@@ -549,7 +549,16 @@ body {font-size:0.8em;}
 </div>
 <!--POST-SHADOWAREA-->
 <div id="storeArea">
-<div title="AdministrationPage" modifier="YourName" created="201206131959" modified="202401161401" tags="System excludeLists" _hash="e1ebb210726c3b146ffdcd2bb68ef6449c55f179" changecount="4">
+<div title="Academic Blog" creator="YourName" modifier="YourName" created="202401160507" modified="202404080815" changecount="8">
+<pre>!Last content updates
+|Last 5 tiddlers created|Last 5 tiddlers modified|h
+|&lt;&lt;ContentTimeline created 5&gt;&gt;|&lt;&lt;ContentTimeline modified 5&gt;&gt;|
+ See more in [[Last Updates|LastUpdates]]
+
+!Tagcloud
+&lt;&lt;tagCloud excludeLists excludeSearch systemConfig systemServer PluginInfo Plugin excludeMissing excludePublisher takenotepackage app DiscoveryPackage NavigationPackage IconPackage TidIDEPackage TaskPackage ScrollbarPackage MediaPackage pluginInfo @cdent @developers @ricardoperes Administration follow tips Content System systemConfigDisable AttachFilePackage IFramePackage QuickEditPackage Tag ThemePackage attachment package sample settings story tiddlyLife nonacademic transclusion&gt;&gt;</pre>
+</div>
+<div title="AdministrationPage" modifier="YourName" created="201206131959" modified="202401161401" tags="System excludeLists" changecount="4" _hash="e1ebb210726c3b146ffdcd2bb68ef6449c55f179">
 <pre>|SiteIcon SiteTitle SiteSubtitle||||StyleSheet|
 |MainMenu|SiteUrl||PageTemplate|StyleSheetColors|
 |~|DefaultTiddlers||EditTemplate|StyleSheetLayout|
@@ -1591,15 +1600,6 @@ config.macros.BibRef.handler= function(place,macroName,params) {
 };
 //}}}
  </pre>
-</div>
-<div title="Blog" creator="YourName" modifier="YourName" created="202401160507" modified="202402231355" changecount="6">
-<pre>!Last content updates
-|Last 5 tiddlers created|Last 5 tiddlers modified|h
-|&lt;&lt;ContentTimeline created 5&gt;&gt;|&lt;&lt;ContentTimeline modified 5&gt;&gt;|
- See more in [[Last Updates|LastUpdates]]
-
-!Tagcloud
-&lt;&lt;tagCloud excludeLists excludeSearch systemConfig systemServer PluginInfo Plugin excludeMissing excludePublisher takenotepackage app DiscoveryPackage NavigationPackage IconPackage TidIDEPackage TaskPackage ScrollbarPackage MediaPackage pluginInfo @cdent @developers @ricardoperes Administration follow tips Content System systemConfigDisable AttachFilePackage IFramePackage QuickEditPackage Tag ThemePackage attachment package sample settings story tiddlyLife 强基计划 transclusion&gt;&gt;</pre>
 </div>
 <div title="BreadcrumbsPlugin" modifier="acarvalho" created="201206231901" modified="201206231901" tags="NavigationPackage systemConfig" _hash="7d40a5c449d58caa266233189684bfe1766f4b65">
 <pre>/***
@@ -4255,7 +4255,7 @@ Description: Shows the last updates in this wiki.
 ^^@@
 </pre>
 </div>
-<div title="MainMenu" modifier="YourName" created="202312221102" modified="202403151552" changecount="28">
+<div title="MainMenu" modifier="YourName" created="202312221102" modified="202404080819" changecount="32">
 <pre>[[Home]] 
 
 [[Publication]]
@@ -4264,7 +4264,7 @@ Description: Shows the last updates in this wiki.
 
 [[Teaching]]
 
-[[Blog]]
+[[Academic Blog]]
 
 [[CV]]
 
@@ -4277,6 +4277,8 @@ Description: Shows the last updates in this wiki.
 __''[[Last Updates|LastUpdates]]''__
 ----
 [[Administration|AdministrationPage]]
+[[Nonacademic Blog|nonacademic]]
+[[Private]]
 &lt;&lt;option chkEnableTabsBar&gt;&gt; Tabbed navigation
 DisplayOptions
 ----
@@ -4286,6 +4288,82 @@ Unsaved Changes:
 Powered by 
 [img[https://classic.tiddlywiki.com/images/favicon.ico]][[T]]iddlyWiki &lt;&lt;version&gt;&gt;
 This work is licensed under CC BY-NC-SA 4.0 </pre>
+</div>
+<div title="MathJaxPlugin" creator="YourName" modifier="YourName" created="202404080820" tags="systemConfig" changecount="1">
+<pre>/***
+|''Name:''|MathJaxPlugin|
+|''Description:''|Enable LaTeX formulas for TiddlyWiki|
+|''Version:''|1.0.1|
+|''Date:''|Feb 11, 2012|
+|''Source:''|http://www.guyrutenberg.com/2011/06/25/latex-for-tiddlywiki-a-mathjax-plugin|
+|''Author:''|Guy Rutenberg|
+|''License:''|[[BSD open source license]]|
+|''~CoreVersion:''|2.5.0|
+ 
+!! Changelog
+!!! 1.0.1 Feb 11, 2012
+* Fixed interoperability with TiddlerBarPlugin
+!! How to Use
+Currently the plugin supports the following delemiters:
+* &quot;&quot;&quot;\(&quot;&quot;&quot;..&quot;&quot;&quot;\)&quot;&quot;&quot; - Inline equations
+* &quot;&quot;&quot;$$&quot;&quot;&quot;..&quot;&quot;&quot;$$&quot;&quot;&quot; - Displayed equations
+* &quot;&quot;&quot;\[&quot;&quot;&quot;..&quot;&quot;&quot;\]&quot;&quot;&quot; - Displayed equations
+!! Demo
+This is an inline equation \(P(E)   = {n \choose k} p^k (1-p)^{ n-k}\) and this is a displayed equation:
+\[J_\alpha(x) = \sum_{m=0}^\infty \frac{(-1)^m}{m! \, \Gamma(m + \alpha + 1)}{\left({\frac{x}{2}}\right)}^{2 m + \alpha}\]
+This is another displayed equation $$e=mc^2$$
+!! Code
+***/
+//{{{
+config.extensions.MathJax = {
+  mathJaxScript : &quot;http://cdn.mathjax.org/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML&quot;,
+  // uncomment the following line if you want to access MathJax using SSL
+  // mathJaxScript : &quot;https://d3eoax9i5htok0.cloudfront.net/mathjax/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML&quot;,
+  displayTiddler: function(TiddlerName) {
+    config.extensions.MathJax.displayTiddler_old.apply(this, arguments);
+    MathJax.Hub.Queue([&quot;Typeset&quot;, MathJax.Hub]);
+  }
+};
+ 
+jQuery.getScript(config.extensions.MathJax.mathJaxScript, function(){
+    MathJax.Hub.Config({
+      extensions: [&quot;tex2jax.js&quot;],
+      &quot;HTML-CSS&quot;: { scale: 100 }
+    });
+ 
+    MathJax.Hub.Startup.onload();
+    config.extensions.MathJax.displayTiddler_old = story.displayTiddler;
+    story.displayTiddler = config.extensions.MathJax.displayTiddler;
+});
+ 
+config.formatters.push({
+	name: &quot;mathJaxFormula&quot;,
+	match: &quot;\\\\\\[|\\$\\$|\\\\\\(&quot;,
+	//lookaheadRegExp: /(?:\\\[|\$\$)((?:.|\n)*?)(?:\\\]|$$)/mg,
+	handler: function(w)
+	{
+		switch(w.matchText) {
+		case &quot;\\[&quot;: // displayed equations
+			this.lookaheadRegExp = /\\\[((?:.|\n)*?)(\\\])/mg;
+			break;
+		case &quot;$$&quot;: // inline equations
+			this.lookaheadRegExp = /\$\$((?:.|\n)*?)(\$\$)/mg;
+			break;
+		case &quot;\\(&quot;: // inline equations
+			this.lookaheadRegExp = /\\\(((?:.|\n)*?)(\\\))/mg;
+			break;
+		default:
+			break;
+		}
+		this.lookaheadRegExp.lastIndex = w.matchStart;
+		var lookaheadMatch = this.lookaheadRegExp.exec(w.source);
+		if(lookaheadMatch &amp;&amp; lookaheadMatch.index == w.matchStart) {
+			createTiddlyElement(w.output,&quot;span&quot;,null,null,lookaheadMatch[0]);
+			w.nextMatch = this.lookaheadRegExp.lastIndex;
+		}
+	}
+});
+//}}}</pre>
 </div>
 <div title="MicroBrowser" modifier="ELSDesignStudios" created="200906122150" modified="200909281630" tags="transclusion">
 <pre>/%
@@ -5195,6 +5273,11 @@ merge(config.optionsDesc,{
 	});
 */
 //}}}</pre>
+</div>
+<div title="Private" creator="YourName" modifier="YourName" created="202404071323" modified="202404071324" changecount="3">
+<pre>&lt;&lt;EncryptionChangePassword&gt;&gt; 
+&lt;&lt;EncryptionDecryptAll&gt;&gt; 
+[[参考资料]]</pre>
 </div>
 <div title="Project" creator="YourName" modifier="YourName" created="202401280441" modified="202402201513" changecount="6">
 <pre>!Formalizing in lean4 that eisenstein integer is ED (thus is PID) :homework of BICMR-AI4MATH
@@ -7413,7 +7496,7 @@ with (config.shadowTiddlers) {
 //}}}
 </pre>
 </div>
-<div title="TiddlerEncryptionPlugin" modifier="YourName" created="200807140830" modified="202401101449" tags="systemConfig">
+<div title="TiddlerEncryptionPlugin" modifier="YourName" created="200807140830" modified="202404071324" tags="systemConfig" changecount="1">
 <pre>/***
 |Name|TiddlerEncryptionPlugin|
 |Author|Lyall Pearce|
@@ -9101,7 +9184,7 @@ Description: TiddlyWiki related issues.
 ^^@@
 %/</pre>
 </div>
-<div title="Todo" creator="YourName" modifier="YourName" created="202403151603" modified="202403191609" changecount="5">
+<div title="Todo" creator="YourName" modifier="YourName" created="202403151603" modified="202404071331" changecount="6">
 <pre>大二下计划
 sort by importance
 0.复习准备考试，完成书上题
@@ -9936,6 +10019,9 @@ config.backstageTasks.push(&quot;uploadOptions&quot;);
 
 </pre>
 </div>
+<div title="nonacademic" creator="YourName" modifier="YourName" created="202404080817" changecount="1">
+<pre></pre>
+</div>
 <div title="tips" creator="YourName" modifier="YourName" created="202401280452" modified="202402241430" changecount="20">
 <pre>!Online Courses
 https://tysunseven.github.io/video/index.html
@@ -10618,7 +10704,41 @@ Muenster:如果想读黎曼几何，几何分析
 
 我这个回答主要提供了一些思路，也可能逻辑不是很清晰，具体情况和内容还需要再去了解，也欢迎各路大佬补充讨论。</pre>
 </div>
-<div title="强基计划，不应强制本校保研直博 (知乎存档)" creator="YourName" modifier="YourName" created="202402200341" modified="202402231356" tags="强基计划" changecount="5">
+<div title="参考资料" creator="YourName" modifier="YourName" created="202404071308" modified="202404071342" tags="Decrypt(Ramanujan)" changecount="15">
+<pre>Encrypted(20F4BADB4F4DD6DBD7941A435F43F8AF46070A95)
+3e213334216594c240e2145468c761a5b6f7dd23835a8385e002d6648210b32987
+d4d56121313121d7e42b6a5d399e26be081d9666156657301f9ff84cad43c001
+f20e9ed6d34e57eab8e3ea3d4295cc7dd91d5683464ad3327951dcb61225836a
+1df7de5cc139b7b3384b4ef8a595433569d2acf235f6b7d352fa5923e5dfc43e
+4ba11981d1f3c4774edf167e38998e8592ba33854e9f983eb3df480275d5e4d2
+30bfff952bf3a566c2e1936216d1d8a9c71bbecb80531224361bcb21313121e2
+ac1f9cdb213339219782ae61731e29a416c9adc195f8344bd6021f8d68f4edc5
+f3f6325ce9e01c88de6d7ee902b278617e6d4f9ed7137c21313121a4ec285fa8
+7490cad73e4190be56468cd24ff7b02e5cc3e0e1eb8b8b38cfb9ec2131332118
+d6988e047d206a65022a7835e2ef21313630218b4a213339219f01ca1f700576
+b1d0243d976a282130217c64f94c96ca3172cf906a9ed57a65c6bbc86004eb3a
+2f631d4be31292dc976efb321ed04c2133332162add038f5b207213921eb7a2d
+2f213339215674333dd7756b2c254603fee95f36e74561e08cb21de834ea89db
+2e8c9e57d9a920213021c4897d76f7abd82e1921333421f8484b4f213130219a
+64c7c06ff6c8b85de5452e145fbe3b3c2ed0e3fd88c0d3c4ebe5b7ec5f371b16
+d4d3898ba538c752825051be74b187a294f8f4b2fb455c51168bb1179c3a51ee
+213131219ef2357552a58dbc879dfddf28b4efc6bc78a6d1814ed23d4880f3fa
+d916c7ddef53d8ea4cedff90181a3c422574a78769f682b8e8ab25b8322539ac
+0f21313021bfc19f3c63024495b98ee9910f99da9b0edf8491c19c86a88913b0
+cf12d7d39d6af9486c198ff88afd11b383ed3e4b6329a81f9145187121313021
+d562c69aaaff2b0e44dc3857383ad99ebbf3ff45289a0f9897a8b76c9601bda3
+6da13b062131332106213130213e87cab1898e19a743b52d26d279bf0efd48a3
+d01cdd4ff78a213339211921313021e974fdff58a9c6fd65ad0425bc60506ce1
+6a738d21313021bd8b2133332172213339215f96c514869f5f5cf03b85cf6b07
+acb8b7b9a12131302139111a21313321d57e21313221a759935ef2d474765cc2
+1eca235070905f1df144c1ecf12f5418136b46a9ee3fbe8577c38aca116db298
+b001bc16ee9098b2213021284802813ddd2d9c63c2c5bb06018862adfa4ce8ba
+3ca316d1b2d8988c3e209ae758f46c7ce3c111550e596121333921f8f5ddc091
+18f0b4f373cc1b5bccc42131312147706846585bc4c099b8abe877818af6498c
+151bfb7df37a1990691d1b57bbcea8e64a168cc3cf85fe26638f62106c497e2b
+86d0e23abca853e8779f36e880</pre>
+</div>
+<div title="强基计划，不应强制本校保研直博 (知乎存档)" creator="YourName" modifier="YourName" created="202402200341" modified="202404080816" tags="nonacademic" changecount="7">
 <pre>https://zhuanlan.zhihu.com/p/395648808
 --------
 2023年初更新：
@@ -10649,10 +10769,10 @@ Muenster:如果想读黎曼几何，几何分析
 --------
 Remarks: This is yet another absurd thing that happens in China.</pre>
 </div>
-<div title="教育的光与影：谢玉波教师的不当行为" creator="YourName" modifier="YourName" created="202404071224" modified="202404071226" tags="Content 维权" changecount="5">
-<pre>在我大学生活的早期，我遇到了一位极其糟糕的教师——谢玉波教师。虽然大学时期通常充满了探索和学习的美好经历，但遗憾的是，谢教师的课程并非如此。
+<div title="教育的光与影：谢XX教师的不当行为" creator="YourName" modifier="YourName" created="202404071224" modified="202404080816" tags="nonacademic" changecount="9">
+<pre>在我大学生活的早期，我遇到了一位极其糟糕的教师——谢教师。虽然大学时期通常充满了探索和学习的美好经历，但遗憾的是，谢教师的课程并非如此。
 
-谢玉波是击剑课的授课教师，但他的教学方式远离传统意义上的引导和启发。课程中，大量的时间被浪费在闲聊和自夸上，而击剑这项技能的实际训练和学习却被严重忽视。更为严重的是，谢教师还在课程和公共场合中表达了对多个少数族群的明显歧视。
+谢是击剑课的授课教师，但他的教学方式远离传统意义上的引导和启发。课程中，大量的时间被浪费在闲聊和自夸上，而击剑这项技能的实际训练和学习却被严重忽视。更为严重的是，谢教师还在课程和公共场合中表达了对多个少数族群的明显歧视。
 
 作为一名教育工作者，谢教师应该是学生学习的灯塔，是道德和职业行为的典范。然而，他却选择成为一个狂热的意识形态信徒和独裁者，将私人偏见带入课堂。他对学生和家长的侮辱性言论，尤其是在背后对我进行的精神病侮辱，极大地损害了我的心理健康。
 
