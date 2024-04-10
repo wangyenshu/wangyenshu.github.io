@@ -6009,6 +6009,670 @@ config.macros.copyTiddler = {
 };
 //}}}</pre>
 </div>
+<div title="CoreTweaks" modifier="ELSDesignStudios" created="200608201502" modified="201112270158" tags="systemConfig" server.page.revision="201112270158" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.type="file">
+<pre>/***
+|Name|CoreTweaks|
+|Source|http://www.TiddlyTools.com/#CoreTweaks|
+|Version||
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.2.0|
+|Type|plugin|
+|Description|a small collection of overrides to TW core functions|
+This tiddler contains small changes to TW core functions that correct or enhance standard features or behaviors.
+***/
+//{{{
+// calculate TW version number - used to determine which tweaks should be applied
+var ver=version.major+version.minor/10+version.revision/100;
+//}}}
+/***
+----
+
+***/
+// // closed: won't fix //(leave as core tweaks)//
+// // {{block{
+/***
+!!!637 TiddlyLink tooltip - custom formatting
+***/
+// // {{groupbox small{
+/***
+http://trac.tiddlywiki.org/ticket/637 - CLOSED: WON'T FIX
+This tweak modifies the tooltip format that appears when you mouseover a link to a tiddler.  It adds an option to control the date format, as well as displaying the size of the tiddler (in bytes)
+
+Tiddler link tooltip format:
+{{stretch{&lt;&lt;option txtTiddlerLinkTootip&gt;&gt;}}}
+^^where: %0=title, %1=username, %2=modification date, %3=size in bytes, %4=description slice, %5=first N characters of tiddler content^^
+Tiddler link tooltip date format:
+{{stretch{&lt;&lt;option txtTiddlerLinkTooltipDate&gt;&gt;}}}
+Tiddler excerpt limit (chars):
+{{stretch{&lt;&lt;option txtTiddlerLinkTooltipLimit&gt;&gt;}}}
+***/
+//{{{
+config.messages.tiddlerLinkTooltip='%0 - %1, %2 (%3 bytes) - %4';
+config.messages.tiddlerLinkTooltipDate='DDD, MMM DDth YYYY 0hh12:0mm AM';
+config.messages.tiddlerLinkTooltipLimit=50;
+
+config.options.txtTiddlerLinkTootip=
+	config.options.txtTiddlerLinkTootip||config.messages.tiddlerLinkTooltip;
+config.options.txtTiddlerLinkTooltipDate=
+	config.options.txtTiddlerLinkTooltipDate||config.messages.tiddlerLinkTooltipDate;
+config.options.txtTiddlerLinkTooltipLimit=
+	config.options.txtTiddlerLinkTooltipLimit||config.messages.tiddlerLinkTooltipLimit;
+
+Tiddler.prototype.getSubtitle = function() {
+	var modifier = this.modifier;
+	if(!modifier) modifier = config.messages.subtitleUnknown;
+	var modified = this.modified;
+	if(modified) modified = modified.formatString(config.options.txtTiddlerLinkTooltipDate);
+	else modified = config.messages.subtitleUnknown;
+	var descr=store.getTiddlerSlice(this.title,'Description')||'';
+	var txt=this.text.substr(0,config.options.txtTiddlerLinkTooltipLimit);
+	if (this.text.length&gt;config.options.txtTiddlerLinkTooltipLimit) txt+=&quot;...&quot;;
+	return config.options.txtTiddlerLinkTootip.format([this.title,modifier,modified,this.text.length,descr,txt]);
+};
+//}}}
+// // }}}}}}// // {{block{
+/***
+!!!607 add HREF link on permaview command
+***/
+// // {{groupbox small{
+/***
+http://trac.tiddlywiki.org/ticket/607 - CLOSED: WON'T FIX
+This tweak automatically sets the HREF for the 'permaview' sidebar command link so you can use the 'right click' context menu for faster, easier bookmarking.  Note that this does ''not'' automatically set the permaview in the browser's current location URL... it just sets the HREF on the command link.  You still have to click the link to apply the permaview.
+***/
+//{{{
+config.macros.permaview.handler = function(place)
+{
+	var btn=createTiddlyButton(place,this.label,this.prompt,this.onClick);
+	addEvent(btn,'mouseover',this.setHREF);
+	addEvent(btn,'focus',this.setHREF);
+};
+config.macros.permaview.setHREF = function(event){
+	var links = [];
+	story.forEachTiddler(function(title,element) {
+		links.push(String.encodeTiddlyLink(title));
+	});
+	var newURL=document.location.href;
+	var hashPos=newURL.indexOf('#');
+	if (hashPos!=-1) newURL=newURL.substr(0,hashPos);
+	this.href=newURL+'#'+encodeURIComponent(links.join(' '));
+}
+//}}}
+// // }}}}}}// // {{block{
+/***
+!!!458 add permalink-like HREFs on internal TiddlyLinks
+***/
+// // {{groupbox small{
+/***
+http://trac.tiddlywiki.org/ticket/458 - CLOSED: WON'T FIX
+This tweak assigns a permalink-like HREF to internal Tiddler links (which normally do not have any HREF defined).  This permits the link's context menu (right-click) to include 'open link in another window/tab' command.  Based on a request from Dustin Spicuzza.
+***/
+//{{{
+window.coreTweaks_createTiddlyLink=window.createTiddlyLink;
+window.createTiddlyLink=function(place,title,includeText,theClass,isStatic,linkedFromTiddler,noToggle)
+{
+	// create the core button, then add the HREF (to internal links only)
+	var link=window.coreTweaks_createTiddlyLink.apply(this,arguments);
+	if (!isStatic)
+		link.href=document.location.href.split('#')[0]+'#'+encodeURIComponent(String.encodeTiddlyLink(title));
+	return link;
+}
+//}}}
+// // }}}}}}
+// // to be fixed in 2.6.0:
+// // {{block{
+/***
+!!!1151 adjust popup placement when root element is in scrolled DIV
+***/
+// // {{groupbox small{
+/***
+http://trac.tiddlywiki.org/ticket/1151
+When a popup link is placed inside a DIV with style &quot;overflow:scroll&quot; or &quot;overflow:auto&quot; and that DIV is then scrolled, the position of the resulting popup appears further down the page that intended, because it is not adjusting for the relative scroll offset of the containing DIV.  This tweak patches the Popup.place() function to calculate and subtract the current scroll offset from the computed popup position, so that it appears in the correct location on the page.
+
+Test case: //(scroll to the bottom of this DIV and click on &quot;test popup&quot;)//
+{{groupbox{
+ &lt;&lt;tiddler ScrollBox with: CoreTweaks##1151test 12em&gt;&gt;}}}/%
+!1151test
+&lt;&lt;tiddler About&gt;&gt;
+&lt;&lt;showPopup tiddler:About label:&quot;test popup&quot; tip:About popupClass:sticky&gt;&gt;
+!end
+%/
+***/
+//{{{
+window.findScrollOffsetX=function(obj) {
+	var x=0;
+	while(obj) {
+		if (obj.scrollLeft &amp;&amp; obj.nodeName!='HTML')
+			x+=obj.scrollLeft;
+		obj=obj.parentNode;
+	}
+	return -x;
+}
+
+window.findScrollOffsetY=function(obj) {
+	var y=0;
+	while(obj) {
+		if (obj.scrollTop &amp;&amp; obj.nodeName!='HTML')
+			y+=obj.scrollTop;
+		obj=obj.parentNode;
+	}
+	return -y;
+}
+
+var fn=Popup.place.toString();
+if (fn.indexOf('findScrollOffsetX')==-1) { // only once
+	fn=fn.replace(/var\s*rootLeft\s*=/,'var rootLeft = window.findScrollOffsetX(root) +');
+	fn=fn.replace(/var\s*rootTop\s*=/,'var rootTop = window.findScrollOffsetY(root) +');
+	eval('Popup.place='+fn);
+}
+//}}}
+// // }}}}}}// // {{block{
+/***
+!!!1147 tiddler macro with params does not refresh
+***/
+// // {{groupbox small{
+/***
+http://trac.tiddlywiki.org/ticket/1147
+when the {{{&lt;&lt;tiddler SomeTiddler&gt;&gt;}}} macro is handled, the resulting span has extra attributes: {{{refresh='content'}}} and {{{tiddler='SomeTiddler'}}}.  If SomeTiddler is changed, {{{store.notify('SomeTiddler')}}} triggers {{{refreshDisplay()}}}, which automatically re-renders transcluded content in any span that has these extra attributes.  However, when additional arguments are passed by using {{{&lt;&lt;tiddler SomeTiddler with: arg arg arg ...&gt;&gt;}}} then the resulting span does NOT get the extra attributes noted above and, as a consequence, the transcluded content is not being refreshed, even though the underlying tiddler has changed
+
+To correct this, in {{{config.macros.tiddler.handler}}}:
+*set the 'refresh' and 'tiddler' attributes even when arguments are present in the macro
+*store the arguments themselves in an attribute (e.g, 'args'), using as a space-separated, bracketed list
+Then, in {{{config.refreshers.content}}}:
+*retrieve the stored arguments (if any) and the tiddler source
+*substitute arguments into source and re-render the span with the updated content
+
+***/
+//{{{
+config.refreshers.content=function(e,changeList) {
+		var title = e.getAttribute(&quot;tiddler&quot;);
+		var force = e.getAttribute(&quot;force&quot;);
+		var args = e.getAttribute(&quot;args&quot;); // ADDED
+		if(force != null || changeList == null || changeList.indexOf(title) != -1) {
+			removeChildren(e);
+//			wikify(store.getTiddlerText(title,&quot;&quot;),e,null,store.fetchTiddler(title)); // REMOVED
+			config.macros.tiddler.transclude(e,title,args); // ADDED
+			return true;
+		} else
+			return false;
+};
+
+config.macros.tiddler.handler=function(place,macroName,params,wikifier,paramString,tiddler) {
+	params = paramString.parseParams(&quot;name&quot;,null,true,false,true);
+	var names = params[0][&quot;name&quot;];
+	var tiddlerName = names[0];
+	var className = names[1] || null;
+	var args = params[0][&quot;with&quot;];
+	var wrapper = createTiddlyElement(place,&quot;span&quot;,null,className);
+//	if(!args) { // REMOVED
+		wrapper.setAttribute(&quot;refresh&quot;,&quot;content&quot;);
+		wrapper.setAttribute(&quot;tiddler&quot;,tiddlerName);
+// 	} // REMOVED
+	if(args!==undefined) wrapper.setAttribute(&quot;args&quot;,'[['+args.join(']] [[')+']]'); // ADDED
+	this.transclude(wrapper,tiddlerName,args); // REFACTORED TO ...tiddler.transclude
+}
+
+// REFACTORED FROM ...tiddler.handler
+config.macros.tiddler.transclude=function(wrapper,tiddlerName,args) {
+	var text = store.getTiddlerText(tiddlerName); if (!text) return;
+	var stack = config.macros.tiddler.tiddlerStack;
+	if(stack.indexOf(tiddlerName) !== -1) return;
+	stack.push(tiddlerName);
+	try {
+		if (typeof args == &quot;string&quot;) args=args.readBracketedList(); // ADDED
+		var n = args ? Math.min(args.length,9) : 0;
+		for(var i=0; i&lt;n; i++) {
+			var placeholderRE = new RegExp(&quot;\\$&quot; + (i + 1),&quot;mg&quot;);
+			text = text.replace(placeholderRE,args[i]);
+		}
+		config.macros.tiddler.renderText(wrapper,text,tiddlerName,null); // REMOVED UNUSED 'params'
+	} finally {
+		stack.pop();
+	}
+};
+//}}}
+// // }}}}}}// // {{block{
+/***
+!!!1134 allow leading whitespace in section headings / TBD handle shadow tiddler sections
+***/
+// // {{groupbox small{
+/***
+http://trac.tiddlywiki.org/ticket/1134
+This tweak REPLACES and extends {{{store.getTiddlerText()}}} so it can return sections defined in shadow tiddlers as well as permitting use of leading whitespace in section headings.
+***/
+//{{{
+TiddlyWiki.prototype.getTiddlerText = function(title,defaultText)
+{
+	if(!title) return defaultText;
+	var parts = title.split(config.textPrimitives.sectionSeparator);
+	var title = parts[0];
+	var section = parts[1];
+	var parts = title.split(config.textPrimitives.sliceSeparator);
+	var title = parts[0];
+	var slice = parts[1]?this.getTiddlerSlice(title,parts[1]):null;
+	if(slice) return slice;
+	var tiddler = this.fetchTiddler(title);
+	var text = defaultText;
+	if(this.isShadowTiddler(title))
+		text = this.getShadowTiddlerText(title);
+	if(tiddler)
+		text = tiddler.text;
+	if(!section) return text;
+	var re = new RegExp(&quot;(^!{1,6}[ \t]*&quot; + section.escapeRegExp() + &quot;[ \t]*\n)&quot;,&quot;mg&quot;);
+	re.lastIndex = 0;
+	var match = re.exec(text);
+	if(match) {
+		var t = text.substr(match.index+match[1].length);
+		var re2 = /^!/mg;
+		re2.lastIndex = 0;
+		match = re2.exec(t); //# search for the next heading
+		if(match)
+			t = t.substr(0,match.index-1);//# don't include final \n
+		return t;
+	}
+	return defaultText;
+};
+//}}}
+// // }}}}}}// // {{block{
+/***
+!!!824 ~WindowTitle - alternative to combined ~SiteTitle/~SiteSubtitle in window titlebar
+***/
+// // {{groupbox small{
+/***
+http://trac.tiddlywiki.org/ticket/824 - OPEN
+This tweak allows definition of an optional [[WindowTitle]] tiddler that, when present, provides alternative text for display in the browser window's titlebar, instead of using the combined text content from [[SiteTitle]] and [[SiteSubtitle]] (which will still be displayed as usual in the TiddlyWiki document header area).
+
+Note: this ticket replaces http://trac.tiddlywiki.org/ticket/401 (closed), which proposed using a custom [[PageTitle]] tiddler for this purpose.  ''If you were using the previous '401 ~PageTitle' tweak, you will need to rename [[PageTitle]] to [[WindowTitle]] to continue to use your custom window title text''
+***/
+//{{{
+config.shadowTiddlers.WindowTitle='&lt;&lt;tiddler SiteTitle&gt;&gt; - &lt;&lt;tiddler SiteSubtitle&gt;&gt;';
+window.getPageTitle=function() { return wikifyPlain('WindowTitle'); }
+store.addNotification('WindowTitle',refreshPageTitle); // so title stays in sync with tiddler changes
+//}}}
+// // }}}}}}// // {{block{
+/***
+!!!471 'creator' field for new tiddlers
+***/
+// // {{groupbox small{
+/***
+http://trac.tiddlywiki.org/ticket/471 - OPEN
+This tweak HIJACKS the core's saveTiddler() function to automatically add a 'creator' field to a tiddler when it is FIRST created. You can use &quot;&quot;&quot;&lt;&lt;view creator&gt;&gt;&quot;&quot;&quot; (or &quot;&quot;&quot;&lt;&lt;view creator wikified&gt;&gt;&quot;&quot;&quot; if you prefer) to show this value embedded directly within the tiddler content, or {{{&lt;span macro=&quot;view creator&quot;&gt;&lt;/span&gt;}}} in the ViewTemplate and/or EditTemplate to display the creator value in each tiddler.  
+***/
+//{{{
+// hijack saveTiddler()
+TiddlyWiki.prototype.CoreTweaks_creatorSaveTiddler=TiddlyWiki.prototype.saveTiddler;
+TiddlyWiki.prototype.saveTiddler=function(title,newTitle,newBody,modifier,modified,tags,fields)
+{
+	var existing=store.tiddlerExists(title);
+	var tiddler=this.CoreTweaks_creatorSaveTiddler.apply(this,arguments);
+	if (!existing) store.setValue(title,'creator',config.options.txtUserName);
+	return tiddler;
+}
+//}}}
+// // }}}}}}
+// // fixed in ~TW2.4.3
+// // {{block{
+/***
+!!!444 'tiddler' and 'place' - global variables for use in computed macro parameters
+***/
+// // {{groupbox small{
+/***
+http://trac.tiddlywiki.org/ticket/444 - CLOSED:FIXED - TW2.4.3 - http://trac.tiddlywiki.org/changeset/8367
+When invoking a macro, this tweak makes the current containing tiddler object and DOM rendering location available as global variables (window.tiddler and window.place, respectively).  These globals can then be used within //computed macro parameters// to retrieve tiddler-relative and/or DOM-relative values or perform tiddler-specific side-effect functionality.
+***/
+//{{{
+if (ver&lt;2.43) {
+window.coreTweaks_invokeMacro = window.invokeMacro;
+window.invokeMacro = function(place,macro,params,wikifier,tiddler) {
+	var here=story.findContainingTiddler(place);
+	window.tiddler=here?store.getTiddler(here.getAttribute('tiddler')):tiddler;
+	window.place=place;
+	window.coreTweaks_invokeMacro.apply(this,arguments);
+}
+}
+//}}}
+// // }}}}}}
+// // fixed in ~TW2.4.2:
+// // {{block{
+/***
+!!!823 apply option values via paramifiers (e.g. #chk...and #txt...)
+***/
+// // {{groupbox small{
+/***
+http://trac.tiddlywiki.org/ticket/823 - CLOSED:FIXED - TW2.4.2 http://trac.tiddlywiki.org/changeset/7988
+This tweak extends and ''//replaces//'' the core {{{invokeParamifier()}}} function to support use of ''option paramifiers'' that set TiddlyWiki option values on-the-fly, directly from a document URL.
+
+If a paramifier begins with 'chk' (checkbox) or 'txt' (text field), it's value will be automatically stored in {{{config.options.*}}}, adding to or overriding any existing 'chk' or 'txt' option values that may have already been loaded from browser cookies and/or assigned by the TW core or plugin initialization functions using hard-coded default values.  Note: option values that have been overriden by paramifiers are only applied during the current document session, and are not //automatically// retained.  However, if you edit an overridden option value during that session, then the modified value is, of course, saved in a browser cookie, as usual.
+***/
+//{{{
+if (ver&lt;2.42) {
+function invokeParamifier(params,handler)
+{
+	if(!params || params.length == undefined || params.length &lt;= 1)
+		return;
+	for(var t=1; t&lt;params.length; t++) {
+		var p = config.paramifiers[params[t].name];
+		if(p &amp;&amp; p[handler] instanceof Function)
+			p[handler](params[t].value);
+		else { // not a paramifier with handler()... check for an 'option' prefix
+			var h=config.optionHandlers[params[t].name.substr(0,3)];
+			if (h &amp;&amp; h.set instanceof Function)
+				h.set(params[t].name,params[t].value);
+		}
+	}
+}
+}
+//}}}
+// // }}}}}}
+// // open tickets:
+// // {{block{
+/***
+!!!608/609/610 toolbars - toggles, separators and transclusion
+***/
+// // {{groupbox small{
+/***
+http://trac.tiddlywiki.org/ticket/608 - OPEN (more/less toggle)
+http://trac.tiddlywiki.org/ticket/609 - OPEN (separators)
+http://trac.tiddlywiki.org/ticket/610 - OPEN (wikify tiddler/slice/section content)
+
+This combination tweak extends the &quot;&quot;&quot;&lt;&lt;toolbar&gt;&gt;&quot;&quot;&quot; macro to add use of '&lt;' to insert a 'less' menu command (the opposite of '&gt;' == 'more'), as well as use of '*' to insert linebreaks and &quot;!&quot; to insert a vertical line separator between toolbar items.  In addition, this tweak add the ability to use references to tiddlernames, slices, or sections and render their content inline within the toolbar, allowing easy creation of new toolbar commands using TW content (such as macros, links, inline scripts, etc.)
+
+To produce a one-line style, with &quot;less&quot; at the end, use
+| ViewToolbar| foo bar baz &gt; yabba dabba doo &lt; |
+or to use a two-line style with more/less toggle:
+| ViewToolbar| foo bar baz &gt; &lt; * yabba dabba doo |
+***/
+//{{{
+merge(config.macros.toolbar,{
+	moreLabel: 'more\u25BC',
+	morePrompt: 'Show additional commands',
+	lessLabel: '\u25C4less',
+	lessPrompt: 'Hide additional commands',
+	separator: '|'
+});
+config.macros.toolbar.onClickMore = function(ev) {
+	var e = this.nextSibling;
+	e.style.display = 'inline'; // show menu
+	this.style.display = 'none'; // hide button
+	return false;
+};
+config.macros.toolbar.onClickLess = function(ev) {
+	var e = this.parentNode;
+	var m = e.previousSibling;
+	e.style.display = 'none'; // hide menu
+	m.style.display = 'inline'; // show button
+	return false;
+};
+config.macros.toolbar.handler = function(place,macroName,params,wikifier,paramString,tiddler) {
+	for(var t=0; t&lt;params.length; t++) {
+		var c = params[t];
+		switch(c) {
+			case '!':  // ELS - SEPARATOR (added)
+				createTiddlyText(place,this.separator);
+				break;
+			case '*':  // ELS - LINEBREAK (added)
+				createTiddlyElement(place,'BR');
+				break;
+			case '&lt;': // ELS - LESS COMMAND (added)
+				var btn = createTiddlyButton(place,
+					this.lessLabel,this.lessPrompt,config.macros.toolbar.onClickLess,'moreCommand');
+				break;
+			case '&gt;':
+				var btn = createTiddlyButton(place,
+					this.moreLabel,this.morePrompt,config.macros.toolbar.onClickMore,'moreCommand');
+				var e = createTiddlyElement(place,'span',null,'moreCommand');
+				e.style.display = 'none';
+				place = e;
+				break;
+			default:
+				var theClass = '';
+				switch(c.substr(0,1)) {
+					case '+':
+						theClass = 'defaultCommand';
+						c = c.substr(1);
+						break;
+					case '-':
+						theClass = 'cancelCommand';
+						c = c.substr(1);
+						break;
+				}
+				if(c in config.commands)
+
+					this.createCommand(place,c,tiddler,theClass);
+				else { // ELS - WIKIFY TIDDLER/SLICE/SECTION (added)
+					if (c.substr(0,1)=='~') c=c.substr(1); // ignore leading ~
+					var txt=store.getTiddlerText(c);
+					if (txt) {
+						// trim any leading/trailing newlines
+						txt=txt.replace(/^\n*/,'').replace(/\n*$/,'');
+						// trim PRE format wrapper if any
+						txt=txt.replace(/^\{\{\{\n/,'').replace(/\n\}\}\}$/,'');
+						// render content into toolbar
+						wikify(txt,createTiddlyElement(place,'span'),null,tiddler);
+					}
+				} // ELS - end WIKIFY CONTENT
+				break;
+		}
+	}
+};
+//}}}
+// // }}}}}}// // {{block{
+/***
+!!!529 IE fixup - case-sensitive element lookup of tiddler elements
+***/
+// // {{groupbox small{
+/***
+http://trac.tiddlywiki.org/ticket/529 - OPEN
+This tweak hijacks the standard browser function, document.getElementById(), to work-around the case-INsensitivity error in Internet Explorer (all versions up to and including IE7) //''Note: This tweak is only applied when using IE, and only for lookups of rendered tiddler elements within the containing 'tiddlerDisplay' element.''//
+***/
+//{{{
+if (config.browser.isIE) {
+document.coreTweaks_coreGetElementById=document.getElementById;
+document.getElementById=function(id) {
+	var e=document.coreTweaks_coreGetElementById(id);
+	if (!e || !e.parentNode || e.parentNode.id!='tiddlerDisplay') return e;
+	for (var i=0; i&lt;e.parentNode.childNodes.length; i++)
+		if (id==e.parentNode.childNodes[i].id) return e.parentNode.childNodes[i];
+	return null;
+};
+}
+//}}}
+// // }}}}}}// // {{block{
+/***
+!!!890 add conditional test to &quot;&quot;&quot;&lt;&lt;tiddler&gt;&gt;&quot;&quot;&quot; macro
+***/
+// // {{groupbox small{
+/***
+http://trac.tiddlywiki.org/ticket/890 - OPEN
+This tweak extends the {{{&lt;&lt;tiddler&gt;&gt;}}} macro syntax so you can include a javascript-based //test expression// to determine if the tiddler transclusion should be performed:
+{{{
+&lt;&lt;tiddler TiddlerName if:{{...}} with: param param etc.&gt;&gt;
+}}}
+If the test is ''true'', then the tiddler is transcluded as usual.  If the test is ''false'', then the transclusion is skipped and //no output is produced//.
+***/
+//{{{
+config.macros.tiddler.if_handler = config.macros.tiddler.handler;
+config.macros.tiddler.handler = function(place,macroName,params,wikifier,paramString,tiddler)
+{
+	params = paramString.parseParams('name',null,true,false,true);
+	if (!getParam(params,'if',true)) return;
+	this.if_handler.apply(this,arguments);
+};
+//}}}
+// // }}}}}}// // {{block{
+/***
+!!!831 backslash-quoting for embedding newlines in 'line-mode' formats
+***/
+// // {{groupbox small{
+/***
+http://trac.tiddlywiki.org/ticket/831 - OPEN
+This tweak pre-processes source content to convert 'double-backslash-newline' into {{{&lt;br&gt;}}} before wikify(), so that literal newlines can be embedded in line-mode wiki syntax (e.g., tables, bullets, etc.)
+***/
+//{{{
+window.coreWikify = wikify;
+window.wikify = function(source,output,highlightRegExp,tiddler)
+{
+	if (source) arguments[0]=source.replace(/\\\\\n/mg,'&lt;br&gt;');
+	coreWikify.apply(this,arguments);
+}
+//}}}
+// // }}}}}}// // {{block{
+/***
+!!!683 FireFox3 Import bug: 'browse' button replacement
+***/
+// // {{groupbox small{
+/***
+http://trac.tiddlywiki.org/ticket/683 - OPEN
+The web standard 'type=file' input control that has been used as a local path/file picker for TiddlyWiki no longer works as expected in FireFox3, which has, for security reasons, limited javascript access to this control so that *no* local filesystem path information can be revealed, even when it is intentional and necessary, as it is with TiddlyWiki.  This tweak provides alternative HTML source that patches the backstage import panel.  It replaces the 'type=file' input control with a text+button combination of controls that invokes a system-native secure 'file-chooser' dialog box to provide TiddlyWiki with access to a complete path+filename so that TW functions properly locate user-selected local files.
+&gt;Note: ''This tweak also requires http://trac.tiddlywiki.org/ticket/604 - cross-platform askForFilename()''
+***/
+//{{{
+if (window.Components) {
+	var fixhtml='&lt;input name=&quot;txtBrowse&quot; style=&quot;width:30em&quot;&gt;&lt;input type=&quot;button&quot; value=&quot;...&quot;'
+		+' onClick=&quot;window.browseForFilename(this.previousSibling,true)&quot;&gt;';
+	var cmi=config.macros.importTiddlers;
+	cmi.step1Html=cmi.step1Html.replace(/&lt;input type='file' size=50 name='txtBrowse'&gt;/,fixhtml);
+}
+
+merge(config.messages,{selectFile:'Please enter or select a file'}); // ready for I18N translation
+
+window.browseForFilename=function(target,mustExist) { // note: both params are optional
+	var msg=config.messages.selectFile;
+	if (target &amp;&amp; target.title) msg=target.title; // use target field tooltip (if any) as dialog prompt text
+	// get local path for current document
+	var path=getLocalPath(document.location.href);
+	var p=path.lastIndexOf('/'); if (p==-1) p=path.lastIndexOf('\\'); // Unix or Windows
+	if (p!=-1) path=path.substr(0,p+1); // remove filename, leave trailing slash
+	var file=''
+	var result=window.askForFilename(msg,path,file,mustExist); // requires #604
+	if (target &amp;&amp; result.length) // set target field and trigger handling
+		{ target.value=result; target.onchange(); }
+	return result; 
+}
+//}}}
+// // }}}}}}// // {{block{
+/***
+!!!604 cross-platform askForFilename()
+***/
+// // {{groupbox small{
+/***
+http://trac.tiddlywiki.org/ticket/604 - OPEN
+invokes a system-native secure 'file-chooser' dialog box to provide TiddlyWiki with access to a complete path+filename so that TW functions properly locate user-selected local files.
+***/
+//{{{
+window.askForFilename=function(msg,path,file,mustExist) {
+	var r = window.mozAskForFilename(msg,path,file,mustExist);
+	if(r===null || r===false)
+		r = window.ieAskForFilename(msg,path,file,mustExist);
+	if(r===null || r===false)
+		r = window.javaAskForFilename(msg,path,file,mustExist);
+	if(r===null || r===false)
+		r = prompt(msg,path+file);
+	return r||'';
+}
+
+window.mozAskForFilename=function(msg,path,file,mustExist) {
+	if(!window.Components) return false;
+	try {
+		netscape.security.PrivilegeManager.enablePrivilege('UniversalXPConnect');
+		var nsIFilePicker = window.Components.interfaces.nsIFilePicker;
+		var picker = Components.classes['@mozilla.org/filepicker;1'].createInstance(nsIFilePicker);
+		picker.init(window, msg, mustExist?nsIFilePicker.modeOpen:nsIFilePicker.modeSave);
+		var thispath = Components.classes['@mozilla.org/file/local;1'].createInstance(Components.interfaces.nsILocalFile);
+		thispath.initWithPath(path);
+		picker.displayDirectory=thispath;
+		picker.defaultExtension='html';
+		picker.defaultString=file;
+		picker.appendFilters(nsIFilePicker.filterAll|nsIFilePicker.filterText|nsIFilePicker.filterHTML);
+		if (picker.show()!=nsIFilePicker.returnCancel)
+			var result=picker.file.path;
+	}
+	catch(ex) { displayMessage(ex.toString()); }
+	return result;
+}
+
+window.ieAskForFilename=function(msg,path,file,mustExist) {
+	if(!config.browser.isIE) return false;
+	try {
+		var s = new ActiveXObject('UserAccounts.CommonDialog');
+		s.Filter='All files|*.*|Text files|*.txt|HTML files|*.htm;*.html|';
+		s.FilterIndex=3; // default to HTML files;
+		s.InitialDir=path;
+		s.FileName=file;
+		return s.showOpen()?s.FileName:'';
+	}
+	catch(ex) { displayMessage(ex.toString()); }
+	return result;
+}
+
+window.javaAskForFilename=function(msg,path,file,mustExist) {
+	if(!document.applets['TiddlySaver']) return false;
+	// TBD: implement java-based askFile(...) function
+	try { return document.applets['TiddlySaver'].askFile(msg,path,file,mustExist); } 
+	catch(ex) { displayMessage(ex.toString()); }
+}
+//}}}
+// // }}}}}}// // {{block{
+/***
+!!!657 wrap tabs onto multiple lines
+***/
+// // {{groupbox small{
+/***
+http://trac.tiddlywiki.org/ticket/657 - OPEN
+This tweak inserts an extra space element following each tab, allowing them to wrap onto multiple lines if needed.
+***/
+//{{{
+config.macros.tabs.handler = function(place,macroName,params)
+{
+	var cookie = params[0];
+	var numTabs = (params.length-1)/3;
+	var wrapper = createTiddlyElement(null,'div',null,'tabsetWrapper ' + cookie);
+	var tabset = createTiddlyElement(wrapper,'div',null,'tabset');
+	tabset.setAttribute('cookie',cookie);
+	var validTab = false;
+	for(var t=0; t&lt;numTabs; t++) {
+		var label = params[t*3+1];
+		var prompt = params[t*3+2];
+		var content = params[t*3+3];
+		var tab = createTiddlyButton(tabset,label,prompt,this.onClickTab,'tab tabUnselected');
+		createTiddlyElement(tab,'span',null,null,' ',{style:'font-size:0pt;line-height:0px'}); // ELS
+		tab.setAttribute('tab',label);
+		tab.setAttribute('content',content);
+		tab.title = prompt;
+		if(config.options[cookie] == label)
+			validTab = true;
+	}
+	if(!validTab)
+		config.options[cookie] = params[1];
+	place.appendChild(wrapper);
+	this.switchTab(tabset,config.options[cookie]);
+};
+//}}}
+// // }}}}}}// // {{block{
+/***
+!!!628 hide 'no such macro' errors
+***/
+// // {{groupbox small{
+/***
+http://trac.tiddlywiki.org/ticket/628 - OPEN
+When invoking a macro that is not defined, this tweak prevents the display of the 'error in macro... no such macro' message.  This is useful when rendering tiddler content or templates that reference macros that are defined by //optional// plugins that have not been installed in the current document.
+
+&lt;&lt;option chkHideMissingMacros&gt;&gt; hide 'no such macro' error messages
+***/
+//{{{
+if (config.options.chkHideMissingMacros===undefined)
+	config.options.chkHideMissingMacros=false;
+
+window.coreTweaks_missingMacro_invokeMacro = window.invokeMacro;
+window.invokeMacro = function(place,macro,params,wikifier,tiddler) {
+	if (!config.macros[macro] || !config.macros[macro].handler)
+		if (config.options.chkHideMissingMacros) return;
+	window.coreTweaks_missingMacro_invokeMacro.apply(this,arguments);
+}
+//}}}
+// // }}}}}}
+// // &lt;&lt;foldHeadings&gt;&gt;</pre>
+</div>
 <div title="CreateTiddlersFromCSV" modifier="ELSDesignStudios" created="200903161615" modified="200911240513" tags="html" server.page.revision="200911240513" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.type="file">
 <pre>/%
 |Name|CreateTiddlersFromCSV|
@@ -6096,6 +6760,57 @@ Enter/paste&lt;&lt;slider {{config.options['']=false;'';}}
 		list.options[list.length]=new Option(title,title);
 	});
 '';}}&gt;&gt;}}}</pre>
+</div>
+<div title="CycleThemes" modifier="ELSDesignStudios" created="200909281911" modified="200910012031" tags="transclusion bookmarklet" server.page.revision="200910012031" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.type="file">
+<pre>/%
+!info
+|Name|CycleThemes|
+|Source|http://www.TiddlyTools.com/#CycleThemes|
+|Version|2.0.0|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|transclusion|
+|Description|creates command link to cycle through systemThemes|
+Usage
+&lt;&lt;&lt;
+{{{
+&lt;&lt;tiddler CycleThemes&gt;&gt;
+&lt;&lt;tiddler CycleThemes with: label &quot;theme theme theme&quot;&gt;&gt;
+}}}
+*''label'' (optional)&lt;br&gt;text of command link. default='next theme'
+*''&quot;theme theme theme&quot;'' (optional)&lt;br&gt;list of theme tiddlers to cycle through.   default=[[StyleSheet]] plus all tiddlers tagged with&lt;&lt;tag systemTheme&gt;&gt;, except those tagged with&lt;&lt;tag excludeTheme&gt;&gt;or&lt;&lt;tag excludeLists&gt;&gt;
+&lt;&lt;&lt;
+Examples
+&lt;&lt;&lt;
+*Cycle through all themes:&lt;br&gt;{{{&lt;&lt;tiddler CycleThemes&gt;&gt;}}}&lt;br&gt;&lt;&lt;tiddler CycleThemes##show with: 'next theme' &gt;&gt;
+*Toggle between two themes:&lt;br&gt;{{{&lt;&lt;tiddler CycleThemes with: &quot;toggle&quot; &quot;StyleSheet Plain&quot;&gt;&gt;}}}&lt;br&gt;&lt;&lt;tiddler CycleThemes##show with: &quot;toggle&quot; &quot;StyleSheet Plain&quot;&gt;&gt;
+*Apply a theme:&lt;br&gt;{{{&lt;&lt;tiddler CycleThemes with: &quot;default&quot; StyleSheet&gt;&gt;}}}&lt;br&gt;&lt;&lt;tiddler CycleThemes##show with: &quot;use default StyleSheet&quot; StyleSheet&gt;&gt;
+&lt;&lt;&lt;
+!end
+!show
+&lt;html&gt;&lt;nowiki&gt;&lt;a href=&quot;javascript:;&quot;
+onmouseover=&quot;
+	this.title='current theme: '+config.options.txtTheme;
+	this.href='javascript:void(eval(decodeURIComponent(%22(function(){try{('
+	+encodeURIComponent(encodeURIComponent(this.onclick))
+	+')()}catch(e){alert(e.description?e.description:e.toString())}})()%22)))';&quot;
+onclick=&quot;
+	var titles='$2'.readBracketedList();
+	if ('$2'=='$'+'2') {
+		var tids=store.getTaggedTiddlers('systemTheme');
+		titles=tids.map(function(t){return t.tags.contains('excludeTheme','excludeLists')?null:t.title;});
+		titles.pushUnique('StyleSheet');
+	}
+	var curr=titles.indexOf(config.options.txtTheme);
+	var next=curr+1&gt;=titles.length?0:curr+1;
+	while(!titles[next] &amp;&amp; next!=curr) next=next+1&gt;=titles.length?0:next+1;
+	story.switchTheme(titles[next]);
+	return false;&quot;
+&gt;$1&lt;/a&gt;&lt;/html&gt;
+!end
+%/&lt;&lt;tiddler {{var src='CycleThemes'; src+(tiddler&amp;&amp;tiddler.title==src?'##info':'##show')}}
+	with: {{'$1'=='$'+'1'?'next theme':'$1'}} &quot;$2&quot;&gt;&gt;</pre>
 </div>
 <div title="DOMTweaksPlugin" modifier="ELSDesignStudios" created="200707201333" modified="200707202111" tags="systemConfig" server.page.revision="200707202111" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.type="file">
 <pre>/***
@@ -8140,6 +8855,35 @@ config.macros.editSections = {
 &lt;div macro='tiddler QuickEditToolbar with: show'&gt;&lt;/div&gt;
 &lt;!--}}}--&gt;
 </pre>
+</div>
+<div title="EditTemplateReadOnly" modifier="ELSDesignStudios" created="200801230424" modified="200805121145" tags="template" server.page.revision="200805121145" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.type="file" status="done">
+<pre>&lt;!--{{{--&gt;
+&lt;!--
+|Name|EditTemplate|
+|Source|http://www.TiddlyTools.com/#EditTemplate|
+|Version||
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|template|
+|Requires|ToolbarCommands|
+|Description|custom version of shadow template used to display tiddler for normal editing|
+--&gt;
+&lt;span class='toolbar' macro='toolbar [[ToolbarCommands::EditToolbarReadOnly]]'&gt;&lt;/span&gt;
+&lt;div class='title' macro='view title'&gt;&lt;/div&gt;
+&lt;div style='clear:both'&gt;&lt;/div&gt;
+&lt;div class='editor' macro='edit title'&gt;&lt;/div&gt;
+&lt;div macro='annotations'&gt;&lt;/div&gt;
+&lt;div class='editor' macro='edit text'&gt;&lt;/div&gt;
+&lt;span macro='resizeEditor'&gt;&lt;/span&gt;
+&lt;div class='editor' macro='preview hide text'&gt;&lt;/div&gt;
+&lt;div class='editor' macro='edit tags'&gt;&lt;/div&gt;
+&lt;div class='toolbar editorFooter' style='text-align:left !important;float:left !important'&gt;
+	&lt;span macro='message views.editor.tagPrompt'&gt;&lt;/span&gt;
+	&lt;span macro='tagChooser'&gt;&lt;/span&gt;
+&lt;/div&gt;
+&lt;div style='clear:both'&gt;&lt;/div&gt;
+&lt;!--}}}--&gt;</pre>
 </div>
 <div title="EditTiddlerPlugin" modifier="ELSDesignStudios" created="200604281832" modified="200908151241" tags="systemConfig" server.page.revision="200908151241" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.type="file">
 <pre>/***
@@ -11072,7 +11816,7 @@ After the browser has done its job, the wiki syntax sequences (including the &qu
 <pre>!GNU/Linux and FOSS software enthusiast
 I have a laptop running opensuse leap and stay active in several local {{{LUGs}}}.</pre>
 </div>
-<div title="Home" creator="Wang Yanshu" modifier="YourName" created="202401160150" modified="202404101300" changecount="71">
+<div title="Home" creator="Wang Yanshu" modifier="YourName" created="202401160150" modified="202404101548" changecount="74">
 <pre>!!I am a Math student studying at Nankai University.
 
 &lt;&lt;life cellsize:.8em nostats limit:0 stability:0 delay:100 tid:wangyanshu&gt;&gt;
@@ -11377,6 +12121,17 @@ window.isChild = function(e,parentId) {
 //}}}
 
 
+</pre>
+</div>
+<div title="IconPackage" modifier="ELSDesignStudios" created="200707132129" modified="200707162151" tags="IconPackage package story" server.type="file" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.page.revision="200707162151">
+<pre>This package defines a set of small icons appear adjacent to the title of each tiddler and indicate various information about the tiddler, such as whether it has unsaved changes, or has been changed recently, or has been tagged as&lt;&lt;tag Trash&gt;&gt;.  Additional icons indicate important categories of tiddlers (based on tags), such as plugins, scripts, templates, attachments, bookmarks, tasks, etc.
+
+----
+&lt;&lt;tiddler ShowAllIcons&gt;&gt;
+----
+
+{{fine italic{
+Note: this package includes icons that are part of the &quot;Silk&quot; icon set: http://www.famfamfam.com/lab/icons/silk/ containing 1000 16-by-16 pixel icons in PNG format, created by Mark James, a part-time web developer, part-time student currently living in Birmingham, UK, and is licensed under a Creative Commons Attribution 2.5 License. Please visit http://www.famfamfam.com/ for further information and licensing details.}}}
 </pre>
 </div>
 <div title="ImageMacro" modifier="YourName" created="201206281318" modified="202312270352" tags="systemConfig" _hash="e25d26cd27e000356637c5d009f6e706cd3fdfed">
@@ -12249,6 +13004,9 @@ Lassen
 &lt;&lt;&lt;
 ***/
  </pre>
+</div>
+<div title="ImagePathList" modifier="ELSDesignStudios" created="200703251919" tags="IconPackage settings" server.type="file" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.page.revision="200703251919">
+<pre></pre>
 </div>
 <div title="ImagePathPlugin" modifier="EricShulman" created="200703240806" modified="201408240303" tags="IconPackage systemConfig" server.page.revision="201408240303" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.type="file">
 <pre>/***
@@ -14520,6 +15278,23 @@ TW21Loader.prototype.internalizeTiddler = function(store,tiddler,title,node)
 
 } // END OF TW2.1.x backward-compatibility functions
 //}}}</pre>
+</div>
+<div title="LockedEditTemplate" modifier="ELSDesignStudios" created="200709131714" modified="200709131739" tags="template locked" server.page.revision="200709131739" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.type="file">
+<pre>&lt;!--{{{--&gt;
+&lt;!--
+|Name|LockedEditTemplate|
+|Source|http://www.TiddlyTools.com/#LockedEditTemplate|
+|Version||
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|template|
+|Requires|TiddlerPasswordPlugin,TiddlerPasswordPluginConfig,TaggedTemplateTweak|
+|Description|prompt for admin password to allow editing of tiddlers tagged with &quot;locked&quot;|
+--&gt;
+&lt;span macro='getTiddlerPassword - &quot;A password is required to edit this tiddler:&quot;'&gt;&lt;/span&gt;
+[[EditTemplate]]
+&lt;!--}}}--&gt;</pre>
 </div>
 <div title="LooseLinksPlugin" modifier="ELSDesignStudios" created="200901061926" modified="200908151155" tags="systemConfig" server.type="file" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.page.revision="200908151155">
 <pre>/***
@@ -39595,9 +40370,192 @@ or, in ToolbarCommands (with CoreTweaks #610 installed):
 %/&lt;&lt;tiddler {{'ToggleTiddlerTitles##'+(tiddler&amp;&amp;tiddler.title=='ToggleTiddlerTitles'?'info':'show')}}
 	with: {{&quot;$1&quot;=='$'+'1'?'titles':&quot;$1&quot;}}&gt;&gt;</pre>
 </div>
-<div title="ToolbarCommands" creator="YourName" modifier="YourName" created="202404100513" modified="202404100525" changecount="6">
-<pre>|~ViewToolbar|closeTiddler closeOthers +editTiddler &gt; fields permalink references jump|
-|~EditToolbar|+saveTiddler -cancelTiddler deleteTiddler|</pre>
+<div title="ToolbarCommands" creator="YourName" modifier="YourName" created="202404100513" modified="202404101556" changecount="12">
+<pre>|~ViewToolbar|~ToolbarCommands##spacer collapseTiddler collapseOthers closeTiddler closeOthers ! ~ToolbarCommands##goto ~ToolbarCommands##search ~ToolbarCommands##editTiddler ~ToolbarCommands##undoTiddler ~ToolbarCommands##refreshTiddler ! &gt; &lt; * ~ToolbarCommands##tidide ~ToolbarCommands##related ~ToolbarCommands##copyTiddler ~ToolbarCommands##snapshotSave ~ToolbarCommands##snapshotPrint ~ToolbarCommands##saveTiddlerToFile ~ToolbarCommands##sendTiddler ~ToolbarCommands##revertTiddler ~ToolbarCommands##runTiddler fields permalink references jump|
+|~EditToolbar|~ToolbarCommands##spacer +saveTiddler -cancelTiddler deleteTiddler ! ~ToolbarCommands##fields ! &gt; &lt; * ~ToolbarCommands##options ~ToolbarCommands##autosizeCheckbox ~ToolbarCommands##previewCheckbox ~ToolbarCommands##quickeditCheckbox ~ToolbarCommands##minorchangesCheckbox|
+|~EditToolbarReadOnly|~ToolbarCommands##spacer ~ToolbarCommands##cancelTiddler ! ~ToolbarCommands##fields ! ~ToolbarCommands##autosizeCheckbox ~ToolbarCommands##previewCheckbox |
+|~CollapsedToolbar|~ToolbarCommands##spacer +expandTiddler collapseOthers closeTiddler closeOthers ! ~ToolbarCommands##goto ~ToolbarCommands##search ~ToolbarCommands##editTiddler ~ToolbarCommands##refreshTiddler ! &gt; &lt; * ~ToolbarCommands##tidide ~ToolbarCommands##related ~ToolbarCommands##permalink ~ToolbarCommands##copyTiddler ~ToolbarCommands##snapshotSave ~ToolbarCommands##snapshotPrint ~ToolbarCommands##saveTiddlerToFile ~ToolbarCommands##sendTiddler ~ToolbarCommands##runTiddler|
+&lt;&lt;&lt;
+!!!!!wiki-syntax toolbar commands
+&lt;&lt;&lt;
+!!!!!spacer
+{{{
+/% force whitespace separation and baseline alignment of toolbar with tiddler title %/@@font-size:12pt;&amp;nbsp;@@
+}}}
+!!!!!goto
+{{{
+@@position:static;+++^25em^*[goto|view another tiddler]...
+	&lt;&lt;moveablePanel&gt;&gt;{{fine{
+	{{floatright{&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;}}}/%
+	%/&lt;&lt;tiddler SiteMenuGoto&gt;&gt;}}}===&lt;&lt;setIcon page_go.png&gt;&gt;@@
+}}}
+!!!!!search
+{{{
+@@position:static;+++^22em^*[search|find tiddlers that match search text]...
+	&lt;&lt;moveablePanel&gt;&gt;{{small{
+	{{floatright{&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;}}}/%
+	%/&lt;&lt;tiddler SiteMenuSearch&gt;&gt;}}}===&lt;&lt;setIcon page_find.png&gt;&gt;@@
+}}}
+!!!!!editTiddler
+{{{
+&lt;script&gt;
+	if (readOnly) return &quot;&lt;&lt;toolbar +editTiddler&gt;&gt;&lt;&lt;setIcon page.png&gt;&gt;&quot;; // view
+	else return &quot;&lt;&lt;toolbar +editTiddler&gt;&gt;&lt;&lt;setIcon page_edit.png&gt;&gt;&quot;; // edit
+&lt;/script&gt;
+}}}
+!!!!!undoTiddler
+{{{
+&lt;&lt;undo&gt;&gt;&lt;&lt;setIcon arrow_undo.png&gt;&gt;
+}}}
+!!!!!refreshTiddler
+{{{
+&lt;script label=&quot;refresh&quot; title=&quot;redisplay the contents of this tiddler&quot;&gt;
+	story.refreshTiddler(story.findContainingTiddler(place).getAttribute(&quot;tiddler&quot;),null,true);
+&lt;/script&gt;&lt;script&gt;
+	place.lastChild.style.fontWeight=&quot;normal&quot;;
+&lt;/script&gt;&lt;&lt;setIcon page_refresh.png&gt;&gt;
+}}}
+!!!!!tidide
+{{{
+@@position:static;+++^[TidIDE|Edit this tiddler using the TiddlyWiki Integrated Development Environment]...
+	{{fine smallform nowrap{
+	&lt;&lt;moveablePanel&gt;&gt;&lt;&lt;tidIDE SystemInfo TiddlerTweaker CompareTiddlers +edit:here&gt;&gt;/%
+	%/&lt;&lt;resizeEditor&gt;&gt;}}}===&lt;&lt;setIcon application_form_edit.png&gt;&gt;@@
+}}}
+!!!!!related
+{{{
+@@position:static;+++^65em^[related|show list/tree view of tiddlers related to the current tiddler]...
+	&lt;&lt;moveablePanel&gt;&gt;{{smallform{
+	{{floatright{&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;}}}/%
+	%/&lt;&lt;relatedTiddlers here hideform&gt;&gt;}}}===&lt;&lt;setIcon sitemap.png&gt;&gt;@@
+}}}
+!!!!!permalink
+{{{
+&lt;&lt;toolbar permalink&gt;&gt;&lt;&lt;setIcon page_link.png&gt;&gt;
+}}}
+!!!!!copyTiddler
+{{{
+&lt;script&gt; if (!readOnly) return &quot;&lt;&lt;toolbar copyTiddler&gt;&gt;&lt;&lt;setIcon page_copy.png&gt;&gt;&quot;; &lt;/script&gt;
+}}}
+!!!!!snapshotSave
+{{{
+&lt;&lt;toolbar snapshotSave&gt;&gt;&lt;&lt;setIcon camera.png&gt;&gt;
+}}}
+!!!!!snapshotPrint
+{{{
+&lt;&lt;toolbar snapshotPrint&gt;&gt;&lt;&lt;setIcon printer.png&gt;&gt;
+}}}
+!!!!!saveTiddlerToFile
+{{{
+&lt;&lt;toolbar saveTiddlerToFile&gt;&gt;&lt;&lt;setIcon disk.png&gt;&gt;
+}}}
+!!!!!sendTiddler
+{{{
+&lt;&lt;toolbar sendTiddler&gt;&gt;&lt;&lt;setIcon server_go.png&gt;&gt;
+}}}
+!!!!!runTiddler
+{{{
+&lt;&lt;toolbar runTiddler&gt;&gt;&lt;&lt;setIcon cog.png&gt;&gt;
+}}}
+!!!!!revertTiddler
+{{{
+&lt;html&gt;&lt;hide linebreaks&gt;&lt;a href=&quot;javascript:;&quot;
+	title=&quot;reload the last SAVED version of this tiddler&quot;
+	onclick=&quot;
+		var here=story.findContainingTiddler(this); if (!here) return;
+		var tid=here.getAttribute('tiddler');
+		var t='\&lt;\&lt;loadTiddlers [[tiddler:'+tid+']] '+document.location.href+' confirm force noreport\&gt;\&gt;';
+		var e=document.getElementById('executeRevertTiddler');
+		if (e) e.parentNode.removeChild(e);
+		e=document.createElement('span'); e.id='executeRevertTiddler';
+		wikify(t,e);
+	&quot;&gt;revert&lt;/a&gt;
+&lt;/html&gt;&lt;&lt;setIcon arrow_undo.png&gt;&gt;
+}}}
+!!!!!saveTiddler
+{{{
+&lt;&lt;toolbar +saveTiddler&gt;&gt;&lt;&lt;setIcon tick.png&gt;&gt;
+}}}
+!!!!!cancelTiddler
+{{{
+&lt;script&gt; return &quot;&lt;&lt;toolbar -cancelTiddler&gt;&gt;&lt;&lt;setIcon &quot;+(readOnly?&quot;tick.png&quot;:&quot;cross.png&quot;)+&quot;&gt;&gt;&quot;; &lt;/script&gt;
+}}}
+!!!!!deleteTiddler
+{{{
+&lt;&lt;toolbar deleteTiddler&gt;&gt;&lt;&lt;setIcon delete.png&gt;&gt;
+}}}
+!!!!!fields
+{{{
+&lt;&lt;toolbar fields&gt;&gt;&lt;&lt;setIcon table.png&gt;&gt;
+}}}
+!!!!!options
+{{{
+&amp;nbsp;{{fine{//options://}}}&amp;nbsp;
+}}}
+!!!!!autosizeCheckbox
+{{{
+&lt;script label=&quot;autosize&quot; title=&quot;automatically resize editor to fit contents&quot;&gt;
+	var txt=&quot;&lt;input type='checkbox' style='padding:0;margin:0;' %0&gt;autosize&quot;;
+	var chk=place.innerHTML.toLowerCase().indexOf(&quot;checked&quot;)==-1?&quot;checked&quot;:&quot;&quot;;
+	config.commands.autosizeEditor.handler(null,place,null);
+	place.innerHTML=txt.format([chk]);
+&lt;/script&gt;&lt;script&gt;
+	place.lastChild.innerHTML=&quot;&lt;input type='checkbox' style='padding:0;margin:0;'&gt;autosize&quot;;
+	place.lastChild.style.fontWeight=&quot;normal&quot;;
+	place.lastChild.style.fontSize=&quot;90%&quot;;
+&lt;/script&gt;
+}}}
+!!!!!previewCheckbox
+{{{
+&lt;script label=&quot;preview&quot; title=&quot;show key-by-key preview&quot;&gt;
+	var txt=&quot;&lt;input type='checkbox' style='padding:0;margin:0;' %0&gt;preview&quot;;
+	var chk=place.innerHTML.toLowerCase().indexOf(&quot;checked&quot;)==-1?&quot;checked&quot;:&quot;&quot;;
+	config.commands.previewTiddler.handler(null,place,null);
+	place.innerHTML=txt.format([chk]);
+&lt;/script&gt;&lt;script&gt;
+	place.lastChild.innerHTML=&quot;&lt;input type='checkbox' style='padding:0;margin:0;'&gt;preview&quot;;
+	place.lastChild.style.fontWeight=&quot;normal&quot;;
+	place.lastChild.style.fontSize=&quot;90%&quot;;
+&lt;/script&gt;
+}}}
+!!!!!quickeditCheckbox
+{{{
+&lt;script label=&quot;quickedit&quot; title=&quot;show QuickEdit toolbar buttons&quot;&gt;
+	var opt=&quot;chkShowQuickEdit&quot;;
+	config.commands.toggleQuickEdit.handler(null,place,null);
+	var chk=config.options[opt]?&quot;CHECKED&quot;:&quot;&quot;;
+	var txt=&quot;&lt;input type='checkbox' style='padding:0;margin:0;' option='%0' %1&gt;quickedit&quot;;
+	place.innerHTML=txt.format([opt,chk]);
+&lt;/script&gt;&lt;script&gt;
+	var opt=&quot;chkShowQuickEdit&quot;;
+	var chk=config.options[opt]?&quot;CHECKED&quot;:&quot;&quot;;
+	var txt=&quot;&lt;input type='checkbox' style='padding:0;margin:0;' option='%0' %1&gt;quickedit&quot;;
+	place.lastChild.innerHTML=txt.format([opt,chk]);
+	place.lastChild.style.fontWeight=&quot;normal&quot;;
+	place.lastChild.style.fontSize=&quot;90%&quot;;
+&lt;/script&gt;
+}}}
+!!!!!minorchangesCheckbox
+{{{
+&lt;script label=&quot;minor changes&quot;&gt;
+	var opt=&quot;chkForceMinorUpdate&quot;;
+	config.options[opt]=!config.options[opt];
+	config.macros.option.propagateOption(opt,&quot;checked&quot;, config.options[opt],&quot;input&quot;);
+	var chk=config.options[opt]?&quot;CHECKED&quot;:&quot;&quot;;
+	var txt=&quot;&lt;input type='checkbox' style='padding:0;margin:0;' option='%0' %1&gt;minor changes&quot;;
+	place.innerHTML=txt.format([opt,chk]);
+&lt;/script&gt;&lt;script&gt;
+	var opt=&quot;chkForceMinorUpdate&quot;;
+	var chk=config.options[opt]?&quot;CHECKED&quot;:&quot;&quot;;
+	var txt=&quot;&lt;input type='checkbox' style='padding:0;margin:0;' option='%0' %1&gt;minor changes&quot;;
+	place.lastChild.innerHTML=txt.format([opt,chk]);
+	place.lastChild.style.fontWeight=&quot;normal&quot;;
+	place.lastChild.style.fontSize=&quot;90%&quot;;
+	place.lastChild.title=config.optionsDesc[opt];
+&lt;/script&gt;
+}}}
+!!!!!end of extra commands
+&lt;&lt;&lt;</pre>
 </div>
 <div title="TotallyTiddlers" modifier="ELSDesignStudios" created="200607160223" modified="200909290328" tags="systemTheme CSS ThemePackage excludeTheme" server.page.revision="200909290328" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.type="file">
 <pre>/***
@@ -41154,6 +42112,97 @@ $1
 	src+(tiddler&amp;&amp;tiddler.title==src?'##info':'##show');
 }} with: [[$1]]&gt;&gt;</pre>
 </div>
+<div title="application_add.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="IconPackage attachment excludeMissing silk" server.type="file" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.page.revision="200906041709">
+<pre>!usage
+{{{[img[application_add.png]]}}}
+[img[application_add.png]]
+!notes
+license: http://www.famfamfam.com/lab/icons/silk/
+!type
+image/png
+!file
+./images/silk/icons/application_add.png
+!url
+
+!data
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAH9SURBVDjLpZM9aFRREIW/ue9FF2IULDQuaYIGtTBRWGFJAgqSUsEmjZVgo4mFWBiwVVjBHwjGwsbCShExIAghoEUMARGNGFJYhIC7isXGRbORvJ0Zi/dWY5fFCwOnuHz3nDsz4u78z5HTlx6NDB4v3KjWvd0dMMPNUFPcHHPDVTF3XBU1Y/uWZHVxsXzl6e3hibgwUBhvy7WH3bmWHm5fres4MBHXEw/16s+Wra8lHgBiV+f6mX0tA86VlkkBbgCsNxQH3Bw1MBwzR83Qhqflxro63Z0dqGkKIOuCBEHc8SC4OGJCCIJIQESRyIksEDfS+9bIAE1SAFwEBCIHEzBzIocgEbGAiqMhdWxqWQTL5kAE3P8BiYCrYwIuQBAii1JAM0JTpAxJxQaQxUJsxvTbSV7NP6e2ukLSSFjT/cBJ4kaS/HEggLsjIvgG0Is3T3hfnuLYwFG6dvbwcuEZcx+nKY7mbwbPskSAZC4k00GEIMLk64ccPtCHBqVvzxAqCcVD/QAjwcz+Rsg+M4gQbahv37/QJts4dfAiAJdP3Gfvrl6AXFxeWn58/k4ybKqYGqqKmaFJgplh7lRrKyxUZpmvzDA29IDS1Fly0VaAX7KZbSyO5q91de+42t87SE/nET59fcfshxk+L9VuyWbXuTiaLwEXgA7gB3Bv7m5l7Dd8kw6XoJxL0wAAAABJRU5ErkJggg==
+</pre>
+</div>
+<div title="application_form_edit.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="IconPackage attachment excludeMissing silk" server.type="file" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.page.revision="200906041709">
+<pre>!usage
+{{{[img[application_form_edit.png]]}}}
+[img[application_form_edit.png]]
+!notes
+license: http://www.famfamfam.com/lab/icons/silk/
+!type
+image/png
+!file
+./images/silk/icons/application_form_edit.png
+!url
+
+!data
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAJcSURBVDjLpZPvS1NRGMfvv9Db6FUvIpDqLwj6AZER1EhBkvTFTALNlWJrkwKRoWKGjZltaUmuYmsIq7SEtrSt1qakzh/TtunSdq9j8253u3fL1vh27t2KNAqsAx+ecw7n+z0PzzkPBYD6HyjZZVNNpzXINz0OQP2IYPwI1YMFXOmfQ+O9WTT0eVFvmMQl/Qcobo+jVueG2uDkRZ1koLEEc9qRNWwXRddYTjIQb/4XqjtGIRmojX6k0+ltI2+15Q1UA4sQBAG8BA+e56W5w+H4jQmbDgsPy+C3ajDVdwzT3UUVlFiwZDKJshbvT1JkLQp+HQJtBWNXIuF9DqTCiHstcN04vkaJ1U5wHLgEgUsUIrfJQKCHwM43Y2P1KZjRDqRnBvEt5MTM/eoMJT4Vy8YRj8elKBFnSWTJHovoEhHPXkMu7UQ6WIt1z0X4BuRw6+XwaGV7qIbeacRiMUQLiPNYNCZl4LF1g51RIZdxQQhUIrNSjuS8GqH+06i73psvoqJnApFIZFMNxPXrwXYw48qCuAKZT2fBzTZhyXASjM+JkkZL3qBO5wHDMIS1QmTge2fE/MtGkvYbZJbl+LJyDgmSSUB/Al85WjpzpsGcN6jVvkc4TBPCoAnuoR7MDasx/aILn92lEJbLsT51Ff67p7C6OAmaFs/RkNWb8KMXTBduOqSfVdVmh7n9KJAMYcFQArt6J97eKcZw8yHUqPQk7SfkZhOIRsQkGWztrpbzRdkNlw4b7ltwaw7DXLUrNaLaf+CP3bh1o/Tgjkxr5d6sra04+6rzyNgz5b7df2vn7z39IYTVO0xbAAAAAElFTkSuQmCC</pre>
+</div>
+<div title="arrow_undo.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="attachment excludeMissing" server.type="file" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.page.revision="200906041709">
+<pre>!usage
+{{{[img[arrow_undo.png]]}}}
+[img[arrow_undo.png]]
+!notes
+license: http://www.famfamfam.com/lab/icons/silk/
+!type
+image/png
+!file
+./images/silk/icons/arrow_undo.png
+!url
+
+!data
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAIJSURBVDjLpVM9aJNRFD35GsRSoUKKzQ/B0NJJF3EQlKrVgijSCBmC4NBFKihIcXBwEZdSHVoUwUInFUEkQ1DQ4CKiFsQsTrb5xNpgaZHw2Uog5t5zn0NJNFaw0guX97hwzuPcc17IOYfNlIdNVrhxufR6xJkZjAbSQGXjNAorqixSWFDV3KPhJ+UGLtSQMPryrDscPwLnAHOEOQc6gkbUpIagGmApWIb/pZRX4fjj889nWiSQtgYyBZ1BTUEj6AjPa0P71nb0Jfqwa+futIheHrzRn2yRQCUK/lOQhApBJVQJChHfnkCqOwWEQ+iORJHckUyX5ksvAEyGNuJC+s6xCRXNHNxzKMmQ4luwgjfvZp69uvr2+IZcyJ8rjIporrxURggetnV0QET3rrPxzMNM2+n7p678jUTrCiWhphAjVHR9DlR0WkSzf4IHxg5MSF0zXZEuVKWKSlCBCostS8zeG7oV64wPqxInbw86lbVXKEQ8mkAqmUJ4SxieeVhcnANFC02C7N2h69HO2IXeWC8MDj2JnqaFNAMd8f3HKjx6+LxQRmnOz1OZaxKIaF1VISYwB9ARZoQaYY6o1WpYCVYxt+zDn/XzVBv/MOWXW5J44ubRyVgkelFpmF/4BJVfOVDlVyqLVBZI5manPjajDOdcswfG9k/3X9v3/vfZv7rFBanriIo++J/f+BMT+YWS6hXl7QAAAABJRU5ErkJggg==</pre>
+</div>
+<div title="asterisk_yellow.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="IconPackage attachment excludeMissing silk" server.type="file" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.page.revision="200906041709">
+<pre>!usage
+{{{[img[asterisk_yellow.png]]}}}
+[img[asterisk_yellow.png]]
+!notes
+license: http://www.famfamfam.com/lab/icons/silk/
+!type
+image/png
+!file
+./images/silk/icons/asterisk_yellow.png
+!url
+
+!data
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAJ5SURBVDjLpZPNS1RhFMaff2EWLWo5tGnRaqCFRBAM0cZFwVSQpVHNQAWVMQwaSSZWtimLiKnsO5lEjKzs4y1zRK3oItfMj1FnnJkaUtNrjo45H3eejpCKNa5anMX73vs855zfOS9I4n9i2SHbCpvph8q8A9PNcCzcz76EM9EETj+DmmqENaeBiJ3mRyuzQy5mwyVMKqiFbzNN0MxgKZOd2zj5GMZE/ZL5ooHZAntGW89s7Bw5Ws25llWcfQHrzHPYE/51ZOQ0M4Fiitj4UQdbzhZSb+FJ63ZypJqp7p0UsTf+FN6kvoMMl3GmNY9jj+BckcF8/HoFldLzpZIqxhthJPVdkr2cifdb5sXefyAKLFvyzVJJAssisIxstILZ0DEyeJzpHifHfNBGamFZ+C9yC7bhG7BBxCrZZqWQpoiNP6S1TMBFDh4gA0VMdxfy+0NosftQX+8gGKkBY741HLoGhbnXUOZwKTn+gGa4nOlBN9MDxdJzCTmwj+wvEKPDTPUc5Zx+kOk+NxmqZOJTIXsviYGQVgKLAos/n0CbbIAS0ir1eY9kF4O+3UzpBYzehhaugQpdR3DwKth7EeyqEoO/oYzXwyKwDDN0ipme/VKFi0l9L8M3oYW8SwxWnIKI1XT7Vqb6i/ntLoLTHdulhROcUJsZuJJjCsvEPpyf8m8io5U0VB6FtFNIe6da84XFEcYaNrDzLDw5DUZ9cEwqm6zxGWYGPBTShogtQtoerV0rLA5JKy5+ubya7SdzbKKMyRG7ByPeIfvebKfAWszUdQFavKOI0bqNbCuF4XfneAvzIaStQrpOxEpIL746rQKOD2VQbSXwtLiXg/wNTNvAOhsl8oEAAAAASUVORK5CYII=</pre>
+</div>
+<div title="camera.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="IconPackage attachment excludeMissing silk" server.type="file" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.page.revision="200906041709">
+<pre>!usage
+{{{[img[camera.png]]}}}
+[img[camera.png]]
+!notes
+license: http://www.famfamfam.com/lab/icons/silk/
+!type
+image/png
+!file
+./images/silk/icons/camera.png
+!url
+
+!data
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAIrSURBVDjLxVPLjhJBFD3V3dCYSZjwDipDRjCOCcTgLGalJmxYufAD0E/QHV9g3LjSsGDhik/QjTEaTdgaEsQQINEFJjwEecmr6Yf3lkJmPwsruXWrq+85dc+9VcJxHFxkKLjg0HgqlUpP1+t1drvdXrIsS2w2G9dqtXKzt21b6Lpu+P3+N4VC4QnH5/P5U3Lfy+XyL1EsFg9VVZ1kMhmwHAJIa1Tf4eH96zC+vcKLDyfwRm6i1Wo/Go/HLwnsJWPtZ2oikainUil/JBJBp9NBr9fDcDjE5aMTfPz8E835bdw6vQMhBLrd7gNFUXSPxwNN08RsNrur0alJr9eLer2OcDiMdDoNkgKSglAohEajgUqlgkAggGw2i36/j8lkImOazeYNjQMHgwGCwSC2B0d4/n6FhSlgU366cOHe1Wvwz+eUfgucJQPb7Tai0aiUqvC0WCwQi8Xw+ouBjaPA4yJzK7AUFz79OJDA0WgkwYZhgAq8z1JjAqq2tN+Wm4AqNGouXw9Bk+G4QR2SxmCO4zV7mQGz7Fh5OI79F0wkCpmqCCyXSxlzPoM9wS4DqijcjgHTJv22Q+k5ksiNFabTqQSapilJOJ79noAZa7UaMoc9qOYSG9oziUSxlriy+YpqtbrXvSPZEWjMxidwewLjMc6Oj2VxOGBO1WdivhvJZFLusf54PC5lMYHI5XKPqa/P6EP3+XyCry4T8E/2BHDoEIdv6fmH92/9Vvz31/gHd9iUVZFEDKoAAAAASUVORK5CYII=</pre>
+</div>
+<div title="cog.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="IconPackage attachment excludeMissing silk" server.type="file" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.page.revision="200906041709">
+<pre>!usage
+{{{[img[cog.png]]}}}
+[img[cog.png]]
+!notes
+license: http://www.famfamfam.com/lab/icons/silk/
+!type
+image/png
+!file
+./images/silk/icons/cog.png
+!url
+
+!data
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAGSSURBVCjPVVFNSwJhEF78Ad79Cf6PvXQRsotUlzKICosuRYmR2RJR0KE6lBFFZVEbpFBSqKu2rum6llFS9HHI4iUhT153n6ZtIWMOM+/MM88z7wwH7s9Ub16SJcnbmrNcxVm2q7Z8/QPvEOtntpj92NkCqITLepEpjix7xQtiLOoQ2b6+E7YAN/5nfOEJ2WbKqOIOJ4bYVMEQx4LfBBQDsvFMhUcCVU1/CxVXmDBGA5ZETrhDCQVcYAPbyEJBhvrnBVPiSpNr6cYDNCQwo4zzU/ySckkgDYuNuVpI42T9k4gLKGMPs/xPzzovQiY2hQYe0jlJfyNNhTqiWDYBq/wBMcSRpnyPzu1oS7WtxjVBSthU1vgVksiQ3Dn6Gp5ah2YOKQo5GiuHPA6xT1EKpxQNCNYejgIR457KKio0S56YckjSa9jo//3mrj+BV0QQagqGTOo+Y7gZIf1puP3WHoLhEb2PjTlCTCWGXtbp8DCX3hZuOdaIc9A+aQvWk4ihq95p67a7nP+u+Ws+r0dql9z/zv0NCYhdCPKZ7oYAAAAASUVORK5CYII=</pre>
+</div>
 <div title="collectedquotes" creator="YourName" modifier="YourName" created="202404101229" modified="202404101300" changecount="4">
 <pre>&quot;Groups, as men, will be known by their actions&quot;. - Guillermo Moreno.
 ----
@@ -41195,8 +42244,368 @@ If you want to put the holes in your knowledge on display, try teaching someone.
 ----
  Superfluity does not vitiate. - Section 3537 of the California Civil Code</pre>
 </div>
+<div title="cross.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="IconPackage attachment excludeMissing silk" server.type="file" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.page.revision="200906041709">
+<pre>!usage
+{{{[img[cross.png]]}}}
+[img[cross.png]]
+!notes
+license: http://www.famfamfam.com/lab/icons/silk/
+!type
+image/png
+!file
+./images/silk/icons/cross.png
+!url
+
+!data
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAIhSURBVDjLlZPrThNRFIWJicmJz6BWiYbIkYDEG0JbBiitDQgm0PuFXqSAtKXtpE2hNuoPTXwSnwtExd6w0pl2OtPlrphKLSXhx07OZM769qy19wwAGLhM1ddC184+d18QMzoq3lfsD3LZ7Y3XbE5DL6Atzuyilc5Ciyd7IHVfgNcDYTQ2tvDr5crn6uLSvX+Av2Lk36FFpSVENDe3OxDZu8apO5rROJDLo30+Nlvj5RnTlVNAKs1aCVFr7b4BPn6Cls21AWgEQlz2+Dl1h7IdA+i97A/geP65WhbmrnZZ0GIJpr6OqZqYAd5/gJpKox4Mg7pD2YoC2b0/54rJQuJZdm6Izcgma4TW1WZ0h+y8BfbyJMwBmSxkjw+VObNanp5h/adwGhaTXF4NWbLj9gEONyCmUZmd10pGgf1/vwcgOT3tUQE0DdicwIod2EmSbwsKE1P8QoDkcHPJ5YESjgBJkYQpIEZ2KEB51Y6y3ojvY+P8XEDN7uKS0w0ltA7QGCWHCxSWWpwyaCeLy0BkA7UXyyg8fIzDoWHeBaDN4tQdSvAVdU1Aok+nsNTipIEVnkywo/FHatVkBoIhnFisOBoZxcGtQd4B0GYJNZsDSiAEadUBCkstPtN3Avs2Msa+Dt9XfxoFSNYF/Bh9gP0bOqHLAm2WUF1YQskwrVFYPWkf3h1iXwbvqGfFPSGW9Eah8HSS9fuZDnS32f71m8KFY7xs/QZyu6TH2+2+FAAAAABJRU5ErkJggg==</pre>
+</div>
+<div title="css.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="IconPackage attachment excludeMissing silk" server.type="file" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.page.revision="200906041709">
+<pre>!usage
+{{{[img[css.png]]}}}
+[img[css.png]]
+!notes
+license: http://www.famfamfam.com/lab/icons/silk/
+!type
+image/png
+!file
+./images/silk/icons/css.png
+!url
+
+!data
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAGeSURBVDjLxVNNS0JRED3qA0MRoqCFouBGN9Yia9HGRa3b9x/6M62jf9CuTS0EV0arXASG0gcUYWIgmvi6792P7sz1WUI7Fw0Mc70z59wz88aYMQbLWBxL2tIEXrN5+mcPWkvrBsZQVNYDSKmglLTZ0J4lwjCER8XZ7OYcSDMxRs/cEdCZSKKoNeUU7u/rjoBMiE8GuKQrcCA1A0XuFK2sZKwC3xE4Zo1UahX5/Dam0yH6/Q4KhV17H+Lu7gKVyiESCQ/dbgPD4QvfSykQlzKcMxP4+fnGJr4seAdPT01MJh8oFve4uNOp20fWQBilQqvAEtBQqE+6IBuPe3h8bML3hyiX95FOr6HXayOT2UCpdIDR6I1r6VF6KK61z5N1ROAkvdBuX+H6+oznksttodE4wevrLbdC8h1GwCMZJF+pgIdSrR6xtCCYWLnrnBuP31GrHfN5MHhgcDRUj3pzbAFarfOFSUf++4tEA3dRwhNCsKRkMv2r+Oe7R7+jvbArNotu/6wC3/Z7yX3TdhkjbDS8eUTi5EoGuLhosX//N34Dm6aVPfzbYjIAAAAASUVORK5CYII=</pre>
+</div>
+<div title="delete.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="IconPackage attachment excludeMissing silk" server.type="file" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.page.revision="200906041709">
+<pre>!usage
+{{{[img[delete.png]]}}}
+[img[delete.png]]
+!notes
+license: http://www.famfamfam.com/lab/icons/silk/
+!type
+image/png
+!file
+./images/silk/icons/delete.png
+!url
+
+!data
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAJdSURBVDjLpZP7S1NhGMf9W7YfogSJboSEUVCY8zJ31trcps6zTI9bLGJpjp1hmkGNxVz4Q6ildtXKXzJNbJRaRmrXoeWx8tJOTWptnrNryre5YCYuI3rh+8vL+/m8PA/PkwIg5X+y5mJWrxfOUBXm91QZM6UluUmthntHqplxUml2lciF6wrmdHriI0Wx3xw2hAediLwZRWRkCPzdDswaSvGqkGCfq8VEUsEyPF1O8Qu3O7A09RbRvjuIttsRbT6HHzebsDjcB4/JgFFlNv9MnkmsEszodIIY7Oaut2OJcSF68Qx8dgv8tmqEL1gQaaARtp5A+N4NzB0lMXxon/uxbI8gIYjB9HytGYuusfiPIQcN71kjgnW6VeFOkgh3XcHLvAwMSDPohOADdYQJdF1FtLMZPmslvhZJk2ahkgRvq4HHUoWHRDqTEDDl2mDkfheiDgt8pw340/EocuClCuFvboQzb0cwIZgki4KhzlaE6w0InipbVzBfqoK/qRH94i0rgokSFeO11iBkp8EdV8cfJo0yD75aE2ZNRvSJ0lZKcBXLaUYmQrCzDT6tDN5SyRqYlWeDLZAg0H4JQ+Jt6M3atNLE10VSwQsN4Z6r0CBwqzXesHmV+BeoyAUri8EyMfi2FowXS5dhd7doo2DVII0V5BAjigP89GEVAtda8b2ehodU4rNaAW+dGfzlFkyo89GTlcrHYCLpKD+V7yeeHNzLjkp24Uu1Ed6G8/F8qjqGRzlbl2H2dzjpMg1KdwsHxOlmJ7GTeZC/nesXbeZ6c9OYnuxUc3fmBuFft/Ff8xMd0s65SXIb/gAAAABJRU5ErkJggg==</pre>
+</div>
+<div title="disk.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="IconPackage attachment excludeMissing silk" server.type="file" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.page.revision="200906041709">
+<pre>!usage
+{{{[img[disk.png]]}}}
+[img[disk.png]]
+!notes
+license: http://www.famfamfam.com/lab/icons/silk/
+!type
+image/png
+!file
+./images/silk/icons/disk.png
+!url
+
+!data
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAH+SURBVBgZBcE9i11VGAbQtc/sO0OCkqhghEREAwpWAWUg8aMVf4KFaJEqQtAipTZWViKiCGOh2Ap2gmJhlSIWFsFOxUK0EsUM3pl79n4f12qHb3z3Fh7D83gC95GOJsDe0ixLk5Qq/+xv/Lw9Xd+78/HLX3Y8fXTr2nWapy4eCFKxG7Fby97SnDlYtMbxthyfzHO//nl85fNvfvnk8MbX5xa8IHx1518Vkrj54Q+qQms2vVmWZjdiu5ZR2rT01166/NCZg/2PFjwSVMU6yjoC1oq+x6Y3VbHdlXWExPd379nf7Nmejv2Os6OC2O4KLK0RNn3RNCdr2Z5GJSpU4o+/TkhaJ30mEk5HwNuvX7Hpi76wzvjvtIwqVUSkyjqmpHS0mki8+9mPWmuWxqYvGkbFGCUAOH/+QevYI9GFSqmaHr5wkUYTAlGhqiRRiaqiNes6SOkwJwnQEqBRRRJEgkRLJGVdm6R0GLMQENE0EkmkSkQSVVMqopyuIaUTs0J455VLAAAAAODW0U/GiKT0pTWziEj44PZ1AAAAcPPqkTmH3QiJrlEVDXDt0qsAAAAAapa5BqUnyaw0Am7//gUAAAB49tEXzTmtM5KkV/y2G/X4M5fPao03n/sUAAAAwIX7y5yBv9vhjW/fT/IkuSp5gJKElKRISYoUiSRIyD1tufs/IXxui20QsKIAAAAASUVORK5CYII=</pre>
+</div>
+<div title="exclamation.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="IconPackage attachment excludeMissing silk" server.type="file" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.page.revision="200906041709">
+<pre>!usage
+{{{[img[exclamation.png]]}}}
+[img[exclamation.png]]
+!notes
+license: http://www.famfamfam.com/lab/icons/silk/
+!type
+image/png
+!file
+./images/silk/icons/exclamation.png
+!url
+
+!data
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAJPSURBVDjLpZPLS5RhFMYfv9QJlelTQZwRb2OKlKuINuHGLlBEBEOLxAu46oL0F0QQFdWizUCrWnjBaDHgThCMoiKkhUONTqmjmDp2GZ0UnWbmfc/ztrC+GbM2dXbv4ZzfeQ7vefKMMfifyP89IbevNNCYdkN2kawkCZKfSPZTOGTf6Y/m1uflKlC3LvsNTWArr9BT2LAf+W73dn5jHclIBFZyfYWU3or7T4K7AJmbl/yG7EtX1BQXNTVCYgtgbAEAYHlqYHlrsTEVQWr63RZFuqsfDAcdQPrGRR/JF5nKGm9xUxMyr0YBAEXXHgIANq/3ADQobD2J9fAkNiMTMSFb9z8ambMAQER3JC1XttkYGGZXoyZEGyTHRuBuPgBTUu7VSnUAgAUAWutOV2MjZGkehgYUA6O5A0AlkAyRnotiX3MLlFKduYCqAtuGXpyH0XQmOj+TIURt51OzURTYZdBKV2UBSsOIcRp/TVTT4ewK6idECAihtUKOArWcjq/B8tQ6UkUR31+OYXP4sTOdisivrkMyHodWejlXwcC38Fvs8dY5xaIId89VlJy7ACpCNCFCuOp8+BJ6A631gANQSg1mVmOxxGQYRW2nHMha4B5WA3chsv22T5/B13AIicWZmNZ6cMchTXUe81Okzz54pLi0uQWp+TmkZqMwxsBV74Or3od4OISPr0e3SHa3PX0f3HXKofNH/UIG9pZ5PeUth+CyS2EMkEqs4fPEOBJLsyske48/+xD8oxcAYPzs4QaS7RR2kbLTTOTQieczfzfTv8QPldGvTGoF6/8AAAAASUVORK5CYII=</pre>
+</div>
+<div title="help.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="IconPackage attachment excludeMissing silk" server.type="file" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.page.revision="200906041709">
+<pre>!usage
+{{{[img[help.png]]}}}
+[img[help.png]]
+!notes
+license: http://www.famfamfam.com/lab/icons/silk/
+!type
+image/png
+!file
+./images/silk/icons/help.png
+!url
+
+!data
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAKkSURBVDjLpZPdT5JhGMb9W+BPaK3matVqndXWOOigA6fmJ9DUcrUMlrN0mNMsKTUznQpq6pyKAm8CIogmypcg8GIiX8rHRHjhVbPt6o01nMvZWge/k3vP9duuZ/edAyDnf/hjoCMP2Vr3gUDj3CdV6zT1xZ6iFDaKnLEkBFOmPfaZArWT5sw60iFP+BAbOzTcQSqDZzsNRyCNkcVoaGghzDlVQKylOHJrMrUZ2Yf52y6kc36IxpyoH1lHF7EBgyMKV4jCJ5U/1UVscU4IZOYEa3I1HtwI01hwxlDLhDoJD/wxGr5YGmOLAdRIrVCuhmD3JdA6SQabx12srGB0KSpc86ew4olDOGjH4x4z0gdHDD9+c4TaQQtq+k2Yt0egXYugTmoVZgV9cyHSxXTtJjZR3WNCVfcK/NE0ppYDUNu2QTMCtS0IbrsOrVMOWL27eNJtJLOCDoWXdgeTEEosqPxoBK/TwDzWY9rowy51gJ1dGr2zLpS2aVH5QQ+Hbw88sZ7OClrGXbQrkMTTAQu4HXqUv9eh7J0OSfo7tiIU+GItilpUuM/AF2tg98eR36Q+FryQ2kjbVhximQu8dgPKxPMoeTuH4tfqDIWvCBQ2KlDQKEe9dBlGTwR36+THFZg+QoUxAL0jgsoOQzYYS+wjskcjTzSToVAkA7Hqg4Spc6tm4vgT+eIFVvmb+eCSMwLlih/cNg0KmpRoGzdl+BXOb5jAsMYNjSWAm9VjwesPR1knFilPNMu510CkdPZtqK1BvJQsoaRZjqLGaTzv1UNp9EJl9uNqxefU5QdDnFNX+Y5Qxrn9bDLUR6zjqzsMizeWYdG5gy6ZDbk8aehiuYRz5jHdeDTKvlY1IrhSMUxe4g9SuVwpdaFsgDxf2i84V9zH/us1/is/AdevBaK9Tb3EAAAAAElFTkSuQmCC</pre>
+</div>
+<div title="html.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="IconPackage attachment excludeMissing silk" server.type="file" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.page.revision="200906041709">
+<pre>!usage
+{{{[img[html.png]]}}}
+[img[html.png]]
+!notes
+license: http://www.famfamfam.com/lab/icons/silk/
+!type
+image/png
+!file
+./images/silk/icons/html.png
+!url
+
+!data
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAHUSURBVDjLxZM7a1RhEIafc3J2z6qJkIuCKChItBNSBQ0iIlZiK4gWItj6HwRbC7FRf4CVnSCIkH9gJVjYiCDximCyZ7/zfXOz2A0I2qVwmmFg3rm870wVEezFavZoey7Q3Hv+/Z87qDsiTlZFBJIGKStZlFSCTpyUlAZgfXXfH9BAPTCberVANBB3RAJRR8wp6jzd/DotALA9UcyZgZxis2QNijpZjSJBVqeIszTfkMY65cAjuHxmgSzGlbUFrp1d5ObGErcuLLNxep5hU3H93AqjYcXti4cZZ2OSDU9CnVURddqmIovTDmoev/5GVcGDF585tjzg1JGWo0tDDgxrThxq6XojieOd0nRZ6dVpBxU3zi/T1BVdViKCcTbcYX11ngB6cca9MSlGlprojHqcglycVJyHL79Q1Jn0TgBdb1gEbz9OeL81IYsRAakYvQSeC/WvVOiLE8GsM4xnvsuGe/Do1RY/dpRenIP753hyZxURJ3JQXbr/Lq6uLfLpZ6aIk9XJssv8VK5dNcQcmcl7fKVl89kHmu0dJRVjYTRHGVSMpELaQLVCtEY8EAvMHHUwn067+0LVybtvok9KSODZiaKEOJENihPm01gD3P+62Oq/f+Nv2d9y2D8jLUEAAAAASUVORK5CYII=</pre>
+</div>
+<div title="information.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="IconPackage attachment excludeMissing silk" server.type="file" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.page.revision="200906041709">
+<pre>!usage
+{{{[img[information.png]]}}}
+[img[information.png]]
+!notes
+license: http://www.famfamfam.com/lab/icons/silk/
+!type
+image/png
+!file
+./images/silk/icons/information.png
+!url
+
+!data
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAKcSURBVDjLpZPLa9RXHMU/d0ysZEwmMQqZiTaP0agoaKGJUiwIxU0hUjtUQaIuXHSVbRVc+R8ICj5WvrCldJquhVqalIbOohuZxjDVxDSP0RgzyST9zdzvvffrQkh8tBs9yy9fPhw45xhV5X1U8+Yhc3U0LcEdVxdOVq20OA0ooQjhpnfhzuDZTx6++m9edfDFlZGMtXKxI6HJnrZGGtauAWAhcgwVnnB/enkGo/25859l3wIcvpzP2EhuHNpWF9/dWs/UnKW4EOGDkqhbQyqxjsKzMgM/P1ymhlO5C4ezK4DeS/c7RdzQoa3x1PaWenJjJZwT9rQ1gSp/js1jYoZdyfX8M1/mp7uFaTR8mrt29FEMQILr62jQ1I5kA8OF59jIItVA78dJertTiBNs1ZKfLNG+MUHX1oaURtIHEAOw3p/Y197MWHEJEUGCxwfHj8MTZIcnsGKxzrIURYzPLnJgbxvG2hMrKdjItjbV11CYKeG8R7ygIdB3sBMFhkem0RAAQ3Fuka7UZtRHrasOqhYNilOwrkrwnhCU/ON5/q04vHV48ThxOCuoAbxnBQB+am65QnO8FqMxNCjBe14mpHhxBBGCWBLxD3iyWMaYMLUKsO7WYH6Stk1xCAGccmR/Ozs/bKJuXS39R/YgIjgROloSDA39Deit1SZWotsjD8pfp5ONqZ6uTfyWn+T7X0f59t5fqDhUA4ry0fYtjJcWeZQvTBu4/VqRuk9/l9Fy5cbnX+6Od26s58HjWWaflwkusKGxjm1bmhkvLXHvh1+WMbWncgPfZN+qcvex6xnUXkzvSiYP7EvTvH4toDxdqDD4+ygT+cKMMbH+3MCZ7H9uAaDnqytpVX8cDScJlRY0YIwpAjcNcuePgXP/P6Z30QuoP4J7WbYhuQAAAABJRU5ErkJggg==</pre>
+</div>
+<div title="layout.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="IconPackage attachment excludeMissing silk" server.type="file" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.page.revision="200906041709">
+<pre>!usage
+{{{[img[layout.png]]}}}
+[img[layout.png]]
+!notes
+license: http://www.famfamfam.com/lab/icons/silk/
+!type
+image/png
+!file
+./images/silk/icons/layout.png
+!url
+
+!data
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAFySURBVBgZpcE7a1RBGMfh3xwnRziwBlOoBEG28FYriMSU9oKkTop8AcFWEKystRDEL2BnIVbapdVC8EbAYCEokgsL2T05M+/fd9CFRTcYyfMESRxGxK08fHMLOANcAy6BhAiYqKpAFcDMsMz2TNT6+dPHLmPi9s0LAUksP3j9WP/p/tN3ckR+WcQ9WdtkTOxvdWGOD1+2W1ykMJ3it7MnjlKEwFQfv7UUw1FX4yJOUoMT8Ol7y0Eo54CLOJkibnVhjoOybBQRJ1PALd19ycgMEzy/d53PX3eYpj8/iyxTVDiZUfwYdly5eJLNYWKs19T0mppeU9NrasaUMkWFk4liMMp0ErttYlKXRZfFJLNEUeGCGUXbdgy7TB51/IvSHkXECTEm8ZeZI4E/SYki4iyZgIB7sbbBpMHuHtPIJFzEZbMNoP/20Q0m9edn2Y+kLVykyPZs6c6rc5KuYnbcLIEMWUaWQBmZIQmQwAZQvccFSRzGT6Th9AjEKBwhAAAAAElFTkSuQmCC</pre>
+</div>
 <div title="nonacademic" creator="YourName" modifier="YourName" created="202404080817" changecount="1">
 <pre></pre>
+</div>
+<div title="page.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="IconPackage attachment excludeMissing silk" server.type="file" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.page.revision="200906041709">
+<pre>!usage
+{{{[img[page.png]]}}}
+[img[page.png]]
+!notes
+license: http://www.famfamfam.com/lab/icons/silk/
+!type
+image/png
+!file
+./images/silk/icons/page.png
+!url
+
+!data
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAINSURBVBgZBcG/r55zGAfg6/4+z3va01NHlYgzEfE7MdCIGISFgS4Gk8ViYyM2Mdlsko4GSf8Do0FLRCIkghhYJA3aVBtEz3nP89wf11VJvPDepdd390+8Nso5nESBQoq0pfvXm9fzWf19453LF85vASqJlz748vInb517dIw6EyYBIIG49u+xi9/c9MdvR//99MPPZ7+4cP4IZhhTPbwzT2d+vGoaVRRp1rRliVvHq+cfvM3TD82+7mun0o/ceO7NT+/4/KOXjwZU1ekk0840bAZzMQ2mooqh0A72d5x/6sB9D5zYnff3PoYBoWBgFKPKqDKqjCpjKr//dcu9p489dra88cydps30KswACfNEKanSaxhlntjJ8Mv12Paie+vZ+0+oeSwwQ0Iw1xAR1CiFNJkGO4wu3ZMY1AAzBI0qSgmCNJsJUEOtJSMaCTBDLyQ0CknAGOgyTyFFiLI2awMzdEcSQgSAAKVUmAeNkxvWJWCGtVlDmgYQ0GFtgg4pNtOwbBcwQy/Rife/2yrRRVI0qYCEBly8Z+P4qMEMy7JaVw72N568e+iwhrXoECQkfH91kY7jwwXMsBx1L93ZruqrK6uuiAIdSnTIKKPLPFcvay8ww/Hh+ufeznTXu49v95IMoQG3784gYXdTqvRmqn/Wpa/ADFX58MW3L71SVU9ETgEIQQQIOOzub+fhIvwPRDgeVjWDahIAAAAASUVORK5CYII=</pre>
+</div>
+<div title="page_copy.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="attachment excludeMissing" server.type="file" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.page.revision="200906041709">
+<pre>!usage
+{{{[img[page_copy.png]]}}}
+[img[page_copy.png]]
+!notes
+license: http://www.famfamfam.com/lab/icons/silk/
+!type
+image/png
+!file
+./images/silk/icons/page_copy.png
+!url
+
+!data
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAIpSURBVDjLddM9aFRBFIbh98zM3WyybnYVf4KSQjBJJVZBixhRixSaShtBMKUoWomgnaCxsJdgIQSstE4nEhNREgyoZYhpkogkuMa4/3fuHIu7gpLd00wz52POMzMydu/Dy958dMwYioomIIgqDa+VnWrzebNUejY/NV6nQ8nlR4ufXt0fzm2WgxUgqBInAWdhemGbpcWNN9/XN27PPb1QbRdgjEhPqap2ZUv5+iOwvJnweT1mT5djZKjI6Ej/udz+wt1OJzAKYgWyDjJWyFghmzFsbtcY2gsTJwv09/Vc7RTgAEQgsqAKaoWsM8wu/z7a8B7vA8cHD3Fr+ktFgspO3a+vrdVfNEulJ/NT4zWngCBYY1oqSghKI465fvYwW+VAatPX07IZmF7YfrC0uDE8emPmilOFkHYiBKxAxhmSRPlZVVa2FGOU2Ad2ap4zg92MDBXJZczFmdflx05VEcAZMGIIClZASdesS2cU/dcm4sTBArNzXTcNakiCb3/HLRsn4Fo2qyXh3WqDXzUlcgYnam3Dl4Hif82dbOiyiBGstSjg4majEpl8rpCNUQUjgkia0M5GVAlBEBFUwflEv12b/Hig6SmA1iDtzhcsE6eP7LIxAchAtwNVxc1MnhprN/+lh0txErxrPZVdFdRDEEzHT6LWpTbtq+HLSDDiOm2o1uqlyOT37bIhHdKaXoL6pqhq24Dzd96/tUYGwPSBVv7atFglaFIu5KLuPxeX/xsp7aR6AAAAAElFTkSuQmCC</pre>
+</div>
+<div title="page_edit.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="IconPackage attachment excludeMissing silk" server.type="file" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.page.revision="200906041709">
+<pre>!usage
+{{{[img[page_edit.png]]}}}
+[img[page_edit.png]]
+!notes
+license: http://www.famfamfam.com/lab/icons/silk/
+!type
+image/png
+!file
+./images/silk/icons/page_edit.png
+!url
+
+!data
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAK5SURBVBgZBcFPaJZ1HADwz+95n3e6uTnREGdljRKtGCYiHTLxkIUmQeeCOnXzVnQIoi5BQV08TMo6GIiHiKI6ZEWgszzEmtpqSDP7s9ycm9NN977vnuf37fNJEWH/G6df6l676vki2YXVSCAhEpFVOU8uzMX36daNV88MH+oApIhw8O2zZz45vOuhokjrgoYAIALC7NKKEz8vmP67fee3XyfWjwwfakMJRSNt6yob68avaRQpkYhMHVlVheWV2r6tffYPjNi4eLyncWCodf7jI1Jr6sUSUkq9EdHoajQkIZALZOpEIWlPf27r4jndQy/oH9xp4c9tJk4de7eEIEGBlAgJREqKRP/yKXVcsH7r4+Ynf9eVOvrWbtK7YUt/CRBB2SBJIiW5Doqkd3nEllWj+gef1r56UldP8tfYhJt3UhTtuR0FRBAoU6FISYFGkaxePG1LfKv/gYNa/30oNW9o9vbpzvOOXj+wsvvwZ5cKCGSkRJGSIiWtK19af/uU/gef1ZoaVjRXdG7db+bMed173zJVD2QoIFdEkBG4fflrPYs/2vjIMzrTxzS6QvvWfWZGRs3tGZY2bFdnoICcQ0QQTI+e1L3wk5W82dWLR2Qtt+fvNnNuwuLeo1LvgNXNpK4CFFBn6iAysxc/8vCel636Z8SlL84a+2be+Hdjlh57R9WzWaDZKFSdCpSQq5AjvPlLx9DkrM74VwZ3POHm7JzJsUk/7PvU9Sv3yipwYlPTSjuDEqqqVtcMrG0a/+Oa9z8Ytnv7oOXNOyw9edyjffeIIIIL1yqRw0qrAiVU7ZyrnKNTS+te/9flFCYlkJdIS5UcRJEUOSnLlKs6V1DCSqueWdPVuOu1oc6aiCgEGdDfXYIIuptJSnKzkRbrKk9BCSnFe0+9cvq5lNLOED0AgkAIIEAr5zxaFk7A/5IUWNTkV3l/AAAAAElFTkSuQmCC</pre>
+</div>
+<div title="page_find.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="IconPackage attachment excludeMissing silk" server.type="file" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.page.revision="200906041709">
+<pre>!usage
+{{{[img[page_find.png]]}}}
+[img[page_find.png]]
+!notes
+license: http://www.famfamfam.com/lab/icons/silk/
+!type
+image/png
+!file
+./images/silk/icons/page_find.png
+!url
+
+!data
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAMBSURBVBgZBcFLaJxVGIDh9zvn/2cmmWTSJk1oxUu1xCZoi1qvi6gggpRIdd2Niy6KVRChiCBeNiK4KOiiGxGKkNiCpKIhQrzUxiINkmJqQqdt2iQzk8xkkiZNOpfMnHM+n0dUFYBXP774VksmedQIh4AUIAAIoAIacCHMbazpb7K5fnLi9GADQFQVgMOfX5r47t1D/cbIDgWLAgCAKoBSvtdk6J8Niovb1dn/rnX+dXpwOwIAMFb2JyK7Y2YFa0RAQAN4DTin1Jqel3vbee7RiMuh3Kqhb/2ld0Z3iqry0Rdfdy4vFdYsgTeOHufst1/RdJ73Pz2FD4GGU+oNz4u9KWbKitPA+L9Ffp+YG7b5tWrHzq7uTzq7up+/OjVJ/4GnufTHGP0Hn2AuO8O+/Y+DWDxKrE160sqeNsvBPUnOTxb7zX0P7M3MTk8dWy2VuFepc/XKJNve0AyGP8dHqWyuE1khYQ0314TLi44LN6okY4tExpmx82eP16qVtof7HqPn/oco37lLJtPOru7dtLam+encGSIRYmtIJiyphCWViFEMiME80tv3dro9wy8jQ1RW83S2JSjl5vj53DeUlnOMjQwTWyE2QhwZEtaSjAwBUIWoPdPRMvj6EW4t5FiazzLwymEKuXleGzzCcqnM+OgPGBEiq6ACCorgA/gAkXMu6bwnOzvNxmqJ4lIesQYxhts3r1FYmAdAEEQhMhCAVAzeKaaytclifol6rUY+l6OytcXd9Ttcz2ZZXSmyVi4SVPEBFAgKCsTW4BqOKL94+/rI92eoONv7YE+X/LjSwq0bC8zOF6hVq/iuvXx2pQmAKgQAYGh3THM7IKoKwMCHF2vDJ59NfTmT4KkeQ1DwCl4gKCigCqowveI49QIMvHehHgEAuO0QXAja8MjfBU8QRREAgoKgBAU1gglCFElwPrgIAKBZ96V0wu764EAjraoGhQAAdLREAKhCSyyIEGIrW96FgqgqAM+c+PWEa+qbIvKkoq0AACgooCgAKAD1EMKUgaH/AfiQhzSolJNMAAAAAElFTkSuQmCC</pre>
+</div>
+<div title="page_go.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="IconPackage attachment excludeMissing silk" server.type="file" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.page.revision="200906041709">
+<pre>!usage
+{{{[img[page_go.png]]}}}
+[img[page_go.png]]
+!notes
+license: http://www.famfamfam.com/lab/icons/silk/
+!type
+image/png
+!file
+./images/silk/icons/page_go.png
+!url
+
+!data
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAKdSURBVBgZBcFLiFZlGADg5/3OmRlHbbwkpmQ37WZlmBYWIrnRRUnRolVQbcRN7Yp20SLauSvENgaB1C6KdpnlBbHMFl2IMsK7Ntg43mbm/8/53p4nMtO2dw+9Pj4x9koJGzEPAQIZZNXV+vfVK3kgrk29fXjPjgFAZKbnPjh6+NM3N64tJRYnjQQgE9LkjaH9J666dGbu1u+//rH0yJ4dc9BCaeKh0bZZ/Nu/mhJBkJU+q65LM8Pe1gdus+nB1vE6OT/rw1PPvvH1ku8/fH6uQEQszMxmtClGCm3QFJoggiJQrZwYteOple69f2y8nViwDwokAQUlKBFKhBKhRChNuPjfjHsWDj2yNOx85nbNSPMytACZtA0hZITaJyW0DaNZnLqSBrVT68CW1WOiLR20kEmijSKlRJQQyEo2hVFKDbU2UiEKKJCoiKBEKBFKhMgw0oSREr448YLPjm421hYVmUCB2pFJRSIzkUqhRGgb5rqhVcvW+uib9fpKX4EWak2ZSZIS7P12K9kb1M6g66xcssbaFZtcn73p1X336bvPQQt9pU+yUgFdHdj26Gv6rPraq9KF6bPWrdrsxmDGT7e2z3v8/ZlooXapZnrv54GQarCoG+izOn3lL8Pa6erQsB+6Nnfd+ru2uDG85fg/R2Zb6Lpe37NyYsSG5UVNDlyY1fWdOybu1tVen9XF6TOWLlzh5Nmjjv15OmfT4ha6uVq7WnPQi2PnezXSrW7gk2O7DerAbDewZtlaT6/e7sfTR5ybvmR8cs/NUx8/P9PCcLa/vGC0WfbOusGCzCyS+tgvYNF4C17ce6co4yavT/ly1w/TG3YePA8tROTu7W8deikinkg5H0CSSOnG8rmxc1PfxeLLX119ctfBk22xH/4HCmFTpxr5rC8AAAAASUVORK5CYII=</pre>
+</div>
+<div title="page_link.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="IconPackage attachment excludeMissing silk" server.type="file" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.page.revision="200906041709">
+<pre>!usage
+{{{[img[page_link.png]]}}}
+[img[page_link.png]]
+!notes
+license: http://www.famfamfam.com/lab/icons/silk/
+!type
+image/png
+!file
+./images/silk/icons/page_link.png
+!url
+
+!data
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAALQSURBVBgZBcFfaJVlHADg532/bzvNo9MtY1oXRlRWsCREIlFXoaBmUEIkaH9uCsokEIK6qbtg4UVBIN0kFETQnVQ3FmXOxMwg1BApA9GdTdFJbLqzc87763lSRNjy/i+vDgw2dudkLe5AAgmRiKJbyj83r8eP6b+Zd44d3LEAkCLC9g+PH/ty39qHc07LgkoAEAHh2mzHV7/fNHWpfeuvs+eHJw7uaEMNuUqr++tq2bmrqpwSiSj0ouh2w+1Oz5MPLPH4g7WT5dqiKA/NjL313dDRT59pZ0gpLY6Iqr/K+jJ1ospUiZTIEoqVg/12rFvp3vsbA/Vg8xBkCBJk5EROSU5JTklOSa6S1o3bVi3ueGQ4ee2JO1V91QtQA0RQVyRJpKT0gpzUFf2R/X09LJSuUhZsvK8h1bkLNUQQqFMWQiDlJCEKUWX6ySUppRIyKYMaAgUpkSSBQBT6KkDKUi+JHAoigBpKlwgKEiIC5IyS1FUQiSAkvUKvADWUEiKCYL5927k/jpu8eMby4SFTV69b9/ROA0uGHDt8yMhdQ36dmTE0O1iPjb3brKFX6AWdhY4jh7/WiFkv79ltbm7O5cuX/Tbxrap/wM7nnlXXlVarpe/06frI+cEPaijdUCK8980xq69d9NKeXd7+6HOzF064e+UKo6OjWlf+deDAKZOtKevXrze2aaNLly69nqHb7en1qKfOGh5sgqde2W9+oWPXrl02bNhg27Zttm7d6la7440394GlS5c2aui2S+mWEnnpinS5dRL8dGhc9HrGx8c1m00wNzcnlfDJxwdiy+bN6cqVK/M1dOZ7083+avn+7WuaX3x2NE/8fNSLY4+yadT09LQLFy5oNBpWrVplZGREztnEiVO9ycnJqRQR1u39YW+3E88n8VhemF68/Mb3ffeMLEuNRp+EM3OrO920KNYs+rM/KdFuL5RWa3rm1uzMlv8B/jBGW3bkYMYAAAAASUVORK5CYII=</pre>
+</div>
+<div title="page_refresh.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="IconPackage attachment excludeMissing silk" server.type="file" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.page.revision="200906041709">
+<pre>!usage
+{{{[img[page_refresh.png]]}}}
+[img[page_refresh.png]]
+!notes
+license: http://www.famfamfam.com/lab/icons/silk/
+!type
+image/png
+!file
+./images/silk/icons/page_refresh.png
+!url
+
+!data
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAALsSURBVBgZBcFtaJVlGMDx/3U/9znz7LjjfMGXYiq1VkkrUiRoZQUhhoOKrAi/hEH0IUHFZQSREu1TQh8CP0TaEBQtIYikfRD3ciSWc0rlWpuzEmbT5TZ1O8fzPPd9Xf1+8uLHvW8XSnXbnbABWAAIAAKYgClBdXz2lp2ROzMd/YfaUwAAAHnps3L/0Z0bHnVOGg0SDAAAzACMqbmMY4OzTF6rVYZ/H1lSPtReAwDwLpGH8z5pvHyTxImAgClEU0Iwqlnk+YcaeKrFM6BT9aaPzDz3/o+Le7/cWgNwIrLQzJJ84sg58AKJg0RABBwCKKtKeYorvmdtc67gS8UjAADOQAAc4AScCE4EJ4ITwSXCv9NV1izMmKtOEOq+JsklrwMAeAAz8AkIgomg0biRjjH03w9cn/uDMB4JaaCpYTVZmKd+5QkHzwLgzcAALw7DMGCyNsb5qe+4r34Jjy9tR02JFlGLBI1UKgNuyxcvXPlp19lmb4ACIiAIBozdHmBZvsjywgqGJgYZmxwlSwNNi1cTQ2T4SqrdHWebAZwGMAMFDDAzrs5cYuj6BU799i3zFcfuZ06ye9Mpbk1XCRVHqLyTtu3fWADwqoaZgYFhAOxYdxAzUIOokeODnWxb/xGL8is58MonvNw5yLlPz1cBfFSIBqagAAAYQVOEHF+V93G3OosavNV2gA+Ovsdc7ZcFT+wKFrLwj9dgqBn7L6YIhgqYCagjvfkhTQ23qcsH9nzzNFkaeLBpLdu3vcHwyJ/09p/r9iFEYoRVpRzrlzvUIBqc7nuN+xtLtDa3Ei3yWMs6okXUIqNXx+npK1+IIR73oaYaVC2NyM8TERXDEJa2nOTvy3uozA+QhcDwyAghDYQsouGBGELc+1fXtR6f3Ys3ivlk2b7WtGhmDgMFABZt/JyOrnep3Jmm3PkrImgh7+627uieGO3a0gPgRezg5r19r4rIk4bVAwBgYIDxJjE5nGvbeSYD7qnqkHccAwD4HyXFhGV2sNBxAAAAAElFTkSuQmCC</pre>
+</div>
+<div title="printer.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="IconPackage attachment excludeMissing silk" server.type="file" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.page.revision="200906041709">
+<pre>!usage
+{{{[img[printer.png]]}}}
+[img[printer.png]]
+!notes
+license: http://www.famfamfam.com/lab/icons/silk/
+!type
+image/png
+!file
+./images/silk/icons/printer.png
+!url
+
+!data
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAJtSURBVDjLjZPfS1NhGMfPXfh3OG/E/yBImNkqrYGCzAthh+WNgXihwQYb2CoYukGwsdRLoYUWQbRAhqzc2Q91IrrVhlhLqznL5Tyb23m3s317z1szBzM68Lk47/N9Pud5XjgcAK7OVfM7/a2piE87HalRoLVHStrp1VKvLVi7fE9wns/WaXi58UgoH4kl/CxIyOZ/cyRKSKRFmF/tw/B4p3jl7utLFwp6baHiySnBxheZUkHkM8HKrgSpUsVGWsaDN/tQG/1PLxT02EIlRbBJBZtfZaztlSF8JEgdFqBMdnh8im7LSqWpYHJysqXHFiS5AkGMfi12UP0zRRm+D6fwxvPI0dWu3Q8QvV7f0iCgzQZKnl4WjqkgcVDDeyrYpqLoXoWtsbxTpLUyrlsFDA4O5vv7+w1MQBu7Z2dnEY1GcXsqjCwVJDM1JCixb1Vs0VXCdIoAXSVLBTcfhhEIBDA+Pg6NRtOtCLbpg0wmA7PZ/F8oWUEQMDAwsKsIiCzLUFhfX4coiv8kFAqhnh8bG6txFosFhBDG4uIiUqkUEzVDqc3Pz5/leZ4HZzKZkEgkGG63G8lkEn6/vylKxuFwnOU7OzvBTUxMwOfzMex2O+LxOJaWlpoSi8VgtVrP8u3t7eDoHvB6vQyXywV6Jwyj0YjR0VE2Zl9fH7q6uqBWq9lZPd/W1gZuZGSk6vF42IHSuPD8JZbfBpvybOEFOjo6WHZubg6tra3gDAbDzNDQ0LZOpwPvCqNYIjg6IfhBOcxJSGdL2PtewKeMiKJUBu8MQ6VSKc1bFFPDv8C7ItXhJ2sYdv/lDmOVodR4Z6R6vucXuxIEyKz+W40AAAAASUVORK5CYII=</pre>
+</div>
+<div title="script_code.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="IconPackage attachment excludeMissing silk" server.type="file" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.page.revision="200906041709">
+<pre>!usage
+{{{[img[script_code.png]]}}}
+[img[script_code.png]]
+!notes
+license: http://www.famfamfam.com/lab/icons/silk/
+!type
+image/png
+!file
+./images/silk/icons/script_code.png
+!url
+
+!data
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAALtSURBVBgZTcFLaFxVAIDh/5577jwzj0wSUmqMtKIiBltbbJ1FUCxVoQu3FrHGVRU3BVcKrkTcKOhCUOtOAyJ23WIQtFawpoooZWKJpnbsNJN5PzP3PO5xArPo93nOOfasXCgfAz48mE8UhzpiqCN0FLFrog7QA+qABVpAA/gC+FYyERlz/NC+qeIbT85xt4GKckMV5Voju6A09ELLzXqfi38PTgLnJBORMfPZmMeectsSeB7SA19CPBAsxgW+EAQ+PLaQZH8uXTj/S+UDwYTVOitxmAh6yqOjoR1CZwSdETR2Yadv2fPm6i2KB9IszQZzkgkVmvnLZcuP21VeO1rgs+tdAu1YOZxlKiHw8fA9iADPdvn5nxa/3epUBGOH39sqjETu2UJG4oUwDB2RcmRSHuevdtjpWgZhxEBH4KDaDflobbNrlVoRh97demHpgfTth+5J5ZpNw5kjWQxw6mCa7aYlk4bPr7X54XqfkfGIHNjAYpQ6cOH1x9fEw/cnP13M+Ik7bc3ZYxniMR9PQCElObmYptox7E97XK0MscbhHJgwxKrQMiZ+v9Y9u3knHBUCn08ut6m2DQJHe6C5WOqQl4KbVcXR2QSxwENbS38wNEapLmNi4/0Hv/r3zxvHN0p1YnGP1e/r4ODr9TbZlKBTU7xSnKG4lCUZQKMfYkJVvfT2c44xyVjKr6lpEUI3g3UOPIE1lu6O5aUTcyRjPjhISUGttYtVYYUJuXxudRZ4p/jIvZx+eoHvSopmz/Ly8jyJwBFIkD7EfMimYLM8xChVZUJapU4Ap34tbdHalfRDh7aOUHsoE2FsROQchVyOV5/Zx3ZjiFWqxoS0Wh95/qlHk2+9+AR3sw60dSgDOPj4UoVUAL3+EKt1gwlptd7arnf4cq1EfipJPpsgn46TS8fJpGLEY4K4FJxenicuodbsYbX+jwkZGfPNlfWNhSvrG/cBM8AMMA1MA7lELAgSiYBsOkk+m+KPv8o3gJ+Y+B9yFXCQeyJWrQAAAABJRU5ErkJggg==</pre>
+</div>
+<div title="server_go.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="IconPackage attachment excludeMissing silk" server.type="file" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.page.revision="200906041709">
+<pre>!usage
+{{{[img[server_go.png]]}}}
+[img[server_go.png]]
+!notes
+license: http://www.famfamfam.com/lab/icons/silk/
+!type
+image/png
+!file
+./images/silk/icons/server_go.png
+!url
+
+!data
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAJUSURBVDjLpVPNaxNBFP8lqY1JSJOGFBtSU11BaEulUUFB7EUalB70kINCQfBv8FgNgvRUJCdPUj36FxgqKahpi18NSQXBikRbE6UfYpNtsruzO+ubTTaHNoLgwuMxs/P7eG/eOEzTxP98Xfs38vn8Y13XpxhjXZRB2QpN00R+mkwmb3QkKBaLAQI8CgaDSbfbC5VA4ByWP3LZ2xvE/HzmOq0OEhQKhcsCHA6Hoz6fD6WvZQh1zk1wkxORCYPIVFXtXAIdzsRiMWuj0VDACPyhuEIEvB0TiStWGR0JRI3d3d2oVqtNZcPA8MiYpW621EWz/+pAMBsEEofEpQjrxcI7yoalLv5FJq92dOAQoGw2a8bjcdRqNTrEUK5st9XtnNm+g7omQ+O698mt1YZN4LQdNJttWmEIZaNZ+5a/hLnfaSg6w0B4CApj9WsPj3kOlNAGt4DPNqdJmUH9weCjvvSFTmKo/xxqyh6K31/L47OhwKvbv2SLQDTHnkhhWfRA5xomRm7CoLXliCaisruB0YELkLWGc2X95e6p+85Q24G4BZfL1aybXCi6ZoG/7XwG4zoR0kQaDFW1hrGjFyGzuvNNaXHH2XLwNpfLQZZl+P1+HPa4iUCBbug40hNDf88gIgEJh1we9PmjyG8sYenL4lZdw1mHbT2dTk/SPNyLRCJnjksn8GB1Cgo506gU4UYKD+O8lMD79WUsrD3/qem4VJkxPzr2v8ZUKpUgolmKUfsxibwcncPpwXG8WFsoa9wCf2rPwb980l3HnsFd3gY3pM0Zs2Tv/wEq26vP9fcF2QAAAABJRU5ErkJggg==</pre>
+</div>
+<div title="sitemap.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="IconPackage attachment excludeMissing silk" server.type="file" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.page.revision="200906041709">
+<pre>!usage
+{{{[img[sitemap.png]]}}}
+[img[sitemap.png]]
+!notes
+license: http://www.famfamfam.com/lab/icons/silk/
+!type
+image/png
+!file
+./images/silk/icons/sitemap.png
+!url
+
+!data
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAQAAAC1+jfqAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAACoSURBVCjPY/jPAIMMCgxmYKiAEAOKwhmMDGZ//v/5/+M/qhI0BW/+gxQBlTDiUPDl/3v8Cn7//4VfwR/cVkB8kfI27S0WR+7rm/ui70X7i9YX88O7whtflANh7ouUPqgCBsbZLyBGAq1hRLBiX4BZiODBxgIpgAWPOYM/BgukGCl4En9jsswYkIIHKIzBgiiABg9QGINlxoAUPEBhDJYZwhdmDDZYWAoAtTEEdnXdy7IAAAAASUVORK5CYII=</pre>
+</div>
+<div title="star.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="IconPackage attachment excludeMissing silk" server.type="file" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.page.revision="200906041709">
+<pre>!usage
+{{{[img[star.png]]}}}
+[img[star.png]]
+!notes
+license: http://www.famfamfam.com/lab/icons/silk/
+!type
+image/png
+!file
+./images/silk/icons/star.png
+!url
+
+!data
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAIwSURBVDjLlZLNS5RRFMafe9/3vjPOjI1jaKKEVH40tGgRBWEibfoPQoKkVdtoEQQF4T/QqkVtWrSTFrVsF1FgJbWpIAh1k2PNh+PrfL4f95zTQk0HHKkDD/cc7vP8uHCuEhF0q/KnmXNgGR248PZFN4/GISXMC8L89DBPV0Dp4/SsazJjrtfb9/vdxfn/BgjzY5M8Aq8nBya+V3h93vtnQHFxat4kszntJAAAxus1YvnZQV5V/jyTEZarwnwFLGeFZdT0ZFOJdD84qoCDOpQ7grZfRNj020JSEOKvwvxGiF+q0tL0N5PuO+Mk0nC0B0BDsYCCImyzAIktBBloMwKJLSgKYcMAcdhC2KpVlIig+H5qxcv0n0xmj4Gbq+BwC2wtJLbgHUlMEFJwUpMIGpto16u+kJzSACAk+WCzvNbe+AVljkOYIcQQou3TbvdOJo+g4aNdqzaF+PT43HJVA8DQpcVIiPPtaqlEUQzlDELsTpgYwgTAQIjQqlUCtpQfn1spdmxh+PJSQyw9CrbKgM7tvcISQAxlBhC3GuCYXk3cWP25m3M7dk88qbWBRDVApaATOSjPBdXXwYEP5QyCgvjE/kwHgInHtHYBnYA2owhrPiiuw0sOw3EZFEagIB7qChDiYaUcNIoFtP1KxCTPhWiDw7WbXk9vKpnOgsI4exjg6Mbq96YQPxm79uPOvqvbXx4O3KrF6w8osv2df17kr5YXJq7vnw/S0v3k7Ie7xtud/wAaRnP+Cw8iKQAAAABJRU5ErkJggg==</pre>
+</div>
+<div title="table.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="IconPackage attachment excludeMissing silk" server.type="file" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.page.revision="200906041709">
+<pre>!usage
+{{{[img[table.png]]}}}
+[img[table.png]]
+!notes
+license: http://www.famfamfam.com/lab/icons/silk/
+!type
+image/png
+!file
+./images/silk/icons/table.png
+!url
+
+!data
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAHISURBVDjLpVPNK0RRFP+9D98syMwUspHkm9I0YkFZWBFKkZ0s7a3Ewh+ilChK7FgoZCJFKYlYKB8zk2+Z5t0P577He29kQU7dd+6575zf+d1zztWklPiPmOozt/U4SThjXIoyIQS4AJjSXO0lGGlvcXAm6Vzsz4xUhm0AIeX4QLig+C+ZpxbOG1wGhGYHr1zMUmZGWRgs0ha3PE1nX/8mWmdgWTzLB+DUYbhm9FfZ35IEyrhXA3VXJfPbsV8B9LQUIeUHYJ8ASobag1jcucNgW8g9W4reYSDi2YnnZDoDiwCokDANct6NwTB0LEdj0HRA/wxa2SN25JNBEdWluUhZ366gqmAaGvrCAXKOozccTGPgt8+vn8GYSGcgyTYp3dpBnBg42nbQPRBTo5bTvqYkmxL6AQhNTWQGBXY3B7BxlEBXozcW64dxRKoKUZBju+P06gl5WaaviMJBM3TNDlbypemIZgHYOnlwASsCmW7nHADGnBoQ3c76YmweJ9BR5zFYjsbRHwm4tmJg6PhWA7pCXXk+bu7fURHKweXtq/sWaksz7SC/CCGFrwtyZ3r+rCnFRZ7qr1qc6mLZj4f9OEyPL8lVpbX/PucPv5QPKHB1TdEAAAAASUVORK5CYII=</pre>
+</div>
+<div title="tag_blue.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="IconPackage attachment excludeMissing silk" server.type="file" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.page.revision="200906041709">
+<pre>!usage
+{{{[img[tag_blue.png]]}}}
+[img[tag_blue.png]]
+!notes
+license: http://www.famfamfam.com/lab/icons/silk/
+!type
+image/png
+!file
+./images/silk/icons/tag_blue.png
+!url
+
+!data
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAHcSURBVDjLhZPZihpBFIbrJeY2wbcQmjxdIGSSTC4zQxLyAK4o7igoKm7TPW49LoiYjqLG3DWpZmx7/tQpsR1xycW5qTr/9/+n+jTTdR3dbhftdhutVgvNZhOapkFVVTQajSsA7FKxTqcDx3GOajqdSki1Wr0IYeRMAsMwpPNkMnEhdCZSoFQqnYUwikzN5EYH9XpdNU0Ttm3LcwJWKhXk8/mTEEauu0YhfhKRDcuysDBt5H5tk4zHYxSLReRyuSMII+dd5M1mAxL//uvgw8Mz3t4DWWN7NxqNKAXS6fQBhIkZ+Wq1kk3r9Rpz4XytPeNLF/iqAx8f9pDhcEgpEI/HXQir1WpvxIx8uVzKps7Kls53AvCjB3x7PIQMBgNKgUgkIiGSUi6XFTEjXywWsunxj433qoM7fQ+51oDMzy2k1+tRCoRCoSt3lkKhoIgZ+Xw+P4J8F4DPTeDm3oK92aZIJpMIBAKvD15UzKdks1k+m81cyDsB+SRGuG2tYVpPL8Ued4SXlclklFQqxWkTCaILyG3bgWXvnf1+v8d9xFPLkUgklFgsxmkTd5+YxOL8QHwWQBWNRr3ipTktWL/fPym+CKAKh8PeYDDISezz+TwnV/l/v6tw9Qrxq3P3/wBazDrstPR7KQAAAABJRU5ErkJggg==</pre>
+</div>
+<div title="tick.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="IconPackage attachment excludeMissing silk" server.type="file" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.page.revision="200906041709">
+<pre>!usage
+{{{[img[tick.png]]}}}
+[img[tick.png]]
+!notes
+license: http://www.famfamfam.com/lab/icons/silk/
+!type
+image/png
+!file
+./images/silk/icons/tick.png
+!url
+
+!data
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAGrSURBVDjLvZPZLkNhFIV75zjvYm7VGFNCqoZUJ+roKUUpjRuqp61Wq0NKDMelGGqOxBSUIBKXWtWGZxAvobr8lWjChRgSF//dv9be+9trCwAI/vIE/26gXmviW5bqnb8yUK028qZjPfoPWEj4Ku5HBspgAz941IXZeze8N1bottSo8BTZviVWrEh546EO03EXpuJOdG63otJbjBKHkEp/Ml6yNYYzpuezWL4s5VMtT8acCMQcb5XL3eJE8VgBlR7BeMGW9Z4yT9y1CeyucuhdTGDxfftaBO7G4L+zg91UocxVmCiy51NpiP3n2treUPujL8xhOjYOzZYsQWANyRYlU4Y9Br6oHd5bDh0bCpSOixJiWx71YY09J5pM/WEbzFcDmHvwwBu2wnikg+lEj4mwBe5bC5h1OUqcwpdC60dxegRmR06TyjCF9G9z+qM2uCJmuMJmaNZaUrCSIi6X+jJIBBYtW5Cge7cd7sgoHDfDaAvKQGAlRZYc6ltJlMxX03UzlaRlBdQrzSCwksLRbOpHUSb7pcsnxCCwngvM2Rm/ugUCi84fycr4l2t8Bb6iqTxSCgNIAAAAAElFTkSuQmCC</pre>
 </div>
 <div title="tips" creator="YourName" modifier="YourName" created="202401280452" modified="202404090411" changecount="27">
 <pre>!Online Courses
@@ -41311,6 +42720,21 @@ O------O-----O-------------------------OO-----OO----------------------O---------
 ------------------------------------------------------------------------------------
 ------------------------------------------------------------------------------------
 }}}</pre>
+</div>
+<div title="wrench.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="IconPackage attachment excludeMissing silk" server.type="file" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.page.revision="200906041709">
+<pre>!usage
+{{{[img[wrench.png]]}}}
+[img[wrench.png]]
+!notes
+license: http://www.famfamfam.com/lab/icons/silk/
+!type
+image/png
+!file
+./images/silk/icons/wrench.png
+!url
+
+!data
+data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAH0SURBVDjLlZPLbxJRGMX5X/xbjBpjjCtXLl2L0YWkaZrhNQwdIA4FZxygC22wltYYSltG1HGGl8nopCMPX9AUKQjacdW4GNPTOywak7ZAF/eRe/M73/nOzXUAcEwaqVTKmUgkGqIoWoIgWP/fTYSTyaSTgAfdbhemaSIej+NcAgRudDod9Pt95PN5RKPR8wnwPG/Z1XVdB8dxin0WDofBsiyCwaA1UYBY/tdqtVAqlRCJRN6FQiE1k8mg2WyCpunxArFY7DKxfFir1VCtVlEoFCBJEhRFQbFYhM/na5wKzq/+4ALprzqxbFUqFWiaBnstl8tQVRWyLMPr9R643W7nCZhZ3uUS+T74jR7Y5c8wDAO5XA4MwxzalklVy+PxNCiKcp4IkbbhzR4K+h9IH02wax3MiAYCgcBfv99/4TS3xxtfepcTCPyKgGl5gCevfyJb/Q3q6Q5uMcb7s3IaTZ6lHY5f70H6YGLp7QDx9T0kSRtr5V9wLbZxw1N/fqbAHIEXsj1saQR+M8BCdg8icbJaHOJBqo3r1KfMuJdyuBZb2NT2R5a5l108JuFl1CHuJ9q4NjceHgncefSN9LoPcYskT9pYIfA9Al+Z3X4xzUdz3H74RbODWlGGeCYPcVf4jksz08HHId6k63USFK7ObuOia3rYHkdyavlR+267GwAAAABJRU5ErkJggg==</pre>
 </div>
 <div title="北大数学攻略" creator="YourName" modifier="YourName" created="202402241409" changecount="1">
 <pre>备份北大数学攻略，侵删
