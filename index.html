@@ -560,7 +560,7 @@ body {font-size:0.8em;}
 !Tagcloud
 &lt;&lt;tagCloud excludeLists excludeSearch systemConfig systemServer PluginInfo Plugin excludeMissing excludePublisher takenotepackage app DiscoveryPackage NavigationPackage IconPackage TidIDEPackage TaskPackage ScrollbarPackage MediaPackage pluginInfo @cdent @developers @ricardoperes Administration follow tips Content System systemConfigDisable AttachFilePackage IFramePackage QuickEditPackage Tag ThemePackage attachment package sample settings story tiddlyLife BasicsPackage BookmarkPackage CD CSS DiscussionPackage ImportExportPackage InputPackage JashPackage MoveablePanelPackage PasetUpPackage PasteUpPackage TiddlyTools [[To Do]] alpha animation blank bookmarklet catalog demo discussion excludeTheme framedLinks html media moveable panelmap patch script setup stylesheet stylesheets systemTheme template test translate nonacademic transclusion&gt;&gt;</pre>
 </div>
-<div title="AdministrationPage" modifier="YourName" created="201206131959" modified="202404091602" tags="System excludeLists" changecount="6" _hash="e1ebb210726c3b146ffdcd2bb68ef6449c55f179">
+<div title="AdministrationPage" modifier="YourName" created="201206131959" modified="202404101631" tags="System excludeLists" changecount="8" _hash="e1ebb210726c3b146ffdcd2bb68ef6449c55f179">
 <pre>|SiteIcon SiteTitle SiteSubtitle||||StyleSheet|
 |MainMenu|SiteUrl||PageTemplate|StyleSheetColors|
 |~|DefaultTiddlers||EditTemplate|StyleSheetLayout|
@@ -593,7 +593,13 @@ body {font-size:0.8em;}
 ** HtmlJavascript - Call external javascript code on serializing
 
 !!~TiddlyWiki tools
-
+* [[TiddlyWiki Classic|https://classic.tiddlywiki.com/]]
+* [[tiddlypocketbook|http://tiddlypocketbook.tiddlyspace.com/#]] - A guide to ~TiddlyWiki syntax
+* [[TiddlyVault|http://tiddlyvault.tiddlyspot.com/]] - An index of ~TiddlyWiki extensions
+* [[Tiddly Tools|http://www.tiddlytools.com]] 
+* [[abegoExtensions|http://tiddlywiki.abego-software.de]] - UdoBorkowski's Extensions for TiddlyWiki
+* [[Martin's wiki|http://www.martinswiki.com/]] - Martin Budden's plugins and extensions for TiddlyWiki 
+* [[André de Carvalho's HomePage|https://acarvalho.tiddlyhost.com/]]
 ----
 @@color:#c4d6ed; ^^
 Description: Administration functionality for this wiki. 
@@ -10866,6 +10872,683 @@ Slider.prototype.stop = function()
 }
 //}}}</pre>
 </div>
+<div title="GPACalculator" creator="YourName" modifier="YourName" created="202404110842" modified="202404110914" changecount="4">
+<pre>&lt;html&gt;
+&lt;head&gt;
+&lt;meta charset=&quot;utf-8&quot;&gt; 
+&lt;meta http-equiv=&quot;X-UA-Compatible&quot; content=&quot;IE=edge&quot;&gt;
+&lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot;&gt;
+
+&lt;meta property=&quot;og:type&quot; content=&quot;article&quot; /&gt;
+&lt;meta name=&quot;twitter:card&quot; content=&quot;summary&quot;&gt;
+
+&lt;link href=&quot;//cdn.bootcss.com/bootstrap/2.3.2/css/bootstrap.min.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;link href=&quot;//cdn.bootcss.com/bootstrap/2.3.2/css/bootstrap-responsive.min.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;link href=&quot;//cdn.bootcss.com/font-awesome/4.0.3/css/font-awesome.min.css&quot; rel=&quot;stylesheet&quot;&gt;
+
+&lt;script src=&quot;//cdn.bootcss.com/jquery/1.11.1/jquery.min.js&quot;&gt;&lt;/script&gt;
+
+&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/theme/css/pygments.css&quot; media=&quot;screen&quot;&gt;
+&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/theme/tipuesearch/tipuesearch.css&quot; media=&quot;screen&quot;&gt;
+&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/theme/css/elegant.css&quot; media=&quot;screen&quot;&gt;
+&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/theme/css/custom.css&quot; media=&quot;screen&quot;&gt;
+&lt;link href=&quot;static/css/ListTabMenu.css&quot; rel=&quot;stylesheet&quot;&gt;
+&lt;style&gt;
+body { padding-top: 50px; padding-bottom: 10px; }
+&lt;/style&gt;
+
+&lt;link rel=&quot;stylesheet&quot; href=&quot;//bdimg.share.baidu.com/static/api/css/share_style1_24.css&quot;&gt;
+&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;/theme/css/style.css&quot; media=&quot;screen&quot;&gt;
+&lt;title&gt;GPA calculator for all &lt;/title&gt;
+&lt;script src=&quot;static/js/function.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;static/js/UploadFile.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;static/js/file.js&quot;&gt;&lt;/script&gt;
+&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;static/css/gpa.css&quot;&gt;
+
+&lt;/head&gt;
+&lt;body onload=&quot;init()&quot;&gt;
+&lt;div id=&quot;content-sans-footer&quot;&gt;
+    &lt;div class=&quot;container-fluid&quot;&gt;
+        &lt;div id=&quot;wrap&quot; class=&quot;span9&quot;&gt;
+            &lt;h1&gt;GPA 计算器calculator&lt;/h1&gt;
+            &lt;div id=&quot;main&quot;&gt;
+                &lt;div id=&quot;GPAForm&quot;&gt;
+                    &lt;p&gt;通过本程序，可以方便的计算出您所修读的课程的GPA。具体方法是在下面的方框中输入您&lt;/p&gt;
+                    &lt;p&gt;修读获得的课程学分和课程分数（如果是等级制的，在下拉框选择对应等级），页面下方会累计加权结果。&lt;/p&gt;
+                    &lt;hr&gt;
+                定制文件格式， 学分必选， 三种记分方式中选一种
+                &lt;br&gt;
+                &lt;input type=&quot;checkbox&quot; name=&quot;select&quot; value=&quot;0&quot; checked=&quot;checked&quot; &gt;课程名
+                &lt;input type=&quot;checkbox&quot; name=&quot;select&quot; value=&quot;1&quot; checked=&quot;checked&quot; &gt;百分制
+                &lt;input type=&quot;checkbox&quot; name=&quot;select&quot; value=&quot;3&quot;                   &gt;等级制
+                &lt;input type=&quot;checkbox&quot; name=&quot;select&quot; value=&quot;2&quot;                   &gt;4分制
+                &lt;input type=&quot;checkbox&quot; name=&quot;select&quot; value=&quot;4&quot; checked=&quot;checked&quot; &gt;学分
+                &lt;input type=&quot;checkbox&quot; name=&quot;select&quot; value=&quot;5&quot; checked=&quot;checked&quot; &gt;学时
+                &lt;br&gt;
+                文件或下框内容的格式必须与选中字段保持相同顺序（可多不可少）
+                &lt;hr/&gt;
+                    &lt;div&gt;
+                        可上传文件(纯文本txt,csv, 或xls,xlsx)
+                        &lt;input type=&quot;file&quot; id=&quot;file&quot; onchange=&quot;uploadFiles(this.files)&quot;&gt;
+                        &lt;div name=&quot;image&quot; id=&quot;dropbox&quot; style=&quot;min-width:300px;min-height:100px;border:3px dashed silver;&quot;&gt;&lt;/div&gt;  
+
+                        &lt;br&gt;
+                        
+                        请按照格式描述选择字段， 课程名 ? 百分制? 等级制 ? 4分制 ? 学分 ? 学时    ?指代分隔符类型，默认使用空格作为分隔符
+                    &lt;/div&gt;
+                &lt;/div&gt;
+                &lt;br&gt;
+                &lt;div&gt;
+                    &lt;input type=&quot;text&quot; id=&quot;type&quot;&gt;分隔符类型， 支持逗号、分号、空格、 tab(tab 或\t), 默认使用空格作为分隔符, 
+                &lt;/div&gt;
+
+                &lt;hr /&gt;
+                也可手输， 上传文件则直接显示。
+                &lt;div&gt; &lt;textarea id=&quot;grade&quot; style=&quot;border:solid 1px&quot; rows=&quot;15&quot; cols=&quot;120&quot;&gt;&lt;/textarea&gt;
+                &lt;/div&gt;
+
+                请选择GPA算法
+                &lt;select id=&quot;algorithm&quot;&gt;
+                    &lt;option value =&quot;s4&quot;&gt;标准4.0&lt;/option&gt;
+                    &lt;option value =&quot;s41&quot; selected = &quot;selected&quot;&gt;改进4.0(1)&lt;/option&gt;
+                    &lt;option value =&quot;s42&quot;&gt;改进4.0(2)&lt;/option&gt;
+                    &lt;option value =&quot;p4&quot;&gt;北大4.0&lt;/option&gt;
+                    &lt;option value =&quot;c4&quot;&gt;加拿大4.3&lt;/option&gt;
+                    &lt;option value =&quot;sjt4&quot;&gt;上海交大4.3&lt;/option&gt;
+                    &lt;option value =&quot;cs4&quot;&gt;中科大4.3&lt;/option&gt;
+                    &lt;option value =&quot;nk4&quot;&gt;南开4.0&lt;/option&gt;
+                &lt;/select&gt;
+                &lt;br&gt;
+                &lt;a class=&quot;btn btn-info&quot; value=&quot;计算&quot; onclick=&quot;calit();&quot;&gt; 
+                    计算
+                &lt;/a&gt;
+
+                &lt;hr /&gt;
+
+                &lt;div id=&quot;totals&quot;&gt;
+                    &lt;label&gt;学分总计：
+                        &lt;input id=&quot;sum0&quot; type=&quot;text&quot; size=&quot;7&quot; maxlength=&quot;7&quot; placeholder=&quot;请先填表&quot; readonly=&quot;readonly&quot; /&gt;
+                    &lt;/label&gt;
+                    &lt;label&gt;学分*绩点总计：
+                        &lt;input id=&quot;sum1&quot; type=&quot;text&quot; size=&quot;7&quot; maxlength=&quot;7&quot; placeholder=&quot;请先填表&quot; readonly=&quot;readonly&quot; /&gt;
+                    &lt;/label&gt;
+                    &lt;label&gt;GPA：
+                        &lt;input id=&quot;sum2&quot; type=&quot;text&quot; size=&quot;7&quot; maxlength=&quot;7&quot; placeholder=&quot;请先填表&quot; readonly=&quot;readonly&quot; /&gt;
+                    &lt;/label&gt;
+                    &lt;label&gt;加权平均分：
+                        &lt;input id=&quot;sum3&quot; type=&quot;text&quot; size=&quot;7&quot; maxlength=&quot;7&quot; placeholder=&quot;请先填表&quot; readonly=&quot;readonly&quot; /&gt;
+                    &lt;/label&gt;
+                &lt;/div&gt;
+
+                &lt;hr /&gt;
+                    &lt;div id=&quot;content&quot;&gt;
+                    &lt;/div&gt;
+                &lt;div class=&quot;bdsharebuttonbox bdshare-button-style1-24&quot; data-bd-bind=&quot;1444449175032&quot;&gt;
+                    &lt;a href=&quot;#&quot; class=&quot;bds_more&quot; data-cmd=&quot;more&quot;&gt;&lt;/a&gt;
+                    &lt;a href=&quot;#&quot; class=&quot;bds_tsina&quot; data-cmd=&quot;tsina&quot; title=&quot;分享到新浪微博&quot;&gt;&lt;/a&gt;
+                    &lt;a href=&quot;#&quot; class=&quot;bds_weixin&quot; data-cmd=&quot;weixin&quot; title=&quot;分享到微信&quot;&gt;&lt;/a&gt;
+                    &lt;a href=&quot;#&quot; class=&quot;bds_douban&quot; data-cmd=&quot;douban&quot; title=&quot;分享到豆瓣网&quot;&gt;&lt;/a&gt;
+                    &lt;a href=&quot;#&quot; class=&quot;bds_fbook&quot; data-cmd=&quot;fbook&quot; title=&quot;分享到Facebook&quot;&gt;&lt;/a&gt;
+                    &lt;a href=&quot;#&quot; class=&quot;bds_copy&quot; data-cmd=&quot;copy&quot; title=&quot;分享到复制网址&quot;&gt;&lt;/a&gt;
+                &lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+
+        &lt;div class=&quot;aside&quot;&gt;
+            &lt;div class=&quot;section&quot;&gt;
+                &lt;h2&gt;如何计算GPA？&lt;/h2&gt;
+                &lt;div class=&quot;article&quot;&gt;
+                    &lt;div class=&quot;intro&quot;&gt;
+                        &lt;div class=&quot;intro_top&quot;&gt;
+                            &lt;div class=&quot;intro_top_le f14&quot;&gt;其他常见算法说明&lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;div class=&quot;intro_con f12&quot;&gt;
+                            &lt;div class=&quot;intro_col&quot;&gt;
+                                &lt;a class=&quot;accordion-toggle&quot; data-toggle=&quot;collapse&quot; data-target=&quot;#nav-gpa-4-0&quot;&gt;
+                                    (1)标准4.0
+                                &lt;/a&gt;
+                                &lt;div id=&quot;nav-gpa-4-0&quot; class=&quot;collapse&quot;&gt;
+                                    &lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; width=&quot;120&quot;&gt;
+                                        &lt;tbody&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;成绩&lt;/td&gt;
+                                            &lt;td&gt;等级&lt;/td&gt;
+                                            &lt;td&gt;GPA&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;100～90&lt;/td&gt;
+                                            &lt;td&gt;A&lt;/td&gt;
+                                            &lt;td&gt;4.0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;89～80&lt;/td&gt;
+                                            &lt;td&gt;B&lt;/td&gt;
+                                            &lt;td&gt;3.0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;79～70&lt;/td&gt;
+                                            &lt;td&gt;C&lt;/td&gt;
+                                            &lt;td&gt;2.0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;69～60&lt;/td&gt;
+                                            &lt;td&gt;D&lt;/td&gt;
+                                            &lt;td&gt;1.0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;59～0&lt;/td&gt;
+                                            &lt;td&gt;F&lt;/td&gt;
+                                            &lt;td&gt;0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;/tbody&gt;
+                                    &lt;/table&gt;
+                                &lt;/div&gt;
+                                &lt;a class=&quot;accordion-toggle&quot; data-toggle=&quot;collapse&quot; data-target=&quot;#nav-gpa-4-1&quot;&gt;
+                                    (2)改进4.0(1)
+                                &lt;/a&gt;
+                                &lt;div id=&quot;nav-gpa-4-1&quot; class=&quot;collapse&quot;&gt;
+                                    &lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; width=&quot;120&quot;&gt;
+                                        &lt;tbody&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;成绩&lt;/td&gt;
+                                            &lt;td&gt;等级&lt;/td&gt;
+                                            &lt;td&gt;学分&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;100～85&lt;/td&gt;
+                                            &lt;td&gt;A&lt;/td&gt;
+                                            &lt;td&gt;4.0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;84～70&lt;/td&gt;
+                                            &lt;td&gt;B&lt;/td&gt;
+                                            &lt;td&gt;3.0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;69～60&lt;/td&gt;
+                                            &lt;td&gt;C&lt;/td&gt;
+                                            &lt;td&gt;2.0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;59～0&lt;/td&gt;
+                                            &lt;td&gt;F&lt;/td&gt;
+                                            &lt;td&gt;0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;/tbody&gt;
+                                    &lt;/table&gt;
+                                &lt;/div&gt;
+                                &lt;a class=&quot;accordion-toggle&quot; data-toggle=&quot;collapse&quot; data-target=&quot;#nav-gpa-4-2&quot;&gt;
+                                    (3)改进4.0(2)
+                                &lt;/a&gt;
+                                &lt;div id=&quot;nav-gpa-4-2&quot; class=&quot;collapse&quot;&gt;
+                                    &lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; width=&quot;120&quot;&gt;
+                                        &lt;tbody&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;成绩&lt;/td&gt;
+                                            &lt;td&gt;等级&lt;/td&gt;
+                                            &lt;td&gt;学分&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;100～85&lt;/td&gt;
+                                            &lt;td&gt;A&lt;/td&gt;
+                                            &lt;td&gt;4.0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;84～75&lt;/td&gt;
+                                            &lt;td&gt;B&lt;/td&gt;
+                                            &lt;td&gt;3.0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;74～60&lt;/td&gt;
+                                            &lt;td&gt;C&lt;/td&gt;
+                                            &lt;td&gt;2.0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;59～0&lt;/td&gt;
+                                            &lt;td&gt;F&lt;/td&gt;
+                                            &lt;td&gt;0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;/tbody&gt;
+                                    &lt;/table&gt;
+                                &lt;/div&gt;
+                                &lt;a class=&quot;accordion-toggle&quot; data-toggle=&quot;collapse&quot; data-target=&quot;#nav-peking&quot;&gt;
+                                    (4)北大4.0
+                                &lt;/a&gt;
+                                &lt;div id=&quot;nav-peking&quot; class=&quot; collapse&quot;&gt;
+                                    &lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;&gt;
+                                        &lt;tbody&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;成绩&lt;/td&gt;
+                                            &lt;td&gt;等级&lt;/td&gt;
+                                            &lt;td&gt;学分&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;100～90&lt;/td&gt;
+                                            &lt;td&gt;A&lt;/td&gt;
+                                            &lt;td&gt;4.0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;89～85&lt;/td&gt;
+                                            &lt;td&gt;A-&lt;/td&gt;
+                                            &lt;td&gt;3.7&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;84～82&lt;/td&gt;
+                                            &lt;td&gt;B+&lt;/td&gt;
+                                            &lt;td&gt;3.3&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;81～78&lt;/td&gt;
+                                            &lt;td&gt;B&lt;/td&gt;
+                                            &lt;td&gt;3.0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;77～75&lt;/td&gt;
+                                            &lt;td&gt;B-&lt;/td&gt;
+                                            &lt;td&gt;2.7&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;74～72&lt;/td&gt;
+                                            &lt;td&gt;C+&lt;/td&gt;
+                                            &lt;td&gt;2.3&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;71～68&lt;/td&gt;
+                                            &lt;td&gt;C&lt;/td&gt;
+                                            &lt;td&gt;2.0&lt;/td&gt;
+                                        &lt;/tr&gt;
+
+                                        &lt;tr&gt;
+                                            &lt;td&gt;67～64&lt;/td&gt;
+                                            &lt;td&gt;D+&lt;/td&gt;
+                                            &lt;td&gt;1.5&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;63～60&lt;/td&gt;
+                                            &lt;td&gt;D&lt;/td&gt;
+                                            &lt;td&gt;1.0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;59～0&lt;/td&gt;
+                                            &lt;td&gt;F&lt;/td&gt;
+                                            &lt;td&gt;0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;/tbody&gt;
+                                    &lt;/table&gt;
+                                &lt;/div&gt;
+                                &lt;a class=&quot;accordion-toggle&quot; data-toggle=&quot;collapse&quot; data-target=&quot;#nav-canada&quot;&gt;
+                                    (5)加拿大4.3
+                                &lt;/a&gt;
+                                &lt;div id=&quot;nav-canada&quot; class=&quot; collapse&quot;&gt;
+                                    &lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; width=&quot;240&quot;&gt;
+                                        &lt;tbody&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;成绩&lt;/td&gt;
+                                            &lt;td&gt;等级&lt;/td&gt;
+                                            &lt;td&gt;学分&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;100～90&lt;/td&gt;
+                                            &lt;td&gt;A+&lt;/td&gt;
+                                            &lt;td&gt;4.3&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;89～85&lt;/td&gt;
+                                            &lt;td&gt;A&lt;/td&gt;
+                                            &lt;td&gt;4.0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;84～80&lt;/td&gt;
+                                            &lt;td&gt;A-&lt;/td&gt;
+                                            &lt;td&gt;3.7&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;79～75&lt;/td&gt;
+                                            &lt;td&gt;B+&lt;/td&gt;
+                                            &lt;td&gt;3.3&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;74～70&lt;/td&gt;
+                                            &lt;td&gt;B&lt;/td&gt;
+                                            &lt;td&gt;3.0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;69～65&lt;/td&gt;
+                                            &lt;td&gt;B-&lt;/td&gt;
+                                            &lt;td&gt;2.7&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;64～60&lt;/td&gt;
+                                            &lt;td&gt;C+&lt;/td&gt;
+                                            &lt;td&gt;2.3&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;59～0&lt;/td&gt;
+                                            &lt;td&gt;F&lt;/td&gt;
+                                            &lt;td&gt;0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;/tbody&gt;
+                                    &lt;/table&gt;
+                                &lt;/div&gt;
+                                &lt;a class=&quot;accordion-toggle&quot; data-toggle=&quot;collapse&quot; data-target=&quot;#nav-china&quot;&gt;
+                                    (6)中科大4.3
+                                &lt;/a&gt;
+                                &lt;div id=&quot;nav-china&quot; class=&quot; collapse&quot;&gt;
+                                    &lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; width=&quot;240&quot;&gt;
+                                        &lt;tbody&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;成绩&lt;/td&gt;
+                                            &lt;td&gt;等级&lt;/td&gt;
+                                            &lt;td&gt;学分&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;100～95&lt;/td&gt;
+                                            &lt;td&gt;A+&lt;/td&gt;
+                                            &lt;td&gt;4.3&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;94～90&lt;/td&gt;
+                                            &lt;td&gt;A&lt;/td&gt;
+                                            &lt;td&gt;4.0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;89～85&lt;/td&gt;
+                                            &lt;td&gt;A-&lt;/td&gt;
+                                            &lt;td&gt;3.7&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;84～82&lt;/td&gt;
+                                            &lt;td&gt;B+&lt;/td&gt;
+                                            &lt;td&gt;3.3&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;81～78&lt;/td&gt;
+                                            &lt;td&gt;B&lt;/td&gt;
+                                            &lt;td&gt;3.0&lt;/td&gt;
+                                        &lt;/tr&gt;  
+                                        &lt;tr&gt;
+                                            &lt;td&gt;77～75&lt;/td&gt;
+                                            &lt;td&gt;B-&lt;/td&gt;
+                                            &lt;td&gt;2.7&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;74～72&lt;/td&gt;
+                                            &lt;td&gt;C+&lt;/td&gt;
+                                            &lt;td&gt;2.3&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;71～68&lt;/td&gt;
+                                            &lt;td&gt;C&lt;/td&gt;
+                                            &lt;td&gt;2.0&lt;/td&gt;
+                                        &lt;/tr&gt;  
+                                        &lt;tr&gt;
+                                            &lt;td&gt;67～65&lt;/td&gt;
+                                            &lt;td&gt;C-&lt;/td&gt;
+                                            &lt;td&gt;1.7&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;64～64&lt;/td&gt;
+                                            &lt;td&gt;D+&lt;/td&gt;
+                                            &lt;td&gt;1.5&lt;/td&gt;
+                                        &lt;/tr&gt;  
+                                        &lt;tr&gt;
+                                            &lt;td&gt;63～61&lt;/td&gt;
+                                            &lt;td&gt;D&lt;/td&gt;
+                                            &lt;td&gt;1.3&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;60～60&lt;/td&gt;
+                                            &lt;td&gt;D-&lt;/td&gt;
+                                            &lt;td&gt;1.0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;59～0&lt;/td&gt;
+                                            &lt;td&gt;F&lt;/td&gt;
+                                            &lt;td&gt;0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;/tbody&gt;
+                                    &lt;/table&gt;
+                                &lt;/div&gt;
+                                &lt;a class=&quot;accordion-toggle&quot; data-toggle=&quot;collapse&quot; data-target=&quot;#nav-sjtu&quot;&gt;
+                                    (7)上海交大4.3
+                                &lt;/a&gt;
+                                &lt;div id=&quot;nav-sjtu&quot; class=&quot; collapse&quot;&gt;
+                                    &lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; width=&quot;240&quot;&gt;
+                                        &lt;tbody&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;成绩&lt;/td&gt;
+                                            &lt;td&gt;等级&lt;/td&gt;
+                                            &lt;td&gt;学分&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;100～95&lt;/td&gt;
+                                            &lt;td&gt;A+&lt;/td&gt;
+                                            &lt;td&gt;4.3&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;94～90&lt;/td&gt;
+                                            &lt;td&gt;A&lt;/td&gt;
+                                            &lt;td&gt;4.0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;89～85&lt;/td&gt;
+                                            &lt;td&gt;A-&lt;/td&gt;
+                                            &lt;td&gt;3.7&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;84～80&lt;/td&gt;
+                                            &lt;td&gt;B+&lt;/td&gt;
+                                            &lt;td&gt;3.3&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;79～75&lt;/td&gt;
+                                            &lt;td&gt;B&lt;/td&gt;
+                                            &lt;td&gt;3.0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;74～70&lt;/td&gt;
+                                            &lt;td&gt;B-&lt;/td&gt;
+                                            &lt;td&gt;2.7&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;69～67&lt;/td&gt;
+                                            &lt;td&gt;C+&lt;/td&gt;
+                                            &lt;td&gt;2.3&lt;/td&gt;
+                                        &lt;/tr&gt;
+
+                                        &lt;tr&gt;
+                                            &lt;td&gt;66～65&lt;/td&gt;
+                                            &lt;td&gt;C&lt;/td&gt;
+                                            &lt;td&gt;2.0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;64～62&lt;/td&gt;
+                                            &lt;td&gt;C-&lt;/td&gt;
+                                            &lt;td&gt;1.7&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;61～60&lt;/td&gt;
+                                            &lt;td&gt;D&lt;/td&gt;
+                                            &lt;td&gt;1.0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;59～0&lt;/td&gt;
+                                            &lt;td&gt;F&lt;/td&gt;
+                                            &lt;td&gt;0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;/tbody&gt;
+                                    &lt;/table&gt;
+                                &lt;/div&gt;
+                                &lt;a class=&quot;accordion-toggle&quot; data-toggle=&quot;collapse&quot; data-target=&quot;#nav-rank-alg&quot;&gt;(8)等级制算法&lt;/a&gt;
+                                &lt;div id=&quot;nav-rank-alg&quot; class=&quot; collapse&quot;&gt;
+                                    &lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot; width=&quot;240&quot;&gt;
+                                        &lt;tbody&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;成绩&lt;/td&gt;
+                                            &lt;td&gt;学分&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;A&lt;/td&gt;
+                                            &lt;td&gt;4.0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;A-&lt;/td&gt;
+                                            &lt;td&gt;3.7&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;B+&lt;/td&gt;
+                                            &lt;td&gt;3.3&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;B&lt;/td&gt;
+                                            &lt;td&gt;3&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;B-&lt;/td&gt;
+                                            &lt;td&gt;2.7&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;C+&lt;/td&gt;
+                                            &lt;td&gt;2.3&lt;/td&gt;
+                                        &lt;/tr&gt;  
+                                        &lt;tr&gt;
+                                            &lt;td&gt;C&lt;/td&gt;
+                                            &lt;td&gt;2.0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;C-&lt;/td&gt;
+                                            &lt;td&gt;1.7&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;&lt;td&gt;D+&lt;/td&gt;
+                                            &lt;td&gt;1.3&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;D&lt;/td&gt;
+                                            &lt;td&gt;1.0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;F&lt;/td&gt;
+                                            &lt;td&gt;0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                    &lt;/div&gt;
+                                    &lt;/tbody&gt;
+                                &lt;/table&gt;
+                            &lt;/div&gt;
+                        &lt;/div&gt;
+                        &lt;a class=&quot;accordion-toggle&quot; data-toggle=&quot;collapse&quot; data-target=&quot;#nav-nankai&quot;&gt;
+                                    (9)南开4.0
+                                &lt;/a&gt;
+                                &lt;div id=&quot;nav-nankai&quot; class=&quot; collapse&quot;&gt;
+                                    &lt;table border=&quot;0&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;&gt;
+                                        &lt;tbody&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;成绩&lt;/td&gt;
+                                            &lt;td&gt;等级&lt;/td&gt;
+                                            &lt;td&gt;学分&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;100～90&lt;/td&gt;
+                                            &lt;td&gt;A&lt;/td&gt;
+                                            &lt;td&gt;4.0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;89～85&lt;/td&gt;
+                                            &lt;td&gt;A-&lt;/td&gt;
+                                            &lt;td&gt;3.7&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;84～81&lt;/td&gt;
+                                            &lt;td&gt;B+&lt;/td&gt;
+                                            &lt;td&gt;3.3&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;80～78&lt;/td&gt;
+                                            &lt;td&gt;B&lt;/td&gt;
+                                            &lt;td&gt;3.0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;77～75&lt;/td&gt;
+                                            &lt;td&gt;B-&lt;/td&gt;
+                                            &lt;td&gt;2.7&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;74～72&lt;/td&gt;
+                                            &lt;td&gt;C+&lt;/td&gt;
+                                            &lt;td&gt;2.3&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;71～69&lt;/td&gt;
+                                            &lt;td&gt;C&lt;/td&gt;
+                                            &lt;td&gt;2.0&lt;/td&gt;
+                                        &lt;/tr&gt;
+
+                                        &lt;tr&gt;
+                                            &lt;td&gt;68～66&lt;/td&gt;
+                                            &lt;td&gt;D+&lt;/td&gt;
+                                            &lt;td&gt;1.7&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;65～63&lt;/td&gt;
+                                            &lt;td&gt;D&lt;/td&gt;
+                                            &lt;td&gt;1.3&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;62～60&lt;/td&gt;
+                                            &lt;td&gt;F&lt;/td&gt;
+                                            &lt;td&gt;1.0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;tr&gt;
+                                            &lt;td&gt;59～0&lt;/td&gt;
+                                            &lt;td&gt;F&lt;/td&gt;
+                                            &lt;td&gt;0&lt;/td&gt;
+                                        &lt;/tr&gt;
+                                        &lt;/tbody&gt;
+                                    &lt;/table&gt;
+                                &lt;/div&gt;
+                        &lt;p&gt;绩点（Grade Point Average 缩写GPA）是对学生各门课程所获学分的加权平均值，是衡量学生学业水平的重要指标。&lt;/p&gt;
+                        &lt;p&gt;原有四级记分制的成绩：优（85-100）、良（70-84）、及格（60-69）、不及格（未达60分为不及格），按照就高不就低原则对应绩点。&lt;/p&gt;
+                        &lt;p&gt;其中“优”对应绩点为4.0,“良”对应绩点为3.0，“及格”对应绩点为“1.3”，“不及格”对应绩点为“0”。两级记分制（合格、不合格）的课程成绩，不纳入课程学分绩点计算。&lt;/p&gt;
+                    &lt;/div&gt;&lt;!-- .article --&gt;
+                &lt;/div&gt;&lt;!-- .section --&gt;
+            &lt;/div&gt;&lt;!-- .aside --&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div id=&quot;footer&quot; class=&quot;span12&quot;&gt;
+        &lt;p&gt;
+        fork from&lt;a href=&quot;https://github.com/sndnyang/superbGPACalculator&quot;&gt;superbGPACalculator&lt;/a&gt;  
+        &lt;/p&gt;
+    &lt;/div&gt;
+&lt;/div&gt;
+&lt;script src=&quot;https://cdn.bootcss.com/xlsx/0.10.6/xlsx.full.min.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;//cdn.bootcss.com/bootstrap/2.3.2/js/bootstrap.min.js&quot;&gt;&lt;/script&gt;
+
+&lt;script&gt;window._bd_share_config={&quot;common&quot;:{&quot;bdSnsKey&quot;:{},&quot;bdText&quot;:&quot;&quot;,&quot;bdMini&quot;:&quot;2&quot;,&quot;bdMiniList&quot;:false,&quot;bdPic&quot;:&quot;&quot;,&quot;bdStyle&quot;:&quot;1&quot;,&quot;bdSize&quot;:&quot;24&quot;},&quot;share&quot;:{}};with(document)0[(getElementsByTagName('head')[0]||body).appendChild(createElement('script')).src='//bdimg.share.baidu.com/static/api/js/share.js?v=89860593.js?cdnversion='+~(-new Date()/36e5)];&lt;/script&gt;
+&lt;script type=&quot;text/javascript&quot;&gt;var cnzz_protocol = ((&quot;https:&quot; == document.location.protocol) ? &quot; https://&quot; : &quot; http://&quot;);document.write(unescape(&quot;%3Cspan id='cnzz_stat_icon_1261726608'%3E%3C/span%3E%3Cscript src='&quot; + cnzz_protocol + &quot;s4.cnzz.com/z_stat.php%3Fid%3D1261726608%26show%3Dpic1' type='text/javascript'%3E%3C/script%3E&quot;));&lt;/script&gt;
+
+&lt;/body&gt;
+&lt;/html&gt;
+MIT License
+
+Copyright (c) 2019 sndnyang
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the &quot;Software&quot;), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED &quot;AS IS&quot;, WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.</pre>
+</div>
 <div title="GliderDance" modifier="ELSDesignStudios" created="200810041151" modified="200810121130" tags="tiddlyLife">
 <pre>{{{
 -------------------OO---------
@@ -11741,6 +12424,9 @@ function wikifyTextNodes(theNode,w)
 }
 //}}}</pre>
 </div>
+<div title="HTMLFormattingPluginConfig" creator="YourName" modifier="YourName" created="202404110848" tags="systemConfig" changecount="1">
+<pre>config.options.chkHTMLHideLinebreaks=true;</pre>
+</div>
 <div title="HTMLFormattingPluginInfo" modifier="ELSDesignStudios" created="200801090044" modified="201005071837" tags="pluginInfo" server.type="file" server.host="file:///home/stark/wangyenshu.github.io//home/stark/Downloads/index.html" server.page.revision="201005071837">
 <pre>|Name|HTMLFormattingPluginInfo|
 |Source|http://www.TiddlyTools.com/#HTMLFormattingPlugin|
@@ -11812,9 +12498,50 @@ After the browser has done its job, the wiki syntax sequences (including the &qu
 2005.06.26 1.0.0 Initial Release (as code adaptation - pre-dates TiddlyWiki plugin architecture!!)
 &lt;&lt;&lt;</pre>
 </div>
-<div title="Hobbies" creator="YourName" modifier="YourName" created="202402201522" modified="202402241431" changecount="5">
+<div title="Hobbies" creator="YourName" modifier="YourName" created="202402201522" modified="202404111545" changecount="9">
 <pre>!GNU/Linux and FOSS software enthusiast
-I have a laptop running opensuse leap and stay active in several local {{{LUGs}}}.</pre>
+I have a laptop running opensuse leap and stay active in several local {{{LUGs}}}.
+
+&lt;html&gt;
+
+&lt;style&gt;
+    .terminal {
+    border: 0px solid black;
+    font-family: courier,fixed,swiss,monospace,sans-serif;
+    font-size: 12px;
+    color: #bbbbbb;
+    background: #000000;
+    border-collapse: collapse;
+    }
+&lt;/style&gt;
+
+
+&lt;h1&gt;jor1k simple demo&lt;/h1&gt;
+
+&lt;table id=&quot;tty&quot; class=&quot;terminal&quot; cellpadding=&quot;0&quot; cellspacing=&quot;0&quot;&gt;
+&lt;/table&gt;
+
+&lt;script src=&quot;../openrisc-sys/jor1k-master-min.js&quot;&gt;&lt;/script&gt;
+
+&lt;script&gt;
+
+var Jor1k = require(&quot;Jor1k&quot;);
+var LinuxTerm = require(&quot;LinuxTerm&quot;);
+
+jor1kgui = new Jor1k(
+    {
+        term: new LinuxTerm(&quot;tty&quot;),
+        path: &quot;../openrisc-sys/&quot;,
+        system: {
+            kernelURL: &quot;kernel/vmlinux.bin.bz2&quot;
+        },
+        fs: {
+            basefsURL: &quot;basefs-compile.json&quot;
+        }
+    });
+
+&lt;/script&gt;
+&lt;/html&gt;</pre>
 </div>
 <div title="Home" creator="Wang Yanshu" modifier="YourName" created="202401160150" modified="202404101548" changecount="74">
 <pre>!!I am a Math student studying at Nankai University.
@@ -23755,10 +24482,11 @@ You can select the ''freeze'' checkbox to suspend automatic key-by-key preview d
 In addition to a 'wikified' preview, the previewer display can show a ''DOM viewer'' and/or an ''HTML viewer'' that are also updated with each keystroke.  These text-based displays can be helpful while attempting to correct or enhance the formatting of tiddler content, especially when complex combinations of wiki-syntax produce unexpected or undesired results.
 &lt;&lt;&lt;</pre>
 </div>
-<div title="Private" creator="YourName" modifier="YourName" created="202404071323" modified="202404091605" changecount="6">
+<div title="Private" creator="YourName" modifier="YourName" created="202404071323" modified="202404110822" changecount="7">
 <pre>&lt;&lt;EncryptionChangePassword&gt;&gt; 
 &lt;&lt;EncryptionDecryptAll&gt;&gt; 
 [[小参考]]
+[[Family]]
 [[tips]]</pre>
 </div>
 <div title="Project" creator="YourName" modifier="YourName" created="202401280441" modified="202402201513" changecount="6">
