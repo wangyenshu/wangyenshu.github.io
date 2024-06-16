@@ -33631,7 +33631,7 @@ where:
 2007.10.23 1.0.0 Initial release, split {{{&lt;&lt;storyViewer&gt;&gt;}}} macro definition from [[StorySaverPlugin]] to allow separate installation of story saving vs. story viewing features.
 &lt;&lt;&lt;</pre>
 </div>
-<div title="StyleSheet" modifier="YourName" created="202401160108" modified="202405290834" changecount="11">
+<div title="StyleSheet" modifier="YourName" created="202401160108" modified="202406160435" changecount="15">
 <pre>/*{{{*/
 /* -------------------------- */
 /* Mind Map */
@@ -33710,6 +33710,16 @@ border-bottom: 1px dotted #fff; text-decoration:none;
 #topMenu a, #topMenu .tiddlyLink, #topMenu .button {color:#f1f1f1; padding:0.3em 0.45em; margin:0 4px;font-size:120%;font-weight:normal;font-variant: small-caps; border:none; background:#BF2323; text-decoration:none; }
 
 #topMenu a:hover, #topMenu .tiddlyLink:hover, #topMenu .button:hover, #topMenu .button:active, #topMenu .highlight {color:#fff;text-decoration:none; background:#9F1313; }
+
+@media only screen and (max-width: 600px) {
+
+.header {width:100%}
+#tiddlerDisplay {position:absolute; width:100% }
+#mainMenu {position:relative; display: none;}
+#sidebar {position:relative; }
+#displayArea{padding:0.2em;margin:0;}
+
+}
 
 /* -------------------------- */
 /*}}}*/</pre>
