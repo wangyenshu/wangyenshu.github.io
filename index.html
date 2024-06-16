@@ -567,7 +567,7 @@ body {font-size:0.8em;}
 !Tagcloud
 &lt;&lt;tagCloud excludeLists excludeSearch systemConfig systemServer PluginInfo Plugin excludeMissing excludePublisher takenotepackage app DiscoveryPackage NavigationPackage IconPackage TidIDEPackage TaskPackage ScrollbarPackage MediaPackage pluginInfo @cdent @developers @ricardoperes Administration follow tips Content System systemConfigDisable AttachFilePackage IFramePackage QuickEditPackage Tag ThemePackage attachment package sample settings story tiddlyLife BasicsPackage BookmarkPackage CD CSS DiscussionPackage ImportExportPackage InputPackage JashPackage MoveablePanelPackage PasetUpPackage PasteUpPackage TiddlyTools [[To Do]] alpha animation blank bookmarklet catalog demo discussion excludeTheme framedLinks html media moveable panelmap patch script setup stylesheet stylesheets systemTheme template test translate nonacademic transclusion locked silk Decrypt(Ramanujan) Trash nonacademic&gt;&gt;</pre>
 </div>
-<div title="AdministrationPage" modifier="YourName" created="201206131959" modified="202406160707" tags="System excludeLists" _hash="e1ebb210726c3b146ffdcd2bb68ef6449c55f179" changecount="14">
+<div title="AdministrationPage" modifier="YourName" created="201206131959" modified="202406160707" tags="System excludeLists" changecount="14" _hash="e1ebb210726c3b146ffdcd2bb68ef6449c55f179">
 <pre>|SiteIcon SiteTitle SiteSubtitle||||StyleSheet|
 |MainMenu|SiteUrl||PageTemplate|StyleSheetColors|
 |~|DefaultTiddlers||EditTemplate|StyleSheetLayout|
@@ -3464,7 +3464,7 @@ a:hover, .button:hover { color:#fff; }
 &lt;/div&gt;&lt;!-- viewer --&gt;
 &lt;!--}}}--&gt;</pre>
 </div>
-<div title="CDSample" modifier="ELSDesignStudios" created="200706152348" modified="200706212043" tags="CD MediaPackage sample" albumtitle="Music for Sentient Beings, Vol IV" website="http://www.cdbaby.com/cd/vlhohenstein" sample="http://www.TiddlyTools.com/vlh/MFSB4/Kindling.m3u" cover="http://cdbaby.name/v/l/vlhohenstein.jpg" purchaseurl="" sampleurl="" coverurl="" genre="ambient electronic" mediatype="cd" year="2005" artist="Vernon L Hohenstein">
+<div title="CDSample" modifier="ELSDesignStudios" created="200706152348" modified="200706212043" tags="CD MediaPackage sample" artist="Vernon L Hohenstein" year="2005" mediatype="cd" genre="ambient electronic" coverurl="" sampleurl="" purchaseurl="" cover="http://cdbaby.name/v/l/vlhohenstein.jpg" sample="http://www.TiddlyTools.com/vlh/MFSB4/Kindling.m3u" website="http://www.cdbaby.com/cd/vlhohenstein" albumtitle="Music for Sentient Beings, Vol IV">
 <pre>----
 |borderless|k
 |1 [[Candlelight|http://www.TiddlyTools.com/vlh/MFSB4/Candlelight.m3u]] (7:50) | &amp;nbsp;&amp;nbsp; |5 [[Fuego|http://www.TiddlyTools.com/vlh/MFSB4/Fuego.m3u]] (7:40) | |
@@ -3981,7 +3981,7 @@ config.options.txtCalStartOfWeekend=5;
 config.macros.calendar.journalDateFmt=&quot;DDD MMM 0DD YYYY&quot;;
 //}}}</pre>
 </div>
-<div title="CheckboxPlugin" modifier="ELSDesignStudios" created="200512071459" modified="200801090029" tags="MediaPackage TaskPackage systemConfig InputPackage" checked="false" demofield="false">
+<div title="CheckboxPlugin" modifier="ELSDesignStudios" created="200512071459" modified="200801090029" tags="MediaPackage TaskPackage systemConfig InputPackage" demofield="false" checked="false">
 <pre>/***
 |Name|CheckboxPlugin|
 |Source|http://www.TiddlyTools.com/#CheckboxPlugin|
@@ -4173,7 +4173,7 @@ config.macros.checkbox = {
 }
 //}}}</pre>
 </div>
-<div title="CheckboxPluginInfo" modifier="ELSDesignStudios" created="200801090021" modified="200801090024" tags="pluginInfo" demofield="false" checked="false">
+<div title="CheckboxPluginInfo" modifier="ELSDesignStudios" created="200801090021" modified="200801090024" tags="pluginInfo" checked="false" demofield="false">
 <pre>|Name|CheckboxPluginInfo|
 |Source|http://www.TiddlyTools.com/#CheckboxPlugin|
 |Documentation|http://www.TiddlyTools.com/#CheckboxPluginInfo|
@@ -5303,8 +5303,10 @@ config.macros.compareTiddlers= {
 }
 //}}}</pre>
 </div>
-<div title="ConfigTweaks" modifier="YourName" created="202401160146" modified="202401160146" tags="systemConfig">
-<pre>config.options.chkShowQuickEdit=true;</pre>
+<div title="ConfigTweaks" modifier="YourName" created="202401160146" modified="202406161316" tags="systemConfig" changecount="2">
+<pre>config.options.chkShowQuickEdit=true;
+config.options.chkGenerateAnRssFeed=true;
+config.options.txtUserName=&quot;Wang Yanshu&quot;;</pre>
 </div>
 <div title="ContentTimelineMacro" modifier="acarvalho" created="201304121305" modified="201304122228" tags="System systemConfig" _hash="95dda8efa5fa70e3057b662592bb5ef971ddaffd">
 <pre>/***
@@ -5355,6 +5357,597 @@ for(var t=tiddlers.length-1; t&gt;=0; t--)
 };
 }}}
 </pre>
+</div>
+<div title="CookieManagerPlugin" creator="YourName" modifier="ELSDesignStudios" created="200708030045" modified="201101162033" tags="systemConfig">
+<pre>/***
+|Name|CookieManagerPlugin|
+|Source|http://www.TiddlyTools.com/#CookieManagerPlugin|
+|Version|2.4.1|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|plugin|
+|Description|view/add/delete browser-based cookies and &quot;bake&quot; cookies to CookieJar tiddler for 'sticky' settings|
+!!!!!Usage
+&lt;&lt;&lt;
+This plugin provides an interactive control panel that lets you select, view, modify, or delete any of the current values for TiddlyWiki options that have been stored as local, private, //browser cookies//.  You can also use the control panel to &quot;bake cookies&quot;, which generates a set of javascript statements that assign hard-coded option values to the TiddlyWiki internal variables that correspond to the current browser cookie settings.  These hard-coded values are then stored in the [[CookieJar]] tiddler, which is tagged with&lt;&lt;tag systemConfig&gt;&gt; so that each time the document is loaded, the baked cookie settings will be automatically applied.
+
+When a set of baked cookies is added to the [[CookieJar]], it is automatically surrounded by a conditional test so that the hard-coded settings will only be applied for the username that was in effect when they were initially generated.  In this way, if you publish or share your document with others, //your// particular baked cookie settings are not automatically applied to others, so that their own browser-based cookie settings (if defined) will be applied as usual.
+
+Whenever you &quot;bake cookies&quot;, new hard-coded javascript assignment statements are *appended* to the end of the [[CookieJar]].  However, any baked cookies that were previously generated and stored in the [[CookieJar]] are not automatically removed from the tiddler.  As a result, because the most recently baked cookie settings in the [[CookieJar]] are always the last to be processed, the values assigned by older baked cookies are immediately overridden by the values from the newest baked cookies, so that the newest values will be in effect when the CookieJar startup processing is completed.
+
+Each time you bake a new batch of cookies, it is recommended that you should review and hand-edit the [[CookieJar]] to remove any &quot;stale cookies&quot; or merge the old and new sets of baked cookies into a single block to simplify readability (as well as saving a little tiddler storage space).  Of course, you can also hand-edit the [[CookieJar]] tiddler at any time simply to remove a few individual //baked cookies// if they are no longer needed, and you can even delete the entire [[CookieJar]] tiddler and start fresh, if that is appropriate.  Please note that changing or deleting a baked cookie does not alter the current value of the corresponding option setting, and any changes you make to the [[CookieJar]] will only be applied after you have saved and reloaded the document in your browser.
+&lt;&lt;&lt;
+!!!!!Examples
+&lt;&lt;&lt;
+{{{&lt;&lt;cookieManager&gt;&gt;}}}
+{{smallform small center{
+@@display:block;width:35em;&lt;&lt;cookieManager&gt;&gt;@@}}}
+&lt;&lt;&lt;
+!!!!!Configuration
+&lt;&lt;&lt;
+&lt;&lt;option chkAllowBrowserCookies&gt;&gt; store ~TiddlyWiki option settings using private browser cookies
+&lt;&lt;option chkMonitorBrowserCookies&gt;&gt; monitor browser cookie activity (show a message whenever a cookie is set or deleted)
+&lt;&lt;option chkCookieManagerAddToAdvancedOptions&gt;&gt; display [[CookieManager]] in [[AdvancedOptions]]
+//note: this setting does not take effect until you reload the document//
+&lt;&lt;&lt;
+!!!!!Revisions
+&lt;&lt;&lt;
+2011.01.16 2.4.1 in init(), corrected double addition of CookieManager to backstage
+2009.08.05 2.4.0 changed CookieJar output format to support odd symbols in option names (e.g. '@')
+2008.09.14 2.3.2 fixed handling for blocked cookies (was still allowing some blocked cookies to be set)
+2008.09.12 2.3.1 added blocked[] array and allowBrowserCookie() test function for selective blocking of changes to browser cookies based on cookie name
+2008.09.08 2.3.0 extensive code cleanup: defined removeCookie(), renamed cookies, added 'button' param for stand-alone &quot;bake cookies&quot; button, improved init of shadow [[CookieManager]] and [[CookieJar]] tiddlers for compatibility with new [[CookieSaverPlugin]]. 
+2008.07.11 2.2.1 fixed recursion error in hijack for saveOptionCookie()
+2008.06.26 2.2.0 added chkCookieManagerNoNewCookies option
+2008.06.05 2.1.3 replaced hard-coded definition for &quot;CookieJar&quot; title with option variable
+2008.05.12 2.1.2 add &quot;cookies&quot; task to backstage (moved from BackstageTasks)
+2008.04.09 2.1.0 added options: chkCookieManagerAddToAdvancedOptions
+2008.04.08 2.0.1 automatically include CookieManager control panel in AdvancedOptions shadow tiddler
+2007.08.02 2.0.0 converted from inline script
+2007.04.29 1.0.0 initial release
+&lt;&lt;&lt;
+!!!!!Code
+***/
+//{{{
+version.extensions.CookieManagerPlugin= {major: 2, minor: 4, revision: 1, date: new Date(2011,1,16)};
+//}}}
+//{{{
+config.macros.cookieManager = {
+	target:
+		config.options.txtCookieJar||&quot;CookieJar&quot;,
+	blockedCookies:
+		[],
+	allowBrowserCookie: function(name) {
+		return true;
+	},
+	displayStatus: function(msg) {
+		if (config.options.chkMonitorBrowserCookies &amp;&amp; !startingUp)
+			displayMessage(&quot;CookieManager: &quot;+msg);
+	},
+	init: function() {
+		if (config.options.txtCookieJar===undefined)
+			config.options.txtCookieJar=this.target;
+		if (config.options.chkAllowBrowserCookies===undefined)
+			config.options.chkAllowBrowserCookies=true;
+		if (config.options.chkMonitorBrowserCookies===undefined)
+			config.options.chkMonitorBrowserCookies=false;
+
+		config.shadowTiddlers.CookieManager=
+			 &quot;/***\n&quot;
+			+&quot;!!![[Browser cookies:|CookieManagerPlugin]] &quot;
+			+&quot;{{fine{&lt;&lt;option chkAllowBrowserCookies&gt;&gt;enable &lt;&lt;option chkMonitorBrowserCookies&gt;&gt;monitor}}}\n&quot;
+			+&quot;^^Review, modify, or delete browser cookies...&quot;
+			+&quot;To block specific cookies, see [[CookieManagerPluginConfig]].^^\n&quot;
+			+&quot;@@display:block;width:30em;{{smallform small{\n&lt;&lt;cookieManager&gt;&gt;}}}@@\n&quot;
+			+&quot;***/\n&quot;;
+
+		// add CookieManager to shadow CookieJar
+		var h=&quot;/***\n&lt;&lt;tiddler CookieManager&gt;&gt;\n***/\n&quot;;
+		var t=(config.shadowTiddlers[this.target]||&quot;&quot;).replace(new RegExp(h.replace(/\*/g,'\\*'),''),'')
+		config.shadowTiddlers[this.target]=h+t;
+
+		if (config.options.chkCookieManagerAddToAdvancedOptions===undefined)
+			config.options.chkCookieManagerAddToAdvancedOptions=true;
+		if (config.options.chkCookieManagerAddToAdvancedOptions)
+			config.shadowTiddlers.AdvancedOptions+=&quot;\n!!CookieManager\n&gt;&lt;&lt;tiddler CookieManager&gt;&gt;&quot;;
+
+		// add &quot;cookies&quot; backstage task
+		if (config.tasks &amp;&amp; !config.tasks.cookies) { // for TW2.2b3 or above
+			config.tasks.cookies = {
+				text: &quot;cookies&quot;,
+				tooltip: &quot;manage cookie-based option settings&quot;,
+				content: &quot;{{groupbox{&lt;&lt;tiddler [[&quot;+this.target+&quot;]]&gt;&gt;}}}&quot;
+			}
+			config.backstageTasks.push(&quot;cookies&quot;);
+		}
+	},
+	handler: function(place,macroName,params,wikifier,paramString,tiddler) {
+		var span=createTiddlyElement(place,&quot;span&quot;);
+		span.innerHTML=(params[0]&amp;&amp;params[0].toLowerCase()==&quot;button&quot;)?this.button:this.panel;
+		this.setList(span.firstChild.list);
+	},
+	panel: '&lt;form style=&quot;display:inline;margin:0;padding:0&quot; onsubmit=&quot;return false&quot;&gt;&lt;!--\
+		--&gt;&lt;select style=&quot;width:99%&quot; name=&quot;list&quot; \
+			onchange=&quot;this.form.val.value=this.value.length?config.options[this.value]:\'\';&quot;&gt;&lt;!--\
+		--&gt;&lt;/select&gt;&lt;br&gt;\
+		&lt;input type=&quot;text&quot; style=&quot;width:98%;margin:0;&quot; name=&quot;val&quot; title=&quot;enter an option value&quot;&gt;&lt;br&gt;\
+		&lt;input type=&quot;button&quot; style=&quot;width:33%;margin:0;&quot; value=&quot;get&quot; title=&quot;refresh list&quot; \
+			onclick=&quot;config.macros.cookieManager.setList(this.form.list);&quot;&gt;&lt;!--\
+		--&gt;&lt;input type=&quot;button&quot; style=&quot;width:33%;margin:0;&quot; value=&quot;set&quot; title=&quot;save cookie value&quot; \
+			onclick=&quot;var cmc=config.macros.cookieManager;\
+				var opt=this.form.list.value; var v=this.form.val.value; \
+				var msg=opt+\' is a blocked cookie.  OK to proceed?\';\
+				if ((!cmc.blockedCookies.contains(opt) &amp;&amp; cmc.allowBrowserCookie(opt))||confirm(msg)) {\
+					config.options[opt]=opt.substr(0,3)==\'txt\'?v:(v.toLowerCase()==\'true\'); \
+					saveOptionCookie(opt);config.macros.cookieManager.setList(this.form.list);\
+				}&quot;&gt;&lt;!--\
+		--&gt;&lt;input type=&quot;button&quot; style=&quot;width:33%;margin:0;&quot; value=&quot;del&quot; title=&quot;remove cookie&quot; \
+			onclick=&quot;var cmc=config.macros.cookieManager; var opt=this.form.list.value; \
+				var msg=opt+\' is a blocked cookie.  OK to proceed?\';\
+				if ((!cmc.blockedCookies.contains(opt) &amp;&amp; cmc.allowBrowserCookie(opt))||confirm(msg)) {\
+					removeCookie(this.form.list.value,true); \
+					cmc.setList(this.form.list);\
+				}&quot;&gt;&lt;br&gt;\
+		&lt;input type=&quot;button&quot; style=&quot;width:50%;margin:0;&quot; value=&quot;bake cookies&quot; \
+			title=&quot;save current cookie-based option values into a tiddler&quot; \
+			onclick=&quot;return config.macros.cookieManager.bake(this,false)&quot;&gt;&lt;!--\
+		--&gt;&lt;input type=&quot;button&quot; style=&quot;width:50%;margin:0;&quot; value=&quot;bake all options&quot; \
+			title=&quot;save ALL option values (including NON-COOKIE values) into a tiddler&quot; \
+			onclick=&quot;return config.macros.cookieManager.bake(this,true)&quot;&gt;&lt;!--\
+		--&gt;&lt;/form&gt;\
+	',
+	button: '&lt;form style=&quot;display:inline;margin:0;padding:0&quot; onsubmit=&quot;return false&quot;&gt;&lt;!--\
+		--&gt;&lt;input type=&quot;button&quot; style=&quot;margin:0;&quot; value=&quot;bake cookies&quot; \
+			title=&quot;save current browser-based cookie values into a tiddler&quot; \
+			onclick=&quot;return config.macros.cookieManager.bake(this,false)&quot;&gt;&lt;!--\
+		--&gt;&lt;/form&gt;\
+	',
+	getCookieList: function() {
+		var cookies = { };
+		if (document.cookie != &quot;&quot;) {
+			var p = document.cookie.split(&quot;; &quot;);
+			for (var i=0; i &lt; p.length; i++) {
+				var pos=p[i].indexOf(&quot;=&quot;);
+				if (pos==-1) cookies[p[i]]=&quot;&quot;;
+				else cookies[p[i].substr(0,pos)]=unescape(p[i].slice(pos+1));
+			}
+		}
+		var opt=new Array(); for (var i in config.options) if (cookies[i]) opt.push(i); opt.sort();
+		return opt;
+	},
+	setList: function(list) {
+		if (!list) return false;
+		var opt=this.getCookieList();
+		var sel=list.selectedIndex;
+		while (list.options.length &gt; 1) { list.options[1]=null; } // clear list (except for header item)
+		list.options[0]=new Option(&quot;There are &quot;+opt.length+&quot; cookies...&quot;,&quot;&quot;,false,false);
+		if (!opt.length) { list.form.val.value=&quot;&quot;; return; } // no cookies
+		var c=1;
+		for(var i=0; i&lt;opt.length; i++) {
+			var txt=&quot;&quot;;
+			if  (opt[i].substr(0,3)==&quot;chk&quot;)
+				txt+=&quot;[&quot;+(config.options[opt[i]]?&quot;\u221A&quot;:&quot;_&quot;)+&quot;] &quot;;
+			txt+=opt[i];
+			list.options[c++]=new Option(txt,opt[i],false,false);
+		}
+		list.selectedIndex=sel&gt;0?sel:0;
+		list.form.val.value=sel&gt;0?config.options[list.options[sel].value]:&quot;&quot;;
+	},
+	header:
+		&quot;/***\n&quot;
+		+&quot;!!![[Baked cookies:|CookieManagerPlugin]]\n&quot;
+		+&quot;^^Press {{smallform{&lt;&lt;cookieManager button&gt;&gt;}}} to save the current browser cookies... &quot;
+		+&quot;then hand-edit this section to customize the results.^^\n&quot;
+		+&quot;***/\n&quot;,
+	format: function(name) {
+		if (name.substr(0,3)=='chk')
+			return '\tconfig.options[&quot;'+name+'&quot;]='+(config.options[name]?'true;':'false;');
+		return '\tconfig.options[&quot;'+name+'&quot;]=&quot;'+config.options[name]+'&quot;;';
+	},
+	bake: function(here,all) {
+		if (story.isDirty(this.target)) return false; // target is being hand-edited... do nothing
+		var text=store.getTiddlerText(this.target);
+		if (text.indexOf(this.header)==-1) {
+			text+=this.header;
+			displayMessage(&quot;CookieManager: added 'Baked Cookies' section to CookieJar&quot;);
+		}
+		var who=config.options.txtUserName;
+		var when=new Date();
+		var tags=['systemConfig'];
+		var tid=store.getTiddler(this.target)||store.saveTiddler(this.target,this.target,text,who,when,tags,{});
+		if (!tid) return false; // if no target... do nothing
+		if (all) { 
+			var opts=new Array();
+			for (var i in config.options) if (i.substr(0,3)=='chk'||i.substr(0,3)=='txt') opts.push(i);
+			opts.sort();
+		}
+		else var opts=this.getCookieList();
+		var t=tid.text;
+		if (t.indexOf(this.header)==-1) t+=this.header;
+		t+='\n// '+opts.length+(all?' options':' cookies')+' saved ';
+		t+=when.formatString('on DDD, MMM DDth YYYY at 0hh:0mm:0ss');
+		t+=' by '+who+'//\n';
+		t+='//^^(edit/remove username check and/or individual option settings as desired)^^//\n';
+		t+='//{{{\n';
+		t+='if (config.options.txtUserName==&quot;'+who+'&quot;) {\n';
+		for (i=0; i&lt;opts.length; i++) t+=config.macros.cookieManager.format(opts[i])+&quot;\n&quot;;
+		t+='}\n//}}}\n';
+		store.saveTiddler(this.target,this.target,t,who,when,tags,tid?tid.fields:{});
+		story.displayTiddler(story.findContainingTiddler(this),this.target);
+		story.refreshTiddler(this.target,null,true);
+		var msg=opts.length+(all?' options':' cookies')+' have been saved in '+this.target+'.  ';
+		msg+='Please review all stored settings.';
+		displayMessage(msg);
+		return false;
+	}
+}
+//}}}
+//{{{
+// Hijack saveOptionCookie() to add cookie blocking and monitoring messages
+config.macros.cookieManager.saveOptionCookie=saveOptionCookie;
+window.saveOptionCookie=function(name,force)
+{
+	var cmc=config.macros.cookieManager; // abbrev
+	if (force || ((config.options.chkAllowBrowserCookies || name==&quot;chkAllowBrowserCookies&quot;)
+		&amp;&amp; !cmc.blockedCookies.contains(name) &amp;&amp; cmc.allowBrowserCookie(name))) {
+		cmc.saveOptionCookie.apply(this,arguments);
+		cmc.displayStatus(name+&quot;=&quot;+config.options[name]);
+	} else cmc.displayStatus(&quot;setting of '&quot;+name+&quot;' is blocked&quot;);
+}
+
+// if removeCookie() function is not defined by TW core, define it here.
+if (window.removeCookie===undefined) {
+	window.removeCookie=function(name) {
+		document.cookie = name+'=; expires=Thu, 01-Jan-1970 00:00:01 UTC; path=/;'; 
+	}
+}
+
+// ... and then hijack it to add cookie blocking and monitoring messages
+config.macros.cookieManager.removeCookie=removeCookie;
+window.removeCookie=function(name,force)
+{
+	var cmc=config.macros.cookieManager; // abbrev
+	if (!cmc.getCookieList().contains(name))
+		return; // not a current cookie!
+	if (force || ((config.options.chkAllowBrowserCookies || name==&quot;chkAllowBrowserCookies&quot;)
+		&amp;&amp; !cmc.blockedCookies.contains(name) &amp;&amp; cmc.allowBrowserCookie(name))) {
+		cmc.removeCookie.apply(this,arguments);
+		cmc.displayStatus(&quot;deleted &quot;+name);
+	} else cmc.displayStatus(&quot;deletion of '&quot;+name+&quot;' is blocked&quot;);
+}
+//}}}</pre>
+</div>
+<div title="CookieManagerPluginConfig" creator="YourName" modifier="ELSDesignStudios" created="200809120912" modified="200809121108" tags="systemConfig settings">
+<pre>/***
+|Name|CookieManagerPluginConfig|
+|Source|http://www.TiddlyTools.com/#CookieManagerPluginConfig|
+|Requires|CookieManagerPlugin|
+|Description|custom settings for [[CookieManagerPlugin]]|
+!!!!!Browser Cookie Configuration:
+***/
+// // &lt;&lt;option chkAllowBrowserCookies&gt;&gt; store ~TiddlyWiki option settings using private browser cookies
+// // &lt;&lt;option chkMonitorBrowserCookies&gt;&gt; monitor browser cookie activity (shows a message whenever a cookie is updated)
+//{{{
+// default settings:
+config.options.chkAllowBrowserCookies=true;	// if FALSE, this blocks *all* cookies
+config.options.chkMonitorBrowserCookies=false;
+//}}}
+
+// // Individual cookie names can be prevented from being created, modified, or deleted in your browser's stored cookies by adding them to the {{{config.macros.cookieManager.blockedCookies}}} array: 
+//{{{
+var bc=config.macros.cookieManager.blockedCookies; // abbreviation
+bc.push(&quot;txtMainTab&quot;);			// TiddlyWiki:  SideBarTabs
+bc.push(&quot;txtTOCSortBy&quot;);		// TiddlyTools: TableOfContentsPlugin
+bc.push(&quot;txtCatalogTab&quot;);		// TiddlyTools: CatalogTabs
+//}}}
+// // You can also define a javascript test function that determines whether or not any particular cookie name should be blocked or allowed.  The following function should return FALSE if the browser cookie should be blocked, or TRUE if changes to the cookie should be allowed:
+//{{{
+config.macros.cookieManager.allowBrowserCookie=function(name) {
+	// add tests based on specific cookie names and runtime conditions
+	return true;
+}
+//}}}</pre>
+</div>
+<div title="CookieSaverPlugin" creator="YourName" modifier="ELSDesignStudios" created="200809091958" modified="200908050710" tags="systemConfig">
+<pre>/***
+|Name|CookieSaverPlugin|
+|Source|http://www.TiddlyTools.com/#CookieSaverPlugin|
+|Version|1.1.0|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|plugin|
+|Description|automatically save TiddlyWiki cookie options to [[CookieJar]] tiddler for portable settings|
+!!!!!Usage
+&lt;&lt;&lt;
+Whenever TiddlyWiki option settings are changed, a browser-based cookie value is added, removed, or changed.  Each time this occurs, the CookieSaverPlugin generates an equivalent ''portable cookie'': a single line of javascript code that assigns a stored value directly to the specific TiddlyWiki internal config.options.* variable corresponding to the browser cookie with the same name.
+
+The portable cookies are automatically written into a tiddler named [[CookieJar]] that is tagged with&lt;&lt;tag systemConfig&gt;&gt;so that their values will be applied as soon as the document is saved and reloaded.  You can change or delete an individual portable cookie by editing the contents of the [[CookieJar]] and removing the appropriate line of javascript from the tiddler source code.  Note: editing the portable cookie definitions does not alter the values of any corresponding browser cookies, nor does it update the internal value that is in use within the current TiddlyWiki document session.  Changes made directly to the [[CookieJar]] are only applied after saving and reloading the document.  In any case, whenever a browser cookie value is updated, any modifications you made to the equivalent portable cookie are immediately rewritten to reflect the current browser cookie value.
+
+Browser cookies are, obviously, stored with your browser... and are kept separate from the document itself.  In contrast, because your portable cookies are stored in a [[CookieJar]] within the document, they remain part of that document.
+
+When the document is copied and shared with others, each copy includes the [[CookieJar]] containing //your// stored portable cookies.  Fortunately, CookieSaverPlugin can generate and maintain several separate sets of portable cookies in the same [[CookieJar]] tiddler, where each set is associated with a different TiddlyWiki username.  As long as other readers have not chosen the same username, your portable cookie values will not be automatically applied when they are reading the document.  Rather, as they interact with the document, a new set of portable cookies, associated with //their// username, will be automatically added to the [[CookieJar]].
+
+In addition to tracking and applying separate portable cookies for each user, CookieSaverPlugin can also be configured so that sensitive data (such as internal URLs, email addresses, login IDs and passwords, etc.) will never be inadvertently stored in the [[CookieJar]].  To achieve this, you can selectively prevent specific cookienames from being used as portable cookies by placing a special javascript function definition in a tiddler named [[CookieSaverPluginConfig]], tagged with 'systemConfig':
+{{{
+config.macros.cookieSaver.allowPortableCookie=function(name){
+	if ( ... some test using 'name' ...) return false;
+	if ( ... another test with 'name' ...) return true;
+	etc.
+	return true;  // default=allow
+}
+}}}
+The allowPortableCookie() function offers a flexible method for plugin developers and other technically skilled document authors to implement their own custom-defined, application-specific cookie data protection by applying sophisticated logic for deciding which cookies should be allowed or blocked based on variety of different conditions.  The basic operation of this function is to accept a cookie name as text input, apply some tests based on that cookie name (combined with any other useful criteria), and then return //true// if saving the portable cookie should be permitted, or //false// if the cookie should be excluded from the [[CookieJar]].
+
+Unfortunately, although the technical expertise needed to write this test function is relatively minor, the level of programming ability that is needed can nonetheless be beyond the skills that many people possess.  To help address this, CookieSaverPlugin also supports an alternative syntax that allows you to define a simple array of cookie names that is used by the plugin to automatically block the indicated names from being included as portable cookies in the [[CookieJar]].  The array definition syntax looks like this:
+{{{
+// define a complete set of blocked cookie names
+config.macros.cookieSaver.blockedCookies=['cookie','cookie','cookie',etc...];
+}}}
+or
+{{{
+// add individual cookies names to the current set of blocked cookies
+config.macros.cookieSaver.blockedCookies.push('cookie');
+config.macros.cookieSaver.blockedCookies.push('cookie');
+etc...
+}}}
+Note: the allowPortableCookie() function and the blockedCookies[] array are only used to limit the creation of portable cookies within the [[CookieJar]], and are //not// applied when creating normal browser cookies.  Thus, regardless of whether or not a given portable cookie has been excluded or permitted, all the usual TiddlyWiki settings and internal state data can still be saved as secure, private, local browser cookies that are never made visible to others, even when the document is shared.
+&lt;&lt;&lt;
+!!!!!Configuration
+&lt;&lt;&lt;
+&lt;&lt;option chkPortableCookies&gt;&gt; allow ~CookieSaver to store //''portable cookies''// in [[CookieJar]] tiddler
+&lt;&lt;option chkMonitorCookieJar&gt;&gt; monitor ~CookieSaver activity (show messages whenever [[CookieJar]] is updated)
+&lt;&lt;option chkCookieJarAddToAdvancedOptions&gt;&gt; display [[CookieJar]] in [[AdvancedOptions]]
+^^//note: changing this setting does not take effect until you reload the document//^^
+&lt;&lt;&lt;
+!!!!!Revisions
+&lt;&lt;&lt;
+2009.08.05 [1.1.0] changed CookieJar output format to support odd symbols in option names (e.g. '@')
+2008.09.11 [1.0.2] automatically add portable cookies header to existing CookieJar (if any).  Also, added chkMonitorCookieJar option to display CookieJar activity messages
+2008.09.10 [1.0.1] documentation, code cleanup, improvements in 'allowPortableCookie()' function handling
+2008.09.09 [1.0.0] initial release
+&lt;&lt;&lt;
+!!!!!Code
+***/
+//{{{
+version.extensions.CookieSaverPlugin= {major: 1, minor: 1, revision: 0, date: new Date(2009,8,5)};
+
+config.macros.cookieSaver = {
+	target:
+		config.options.txtCookieJar||&quot;CookieJar&quot;,
+	init: function() {
+		if (config.options.chkPortableCookies===undefined)
+			config.options.chkPortableCookies=false;
+		if (config.options.txtCookieJar===undefined)
+			config.options.txtCookieJar=this.target;
+		if (config.options.chkCookieJarAddToAdvancedOptions===undefined)
+			config.options.chkCookieJarAddToAdvancedOptions=true;
+		if (config.options.chkCookieJarAddToAdvancedOptions)
+			config.shadowTiddlers.AdvancedOptions+=&quot;\n!!%0\n&gt;&lt;&lt;tiddler [[%0]]&gt;&gt;&quot;.format([this.target]);
+		if (config.options.chkMonitorCookieJar===undefined)
+			config.options.chkMonitorCookieJar=false;
+
+		// add empty Portable Cookies section to shadow CookieJar
+		var h=&quot;/***\n&lt;&lt;tiddler CookieManager&gt;&gt;\n***/\n&quot;;
+		var t=(config.shadowTiddlers[this.target]||&quot;&quot;).replace(new RegExp(h.replace(/\*/g,'\\*'),''),'')
+		config.shadowTiddlers[this.target]=this.header+this.footer+t;
+
+		// add empty Portable Cookies section to real CookieJar (if one exists)
+		if (store.tiddlerExists(this.target) &amp;&amp; !readOnly) {
+			var tid=this.get(this.target);
+			var t=tid.text;
+			if (t.indexOf(this.header)==-1){
+				t=this.header+this.footer+t.replace(new RegExp(h.replace(/\*/g,'\\*'),''),'');
+				var who=config.options.chkForceMinorUpdate?tid.modifier:config.options.txtUserName;
+				var when=config.options.chkForceMinorUpdate?tid.modified:new Date();
+				store.saveTiddler(tid.title,tid.title,t,who,when,tid.tags,tid.fields);
+				displayMessage(&quot;CookieSaver: added 'Portable Cookies' section to CookieJar&quot;);
+			}
+		}
+
+		// add &quot;cookies&quot; backstage task
+		if (config.tasks &amp;&amp; !config.tasks.cookies) { // for TW2.2b3 or above
+			config.tasks.cookies = {
+				text: &quot;cookies&quot;,
+				tooltip: &quot;manage cookie-based option settings&quot;,
+				content: &quot;{{groupbox{&lt;&lt;tiddler CookieManager&gt;&gt;&lt;&lt;tiddler [[%0]]&gt;&gt;}}}&quot;.format([this.target])
+			}
+			config.backstageTasks.push(&quot;cookies&quot;);
+		}
+	},
+	header:
+		 &quot;/***\n&lt;&lt;tiddler CookieManager&gt;&gt;\n***/\n&quot;
+		+&quot;/***\n&quot;
+		+&quot;!!![[Portable cookies:|CookieSaverPlugin]] &quot;
+		+&quot;{{fine{&lt;&lt;option chkPortableCookies&gt;&gt;enable &lt;&lt;option chkMonitorCookieJar&gt;&gt;monitor}}}\n&quot;
+		+&quot;^^This section is ''//__automatically maintained__//'' by [[CookieSaverPlugin]].  &quot;
+		+&quot;To block specific cookies, see [[CookieSaverPluginConfig]].^^\n&quot;
+		+&quot;***/\n&quot;,
+	startUser:
+		 &quot;//{{{\n&quot;
+		+&quot;if (config.options.txtUserName==\&quot;%0\&quot; &amp;&amp; config.options.chkPortableCookies) {&quot;,
+	endUser:
+		&quot;\n}\n//}}}\n&quot;,
+	footer:
+		&quot;// // /% end portable cookies %/\n&quot;,
+	get: function(tid) { // create or retrieve tiddler
+		if (story.isDirty(tid)) return null; // tiddler is being hand-edited... leave it alone.
+		var text=config.shadowTiddlers[this.target];
+		var who=config.options.txtUserName;
+		var when=new Date();
+		var tags=['systemConfig'];
+		return store.getTiddler(tid)||store.saveTiddler(tid,tid,text,who,when,tags,{});
+	},
+	format: function(name) {
+		if (name.substr(0,3)=='chk')
+			return '\tconfig.options[&quot;'+name+'&quot;]='+(config.options[name]?'true;':'false;');
+		return '\tconfig.options[&quot;'+name+'&quot;]=&quot;'+config.options[name]+'&quot;;';
+	},
+	blockedCookies: [],
+	allowPortableCookie: function(name) {
+		return true;
+	},
+	set: function(name) {
+		if (!name||!name.trim().length) return;
+		if (name=='txtUserName' || this.blockedCookies.contains(name) || !this.allowPortableCookie(name)) {
+			if (config.options.chkMonitorCookieJar &amp;&amp; !startingUp)
+				displayMessage(&quot;CookieJar: blocked '&quot;+name+&quot;'&quot;);
+			return false; // don't save excluded cookies
+		}
+		var tid=this.get(this.target);
+		if (!tid) return false; // if no tiddler... do nothing
+		var t=tid.text;
+		if (t.indexOf(this.header)==-1) {  // re-add Portable Cookies section if it was deleted by hand edit
+			var h=&quot;/***\n&lt;&lt;tiddler CookieManager&gt;&gt;\n***/\n&quot;;
+			t=this.header+this.footer+t.replace(new RegExp(h.replace(/\*/g,'\\*'),''),'');
+		}
+		var who=config.options.txtUserName;
+		var when=new Date();
+		var startmark=this.startUser.format([who]);
+		var endmark=this.endUser;
+		var startpos=t.indexOf(startmark);
+		if (startpos==-1) { // insert new user (just before footer)
+			if (config.options.chkMonitorCookieJar &amp;&amp; !startingUp)
+				displayMessage(&quot;CookieJar: added new user '&quot;+who+&quot;'&quot;);
+			var addpos=t.indexOf(this.footer); if (addpos==-1) addpos=t.length;
+			t=t.substr(0,addpos)+startmark+endmark+t.substr(addpos);
+			startpos=addpos;
+		}
+		startpos+=startmark.length;
+		var endpos=t.indexOf(endmark,startpos);
+		var pre=t.substr(0,startpos);
+		var lines=t.substring(startpos,endpos).split('\n');
+		var post=t.substr(endpos);
+		var code=this.format(name);
+		var match='\tconfig.options[&quot;'+name+'&quot;]=';
+		var found=false; var changed=false;
+		for (var i=0; i&lt;lines.length; i++) { // find and replace existing setting
+			if (lines[i].substr(0,match.length)==match) {
+				found=true;
+				if (changed=lines[i]!=code) lines[i]=code; // replace value
+				if (config.options.chkMonitorCookieJar &amp;&amp; !startingUp &amp;&amp; changed)
+					displayMessage(&quot;CookieJar: &quot;+code);
+			}
+		}
+		if (!found &amp;&amp; code.length) { // OR, add new setting
+			lines[lines.length]=code;
+			if (config.options.chkMonitorCookieJar &amp;&amp; !startingUp)
+				displayMessage(&quot;CookieJar: &quot;+code);
+		}
+		if (found &amp;&amp; !changed) return; // don't alter tiddler unless necessary
+		t=pre+lines.join('\n')+post;
+		var who=config.options.chkForceMinorUpdate?tid.modifier:config.options.txtUserName;
+		var when=config.options.chkForceMinorUpdate?tid.modified:new Date();
+		store.saveTiddler(this.target,this.target,t,who,when,tid.tags,tid.fields);
+		story.refreshTiddler(this.target,null,true);
+	},
+	remove: function(name) {
+		if (!name||!name.trim().length) return;
+		var who=config.options.txtUserName;
+		var when=new Date();
+		var tid=store.getTiddler(this.target);
+		if (!tid) return false; // if no tiddler... do nothing
+		var t=tid.text;
+		var who=config.options.txtUserName
+		var startmark=this.startUser.format([who]);
+		var endmark=this.endUser;
+		var startpos=t.indexOf(startmark);
+		if (startpos==-1) return false; // no such user... do nothing
+		startpos+=startmark.length;
+		var endpos=t.indexOf(endmark,startpos);
+		var pre=t.substr(0,startpos);
+		var lines=t.substring(startpos,endpos).split('\n');
+		var post=t.substr(endpos);
+		var match='\tconfig.options[&quot;'+name+'&quot;]';
+		var found=false; var changed=false;
+		for (var i=0; i&lt;lines.length; i++) { // find and remove setting
+			if (lines[i].substr(0,match.length)==match) {
+				lines.splice(i,1);
+				changed=true;
+				if (config.options.chkMonitorCookieJar &amp;&amp; !startingUp)
+					displayMessage(&quot;CookieJar: deleted '&quot;+name+&quot;'&quot;);
+				break;
+			}
+		}
+		if (!changed) return; // not found... do nothing
+		t=pre+lines.join('\n')+post;
+		if (lines.length==1) { // no cookies left, remove user
+			t=pre.substr(0,pre.length-startmark.length)+post.substr(endmark.length);
+			if (config.options.chkMonitorCookieJar &amp;&amp; !startingUp)
+				displayMessage(&quot;CookieJar: removed user '&quot;+who+&quot;'&quot;);
+		}
+		var who=config.options.chkForceMinorUpdate?tid.modifier:config.options.txtUserName;
+		var when=config.options.chkForceMinorUpdate?tid.modified:new Date();
+		store.saveTiddler(this.target,this.target,t,who,when,tid.tags,tid.fields);
+		story.refreshTiddler(this.target,null,true);
+	}
+}
+//}}}
+//{{{
+// Hijack saveOptionCookie() to add CookieSaver processing
+config.macros.cookieSaver.saveOptionCookie=saveOptionCookie;
+window.saveOptionCookie=function(name)
+{
+	config.macros.cookieSaver.saveOptionCookie.apply(this,arguments);
+	if (!readOnly &amp;&amp; (config.options.chkPortableCookies || name==&quot;chkPortableCookies&quot;))
+		config.macros.cookieSaver.set(name);
+}
+// if removeCookie() function is not defined by TW core, define it here.
+if (window.removeCookie===undefined) {
+	window.removeCookie=function(name) {
+		document.cookie = name+'=; expires=Thu, 01-Jan-1970 00:00:01 UTC; path=/;'; 
+	}
+}
+// ... and then hijack it to also remove any corresponding PortableCookie
+config.macros.cookieSaver.removeCookie=removeCookie;
+window.removeCookie=function(name)
+{
+	if (config.options.chkPortableCookies &amp;&amp; !readOnly)
+		config.macros.cookieSaver.remove(name);
+	config.macros.cookieSaver.removeCookie.apply(this,arguments);
+}
+//}}}</pre>
+</div>
+<div title="CookieSaverPluginConfig" creator="YourName" modifier="ELSDesignStudios" created="200809091959" modified="200809121244" tags="systemConfig settings">
+<pre>/***
+|Name|CookieSaverPluginConfig|
+|Source|http://www.TiddlyTools.com/#CookieSaverPluginConfig|
+|Requires|CookieSaverPlugin|
+|Description|custom settings for [[CookieSaverPlugin]]|
+!!!!!Portable Cookie Configuration:
+***/
+// // &lt;&lt;option chkPortableCookies&gt;&gt; allow ~CookieSaver to store //''portable cookies''// in [[CookieJar]] tiddler
+// // &lt;&lt;option chkMonitorCookieJar&gt;&gt; monitor ~CookieSaver activity (show messages whenever [[CookieJar]] is updated)
+//{{{
+// default to these settings:
+// config.options.chkPortableCookies=false;	// when FALSE this blocks ALL portable cookies
+// config.options.chkMonitorCookieJar=false;
+//}}}
+
+// // Individual cookie names can be added to the {{{config.macros.cookieSaver.blockedCookies}}} array to prevent them from being stored in the [[CookieJar]].
+//{{{
+var bc=config.macros.cookieSaver.blockedCookies;
+bc.push(&quot;chkBackstage&quot;);		// core
+bc.push(&quot;txtMainTab&quot;);			// TiddlyWiki: SideBarTabs
+bc.push(&quot;txtTOCSortBy&quot;);		// TiddlyTools: TableOfContentsPlugin
+bc.push(&quot;txtCatalogTab&quot;);		// TiddlyTools: CatalogTabs
+bc.push(&quot;txtUploadFilename&quot;);		// BidiX: UploadPlugin
+bc.push(&quot;txtUploadDir&quot;);		// BidiX: UploadPlugin
+bc.push(&quot;pasPassword&quot;);			// BidiX: UploadPlugin
+bc.push(&quot;pasUploadPassword&quot;);		// BidiX: UploadPlugin
+//}}}
+// // You can also define a javascript test function that determines whether or not any particular cookie name should be stored in the [[CookieJar]].  The following function should return FALSE if the portable cookie should be blocked, or TRUE if the cookie should be allowed:
+//{{{
+config.macros.cookieSaver.allowPortableCookie=function(name) {
+	// add tests based on specific cookie names and runtime conditions
+	if (name.substr(0,9)==&quot;chkSlider&quot;) 	return false;	// NestedSlidersPlugin
+	if (name.substr(0,13)==&quot;txtFirstVisit&quot;)	return false;	// VisitCounter
+	if (name.substr(0,12)==&quot;txtLastVisit&quot;)	return false;	// VisitCounter
+	if (name.substr(0,13)==&quot;txtVisitCount&quot;)	return false;	// VisitCounter
+	return true;
+}
+//}}}</pre>
 </div>
 <div title="CopyTiddlerPlugin" modifier="ELSDesignStudios" created="200601061656" modified="201011301925" tags="systemConfig">
 <pre>/***
@@ -10774,6 +11367,72 @@ handler: function(place, macroName, params, wikifier, paramString, tiddler) {
 })(jQuery);}
 //}}}</pre>
 </div>
+<div title="GenerateRssByTagPlugin" creator="YourName" modifier="YourName" created="200703052156" modified="202406161309" tags="systemConfig" changecount="2">
+<pre>/***
+|''Name:''|GenerateRssByTagPlugin|
+|''Description:''|Only tiddlers with a specific tag are inluded in the RSSFeed. If no tiddlers are selected then works as before. (see ticket #270: http://trac.tiddlywiki.org/tiddlywiki/ticket/270). &lt;br&gt;RssTag: &lt;&lt;option txtRssTag&gt;&gt;|
+|''Version:''|1.0.2|
+|''Date:''|Apr 20, 2007|
+|''Source:''|http://tiddlywiki.bidix.info/#GenerateRssByTagPlugin|
+|''Author:''|BidiX (BidiX (at) bidix (dot) info)|
+|''[[License]]:''|[[BSD open source license|http://tiddlywiki.bidix.info/#%5B%5BBSD%20open%20source%20license%5D%5D ]]|
+|''~CoreVersion:''|2.2.0 (Beta 5)|
+***/
+//{{{
+version.extensions.GenerateRssByTagPlugin = {
+	major: 1, minor: 0, revision: 2, 
+	date: new Date(&quot;Apr 20, 2007&quot;),
+	source: 'http://tiddlywiki.bidix.info/#PasswordOptionPlugin',
+	author: 'BidiX (BidiX (at) bidix (dot) info',
+	coreVersion: '2.2.0 (Beta 5)'
+};
+
+if (!window.bidix) window.bidix = {}; // bidix namespace
+
+bidix.generateRssByTag = function()
+{
+	var s = [];
+	var d = new Date();
+	var u = store.getTiddlerText(&quot;SiteUrl&quot;);
+	// Assemble the header
+	s.push(&quot;&lt;&quot; + &quot;?xml version=\&quot;1.0\&quot;&quot; + &quot; encoding='UTF-8' &quot; + &quot;?&quot; + &quot;&gt;&quot;);
+	s.push(&quot;&lt;rss version=\&quot;2.0\&quot;&gt;&quot;);
+	s.push(&quot;&lt;channel&gt;&quot;);
+	s.push(&quot;&lt;title&quot; + &quot;&gt;&quot; + wikifyPlain(&quot;SiteTitle&quot;).htmlEncode() + &quot;&lt;/title&quot; + &quot;&gt;&quot;);
+	if(u)
+		s.push(&quot;&lt;link&gt;&quot; + u.htmlEncode() + &quot;&lt;/link&gt;&quot;);
+	s.push(&quot;&lt;description&gt;&quot; + wikifyPlain(&quot;SiteSubtitle&quot;).htmlEncode() + &quot;&lt;/description&gt;&quot;);
+	s.push(&quot;&lt;language&gt;en-us&lt;/language&gt;&quot;);
+	s.push(&quot;&lt;copyright&gt;Copyright &quot; + d.getFullYear() + &quot; &quot; + config.options.txtUserName.htmlEncode() + &quot;&lt;/copyright&gt;&quot;);
+	s.push(&quot;&lt;pubDate&gt;&quot; + d.toGMTString() + &quot;&lt;/pubDate&gt;&quot;);
+	s.push(&quot;&lt;lastBuildDate&gt;&quot; + d.toGMTString() + &quot;&lt;/lastBuildDate&gt;&quot;);
+	s.push(&quot;&lt;docs&gt;http://blogs.law.harvard.edu/tech/rss&lt;/docs&gt;&quot;);
+	s.push(&quot;&lt;generator&gt;TiddlyWiki &quot; + version.major + &quot;.&quot; + version.minor + &quot;.&quot; + version.revision + &quot;&lt;/generator&gt;&quot;);
+	// The body
+	var tiddlers;
+	if (config.options.txtRssTag &amp;&amp; store.getTaggedTiddlers(config.options.txtRssTag).length &gt; 0)
+		tiddlers = store.getTaggedTiddlers(config.options.txtRssTag,&quot;modified&quot;);
+	else
+		tiddlers = store.getTiddlers(&quot;modified&quot;,&quot;[[excludeLists]]&quot;);
+	var n = config.numRssItems &gt; tiddlers.length ? 0 : tiddlers.length-config.numRssItems;
+	for (var t=tiddlers.length-1; t&gt;=n; t--)
+		s.push(tiddlers[t].saveToRss(u));
+	// And footer
+	s.push(&quot;&lt;/channel&gt;&quot;);
+	s.push(&quot;&lt;/rss&gt;&quot;);
+	// Save it all
+	return s.join(&quot;\n&quot;);
+};
+
+//
+// Initializations
+//
+bidix.generateRss = generateRss; // backup core version
+generateRss = bidix.generateRssByTag; // install new one
+config.options.txtRssTag = &quot;blog&quot;; // default RssTag. use &lt;&lt;option txtRssTag&gt;&gt; to overwritte
+merge(config.optionsDesc,{txtRssTag: &quot;Only tiddlers with this tag will be included in the RSS Feed.&quot;});
+//}}}</pre>
+</div>
 <div title="GliderDance" modifier="ELSDesignStudios" created="200810041151" modified="200810121130" tags="tiddlyLife">
 <pre>{{{
 -------------------OO---------
@@ -12056,7 +12715,7 @@ I have a laptop running opensuse leap and stay active in several local {{{LUGs}}
 
 </pre>
 </div>
-<div title="Home" modifier="YourName" created="202401160150" modified="202406160657" tags="blog" changecount="8">
+<div title="Home" modifier="Wang Yanshu" created="202401160150" modified="202406161336" changecount="10">
 <pre>&lt;&lt;life delay:250 autostart nomenu nostats noedit width:60 height:60 tid:DavidHilbert&gt;&gt;
 I am a math students in Nankai University. I am interested in number theory and mathematical logic.
 
@@ -12072,7 +12731,7 @@ Email : Wangyenshu@outlook.com
 &lt;&lt;tagCloud excludeLists excludeSearch systemConfig systemServer PluginInfo Plugin excludeMissing excludePublisher takenotepackage app DiscoveryPackage NavigationPackage IconPackage TidIDEPackage TaskPackage ScrollbarPackage MediaPackage pluginInfo @cdent @developers @ricardoperes Administration follow tips Content System systemConfigDisable AttachFilePackage IFramePackage QuickEditPackage Tag ThemePackage attachment package sample settings story tiddlyLife BasicsPackage BookmarkPackage CD CSS DiscussionPackage ImportExportPackage InputPackage JashPackage MoveablePanelPackage PasetUpPackage PasteUpPackage TiddlyTools [[To Do]] alpha animation blank bookmarklet catalog demo discussion excludeTheme framedLinks html media moveable panelmap patch script setup stylesheet stylesheets systemTheme template test translate nonacademic transclusion locked silk Decrypt(Ramanujan) Trash&gt;&gt;
 </pre>
 </div>
-<div title="HoverMenu" modifier="YourName" created="201206141003" modified="202406160417" tags="Administration System" changecount="1" _hash="af62a178b2914b0d8acae58dea5fd136b93e7a20">
+<div title="HoverMenu" modifier="YourName" created="201206141003" modified="202406160417" tags="Administration System" _hash="af62a178b2914b0d8acae58dea5fd136b93e7a20" changecount="1">
 <pre>&lt;&lt;top&gt;&gt;
 &lt;&lt;jump j '' top&gt;&gt;
 &lt;&lt;toggleSideBar&gt;&gt;&lt;&lt;renameButton '&gt;' &gt;&gt;
@@ -12378,7 +13037,7 @@ window.isChild = function(e,parentId) {
 Note: this package includes icons that are part of the &quot;Silk&quot; icon set: http://www.famfamfam.com/lab/icons/silk/ containing 1000 16-by-16 pixel icons in PNG format, created by Mark James, a part-time web developer, part-time student currently living in Birmingham, UK, and is licensed under a Creative Commons Attribution 2.5 License. Please visit http://www.famfamfam.com/ for further information and licensing details.}}}
 </pre>
 </div>
-<div title="Ideals on Math Research Workflow" creator="YourName" modifier="YourName" created="202405280410" tags="nonacademic" changecount="1">
+<div title="Ideals on Math Research Workflow" creator="YourName" modifier="YourName" created="202405280410" modified="202406161301" tags="blog" changecount="2">
 <pre>- Using mobile camera to take down lecture notes and use digikam to manage photos
 - Zotero for reference manager
 - Joplin for memo and blogging</pre>
@@ -12494,7 +13153,7 @@ config.macros.Image.handler= function(place,macroName,params) {
 //}}}
  </pre>
 </div>
-<div title="ImageMacroPlugin" modifier="YourName" created="201311111923" modified="202406070450" tags="excludeLists systemConfig" _hash="3f1696962a1dff3028ea1a4307d8b95c3b3ceb65" changecount="1">
+<div title="ImageMacroPlugin" modifier="YourName" created="201311111923" modified="202406070450" tags="excludeLists systemConfig" changecount="1" _hash="3f1696962a1dff3028ea1a4307d8b95c3b3ceb65">
 <pre>/***
 |''Name''|ImageMacroPlugin|
 |''Version''|0.9.4|
@@ -14223,7 +14882,7 @@ http://www.TiddlyTools.com/images/fish.jpg
 <div title="Liouville-Theorem-Subharmonic" modifier="YourName" created="202404131555">
 <pre>https://math.berkeley.edu/~vvdatar/m185f16/notes/Lecture-17_Liouville.pdf</pre>
 </div>
-<div title="ListboxPlugin" modifier="ELSDesignStudios" created="200705121851" modified="201003151241" tags="MediaPackage TaskPackage systemConfig InputPackage" thing="meenie" color="#00FF00" size="34">
+<div title="ListboxPlugin" modifier="ELSDesignStudios" created="200705121851" modified="201003151241" tags="MediaPackage TaskPackage systemConfig InputPackage" size="34" color="#00FF00" thing="meenie">
 <pre>/***
 |Name|ListboxPlugin|
 |Source|http://www.TiddlyTools.com/#ListboxPlugin|
@@ -14497,7 +15156,7 @@ config.macros.select = {
 }
 //}}}</pre>
 </div>
-<div title="ListboxPluginInfo" modifier="ELSDesignStudios" created="200801090449" modified="201003151240" tags="pluginInfo" thing="eenie" color="#0000FF" size="30" gender="Male" plugins="AdvancedOptionsPlugin">
+<div title="ListboxPluginInfo" modifier="ELSDesignStudios" created="200801090449" modified="201003151240" tags="pluginInfo" plugins="AdvancedOptionsPlugin" gender="Male" size="30" color="#0000FF" thing="eenie">
 <pre>|Name|ListboxPlugin|
 |Source|http://www.TiddlyTools.com/#ListboxPlugin|
 |Documentation|http://www.TiddlyTools.com/#ListboxPluginInfo|
@@ -15429,7 +16088,7 @@ window.getLooseLinksMap=function(title) {
 store.addNotification(null,window.getLooseLinksMap); // notify
 //}}}</pre>
 </div>
-<div title="MainMenu" modifier="YourName" created="202312221102" modified="202406160659" changecount="16">
+<div title="MainMenu" modifier="Wang Yanshu" created="202312221102" modified="202406161332" changecount="19">
 <pre>^^&lt;&lt;calendar thismonth&gt;&gt;
 ----
 !Music
@@ -15509,7 +16168,10 @@ blogroll template
 
 __''[[Last Updates|LastUpdates]]''__
 ----
-This work excluding plugins is licensed under [[Creative Commons NonCommercial license 4.0|https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode.en]]
+Powered by [[TiddlyWikiClassic|https://github.com/TiddlyWiki/tiddlywiki.com]].
+This site supports [[Webmention|https://webmention.io/]].
+This site supports [[Activitypub|https://fed.brid.gy/]].
+Except where otherwise noted, text content on this site is licensed under [[Creative Commons NonCommercial license 4.0|https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode.en]].
 ----
 Unsaved Changes:
 &lt;&lt;unsavedChanges list &quot;&lt;br&gt;&quot;&gt;&gt;
@@ -16075,18 +16737,18 @@ config.formatters.push({
 <div title="MediaPackage" modifier="ELSDesignStudios" created="200807230227" modified="200807230235" tags="package MediaPackage">
 <pre>These plugins enable you to easily add various types of media (audio, video, flash, etc.) to your tiddler content.  The package includes several different kinds of embedded media players and a number of examples that define and present media content using custom templates, along with supporting plugins to provide additional rendering/formatting for the content surrounding the embedded player.</pre>
 </div>
-<div title="MediaSample - Image" modifier="ELSDesignStudios" created="200706230356" modified="200709030203" tags="media" mediatype="image" autoplay="false" rpgretry="" rpgok="" rpgaction="" height="auto" width="auto" mediaurl="images/JR+ELS_1024.jpg" groupid="photo" itemid="sample" mediatitle="Tiddly Wizards" next="" previous="" showcontrols="true">
+<div title="MediaSample - Image" modifier="ELSDesignStudios" created="200706230356" modified="200709030203" tags="media" showcontrols="true" previous="" next="" mediatitle="Tiddly Wizards" itemid="sample" groupid="photo" mediaurl="images/JR+ELS_1024.jpg" width="auto" height="auto" rpgaction="" rpgok="" rpgretry="" autoplay="false" mediatype="image">
 <pre>Jeremy Ruston (TiddlyWiki) and Eric Shulman (TiddlyTools)
 Yerba Buena Gardens, The Metreon, San Francisco, CA
 1/28/06 3:45pm</pre>
 </div>
-<div title="MediaSample - QuickTime" modifier="ELSDesignStudios" created="200706210143" modified="200709030205" tags="MediaPackage media sample" copyright="&amp;copy; expired/public domain" website="http://www.AmericaFree.tv" genre="old-time comedy movies" mediatype="auto" year="expired/public domain" artist="various (see below)" autoplay="false" rpgretry="" rpgok="" rpgaction="" height="320" width="400" mediaurl="http://www.americafree.tv/unicast_mov/AmericaFreeTVComedy.mov" groupid="AFTV" itemid="COM" mediatitle="America Free TV: Classic Comedy" next="" previous="" showcontrols="true" videourl="http://www.americafree.tv/unicast_mov/AmericaFreeTVComedy.mov" videotitle="{{medium{[[AmericaFree.TV|http://www.AmericaFree.tv]] - Classic Comedy}}}">
+<div title="MediaSample - QuickTime" modifier="ELSDesignStudios" created="200706210143" modified="200709030205" tags="MediaPackage media sample" videotitle="{{medium{[[AmericaFree.TV|http://www.AmericaFree.tv]] - Classic Comedy}}}" videourl="http://www.americafree.tv/unicast_mov/AmericaFreeTVComedy.mov" showcontrols="true" previous="" next="" mediatitle="America Free TV: Classic Comedy" itemid="COM" groupid="AFTV" mediaurl="http://www.americafree.tv/unicast_mov/AmericaFreeTVComedy.mov" width="400" height="320" rpgaction="" rpgok="" rpgretry="" autoplay="false" artist="various (see below)" year="expired/public domain" mediatype="auto" genre="old-time comedy movies" website="http://www.AmericaFree.tv" copyright="&amp;copy; expired/public domain">
 <pre>[[AmericaFree.TV|http://www.AmericaFree.tv]] offers FREE ~QuickTime video streams of classic comedy films such as //&quot;Arsenic and Old Lace&quot;//, as well as movies/TV shows from Abbott &amp; Costello, The Three Stooges, Laurel &amp; Hardy, and others.
 
 Other streams from ~AmericaFree.TV include &quot;Classic Movies&quot; and &quot;~B-Movies&quot; from the 1950's and 1960's.  Visit [[AmericaFree.TV|http://www.AmericaFree.tv]] for details and links.
 </pre>
 </div>
-<div title="MediaSample - Windows" modifier="ELSDesignStudios" created="200706212055" modified="200709030204" tags="MediaPackage media sample" copyright="(c) 2007" website="http://www.earthcam.com" genre="webcam" mediatype="windows" artist="~EarthCam, Inc." autoplay="true" rpgretry="" rpgok="" rpgaction="" height="300" width="400" mediaurl="http://www.earthcam.com/usa/newyork/timessquare/asx/tsq_stream.asx" groupid="webcam" itemid="TIMESSQUARE" mediatitle="LIVE: Times Square, NY" next="" previous="" showcontrols="true" videotitle="~EarthCam: Times Square">
+<div title="MediaSample - Windows" modifier="ELSDesignStudios" created="200706212055" modified="200709030204" tags="MediaPackage media sample" videotitle="~EarthCam: Times Square" showcontrols="true" previous="" next="" mediatitle="LIVE: Times Square, NY" itemid="TIMESSQUARE" groupid="webcam" mediaurl="http://www.earthcam.com/usa/newyork/timessquare/asx/tsq_stream.asx" width="400" height="300" rpgaction="" rpgok="" rpgretry="" autoplay="true" artist="~EarthCam, Inc." mediatype="windows" genre="webcam" website="http://www.earthcam.com" copyright="(c) 2007">
 <pre>Live webcam views of Times Square, New York, complete with audio.  Automatically switches between several cameras from various vantage points.</pre>
 </div>
 <div title="MediaViewTemplate" modifier="ELSDesignStudios" created="200706210043" modified="200709030447" tags="MediaPackage template">
@@ -28217,7 +28879,7 @@ onclick=&quot;
 		{{'$2'!='$'+'2'?'$2':'save breadcrumbs to tiddler'}}
 &gt;&gt;</pre>
 </div>
-<div title="SaveFromWebConfig" modifier="ELSDesignStudios" created="200707261819" modified="200907252056" tags="ImportExportPackage settings systemConfig" changecount="2">
+<div title="SaveFromWebConfig" modifier="Wang Yanshu" created="200707261819" modified="202406161320" tags="ImportExportPackage settings systemConfig" changecount="3">
 <pre>/***
 |Name|SaveFromWebConfig|
 |Source|http://www.TiddlyTools.com/#SaveFromWebConfig|
@@ -28233,7 +28895,7 @@ onclick=&quot;
 !!!!! URL for server-side 'reflector' script.
 ***/
 //{{{
-config.options.txtSaveFromWebScriptURL=&quot;savefromweb.php&quot;;
+config.options.txtSaveFromWebScriptURL=&quot;&quot;;
 //}}}
 /***
 &gt;Script can be hosted on ANY web server that supports PHP5.
@@ -28242,7 +28904,7 @@ config.options.txtSaveFromWebScriptURL=&quot;savefromweb.php&quot;;
 !!!!! URL for TiddlyWiki core source
 ***/
 //{{{
-config.options.txtSaveFromWebSourceFile=&quot;http://www.TiddlyTools.com/empty.html&quot;;
+config.options.txtSaveFromWebSourceFile=&quot;&quot;;
 //}}}
 /***
 &gt;document URL for retrieving TiddlyWiki core source code. Using an *empty* TW minimizes data transfer for retrieving TW core. Can be on ANY domain... If blank, get core source code from current document URL.
@@ -37643,7 +38305,7 @@ with (config.shadowTiddlers) {
 //}}}
 </pre>
 </div>
-<div title="Thoughts on Debian Pure Blend" creator="YourName" modifier="YourName" created="202405280409" modified="202406011425" tags="nonacademic" changecount="2">
+<div title="Thoughts on Debian Pure Blend" creator="YourName" modifier="YourName" created="202405280409" modified="202406161301" tags="blog" changecount="3">
 <pre>Debian Pure Blend provides an amazing amount of FOSS professional tools in almost every discipline.
 
 You can do scientific research, process GIS data, play with medical image processing tools and listen to hamradio. 
@@ -39288,7 +39950,7 @@ By default, the prompt message reads: &quot;Please enter a password to view '%0'
 2006.12.02 1.0.0 initial release - converted from GetTiddlerPassword inline script
 &lt;&lt;&lt;</pre>
 </div>
-<div title="TiddlerToCPlugin" modifier="acarvalho" created="201206221130" modified="201304221421" tags="systemConfig systemConfigDisable" _hash="65443038af3eb740315cc6aead161a31ec702a5b" changecount="1">
+<div title="TiddlerToCPlugin" modifier="acarvalho" created="201206221130" modified="201304221421" tags="systemConfig systemConfigDisable" changecount="1" _hash="65443038af3eb740315cc6aead161a31ec702a5b">
 <pre>/***
 |Name|TiddlerToCPlugin|
 |Description|Tiddler Table of Contents generator|
@@ -39973,7 +40635,7 @@ config.macros.tiddlerTweaker = {
 ***/
  </pre>
 </div>
-<div title="TiddlersBarPluginMP" modifier="acarvalho" created="201304241626" modified="201306271505" tags="System systemConfig" _hash="82bce3d7c0d7ae9805b35ff52d8e956728f439fb" changecount="2">
+<div title="TiddlersBarPluginMP" modifier="acarvalho" created="201304241626" modified="201306271505" tags="System systemConfig" changecount="2" _hash="82bce3d7c0d7ae9805b35ff52d8e956728f439fb">
 <pre>/***
 |''Name:''|TiddlersBarPluginMP|
 |''Description:''|A bar to switch between tiddlers through tabs (like browser tabs bar).|
@@ -44090,13 +44752,11 @@ image/png
 !data
 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAGrSURBVDjLvZPZLkNhFIV75zjvYm7VGFNCqoZUJ+roKUUpjRuqp61Wq0NKDMelGGqOxBSUIBKXWtWGZxAvobr8lWjChRgSF//dv9be+9trCwAI/vIE/26gXmviW5bqnb8yUK028qZjPfoPWEj4Ku5HBspgAz941IXZeze8N1bottSo8BTZviVWrEh546EO03EXpuJOdG63otJbjBKHkEp/Ml6yNYYzpuezWL4s5VMtT8acCMQcb5XL3eJE8VgBlR7BeMGW9Z4yT9y1CeyucuhdTGDxfftaBO7G4L+zg91UocxVmCiy51NpiP3n2treUPujL8xhOjYOzZYsQWANyRYlU4Y9Br6oHd5bDh0bCpSOixJiWx71YY09J5pM/WEbzFcDmHvwwBu2wnikg+lEj4mwBe5bC5h1OUqcwpdC60dxegRmR06TyjCF9G9z+qM2uCJmuMJmaNZaUrCSIi6X+jJIBBYtW5Cge7cd7sgoHDfDaAvKQGAlRZYc6ltJlMxX03UzlaRlBdQrzSCwksLRbOpHUSb7pcsnxCCwngvM2Rm/ugUCi84fycr4l2t8Bb6iqTxSCgNIAAAAAElFTkSuQmCC</pre>
 </div>
-<div title="topMenu" creator="YourName" modifier="YourName" created="202405290836" modified="202405291531" changecount="26">
+<div title="topMenu" creator="YourName" modifier="Wang Yanshu" created="202405290836" modified="202406161324" changecount="29">
 <pre>[[home|Home]]
 [[publication|Publication]]
 [[project|Project]]
 [[teaching|Teaching]]
-[[academic blog|Academic Blog]]
-[[nonacademic blog|Nonacademic Blog]]
 [[cv|CV]]
 [[hobbies|Hobbies]]
 |
@@ -44104,7 +44764,7 @@ data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK
 
 &lt;&lt;fontSize&gt;&gt;
 
-RSS</pre>
+[[rss|index.xml]]</pre>
 </div>
 <div title="wrench.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="IconPackage attachment excludeMissing silk">
 <pre>!usage
