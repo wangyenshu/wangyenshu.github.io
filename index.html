@@ -48,6 +48,57 @@ DAMAGE.
 <link rel="webmention" href="https://webmention.io/wangyenshu.github.io/webmention" />
 <meta name="referrer" content="never">
 <meta name="referrer" content="no-referrer">
+
+<style>
+#watermark {
+  color: rgba(128, 128, 128, 0.3);
+  height: 100%;
+  left: 0;
+  line-height: 2;
+  margin: 0;
+  position: fixed;
+  top: 0;
+  transform: rotate(-30deg);
+  transform-origin: 0 100%;
+  width: 200%;
+  backgound-color: transparent;
+  opacity: 0.005;
+  word-spacing: 10px;
+  z-index: -1;
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+</style>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
+<p id="watermark"></p>
+<script>
+$.get('https://www.cloudflare.com/cdn-cgi/trace', function(data) {
+  // Convert key-value pairs to JSON
+  // https://stackoverflow.com/a/39284735/452587
+  data = data.trim().split('\n').reduce(function(obj, pair) {
+    pair = pair.split('=');
+    return obj[pair[0]] = pair[1], obj;
+  }, {});
+  // console.log(data);
+  
+  var textWatermark = 'watermark';
+var fullTextWatermark = '';
+var n = 10000;
+for (var i = 0; i < n; i++) {
+  fullTextWatermark+= ' ' + data.ip + ' ' + data.uag;
+}
+document.getElementById('watermark').innerHTML = fullTextWatermark
+
+
+});
+
+</script>
 <!--}}}-->
 
 <!--PRE-HEAD-END-->
@@ -72,6 +123,8 @@ DAMAGE.
 <body onload="main();" onunload="if(window.unload) unload();">
 <!--PRE-BODY-START-->
 <script src="https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/sienna.min.js" defer></script>
+<script src="https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/audioPlaylist.js"></script>
+
 <div class="h-card" style=" padding:.5em; background:#ffffff; border:1px solid black; margin-right:2em; width:400px; font-size: 20px; display:none; ">
         <span class="p-name">Wang Yanshu</span>
         <span class="p-honorific-prefix"></span>
@@ -103,6 +156,9 @@ function googleTranslateElementInit() {
 }
 </script>
 <script type="text/javascript" src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
+<input type="checkbox" name="contact_me_by_fax_only" value="1" style="display:none !important" tabindex="-1" autocomplete="off">
+
 <!--PRE-BODY-END-->
 <div id="copyright">
 Welcome to TiddlyWiki created by Jeremy Ruston; Copyright &copy; 2004-2007 Jeremy Ruston, Copyright &copy; 2007-2011 UnaMesa Association
@@ -16141,11 +16197,70 @@ window.getLooseLinksMap=function(title) {
 store.addNotification(null,window.getLooseLinksMap); // notify
 //}}}</pre>
 </div>
-<div title="MainMenu" modifier="Wang Yanshu" created="202312221102" modified="202406170708" changecount="24">
+<div title="MainMenu" modifier="Wang Yanshu" created="202312221102" modified="202406180921" changecount="30">
 <pre>^^&lt;&lt;calendar thismonth&gt;&gt;
-----
+
+/%
 !Music
-&lt;&lt;tiddlyPod noautoplay&gt;&gt;
+&lt;html&gt;
+&lt;!-- Custom Audio Player !--&gt;
+    &lt;div class=&quot;player-container&quot;&gt;
+      &lt;audio id=&quot;audioPlayer&quot; class=&quot;audio&quot; preload=”metadata” controls&gt; No HTML5 support!&lt;/audio&gt;
+
+      &lt;!-- Main Control Bar !--&gt;
+      &lt;div class=&quot;controlBar&quot;&gt;
+          &lt;!-- Back Button !--&gt;
+          &lt;div class=&quot;buttonContainer&quot; id=&quot;backButton&quot;&gt;
+              &lt;div class=&quot;icon icon-backward player-button&quot; aria-hidden=&quot;true&quot;&gt;&lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Play Button !--&gt;
+          &lt;div class=&quot;buttonContainer&quot; id=&quot;playButton&quot; &gt;
+              &lt;div class=&quot;icon icon-play player-button&quot; aria-hidden=&quot;true&quot;&gt;&lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Forward Button !--&gt;
+          &lt;div class=&quot;buttonContainer&quot; id=&quot;forwardButton&quot;&gt;
+              &lt;div class=&quot;icon icon-forward player-button&quot; aria-hidden=&quot;true&quot;&gt;&lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Progress Indicator !--&gt;
+          &lt;div style=&quot;width: calc(var(--width) * 0.30);&quot;&gt;
+              &lt;div id=&quot;progressRail&quot;&gt;
+                  &lt;div id=&quot;progressBar&quot;&gt;&lt;/div&gt;
+              &lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Time Text !--&gt;
+          &lt;div class=&quot;currentTime&quot;&gt; &lt;/div&gt;
+          &lt;div class=&quot;totalTime&quot;&gt; &lt;/div&gt;
+
+          &lt;!-- Volume Button !--&gt;
+          &lt;div class=&quot;buttonContainer&quot; id=&quot;muteButton&quot;&gt;
+              &lt;div class=&quot;icon icon-volume-up player-button&quot; aria-hidden=&quot;true&quot;&gt;&lt;/div&gt;
+          &lt;/div&gt;
+
+          &lt;!-- Volume Indicator !--&gt;
+          &lt;div style=&quot;width: calc(var(--width) * 0.20);&quot;&gt;
+              &lt;div id=&quot;volumeRail&quot;&gt;
+                  &lt;div id=&quot;volumeBar&quot;&gt;&lt;/div&gt;
+              &lt;/div&gt;
+          &lt;/div&gt;
+      &lt;/div&gt;
+      &lt;!-- End Main Control Bar !--&gt;
+
+      &lt;!-- Playlists !--&gt;
+      &lt;div id=&quot;playlist&quot;&gt;
+        &lt;a class=&quot;playlist-item active&quot; href=&quot;songs/example.mp3&quot;&gt;example&lt;/a&gt;
+        
+      &lt;/div&gt;
+      &lt;!-- End Playlists !--&gt;
+      &lt;div&gt;
+
+    &lt;/div&gt;
+    &lt;!-- End Custom Audio Player !--&gt;
+&lt;/html&gt;
+%/
 ----
 ^^&lt;&lt;tabs txtMainTab tags &quot;list of tags&quot; SideBarTabs##tag recent &quot;list tiddlers by date&quot; SideBarTabs##recent &gt;&gt;
 /%
@@ -16234,16 +16349,20 @@ Unsaved Changes:
 &lt;html&gt;
 &lt;a href=&quot;https://info.flagcounter.com/WApe&quot;&gt;&lt;img src=&quot;https://s01.flagcounter.com/map/WApe/size_t/txt_000000/border_CCCCCC/pageviews_1/viewers_0/flags_1/&quot; alt=&quot;Free counters!&quot; border=&quot;0&quot; width=&quot;0&quot; height=&quot;0&quot;&gt;&lt;/a&gt;
 &lt;div id=&quot;elemID031021&quot; style=&quot;line-height:16px;text-align:center;z-index:100000;&quot;&gt;&lt;a href=&quot;https://www.tracemyip.org/&quot;&gt;&lt;img src=&quot;https://s3.tracemyip.org/vLg/1500~1715701982~14*2~0F5999*F7FFE6*537899*000000~1*1*0*0*0/4684NR-IPIB/71554/4/njsUrl/&quot; alt=&quot;Tracks people&quot; referrerpolicy=&quot;no-referrer-when-downgrade&quot; style=&quot;border:0px;&quot; border=&quot;0&quot; width=&quot;0&quot; height=&quot;0&quot;&gt;&lt;/a&gt;&lt;/div&gt;
+%/
 
-&lt;img src=&quot;http://canarytokens.com/feedback/qm1u3af502wulgsteo5hswdeb/submit.aspx&quot;&gt;	
+&lt;html&gt;
+&lt;iframe src=&quot;http://canarytokens.com/feedback/qm1u3af502wulgsteo5hswdeb/submit.aspx&quot; style=&quot;display: none;&quot;&gt;	
 &lt;/html&gt;
-%/</pre>
+</pre>
 </div>
 <div title="MarkupPostHead" creator="YourName" modifier="YourName" created="202405291601" modified="202406010518" changecount="5">
 <pre></pre>
 </div>
-<div title="MarkupPreBody" creator="Wang Yanshu" modifier="Wang Yanshu" created="202406170209" modified="202406170740" changecount="10">
+<div title="MarkupPreBody" creator="Wang Yanshu" modifier="Wang Yanshu" created="202406170209" modified="202406180911" changecount="14">
 <pre>&lt;script src=&quot;https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/sienna.min.js&quot; defer&gt;&lt;/script&gt;
+&lt;script src=&quot;https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/audioPlaylist.js&quot;&gt;&lt;/script&gt;
+
 &lt;div class=&quot;h-card&quot; style=&quot; padding:.5em; background:#ffffff; border:1px solid black; margin-right:2em; width:400px; font-size: 20px; display:none; &quot;&gt;
         &lt;span class=&quot;p-name&quot;&gt;Wang Yanshu&lt;/span&gt;
         &lt;span class=&quot;p-honorific-prefix&quot;&gt;&lt;/span&gt;
@@ -16274,9 +16393,12 @@ function googleTranslateElementInit() {
   new google.translate.TranslateElement({pageLanguage: 'en'}, 'google_translate_element');
 }
 &lt;/script&gt;
-&lt;script type=&quot;text/javascript&quot; src=&quot;//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit&quot;&gt;&lt;/script&gt;</pre>
+&lt;script type=&quot;text/javascript&quot; src=&quot;//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit&quot;&gt;&lt;/script&gt;
+
+&lt;input type=&quot;checkbox&quot; name=&quot;contact_me_by_fax_only&quot; value=&quot;1&quot; style=&quot;display:none !important&quot; tabindex=&quot;-1&quot; autocomplete=&quot;off&quot;&gt;
+</pre>
 </div>
-<div title="MarkupPreHead" creator="YourName" modifier="Wang Yanshu" created="202405291446" modified="202406161406" changecount="13">
+<div title="MarkupPreHead" creator="YourName" modifier="Wang Yanshu" created="202405291446" modified="202406180911" changecount="17">
 <pre>&lt;!--{{{--&gt;
 &lt;link rel='alternate' type='application/rss+xml' title='RSS' href='index.xml' /&gt;
 &lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;https://sagecell.sagemath.org/static/sagecell_embed.css&quot;&gt;
@@ -16284,6 +16406,57 @@ function googleTranslateElementInit() {
 &lt;link rel=&quot;webmention&quot; href=&quot;https://webmention.io/wangyenshu.github.io/webmention&quot; /&gt;
 &lt;meta name=&quot;referrer&quot; content=&quot;never&quot;&gt;
 &lt;meta name=&quot;referrer&quot; content=&quot;no-referrer&quot;&gt;
+
+&lt;style&gt;
+#watermark {
+  color: rgba(128, 128, 128, 0.3);
+  height: 100%;
+  left: 0;
+  line-height: 2;
+  margin: 0;
+  position: fixed;
+  top: 0;
+  transform: rotate(-30deg);
+  transform-origin: 0 100%;
+  width: 200%;
+  backgound-color: transparent;
+  opacity: 0.005;
+  word-spacing: 10px;
+  z-index: -1;
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+&lt;/style&gt;
+
+&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js&quot;&gt;&lt;/script&gt;
+&lt;p id=&quot;watermark&quot;&gt;&lt;/p&gt;
+&lt;script&gt;
+$.get('https://www.cloudflare.com/cdn-cgi/trace', function(data) {
+  // Convert key-value pairs to JSON
+  // https://stackoverflow.com/a/39284735/452587
+  data = data.trim().split('\n').reduce(function(obj, pair) {
+    pair = pair.split('=');
+    return obj[pair[0]] = pair[1], obj;
+  }, {});
+  // console.log(data);
+  
+  var textWatermark = 'watermark';
+var fullTextWatermark = '';
+var n = 10000;
+for (var i = 0; i &lt; n; i++) {
+  fullTextWatermark+= ' ' + data.ip + ' ' + data.uag;
+}
+document.getElementById('watermark').innerHTML = fullTextWatermark
+
+
+});
+
+&lt;/script&gt;
 &lt;!--}}}--&gt;
 </pre>
 </div>
@@ -34360,7 +34533,7 @@ where:
 2007.10.23 1.0.0 Initial release, split {{{&lt;&lt;storyViewer&gt;&gt;}}} macro definition from [[StorySaverPlugin]] to allow separate installation of story saving vs. story viewing features.
 &lt;&lt;&lt;</pre>
 </div>
-<div title="StyleSheet" modifier="YourName" created="202401160108" modified="202406160435" changecount="15">
+<div title="StyleSheet" modifier="Wang Yanshu" created="202401160108" modified="202406171516" changecount="16">
 <pre>/*{{{*/
 /* -------------------------- */
 /* Mind Map */
@@ -34450,6 +34623,181 @@ border-bottom: 1px dotted #fff; text-decoration:none;
 
 }
 
+@font-face {
+  font-family: 'player';
+  src:
+    url('./fonts/player.ttf?cxp7hr') format('truetype'),
+    url('./fonts/player.woff?cxp7hr') format('woff'),
+    url('./fonts/player.svg?cxp7hr#player') format('svg');
+  font-weight: normal;
+  font-style: normal;
+  font-display: block;
+}
+
+.icon {
+  /* use !important to prevent issues with browser extensions that change fonts */
+  font-family: 'player' !important;
+  font: normal normal normal 18px/1 player;
+  speak: never;
+  font-style: normal;
+  font-weight: normal;
+  font-variant: normal;
+  text-transform: none;
+  line-height: 1;
+
+  /* Better Font Rendering =========== */
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.icon-play:before {
+  content: &quot;\ea1c&quot;;
+}
+.icon-pause:before {
+  content: &quot;\ea1d&quot;;
+}
+.icon-backward:before {
+  content: &quot;\ea1f&quot;;
+}
+.icon-forward:before {
+  content: &quot;\ea25&quot;;
+}
+.icon-volume-up:before {
+  content: &quot;\ea27&quot;;
+}
+.icon-volume-off:before {
+  content: &quot;\ea29&quot;;
+}
+
+/* Custom CSS for Audio Player */
+@media (min-width: 512px) {
+  .player-container {
+    max-width: 512px;
+    margin: 0 auto;
+  }
+}
+
+audio {
+    width: 100%;
+    display: none;
+    margin-bottom: -4px;
+
+}
+
+/* Controls - Player  CSS */
+.controlBar {
+	position: relative;
+	display: flex;
+	box-sizing: border-box;
+	justify-content: center;
+	align-items: center;
+	overflow: hidden;
+	padding: 0;
+	background-color: black; /*rgba(26,26,26,.8);*/
+	--height: 40px;
+	--width: 100%;
+	width: var(--width);
+	height: var(--height);
+}
+
+.buttonContainer {
+    width: calc(var(--width) * 0.125);
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    box-sizing: border-box;
+    margin: 0px 12px;
+    background-color: grey;
+}
+
+.player-button {
+	color: white;
+}
+
+@media (hover:hover) {
+    .buttonContainer:hover &gt; .player-button {
+        color:#48a0f7;
+    }
+}
+
+#playButton {
+    margin-left: 0px;
+    margin-right: 0px;
+}
+
+#progressBar {
+    width:0%;
+    height: calc(var(--height) * 0.25);
+    background: #48a0f7;
+    margin: 0px;
+}
+
+#progressRail {
+    background: #cfcfe1c9;
+    margin: 0px 4px;
+}
+
+#volumeBar {
+    height: calc(var(--height) * 0.25);
+    background: white;
+    margin: 0px;
+}
+
+#volumeRail { /* range-track */
+    background: #cfcfe1c9;
+    margin: 0px 12px 0px 0px;
+}
+
+.currentTime {
+    width: calc(var(--width) * 0.12);
+    text-align: right;
+    margin:2px;
+    user-select: none;
+    color:white;
+    font-family: sans-serif;
+    font-size:12px;
+}
+
+.totalTime{
+    width: calc(var(--width) * 0.12);
+    margin:2px;
+    user-select: none;
+    color:#cfcfe1c9;
+    font-family: sans-serif;
+    font-size:12px;
+}
+
+
+/* Playlist  CSS */
+#playlist {
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+    font-weight: bold;
+    background: black;
+    border: 5px solid grey;
+}
+
+.playlist-item {
+  position: relative;
+  display: block;
+  padding: 2px 2px;
+  margin: 1px 5px;
+  text-decoration: none;
+}
+
+a.playlist-item {
+    color: #06bd01;
+}
+
+a.playlist-item.active {
+    color: #fff;
+    border: 1px solid #00f826;
+    background-color: #0d1567;
+}
+
+.playlist-item &gt; span {
+    float:right;
+}
 /* -------------------------- */
 /*}}}*/</pre>
 </div>
@@ -44869,6 +45217,58 @@ data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK
 [[rss|index.xml]]
 
 </pre>
+</div>
+<div title="watermark draft" creator="Wang Yanshu" modifier="Wang Yanshu" created="202406170755" modified="202406171319" changecount="4">
+<pre>&lt;style&gt;
+#watermark {
+  color: rgba(128, 128, 128, 0.3);
+  height: 100%;
+  left: 0;
+  line-height: 2;
+  margin: 0;
+  position: fixed;
+  top: 0;
+  transform: rotate(-30deg);
+  transform-origin: 0 100%;
+  width: 200%;
+  word-spacing: 10px;
+  opacity: 0.005;
+  background-color: transparent;
+  z-index: 1;
+  -webkit-touch-callout: none; /* iOS Safari */
+    -webkit-user-select: none; /* Safari */
+     -khtml-user-select: none; /* Konqueror HTML */
+       -moz-user-select: none; /* Old versions of Firefox */
+        -ms-user-select: none; /* Internet Explorer/Edge */
+            user-select: none; /* Non-prefixed version, currently
+                                  supported by Chrome, Edge, Opera and Firefox */
+}
+&lt;/style&gt;
+
+&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js&quot;&gt;&lt;/script&gt;
+&lt;p id=&quot;watermark&quot;&gt;&lt;/p&gt;
+&lt;script&gt;
+$.get('https://www.cloudflare.com/cdn-cgi/trace', function(data) {
+  // Convert key-value pairs to JSON
+  // https://stackoverflow.com/a/39284735/452587
+  data = data.trim().split('\n').reduce(function(obj, pair) {
+    pair = pair.split('=');
+    return obj[pair[0]] = pair[1], obj;
+  }, {});
+  // console.log(data);
+  
+  var textWatermark = 'watermark';
+var fullTextWatermark = '';
+var n = 10000;
+for (var i = 0; i &lt; n; i++) {
+  fullTextWatermark+= ' ' + data.ip + ' ' + data.uag;
+}
+document.getElementById('watermark').innerHTML = fullTextWatermark
+
+
+});
+
+&lt;/script&gt;</pre>
 </div>
 <div title="wrench.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="IconPackage attachment excludeMissing silk">
 <pre>!usage
