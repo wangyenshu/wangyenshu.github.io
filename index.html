@@ -117,7 +117,69 @@ document.getElementById('watermark').innerHTML = fullTextWatermark
 
 </style>
 <!--POST-HEAD-START-->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/XeTeXEngine.js"></script>
+<script src="https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/DvipdfmxEngine.js"></script>
+<script>
 
+    const compileBtn = document.getElementById("compilebtn");
+    const consoleOutput = document.getElementById("console");
+    const pdfbox = document.getElementById("pdfbox");
+
+    const editor = ace.edit("editor");
+    editor.setTheme("ace/theme/monokai");
+    editor.session.setMode("ace/mode/latex");
+    editor.session.setUseWrapMode(true);
+    editor.setFontSize(18);
+    
+    const globalEn = new XeTeXEngine();
+    const dvipdfmxEn= new DvipdfmxEngine();
+
+    async function init() {
+      await globalEn.loadEngine();
+      await dvipdfmxEn.loadEngine();
+      compileBtn.innerHTML = "Compile";
+      compileBtn.disabled = false;
+    }
+
+    async function compile() {
+        if(!globalEn.isReady() || !dvipdfmxEn.isReady()) {
+            console.log("Engine not ready yet");
+            return;
+        }
+        compileBtn.disabled = true;
+        compileBtn.innerHTML = "Compiling...";
+
+        let imageDownloadReq = await fetch('assets/troll.jpg');
+        let imageBlob = await imageDownloadReq.arrayBuffer();
+        let bibDownloadReq = await fetch('assets/sample-base.bib');
+        let bibBlob = await bibDownloadReq.arrayBuffer();
+        globalEn.writeMemFSFile("main.tex", editor.getValue());
+        globalEn.writeMemFSFile("troll.jpg", new Uint8Array(imageBlob));
+        globalEn.writeMemFSFile("sample-base.bib", new Uint8Array(bibBlob));
+        globalEn.setEngineMainFile("main.tex");
+        let r = await globalEn.compileLaTeX();
+        consoleOutput.innerHTML = r.log;
+        compileBtn.innerHTML = "Compile";
+        compileBtn.disabled = false;
+        if (r.status === 0) {
+            dvipdfmxEn.writeMemFSFile("main.xdv", r.pdf);
+            dvipdfmxEn.setEngineMainFile("main.xdv");
+            dvipdfmxEn.writeMemFSFile("troll.jpg", new Uint8Array(imageBlob));
+            let r1 = await dvipdfmxEn.compilePDF();
+            const pdfblob = new Blob([r1.pdf], {type : 'application/pdf'});
+            const objectURL = URL.createObjectURL(pdfblob);
+            setTimeout(()=>{
+                URL.revokeObjectURL(objectURL);
+            }, 30000);
+            console.log(objectURL);
+            pdfbox.innerHTML = `<embed src="${objectURL}" width="100%" height="400px" type="application/pdf">`;
+        }
+    }
+
+    init();
+
+</script>
 <!--POST-HEAD-END-->
 </head>
 <body onload="main();" onunload="if(window.unload) unload();">
@@ -660,7 +722,7 @@ body {font-size:0.8em;}
 !Tagcloud
 &lt;&lt;tagCloud excludeLists excludeSearch systemConfig systemServer PluginInfo Plugin excludeMissing excludePublisher takenotepackage app DiscoveryPackage NavigationPackage IconPackage TidIDEPackage TaskPackage ScrollbarPackage MediaPackage pluginInfo @cdent @developers @ricardoperes Administration follow tips Content System systemConfigDisable AttachFilePackage IFramePackage QuickEditPackage Tag ThemePackage attachment package sample settings story tiddlyLife BasicsPackage BookmarkPackage CD CSS DiscussionPackage ImportExportPackage InputPackage JashPackage MoveablePanelPackage PasetUpPackage PasteUpPackage TiddlyTools [[To Do]] alpha animation blank bookmarklet catalog demo discussion excludeTheme framedLinks html media moveable panelmap patch script setup stylesheet stylesheets systemTheme template test translate nonacademic transclusion locked silk Decrypt(Ramanujan) Trash nonacademic&gt;&gt;</pre>
 </div>
-<div title="AdministrationPage" modifier="YourName" created="201206131959" modified="202406160707" tags="System excludeLists" _hash="e1ebb210726c3b146ffdcd2bb68ef6449c55f179" changecount="14">
+<div title="AdministrationPage" modifier="YourName" created="201206131959" modified="202406160707" tags="System excludeLists" changecount="14" _hash="e1ebb210726c3b146ffdcd2bb68ef6449c55f179">
 <pre>|SiteIcon SiteTitle SiteSubtitle||||StyleSheet|
 |MainMenu|SiteUrl||PageTemplate|StyleSheetColors|
 |~|DefaultTiddlers||EditTemplate|StyleSheetLayout|
@@ -3564,7 +3626,7 @@ a:hover, .button:hover { color:#fff; }
 &lt;/div&gt;&lt;!-- viewer --&gt;
 &lt;!--}}}--&gt;</pre>
 </div>
-<div title="CDSample" modifier="ELSDesignStudios" created="200706152348" modified="200706212043" tags="CD MediaPackage sample" albumtitle="Music for Sentient Beings, Vol IV" website="http://www.cdbaby.com/cd/vlhohenstein" sample="http://www.TiddlyTools.com/vlh/MFSB4/Kindling.m3u" cover="http://cdbaby.name/v/l/vlhohenstein.jpg" purchaseurl="" sampleurl="" coverurl="" genre="ambient electronic" mediatype="cd" year="2005" artist="Vernon L Hohenstein">
+<div title="CDSample" modifier="ELSDesignStudios" created="200706152348" modified="200706212043" tags="CD MediaPackage sample" artist="Vernon L Hohenstein" year="2005" mediatype="cd" genre="ambient electronic" coverurl="" sampleurl="" purchaseurl="" cover="http://cdbaby.name/v/l/vlhohenstein.jpg" sample="http://www.TiddlyTools.com/vlh/MFSB4/Kindling.m3u" website="http://www.cdbaby.com/cd/vlhohenstein" albumtitle="Music for Sentient Beings, Vol IV">
 <pre>----
 |borderless|k
 |1 [[Candlelight|http://www.TiddlyTools.com/vlh/MFSB4/Candlelight.m3u]] (7:50) | &amp;nbsp;&amp;nbsp; |5 [[Fuego|http://www.TiddlyTools.com/vlh/MFSB4/Fuego.m3u]] (7:40) | |
@@ -4081,7 +4143,7 @@ config.options.txtCalStartOfWeekend=5;
 config.macros.calendar.journalDateFmt=&quot;DDD MMM 0DD YYYY&quot;;
 //}}}</pre>
 </div>
-<div title="CheckboxPlugin" modifier="ELSDesignStudios" created="200512071459" modified="200801090029" tags="MediaPackage TaskPackage systemConfig InputPackage" checked="false" demofield="false">
+<div title="CheckboxPlugin" modifier="ELSDesignStudios" created="200512071459" modified="200801090029" tags="MediaPackage TaskPackage systemConfig InputPackage" demofield="false" checked="false">
 <pre>/***
 |Name|CheckboxPlugin|
 |Source|http://www.TiddlyTools.com/#CheckboxPlugin|
@@ -4273,7 +4335,7 @@ config.macros.checkbox = {
 }
 //}}}</pre>
 </div>
-<div title="CheckboxPluginInfo" modifier="ELSDesignStudios" created="200801090021" modified="200801090024" tags="pluginInfo" demofield="false" checked="false">
+<div title="CheckboxPluginInfo" modifier="ELSDesignStudios" created="200801090021" modified="200801090024" tags="pluginInfo" checked="false" demofield="false">
 <pre>|Name|CheckboxPluginInfo|
 |Source|http://www.TiddlyTools.com/#CheckboxPlugin|
 |Documentation|http://www.TiddlyTools.com/#CheckboxPluginInfo|
@@ -12853,7 +12915,7 @@ I have a laptop running opensuse leap and stay active in several local {{{LUGs}}
 &lt;&lt;tagCloud excludeLists excludeSearch systemConfig systemServer PluginInfo Plugin excludeMissing excludePublisher takenotepackage app DiscoveryPackage NavigationPackage IconPackage TidIDEPackage TaskPackage ScrollbarPackage MediaPackage pluginInfo @cdent @developers @ricardoperes Administration follow tips Content System systemConfigDisable AttachFilePackage IFramePackage QuickEditPackage Tag ThemePackage attachment package sample settings story tiddlyLife BasicsPackage BookmarkPackage CD CSS DiscussionPackage ImportExportPackage InputPackage JashPackage MoveablePanelPackage PasetUpPackage PasteUpPackage TiddlyTools [[To Do]] alpha animation blank bookmarklet catalog demo discussion excludeTheme framedLinks html media moveable panelmap patch script setup stylesheet stylesheets systemTheme template test translate nonacademic transclusion locked silk Decrypt(Ramanujan) Trash&gt;&gt;
 </pre>
 </div>
-<div title="HoverMenu" modifier="YourName" created="201206141003" modified="202406160417" tags="Administration System" changecount="1" _hash="af62a178b2914b0d8acae58dea5fd136b93e7a20">
+<div title="HoverMenu" modifier="YourName" created="201206141003" modified="202406160417" tags="Administration System" _hash="af62a178b2914b0d8acae58dea5fd136b93e7a20" changecount="1">
 <pre>&lt;&lt;top&gt;&gt;
 &lt;&lt;jump j '' top&gt;&gt;
 &lt;&lt;toggleSideBar&gt;&gt;&lt;&lt;renameButton '&gt;' &gt;&gt;
@@ -13275,7 +13337,7 @@ config.macros.Image.handler= function(place,macroName,params) {
 //}}}
  </pre>
 </div>
-<div title="ImageMacroPlugin" modifier="YourName" created="201311111923" modified="202406070450" tags="excludeLists systemConfig" _hash="3f1696962a1dff3028ea1a4307d8b95c3b3ceb65" changecount="1">
+<div title="ImageMacroPlugin" modifier="YourName" created="201311111923" modified="202406070450" tags="excludeLists systemConfig" changecount="1" _hash="3f1696962a1dff3028ea1a4307d8b95c3b3ceb65">
 <pre>/***
 |''Name''|ImageMacroPlugin|
 |''Version''|0.9.4|
@@ -15004,7 +15066,7 @@ http://www.TiddlyTools.com/images/fish.jpg
 <div title="Liouville-Theorem-Subharmonic" modifier="YourName" created="202404131555">
 <pre>https://math.berkeley.edu/~vvdatar/m185f16/notes/Lecture-17_Liouville.pdf</pre>
 </div>
-<div title="ListboxPlugin" modifier="ELSDesignStudios" created="200705121851" modified="201003151241" tags="MediaPackage TaskPackage systemConfig InputPackage" thing="meenie" color="#00FF00" size="34">
+<div title="ListboxPlugin" modifier="ELSDesignStudios" created="200705121851" modified="201003151241" tags="MediaPackage TaskPackage systemConfig InputPackage" size="34" color="#00FF00" thing="meenie">
 <pre>/***
 |Name|ListboxPlugin|
 |Source|http://www.TiddlyTools.com/#ListboxPlugin|
@@ -15278,7 +15340,7 @@ config.macros.select = {
 }
 //}}}</pre>
 </div>
-<div title="ListboxPluginInfo" modifier="ELSDesignStudios" created="200801090449" modified="201003151240" tags="pluginInfo" thing="eenie" color="#0000FF" size="30" gender="Male" plugins="AdvancedOptionsPlugin">
+<div title="ListboxPluginInfo" modifier="ELSDesignStudios" created="200801090449" modified="201003151240" tags="pluginInfo" plugins="AdvancedOptionsPlugin" gender="Male" size="30" color="#0000FF" thing="eenie">
 <pre>|Name|ListboxPlugin|
 |Source|http://www.TiddlyTools.com/#ListboxPlugin|
 |Documentation|http://www.TiddlyTools.com/#ListboxPluginInfo|
@@ -16368,8 +16430,11 @@ Unsaved Changes:
 
 </pre>
 </div>
-<div title="MarkupPostBody" creator="Wang Yanshu" modifier="Wang Yanshu" created="202406190950" modified="202406190951" changecount="2">
-<pre>&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js&quot;&gt;&lt;/script&gt;
+<div title="MarkupPostBody" creator="Wang Yanshu" modifier="Wang Yanshu" created="202406190950" modified="202406191000" changecount="4">
+<pre></pre>
+</div>
+<div title="MarkupPostHead" creator="YourName" modifier="Wang Yanshu" created="202405291601" modified="202406191001" changecount="7">
+<pre>&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js&quot; type=&quot;text/javascript&quot; charset=&quot;utf-8&quot;&gt;&lt;/script&gt;
 &lt;script src=&quot;https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/XeTeXEngine.js&quot;&gt;&lt;/script&gt;
 &lt;script src=&quot;https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/DvipdfmxEngine.js&quot;&gt;&lt;/script&gt;
 &lt;script&gt;
@@ -16433,10 +16498,7 @@ Unsaved Changes:
 
 &lt;/script&gt;</pre>
 </div>
-<div title="MarkupPostHead" creator="YourName" modifier="YourName" created="202405291601" modified="202406010518" changecount="5">
-<pre></pre>
-</div>
-<div title="MarkupPreBody" creator="Wang Yanshu" modifier="Wang Yanshu" created="202406170209" modified="202406190950" changecount="18">
+<div title="MarkupPreBody" creator="Wang Yanshu" modifier="Wang Yanshu" created="202406170209" modified="202406191000" changecount="19">
 <pre>&lt;script src=&quot;https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/sienna.min.js&quot; defer&gt;&lt;/script&gt;
 &lt;script src=&quot;https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/audioPlaylist.js&quot;&gt;&lt;/script&gt;
 &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js&quot; type=&quot;text/javascript&quot; charset=&quot;utf-8&quot;&gt;&lt;/script&gt;
@@ -17080,18 +17142,18 @@ config.formatters.push({
 <div title="MediaPackage" modifier="ELSDesignStudios" created="200807230227" modified="200807230235" tags="package MediaPackage">
 <pre>These plugins enable you to easily add various types of media (audio, video, flash, etc.) to your tiddler content.  The package includes several different kinds of embedded media players and a number of examples that define and present media content using custom templates, along with supporting plugins to provide additional rendering/formatting for the content surrounding the embedded player.</pre>
 </div>
-<div title="MediaSample - Image" modifier="ELSDesignStudios" created="200706230356" modified="200709030203" tags="media" mediatype="image" autoplay="false" rpgretry="" rpgok="" rpgaction="" height="auto" width="auto" mediaurl="images/JR+ELS_1024.jpg" groupid="photo" itemid="sample" mediatitle="Tiddly Wizards" next="" previous="" showcontrols="true">
+<div title="MediaSample - Image" modifier="ELSDesignStudios" created="200706230356" modified="200709030203" tags="media" showcontrols="true" previous="" next="" mediatitle="Tiddly Wizards" itemid="sample" groupid="photo" mediaurl="images/JR+ELS_1024.jpg" width="auto" height="auto" rpgaction="" rpgok="" rpgretry="" autoplay="false" mediatype="image">
 <pre>Jeremy Ruston (TiddlyWiki) and Eric Shulman (TiddlyTools)
 Yerba Buena Gardens, The Metreon, San Francisco, CA
 1/28/06 3:45pm</pre>
 </div>
-<div title="MediaSample - QuickTime" modifier="ELSDesignStudios" created="200706210143" modified="200709030205" tags="MediaPackage media sample" copyright="&amp;copy; expired/public domain" website="http://www.AmericaFree.tv" genre="old-time comedy movies" mediatype="auto" year="expired/public domain" artist="various (see below)" autoplay="false" rpgretry="" rpgok="" rpgaction="" height="320" width="400" mediaurl="http://www.americafree.tv/unicast_mov/AmericaFreeTVComedy.mov" groupid="AFTV" itemid="COM" mediatitle="America Free TV: Classic Comedy" next="" previous="" showcontrols="true" videourl="http://www.americafree.tv/unicast_mov/AmericaFreeTVComedy.mov" videotitle="{{medium{[[AmericaFree.TV|http://www.AmericaFree.tv]] - Classic Comedy}}}">
+<div title="MediaSample - QuickTime" modifier="ELSDesignStudios" created="200706210143" modified="200709030205" tags="MediaPackage media sample" videotitle="{{medium{[[AmericaFree.TV|http://www.AmericaFree.tv]] - Classic Comedy}}}" videourl="http://www.americafree.tv/unicast_mov/AmericaFreeTVComedy.mov" showcontrols="true" previous="" next="" mediatitle="America Free TV: Classic Comedy" itemid="COM" groupid="AFTV" mediaurl="http://www.americafree.tv/unicast_mov/AmericaFreeTVComedy.mov" width="400" height="320" rpgaction="" rpgok="" rpgretry="" autoplay="false" artist="various (see below)" year="expired/public domain" mediatype="auto" genre="old-time comedy movies" website="http://www.AmericaFree.tv" copyright="&amp;copy; expired/public domain">
 <pre>[[AmericaFree.TV|http://www.AmericaFree.tv]] offers FREE ~QuickTime video streams of classic comedy films such as //&quot;Arsenic and Old Lace&quot;//, as well as movies/TV shows from Abbott &amp; Costello, The Three Stooges, Laurel &amp; Hardy, and others.
 
 Other streams from ~AmericaFree.TV include &quot;Classic Movies&quot; and &quot;~B-Movies&quot; from the 1950's and 1960's.  Visit [[AmericaFree.TV|http://www.AmericaFree.tv]] for details and links.
 </pre>
 </div>
-<div title="MediaSample - Windows" modifier="ELSDesignStudios" created="200706212055" modified="200709030204" tags="MediaPackage media sample" copyright="(c) 2007" website="http://www.earthcam.com" genre="webcam" mediatype="windows" artist="~EarthCam, Inc." autoplay="true" rpgretry="" rpgok="" rpgaction="" height="300" width="400" mediaurl="http://www.earthcam.com/usa/newyork/timessquare/asx/tsq_stream.asx" groupid="webcam" itemid="TIMESSQUARE" mediatitle="LIVE: Times Square, NY" next="" previous="" showcontrols="true" videotitle="~EarthCam: Times Square">
+<div title="MediaSample - Windows" modifier="ELSDesignStudios" created="200706212055" modified="200709030204" tags="MediaPackage media sample" videotitle="~EarthCam: Times Square" showcontrols="true" previous="" next="" mediatitle="LIVE: Times Square, NY" itemid="TIMESSQUARE" groupid="webcam" mediaurl="http://www.earthcam.com/usa/newyork/timessquare/asx/tsq_stream.asx" width="400" height="300" rpgaction="" rpgok="" rpgretry="" autoplay="true" artist="~EarthCam, Inc." mediatype="windows" genre="webcam" website="http://www.earthcam.com" copyright="(c) 2007">
 <pre>Live webcam views of Times Square, New York, complete with audio.  Automatically switches between several cameras from various vantage points.</pre>
 </div>
 <div title="MediaViewTemplate" modifier="ELSDesignStudios" created="200706210043" modified="200709030447" tags="MediaPackage template">
@@ -40925,7 +40987,7 @@ By default, the prompt message reads: &quot;Please enter a password to view '%0'
 2006.12.02 1.0.0 initial release - converted from GetTiddlerPassword inline script
 &lt;&lt;&lt;</pre>
 </div>
-<div title="TiddlerToCPlugin" modifier="acarvalho" created="201206221130" modified="201304221421" tags="systemConfig systemConfigDisable" _hash="65443038af3eb740315cc6aead161a31ec702a5b" changecount="1">
+<div title="TiddlerToCPlugin" modifier="acarvalho" created="201206221130" modified="201304221421" tags="systemConfig systemConfigDisable" changecount="1" _hash="65443038af3eb740315cc6aead161a31ec702a5b">
 <pre>/***
 |Name|TiddlerToCPlugin|
 |Description|Tiddler Table of Contents generator|
@@ -41610,7 +41672,7 @@ config.macros.tiddlerTweaker = {
 ***/
  </pre>
 </div>
-<div title="TiddlersBarPluginMP" modifier="acarvalho" created="201304241626" modified="201306271505" tags="System systemConfig" _hash="82bce3d7c0d7ae9805b35ff52d8e956728f439fb" changecount="2">
+<div title="TiddlersBarPluginMP" modifier="acarvalho" created="201304241626" modified="201306271505" tags="System systemConfig" changecount="2" _hash="82bce3d7c0d7ae9805b35ff52d8e956728f439fb">
 <pre>/***
 |''Name:''|TiddlersBarPluginMP|
 |''Description:''|A bar to switch between tiddlers through tabs (like browser tabs bar).|
@@ -45058,7 +45120,7 @@ $1
 	src+(tiddler&amp;&amp;tiddler.title==src?'##info':'##show');
 }} with: [[$1]]&gt;&gt;</pre>
 </div>
-<div title="XeTex sample" creator="Wang Yanshu" modifier="Wang Yanshu" created="202406190404" modified="202406190936" changecount="6">
+<div title="XeTex sample" creator="Wang Yanshu" modifier="Wang Yanshu" created="202406190404" modified="202406191001" changecount="7">
 <pre>&lt;html&gt;
 &lt;head&gt;
     &lt;!-- Basic Page Needs
@@ -56621,69 +56683,7 @@ if(useJavaSaver)
 //]]>
 </script>
 <!--POST-SCRIPT-START-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/XeTeXEngine.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/DvipdfmxEngine.js"></script>
-<script>
 
-    const compileBtn = document.getElementById("compilebtn");
-    const consoleOutput = document.getElementById("console");
-    const pdfbox = document.getElementById("pdfbox");
-
-    const editor = ace.edit("editor");
-    editor.setTheme("ace/theme/monokai");
-    editor.session.setMode("ace/mode/latex");
-    editor.session.setUseWrapMode(true);
-    editor.setFontSize(18);
-    
-    const globalEn = new XeTeXEngine();
-    const dvipdfmxEn= new DvipdfmxEngine();
-
-    async function init() {
-      await globalEn.loadEngine();
-      await dvipdfmxEn.loadEngine();
-      compileBtn.innerHTML = "Compile";
-      compileBtn.disabled = false;
-    }
-
-    async function compile() {
-        if(!globalEn.isReady() || !dvipdfmxEn.isReady()) {
-            console.log("Engine not ready yet");
-            return;
-        }
-        compileBtn.disabled = true;
-        compileBtn.innerHTML = "Compiling...";
-
-        let imageDownloadReq = await fetch('assets/troll.jpg');
-        let imageBlob = await imageDownloadReq.arrayBuffer();
-        let bibDownloadReq = await fetch('assets/sample-base.bib');
-        let bibBlob = await bibDownloadReq.arrayBuffer();
-        globalEn.writeMemFSFile("main.tex", editor.getValue());
-        globalEn.writeMemFSFile("troll.jpg", new Uint8Array(imageBlob));
-        globalEn.writeMemFSFile("sample-base.bib", new Uint8Array(bibBlob));
-        globalEn.setEngineMainFile("main.tex");
-        let r = await globalEn.compileLaTeX();
-        consoleOutput.innerHTML = r.log;
-        compileBtn.innerHTML = "Compile";
-        compileBtn.disabled = false;
-        if (r.status === 0) {
-            dvipdfmxEn.writeMemFSFile("main.xdv", r.pdf);
-            dvipdfmxEn.setEngineMainFile("main.xdv");
-            dvipdfmxEn.writeMemFSFile("troll.jpg", new Uint8Array(imageBlob));
-            let r1 = await dvipdfmxEn.compilePDF();
-            const pdfblob = new Blob([r1.pdf], {type : 'application/pdf'});
-            const objectURL = URL.createObjectURL(pdfblob);
-            setTimeout(()=>{
-                URL.revokeObjectURL(objectURL);
-            }, 30000);
-            console.log(objectURL);
-            pdfbox.innerHTML = `<embed src="${objectURL}" width="100%" height="400px" type="application/pdf">`;
-        }
-    }
-
-    init();
-
-</script>
 <!--POST-SCRIPT-END-->
 </body>
 </html>
