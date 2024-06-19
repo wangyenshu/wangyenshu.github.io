@@ -124,12 +124,20 @@ document.getElementById('watermark').innerHTML = fullTextWatermark
 <!--PRE-BODY-START-->
 <script src="https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/sienna.min.js" defer></script>
 <script src="https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/audioPlaylist.js"></script>
+
+<script src="https://sagecell.sagemath.org/static/embedded_sagecell.js"></script>
+ <script>sagecell.makeSagecell({"inputLocation": ".sage"});</script> 
+<link rel="stylesheet" type="text/css" href="https://sagecell.sagemath.org/static/sagecell_embed.css"> 
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js" type="text/javascript" charset="utf-8"></script>
 <script src="https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/XeTeXEngine.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/DvipdfmxEngine.js"></script>
 <script src="https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/PdfTeXEngine.js"></script>
 
+<script src="https://cheerpxdemos.leaningtech.com/publicdeploy/20240501_137/cx.js"></script>
+<script src="https://cjrtnc.leaningtech.com/3.0/cj3loader.js"></script>
 
+<script src="https://unpkg.com/@ruffle-rs/ruffle"></script> 
 
 <div class="h-card" style=" padding:.5em; background:#ffffff; border:1px solid black; margin-right:2em; width:400px; font-size: 20px; display:none; ">
         <span class="p-name">Wang Yanshu</span>
@@ -16368,83 +16376,29 @@ Unsaved Changes:
 
 </pre>
 </div>
-<div title="MarkupPostBody" creator="Wang Yanshu" modifier="Wang Yanshu" created="202406190950" modified="202406191008" changecount="5">
-<pre>&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js&quot; type=&quot;text/javascript&quot; charset=&quot;utf-8&quot;&gt;&lt;/script&gt;
-&lt;script src=&quot;https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/XeTeXEngine.js&quot;&gt;&lt;/script&gt;
-&lt;script src=&quot;https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/DvipdfmxEngine.js&quot;&gt;&lt;/script&gt;
-&lt;script&gt;
-
-    const compileBtn = document.getElementById(&quot;compilebtn&quot;);
-    const consoleOutput = document.getElementById(&quot;console&quot;);
-    const pdfbox = document.getElementById(&quot;pdfbox&quot;);
-
-    const editor = ace.edit(&quot;editor&quot;);
-    editor.setTheme(&quot;ace/theme/monokai&quot;);
-    editor.session.setMode(&quot;ace/mode/latex&quot;);
-    editor.session.setUseWrapMode(true);
-    editor.setFontSize(18);
-    
-    const globalEn = new XeTeXEngine();
-    const dvipdfmxEn= new DvipdfmxEngine();
-
-    async function init() {
-      await globalEn.loadEngine();
-      await dvipdfmxEn.loadEngine();
-      compileBtn.innerHTML = &quot;Compile&quot;;
-      compileBtn.disabled = false;
-    }
-
-    async function compile() {
-        if(!globalEn.isReady() || !dvipdfmxEn.isReady()) {
-            console.log(&quot;Engine not ready yet&quot;);
-            return;
-        }
-        compileBtn.disabled = true;
-        compileBtn.innerHTML = &quot;Compiling...&quot;;
-
-        let imageDownloadReq = await fetch('assets/troll.jpg');
-        let imageBlob = await imageDownloadReq.arrayBuffer();
-        let bibDownloadReq = await fetch('assets/sample-base.bib');
-        let bibBlob = await bibDownloadReq.arrayBuffer();
-        globalEn.writeMemFSFile(&quot;main.tex&quot;, editor.getValue());
-        globalEn.writeMemFSFile(&quot;troll.jpg&quot;, new Uint8Array(imageBlob));
-        globalEn.writeMemFSFile(&quot;sample-base.bib&quot;, new Uint8Array(bibBlob));
-        globalEn.setEngineMainFile(&quot;main.tex&quot;);
-        let r = await globalEn.compileLaTeX();
-        consoleOutput.innerHTML = r.log;
-        compileBtn.innerHTML = &quot;Compile&quot;;
-        compileBtn.disabled = false;
-        if (r.status === 0) {
-            dvipdfmxEn.writeMemFSFile(&quot;main.xdv&quot;, r.pdf);
-            dvipdfmxEn.setEngineMainFile(&quot;main.xdv&quot;);
-            dvipdfmxEn.writeMemFSFile(&quot;troll.jpg&quot;, new Uint8Array(imageBlob));
-            let r1 = await dvipdfmxEn.compilePDF();
-            const pdfblob = new Blob([r1.pdf], {type : 'application/pdf'});
-            const objectURL = URL.createObjectURL(pdfblob);
-            setTimeout(()=&gt;{
-                URL.revokeObjectURL(objectURL);
-            }, 30000);
-            console.log(objectURL);
-            pdfbox.innerHTML = `&lt;embed src=&quot;${objectURL}&quot; width=&quot;100%&quot; height=&quot;400px&quot; type=&quot;application/pdf&quot;&gt;`;
-        }
-    }
-
-    init();
-
-&lt;/script&gt;</pre>
+<div title="MarkupPostBody" creator="Wang Yanshu" modifier="Wang Yanshu" created="202406190950" modified="202406191012" changecount="6">
+<pre></pre>
 </div>
 <div title="MarkupPostHead" creator="YourName" modifier="Wang Yanshu" created="202405291601" modified="202406191007" changecount="8">
 <pre></pre>
 </div>
-<div title="MarkupPreBody" creator="Wang Yanshu" modifier="Wang Yanshu" created="202406170209" modified="202406191000" changecount="19">
+<div title="MarkupPreBody" creator="Wang Yanshu" modifier="Wang Yanshu" created="202406170209" modified="202406191029" changecount="21">
 <pre>&lt;script src=&quot;https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/sienna.min.js&quot; defer&gt;&lt;/script&gt;
 &lt;script src=&quot;https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/audioPlaylist.js&quot;&gt;&lt;/script&gt;
+
+&lt;script src=&quot;https://sagecell.sagemath.org/static/embedded_sagecell.js&quot;&gt;&lt;/script&gt;
+ &lt;script&gt;sagecell.makeSagecell({&quot;inputLocation&quot;: &quot;.sage&quot;});&lt;/script&gt; 
+&lt;link rel=&quot;stylesheet&quot; type=&quot;text/css&quot; href=&quot;https://sagecell.sagemath.org/static/sagecell_embed.css&quot;&gt; 
+
 &lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js&quot; type=&quot;text/javascript&quot; charset=&quot;utf-8&quot;&gt;&lt;/script&gt;
 &lt;script src=&quot;https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/XeTeXEngine.js&quot;&gt;&lt;/script&gt;
 &lt;script src=&quot;https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/DvipdfmxEngine.js&quot;&gt;&lt;/script&gt;
 &lt;script src=&quot;https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/PdfTeXEngine.js&quot;&gt;&lt;/script&gt;
 
+&lt;script src=&quot;https://cheerpxdemos.leaningtech.com/publicdeploy/20240501_137/cx.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;https://cjrtnc.leaningtech.com/3.0/cj3loader.js&quot;&gt;&lt;/script&gt;
 
+&lt;script src=&quot;https://unpkg.com/@ruffle-rs/ruffle&quot;&gt;&lt;/script&gt; 
 
 &lt;div class=&quot;h-card&quot; style=&quot; padding:.5em; background:#ffffff; border:1px solid black; margin-right:2em; width:400px; font-size: 20px; display:none; &quot;&gt;
         &lt;span class=&quot;p-name&quot;&gt;Wang Yanshu&lt;/span&gt;
@@ -45058,7 +45012,7 @@ $1
 	src+(tiddler&amp;&amp;tiddler.title==src?'##info':'##show');
 }} with: [[$1]]&gt;&gt;</pre>
 </div>
-<div title="XeTex sample" creator="Wang Yanshu" modifier="Wang Yanshu" created="202406190404" modified="202406191008" changecount="8">
+<div title="XeTex sample" creator="Wang Yanshu" modifier="Wang Yanshu" created="202406190404" modified="202406191043" changecount="10">
 <pre>&lt;html&gt;
 &lt;head&gt;
     &lt;!-- Basic Page Needs
@@ -45945,7 +45899,7 @@ massa et mattis lacinia.
 
 &lt;/script&gt;
 &lt;/html&gt;
-&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js&quot; type=&quot;text/javascript&quot; charset=&quot;utf-8&quot;&gt;&lt;/script&gt;
 &lt;script src=&quot;https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/XeTeXEngine.js&quot;&gt;&lt;/script&gt;
 &lt;script src=&quot;https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/DvipdfmxEngine.js&quot;&gt;&lt;/script&gt;
 &lt;script&gt;
@@ -46765,6 +46719,26 @@ document.getElementById('watermark').innerHTML = fullTextWatermark
 });
 
 &lt;/script&gt;</pre>
+</div>
+<div title="webamp" creator="Wang Yanshu" modifier="Wang Yanshu" created="202406191041" modified="202406191042" changecount="3">
+<pre>/%
+&lt;html&gt;
+&lt;div id=&quot;app&quot;&gt;&lt;/div&gt;
+
+&lt;script src=&quot;https://unpkg.com/webamp&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+    const app = document.getElementById(&quot;app&quot;)
+    const webamp = new Webamp();
+    webamp.renderWhenReady(app);
+&lt;/script&gt;
+&lt;/html&gt;
+&lt;script src=&quot;https://unpkg.com/webamp&quot;&gt;&lt;/script&gt;
+&lt;script&gt;
+    const app = document.getElementById(&quot;app&quot;)
+    const webamp = new Webamp();
+    webamp.renderWhenReady(app);
+&lt;/script&gt;
+%/</pre>
 </div>
 <div title="wrench.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="IconPackage attachment excludeMissing silk">
 <pre>!usage
@@ -56621,69 +56595,7 @@ if(useJavaSaver)
 //]]>
 </script>
 <!--POST-SCRIPT-START-->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.14/ace.js" type="text/javascript" charset="utf-8"></script>
-<script src="https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/XeTeXEngine.js"></script>
-<script src="https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/DvipdfmxEngine.js"></script>
-<script>
 
-    const compileBtn = document.getElementById("compilebtn");
-    const consoleOutput = document.getElementById("console");
-    const pdfbox = document.getElementById("pdfbox");
-
-    const editor = ace.edit("editor");
-    editor.setTheme("ace/theme/monokai");
-    editor.session.setMode("ace/mode/latex");
-    editor.session.setUseWrapMode(true);
-    editor.setFontSize(18);
-    
-    const globalEn = new XeTeXEngine();
-    const dvipdfmxEn= new DvipdfmxEngine();
-
-    async function init() {
-      await globalEn.loadEngine();
-      await dvipdfmxEn.loadEngine();
-      compileBtn.innerHTML = "Compile";
-      compileBtn.disabled = false;
-    }
-
-    async function compile() {
-        if(!globalEn.isReady() || !dvipdfmxEn.isReady()) {
-            console.log("Engine not ready yet");
-            return;
-        }
-        compileBtn.disabled = true;
-        compileBtn.innerHTML = "Compiling...";
-
-        let imageDownloadReq = await fetch('assets/troll.jpg');
-        let imageBlob = await imageDownloadReq.arrayBuffer();
-        let bibDownloadReq = await fetch('assets/sample-base.bib');
-        let bibBlob = await bibDownloadReq.arrayBuffer();
-        globalEn.writeMemFSFile("main.tex", editor.getValue());
-        globalEn.writeMemFSFile("troll.jpg", new Uint8Array(imageBlob));
-        globalEn.writeMemFSFile("sample-base.bib", new Uint8Array(bibBlob));
-        globalEn.setEngineMainFile("main.tex");
-        let r = await globalEn.compileLaTeX();
-        consoleOutput.innerHTML = r.log;
-        compileBtn.innerHTML = "Compile";
-        compileBtn.disabled = false;
-        if (r.status === 0) {
-            dvipdfmxEn.writeMemFSFile("main.xdv", r.pdf);
-            dvipdfmxEn.setEngineMainFile("main.xdv");
-            dvipdfmxEn.writeMemFSFile("troll.jpg", new Uint8Array(imageBlob));
-            let r1 = await dvipdfmxEn.compilePDF();
-            const pdfblob = new Blob([r1.pdf], {type : 'application/pdf'});
-            const objectURL = URL.createObjectURL(pdfblob);
-            setTimeout(()=>{
-                URL.revokeObjectURL(objectURL);
-            }, 30000);
-            console.log(objectURL);
-            pdfbox.innerHTML = `<embed src="${objectURL}" width="100%" height="400px" type="application/pdf">`;
-        }
-    }
-
-    init();
-
-</script>
 <!--POST-SCRIPT-END-->
 </body>
 </html>
