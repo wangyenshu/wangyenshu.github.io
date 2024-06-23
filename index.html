@@ -661,8 +661,9 @@ body {font-size:0.8em;}
 </div>
 <!--POST-SHADOWAREA-->
 <div id="storeArea">
-<div title="3D clock" creator="Wang Yanshu" modifier="Wang Yanshu" created="202406220442" changecount="1">
+<div title="3D clock" creator="Wang Yanshu" modifier="Wang Yanshu" created="202406220442" modified="202406230557" changecount="3">
 <pre>&lt;html&gt;
+&lt;script src=&quot;https://cjrtnc.leaningtech.com/3.0/cj3loader.js&quot;&gt;&lt;/script&gt;
 &lt;applet CODE=&quot;Clock3D.class&quot; WIDTH=&quot;200&quot; HEIGHT=&quot;200&quot;&gt;
   &lt;param name=&quot;fps&quot; value=&quot;18&quot;&gt;
   &lt;param name=&quot;a1&quot; value=&quot;12500&quot;&gt;
@@ -687,6 +688,7 @@ body {font-size:0.8em;}
 &lt;font face=&quot;arial, helvetica&quot; size=&quot;-2&quot;&gt;&lt;a href=&quot;http://javascriptkit.com&quot;&gt;JavaScript
 Kit&lt;/a&gt;&lt;/font&gt;&lt;/p&gt;
 &lt;/html&gt;
+&lt;script src=&quot;https://cjrtnc.leaningtech.com/3.0/cj3loader.js&quot;&gt;&lt;/script&gt;
     &lt;script&gt;
       cheerpjInit();
     &lt;/script&gt;</pre>
@@ -46791,7 +46793,7 @@ document.getElementById('watermark').innerHTML = fullTextWatermark
 
 &lt;/script&gt;</pre>
 </div>
-<div title="webamp" creator="Wang Yanshu" modifier="Wang Yanshu" created="202406191041" modified="202406191042" changecount="3">
+<div title="webamp" creator="Wang Yanshu" modifier="Wang Yanshu" created="202406191041" modified="202406230551" changecount="4">
 <pre>/%
 &lt;html&gt;
 &lt;div id=&quot;app&quot;&gt;&lt;/div&gt;
@@ -46809,6 +46811,27 @@ document.getElementById('watermark').innerHTML = fullTextWatermark
     const webamp = new Webamp();
     webamp.renderWhenReady(app);
 &lt;/script&gt;
+
+&lt;html&gt;
+&lt;div id=&quot;app&quot;&gt;&lt;/div&gt;
+&lt;script src=&quot;https://unpkg.com/webamp&quot;&gt;&lt;/script&gt;
+&lt;script&gt;new Webamp({
+    initialTracks: [{
+        metaData: {
+            artist: &quot;The Boy is Mine&quot;,
+            title: &quot;Brandy &amp; Monica&quot;,
+        },
+      
+      // Be careful because mp3s use up a lot of space on your            account.
+        url: &quot;https://sadhost.neocities.org/music/Boy.mp3&quot;,
+    }],
+    
+    initialSkin: {
+        url: 
+      // Find skins https://skins.webamp.org - download them and          host them on your website!
+     &quot;https://github.com/wangyenshu/wangyenshu.github.io/raw/main/Excel_Skin.wsz&quot;
+    },}).renderWhenReady(app);&lt;/script&gt;
+&lt;/html&gt;
 %/</pre>
 </div>
 <div title="wrench.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="IconPackage attachment excludeMissing silk">
