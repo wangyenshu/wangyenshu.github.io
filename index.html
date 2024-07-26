@@ -137,6 +137,7 @@ document.getElementById('watermark').innerHTML = fullTextWatermark
 <body onload="main();" onunload="if(window.unload) unload();">
 <!--PRE-BODY-START-->
 <script src="https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/sienna.min.js" defer></script>
+<script src="speakClient.js"></script>
 <script src="https://togetherjs.com/togetherjs-min.js"></script>
 <!--
 <script src="https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/audioPlaylist.js"></script>
@@ -766,7 +767,7 @@ Kit&lt;/a&gt;&lt;/font&gt;&lt;/p&gt;
 !Tagcloud
 &lt;&lt;tagCloud excludeLists excludeSearch systemConfig systemServer PluginInfo Plugin excludeMissing excludePublisher takenotepackage app DiscoveryPackage NavigationPackage IconPackage TidIDEPackage TaskPackage ScrollbarPackage MediaPackage pluginInfo @cdent @developers @ricardoperes Administration follow tips Content System systemConfigDisable AttachFilePackage IFramePackage QuickEditPackage Tag ThemePackage attachment package sample settings story tiddlyLife BasicsPackage BookmarkPackage CD CSS DiscussionPackage ImportExportPackage InputPackage JashPackage MoveablePanelPackage PasetUpPackage PasteUpPackage TiddlyTools [[To Do]] alpha animation blank bookmarklet catalog demo discussion excludeTheme framedLinks html media moveable panelmap patch script setup stylesheet stylesheets systemTheme template test translate nonacademic transclusion locked silk Decrypt(Ramanujan) Trash nonacademic&gt;&gt;</pre>
 </div>
-<div title="AdministrationPage" modifier="YourName" created="201206131959" modified="202406160707" tags="System excludeLists" _hash="e1ebb210726c3b146ffdcd2bb68ef6449c55f179" changecount="14">
+<div title="AdministrationPage" modifier="YourName" created="201206131959" modified="202406160707" tags="System excludeLists" changecount="14" _hash="e1ebb210726c3b146ffdcd2bb68ef6449c55f179">
 <pre>|SiteIcon SiteTitle SiteSubtitle||||StyleSheet|
 |MainMenu|SiteUrl||PageTemplate|StyleSheetColors|
 |~|DefaultTiddlers||EditTemplate|StyleSheetLayout|
@@ -3675,7 +3676,7 @@ a:hover, .button:hover { color:#fff; }
 &lt;/div&gt;&lt;!-- viewer --&gt;
 &lt;!--}}}--&gt;</pre>
 </div>
-<div title="CDSample" modifier="ELSDesignStudios" created="200706152348" modified="200706212043" tags="CD MediaPackage sample" albumtitle="Music for Sentient Beings, Vol IV" website="http://www.cdbaby.com/cd/vlhohenstein" sample="http://www.TiddlyTools.com/vlh/MFSB4/Kindling.m3u" cover="http://cdbaby.name/v/l/vlhohenstein.jpg" purchaseurl="" sampleurl="" coverurl="" genre="ambient electronic" mediatype="cd" year="2005" artist="Vernon L Hohenstein">
+<div title="CDSample" modifier="ELSDesignStudios" created="200706152348" modified="200706212043" tags="CD MediaPackage sample" artist="Vernon L Hohenstein" year="2005" mediatype="cd" genre="ambient electronic" coverurl="" sampleurl="" purchaseurl="" cover="http://cdbaby.name/v/l/vlhohenstein.jpg" sample="http://www.TiddlyTools.com/vlh/MFSB4/Kindling.m3u" website="http://www.cdbaby.com/cd/vlhohenstein" albumtitle="Music for Sentient Beings, Vol IV">
 <pre>----
 |borderless|k
 |1 [[Candlelight|http://www.TiddlyTools.com/vlh/MFSB4/Candlelight.m3u]] (7:50) | &amp;nbsp;&amp;nbsp; |5 [[Fuego|http://www.TiddlyTools.com/vlh/MFSB4/Fuego.m3u]] (7:40) | |
@@ -4192,7 +4193,420 @@ config.options.txtCalStartOfWeekend=5;
 config.macros.calendar.journalDateFmt=&quot;DDD MMM 0DD YYYY&quot;;
 //}}}</pre>
 </div>
-<div title="CheckboxPlugin" modifier="ELSDesignStudios" created="200512071459" modified="200801090029" tags="MediaPackage TaskPackage systemConfig InputPackage" checked="false" demofield="false">
+<div title="CaptureKeysMacro" creator="Wang Yanshu" modifier="Wang Yanshu" created="202407251505" changecount="1">
+<pre>/***
+| Name:|CaptureKeysMacro|
+| Purpose:|Makes an easy way to capture a key and stop the browser from doing its default action|
+| Creator:|BradleyMeck|
+| Ideas:|BradleyMeck &amp; SaqImtiaz|
+| Source:|http://tiddlyspot.com/BradleyMeck/#CaptureKeysMacro|
+| Requires:|Javascript|
+| Version|1.0 (July 24, 2006)|
+
+!History
+** First release
+!Usage
+config.macros.captureKey(object,handler,keyCode,SHIFT,ALT,CTRL);
+|''object''|Where (element, document, etc.) to try to capture the event at (useful because of stopPropagation).|
+|''handler''|Function to execute when this key is captured.|
+|''keyCode''|The keyCode to execute this function if this key is depressed.|
+|''SHIFT''|Should the Shift key be depressed when this event occurs?|
+|''ALT''|Should the Alt key be depressed when this event occurs?|
+|''CTRL''|Should the Ctrl key be depressed when this event occurs?|
+!Notes
+|If something changes the element's onkeydown/press handlers and the browser does not support addEventListener or attachEvent, the key capturing will be ruined.|
+|Please use the removeCaptureKey function to remove the capture keys if you dont want them to occur anymore, please? However, removing the 'F1' key does not make onhelp work again.|
+|config.macros.captureKeys.preventDefault(), config.macros.captureKeys.stopPropagation(), config.macros.captureKeys.getRealKey(event) are good functions to use in other plugins as well|
+!Examples
+For 'CTRL'+'S' Saving
+{{{
+config.macros.captureKeys.captureKey(document,saveChanges,&quot;S&quot;,false,false,true);
+}}}
+!Code
+!!!Virtual Keyboard
+***/
+//{{{
+config.macros.captureKeys = {};
+config.macros.captureKeys.VK = {
+/*KEYS ARE MAPPED FROM TOP LEFT TO BOTTOM RIGHT,
+THE NAMES ARE TAKEN FROM THE JAVA VK*/
+ &quot;ESCAPE&quot;: 27,
+ &quot;F1&quot;: 112,
+ &quot;F2&quot;: 113,
+ &quot;F3&quot;: 114,
+ &quot;F4&quot;: 115,
+ &quot;F5&quot;: 116,
+ &quot;F6&quot;: 117,
+ &quot;F7&quot;: 118,
+ &quot;F8&quot;: 119,
+ &quot;F9&quot;: 120,
+ &quot;F10&quot;: 121,
+ &quot;F11&quot;: 122,
+ &quot;F12&quot;: 123,
+ &quot;PRINT_SCREEN&quot;: 44,
+ &quot;SCROLL_LOCK&quot;: 145,
+ &quot;PAUSE&quot;: 19,
+ &quot;BACK_QUOTE&quot;: 192,
+ &quot;1&quot;: 49,
+ &quot;2&quot;: 50,
+ &quot;3&quot;: 51,
+ &quot;4&quot;: 52,
+ &quot;5&quot;: 53,
+ &quot;6&quot;: 54,
+ &quot;7&quot;: 55,
+ &quot;8&quot;: 56,
+ &quot;9&quot;: 57,
+ &quot;0&quot;: 48,
+ &quot;MINUS&quot;: 109,
+ &quot;EQUALS&quot;: 61,
+ &quot;BACKSPACE&quot;: 8,
+ &quot;INSERT&quot;: 45,
+ &quot;HOME&quot;: 36,
+ &quot;PAGE_UP&quot;: 33,
+ &quot;NUM_LOCK&quot;: 144,
+ &quot;NUMPADDIVIDE&quot;: 111,
+ &quot;MULTIPLY&quot;: 106,
+ &quot;NUMPADMINUS&quot;: 109,
+ &quot;TAB&quot;: 9,
+ &quot;Q&quot;: 81,
+ &quot;W&quot;: 87,
+ &quot;E&quot;: 69,
+ &quot;R&quot;: 82,
+ &quot;T&quot;: 84,
+ &quot;Y&quot;: 89,
+ &quot;U&quot;: 85,
+ &quot;I&quot;: 73,
+ &quot;O&quot;: 79,
+ &quot;P&quot;: 80,
+ &quot;OPEN_BRACKET&quot;: 219,
+ &quot;CLOSE_BRACKET&quot;: 221,
+ &quot;BACK_SLASH&quot;: 220,
+ &quot;DELETE&quot;: 46,
+ &quot;END&quot;: 35,
+ &quot;PAGE_DOWN&quot;: 34,
+ &quot;NUMPAD7&quot;: 103,
+ &quot;NUMPAD8&quot;: 104,
+ &quot;NUMPAD9&quot;: 105,
+ &quot;PLUS&quot;: 107,
+ &quot;CAPS_LOCK&quot;: 20,
+ &quot;A&quot;: 65,
+ &quot;S&quot;: 83,
+ &quot;D&quot;: 68,
+ &quot;F&quot;: 70,
+ &quot;G&quot;: 71,
+ &quot;H&quot;: 72,
+ &quot;J&quot;: 74,
+ &quot;K&quot;: 75,
+ &quot;L&quot;: 76,
+ &quot;SEMICOLON&quot;: 59,
+ &quot;QUOTE&quot;: 222,
+ &quot;ENTER&quot;: 13,
+ &quot;NUMPAD4&quot;: 100,
+ &quot;NUMPAD5&quot;: 101,
+ &quot;NUMPAD6&quot;: 102,
+ &quot;SHIFT&quot;: 16,
+ &quot;Z&quot;: 90,
+ &quot;X&quot;: 88,
+ &quot;C&quot;: 67,
+ &quot;V&quot;: 86,
+ &quot;B&quot;: 66,
+ &quot;N&quot;: 78,
+ &quot;M&quot;: 77,
+ &quot;COMMA&quot;: 188,
+ &quot;PERIOD&quot;: 190,
+ &quot;DIVIDE&quot;: 191,
+ &quot;UP&quot;: 38,
+ &quot;NUMPAD1&quot;: 97,
+ &quot;NUMPAD2&quot;: 98,
+ &quot;NUMPAD3&quot;: 99,
+ &quot;CONTROL&quot;: 17,
+ &quot;ALT&quot;: 18,
+ &quot;SPACE&quot;: 32,
+ &quot;LEFT&quot;: 37,
+ &quot;DOWN&quot;: 40,
+ &quot;RIGHT&quot;: 39,
+ &quot;NUMPAD0&quot;: 96,
+ &quot;NUMPADPERIOD&quot;: 110
+}
+config.macros.captureKeys.UNICodeToAsciiVK = 
+{
+ 33 : 49,
+ 34 : 222,
+ 35 : 51,
+ 36 : 52,
+ 37 : 53,
+ 38 : 55,
+ 39 : 222,
+ 40 : 57,
+ 41 : 48,
+ 42 : 56,
+ 43 : 61,
+ 44 :188,
+ 45 :109,
+ 46 :190,
+ 47 :191,
+ 48 : 96,
+ 49 : 97,
+ 50 : 98,
+ 51 : 99,
+ 52 :100,
+ 53 :101,
+ 54 :102,
+ 55 :103,
+ 56 :104,
+ 57 :105,
+ 58 : 59,
+ 60 :188,
+ 62 :190,
+ 63 :191,
+ 64 : 50,
+ 91 :219,
+ 92 :220,
+ 93 :221,
+ 94 : 54,
+ 95 :109,
+ 96 :192, 
+ 97 : 65,
+ 98 : 66,
+ 99 : 67,
+ 100: 68,
+ 101: 69,
+ 102: 70,
+ 103: 71,
+ 104: 72,
+ 105: 73,
+ 106: 74,
+ 107: 75,
+ 108: 76,
+ 109: 77,
+ 110: 78,
+ 111: 79,
+ 112: 80,
+ 113: 81,
+ 114: 82,
+ 115: 83,
+ 116: 84,
+ 117: 85,
+ 118: 86,
+ 119: 87,
+ 120: 88,
+ 121: 89,
+ 122: 90,
+ 123:219,
+ 124:220,
+ 125:221,
+ 126:192
+}
+//}}}
+/***
+!!!!captureKey function
+***/
+//{{{
+window.captureKey = config.macros.captureKeys.captureKey = function(elem,handler,keyCode,shiftButton,altButton,ctrlButton)
+{
+ if(!elem.captureKeys)
+ {
+ elem.captureKeys = [];
+ }
+ var keyEvent = {};
+ keyEvent.key = config.macros.captureKeys.VK[keyCode]?config.macros.captureKeys.VK[keyCode]:keyCode;
+ keyEvent.shift = shiftButton;
+ keyEvent.alt = altButton;
+ keyEvent.ctrl = ctrlButton;
+ keyEvent.func = handler; 
+ elem.captureKeys.push(keyEvent);
+ // IE needs onkeyDown
+ // moz needs onkeypress
+ if(window.event)
+ {
+ // For some reason cancelling the f1 keypress doesnt stop it from loading the help?
+ if(keyCode == 112){document.onhelp = function(event){if(!event)var event=window.event;config.macros.captureKeys.preventDefault(event)}}
+ if(!config.macros.captureKeys.hasEventListener(elem,&quot;keydown&quot;,config.macros.captureKeys.captureKeyHandler)){
+ config.macros.captureKeys.addEventListener(elem,&quot;keydown&quot;,config.macros.captureKeys.captureKeyHandler);}
+ }
+ else
+ {
+ if(!config.macros.captureKeys.hasEventListener(elem,&quot;keypress&quot;,config.macros.captureKeys.captureKeyHandler))
+ config.macros.captureKeys.addEventListener(elem,&quot;keypress&quot;,config.macros.captureKeys.captureKeyHandler); 
+ }
+ return keyEvent;
+}
+config.macros.captureKeys.captureKeyHandler = function(event)
+{
+ if(!this.captureKeys)return null;
+var keyCode = config.macros.captureKeys.getRealKey(event)
+ for(var i = 0; i &lt; this.captureKeys.length; i++)
+ {
+ if(this.captureKeys[i].key == keyCode &amp;&amp; this.captureKeys[i].shift == event.shiftKey &amp;&amp; this.captureKeys[i].alt == event.altKey &amp;&amp; this.captureKeys[i].ctrl == event.ctrlKey)
+ {
+ this.captureKeys[i].func.call(this,event);
+ config.macros.captureKeys.preventDefault(event);
+ }
+ }
+}
+config.macros.captureKeys.getRealKey = function(event)
+{
+var keyCode = event.keyCode;
+if(!keyCode || (keyCode &amp;&amp; keyCode == 0))
+{
+ var unicode=event.which? event.which: event.charCode;
+ keyCode = (config.macros.captureKeys.UNICodeToAsciiVK[unicode]?config.macros.captureKeys.UNICodeToAsciiVK[unicode]:unicode);
+}
+return keyCode;
+}
+config.macros.captureKeys.removeCaptureKey = function(elem,handler,keyCode,shiftButton,altButton,ctrlButton)
+{
+ if(!elem.captureKeys)return null;
+ for(var i = 0; i &lt; elem.captureKeys.length; i++)
+ {
+ if(elem.captureKeys[i].key == keyCode &amp;&amp; elem.captureKeys[i].shift == shiftButton &amp;&amp; elem.captureKeys[i].alt == altButton &amp;&amp; elem.captureKeys[i].ctrl == ctrlButton &amp;&amp; elem.captureKeys[i].func == handler)
+ {
+ if(!elem.captureKeys || (elem.captureKeys &amp;&amp; elem.captureKeys.length == 1))
+ {
+ elem.captureKeys = null;
+ config.macros.captureKeys.removeEventListener(elem,window.event?&quot;keydown&quot;:&quot;keypress&quot;,config.macros.captureKeys.captureKeyHandler);
+ return false;
+ }
+ else
+ {
+ elem.captureKeys.splice(i,1)
+ }
+ }
+ }
+}
+config.macros.captureKeys.addEventListener = function(target,eventType,func,capturing)
+{
+ if(!target.eventListeners)
+ {
+ target.eventListeners = {};
+ }
+ if(!target.eventListeners[eventType])
+ {
+ target.eventListeners[eventType] = [];
+ }
+ if(target.addEventListener)
+ {
+ target.addEventListener(eventType,func,capturing);
+ target.eventListeners[eventType].push(func);
+ return func;
+ }
+ else if(target.attachEvent)
+ {
+ var handler = function(event)
+ {
+ if(!event)var event = window.event;
+ func.call(target,event);
+ };
+ handler.originalFunction = func;
+ target.attachEvent(&quot;on&quot;+eventType,handler);
+ target.eventListeners[eventType].push(handler);
+ return handler;
+ }
+ else
+ {
+ if(target.eventListeners[eventType].length == 0)
+ {
+ if(target[&quot;on&quot;+eventType])
+ {
+ target.eventListeners[eventType].push(target[&quot;on&quot;+eventType]);
+ }
+ target[&quot;on&quot;+eventType] = api.event.standardEventHandler;
+ }
+ target.eventListeners[eventType].push(func);
+ }
+}
+config.macros.captureKeys.standardEventHandler = function(event)
+{
+ if(!event)var event = window.event;
+ if(!this.eventListeners || !this.eventListeners[event.type])return null;
+ for(var i = 0; i &lt; this.eventListeners[event.type].length; i++)
+ {
+ this.eventListeners[event.type][i].call(this,event);
+ }
+}
+config.macros.captureKeys.removeEventListener = function(target,eventType,func,capturing)
+{
+ if(!target.eventListeners || !target.eventListeners[eventType])
+ {
+ return null;
+ }
+ if(target.removeEventListener)
+ {
+ target.removeEventListener(eventType,func,capturing);
+ target.eventListeners[eventType].splice(target.eventListeners[eventType].indexOf(func),1);
+ }
+ else if(target.detachEvent)
+ {
+ var trueFunc = null;
+ var i = 0;
+ for(; i &lt; target.eventListeners.length; i++)
+ {
+ if(target.eventListeners[i].originalFunction = func)
+ {
+ trueFunc = target.eventListeners[i];
+ break;
+ }
+ }
+ if(trueFunc)
+ {
+ target.detachEvent(&quot;on&quot;+eventType,trueFunc);
+ target.eventListeners[eventType].splice(i,1);
+ }
+ }
+ else
+ {
+ target.eventListeners[eventType].splice(target.eventListeners[eventType].indexOf(func),1);
+ if(target.eventListeners[eventType].length == 0)target[&quot;on&quot;+eventType] = null;
+ }
+ if(target.eventListeners[eventType].length == 0)
+ {
+ delete target.eventListeners[eventType];
+ }
+ for(var i in target.eventListeners)
+ {
+ return;
+ }
+ target.eventListeners = undefined;
+}
+config.macros.captureKeys.hasEventListener = function(elem,eventType,func)
+{
+ if(!elem.eventListeners || !elem.eventListeners[eventType]) return false;
+ if(elem.eventListeners[eventType].indexOf(func)!=null)return true;
+ return false;
+}
+config.macros.captureKeys.preventDefault = function(event){
+ try
+ {
+ event.keyCode = 0; // Kills old IE
+ }
+ catch(exeption)
+ {
+ }
+ if(window.event)
+ {
+ event.returnValue=false;
+ }
+ if(event.preventDefault)
+ {
+ event.preventDefault();
+ }
+ return event;
+}
+
+config.macros.captureKeys.stopPropagation = function(event){
+ if(event.cancelBubble)
+ {
+ event.cancelBubble=false;
+ }
+ if(event.stopPropagation)
+ {
+ event.stopPropagation();
+ }
+ return event;
+}
+//}}}</pre>
+</div>
+<div title="CheckboxPlugin" modifier="ELSDesignStudios" created="200512071459" modified="200801090029" tags="MediaPackage TaskPackage systemConfig InputPackage" demofield="false" checked="false">
 <pre>/***
 |Name|CheckboxPlugin|
 |Source|http://www.TiddlyTools.com/#CheckboxPlugin|
@@ -4384,7 +4798,7 @@ config.macros.checkbox = {
 }
 //}}}</pre>
 </div>
-<div title="CheckboxPluginInfo" modifier="ELSDesignStudios" created="200801090021" modified="200801090024" tags="pluginInfo" demofield="false" checked="false">
+<div title="CheckboxPluginInfo" modifier="ELSDesignStudios" created="200801090021" modified="200801090024" tags="pluginInfo" checked="false" demofield="false">
 <pre>|Name|CheckboxPluginInfo|
 |Source|http://www.TiddlyTools.com/#CheckboxPlugin|
 |Documentation|http://www.TiddlyTools.com/#CheckboxPluginInfo|
@@ -9378,6 +9792,566 @@ $1
 %/&lt;&lt;tiddler {{var src='EmbedTiddlers'; src+(tiddler&amp;&amp;tiddler.title==src?'##info':'##show');}}
 	with: &quot;$1&quot; &quot;$2&quot;&gt;&gt;</pre>
 </div>
+<div title="Encrypted fields plugin" creator="Wang Yanshu" modifier="Wang Yanshu" created="202407251410" tags="systemConfig" changecount="1">
+<pre>/***
+|Location|http://visualtw.ouvaton.org/VisualTW.html|
+|Version|1.0.1|
+|Requires|~TW2.2.x|
+|Browsers|Firefox 2.0.x, IE 6.0+, others|
+!Description:
+Three macros to protect tiddler fields :
+* __viewEncrypted macro__ : prompt for the password (if not set or bad) and then display the field content.
+* __editEncrypted macro__ : prompt for the password (if not set) and then edit the field content.
+* __setPassword macro__: display a button to prompt field password
+Notes :
+*''protected fields are stored encrypted with RC4 algorithm'' (so, even if you hack TW html code, the content is protected).
+* password is field specific (//text field password// is different from //another field password//).
+* passwords live until page is left or reloaded.
+* obviously, protected fields are not searchable.
+!Demo:
+On [[homepage|http://visualtw.ouvaton.org/VisualTW.html]], see [[EncryptedField example]]
+!Usage:
+*call {{{editEncrypted}}} macro instead of usual {{{edit}}} macro in EditTemplate or another edit template. Parameters are :
+**{{{fieldName}}}. Can be &quot;text&quot; or any other field name (''NB'': TW field names are always lowercase).
+**{{{numberOfRows}}} (optional) for the text editor.
+*call {{{viewEncrypted}}} instead of usual {{{view}}} macro in ViewTemplate or another view template. Parameters are :
+**{{{fieldName}}}. It can be &quot;text&quot; or any other field name (''NB'': TW field names are always lowercase)
+**{{{displayType}}} (optional). It can be //link//, //wikified// or //date// as in standard view macro.
+*call {{{setPassword}}} in SideBarOptions or in any other tiddler. Parameters are :
+**{{{fieldName}}} (optional) on which this password will be applied.
+Notes : 
+*The &lt;&lt;setPassword&gt;&gt; button is shown when no password has been set for a field, or if the current password doesn't match its encrypted content.
+*In &lt;&lt;toolbar fields&gt;&gt;, field content is seen encrypted.
+!Installation:
+#Import [[Encrypted fields plugin]] from [[homepage|http://visualtw.ouvaton.org/VisualTW.html]] (tagged as systemConfig)
+#Adapt your templates (EditTemplate, ViewTemplate, or others) to your needs.
+!FAQ
+!!How to change the password ?
+#edit the tiddler(s) where you want to change the password (ie edit mode).
+#change the passwords using &lt;&lt;setPassword&gt;&gt;.
+#save the tiddler(s). Their fields are protected with a new password.
+!!Can I use several passwords ?
+* use different fields. Each one has its own password.
+* or change the password only for a subset of tiddlers as seen above.
+!Note
+This plugin is [[open source|License]] as [[TiddlyWiki]]. You use it at your own risks. Encrypted data might be lost if you lose your password or in case of bug.
+***/
+//{{{
+
+config.macros.viewEncrypted = {
+	handler : function(place,macroName,params,wikifier,paramString,tiddler) {
+		config.macros.setPassword.callDecrypted(place,macroName,params,tiddler,this.standardView);
+	},
+	standardView : function(place, params, tiddler, value) { //extracted from the standard config.macros.view.handler
+		switch(params[1]) {
+			case undefined :
+			case null :
+				highlightify(value,place,highlightHack,tiddler);
+				break;
+			case &quot;link&quot;:
+				createTiddlyLink(place,value,true);
+				break;
+			case &quot;wikified&quot;:
+				wikify(value,place,highlightHack,tiddler);
+				break;
+			case &quot;date&quot;:
+				value = Date.convertFromYYYYMMDDHHMM(value);
+				createTiddlyText(place,value.formatString(params[2] ? params[2] : config.views.wikified.dateFormat));
+				break;
+		}
+	}
+}
+config.macros.editEncrypted = {
+	handler : function(place,macroName,params,wikifier,paramString,tiddler) {
+		config.macros.setPassword.callDecrypted(place,macroName,params,tiddler,this.standardEdit);
+	},
+	standardEdit : function(place, params, tiddler, value) {  //extracted from the standard config.macros.edit.handler
+		var field = params[0];
+		var rows = params[1];
+		if (field) {
+			story.setDirty(tiddler.title,true);
+			if(field != &quot;text&quot; &amp;&amp; !rows) {
+				var e = createTiddlyElement(null,&quot;input&quot;);
+				if(tiddler.isReadOnly())
+					e.setAttribute(&quot;readOnly&quot;,&quot;readOnly&quot;);
+				e.setAttribute(&quot;editEncrypted&quot;,field);
+				e.setAttribute(&quot;type&quot;,&quot;text&quot;);
+				e.value = value;
+				e.setAttribute(&quot;size&quot;,&quot;40&quot;);
+				e.setAttribute(&quot;autocomplete&quot;,&quot;off&quot;);
+				place.appendChild(e);
+			} else {
+				var wrapper1 = createTiddlyElement(null,&quot;fieldset&quot;,null,&quot;fieldsetFix&quot;);
+				var wrapper2 = createTiddlyElement(wrapper1,&quot;div&quot;);
+				var e = createTiddlyElement(wrapper2,&quot;textarea&quot;);
+				if(tiddler.isReadOnly())
+					e.setAttribute(&quot;readOnly&quot;,&quot;readOnly&quot;);
+				e.value = value;
+				var rows = rows ? rows : 10;
+				var lines = value .match(/\n/mg);
+				var maxLines = Math.max(parseInt(config.options.txtMaxEditRows),5);
+				if(lines != null &amp;&amp; lines.length &gt; rows)
+					rows = lines.length + 5;
+				rows = Math.min(rows,maxLines);
+				e.setAttribute(&quot;rows&quot;,rows);
+				e.setAttribute(&quot;editEncrypted&quot;,field);
+				place.appendChild(wrapper1);
+			}
+		}
+	},
+	gather : function(e, field){
+		if (config.passwords[field])
+			return &quot;cryptoMXPrefix@&quot;+Crypto.cryptomx.encrypt(config.passwords[field],e.value);
+		else
+			return e.value;
+	} 
+}
+
+config.macros.setPassword = {
+        handler : function(place,macroName,params,wikifier,paramString,tiddler) {
+		var field = params[0];
+		var macro = params[1];
+		var param1 = params[2];
+		var param2 = params[3];
+		var btn = createTiddlyButton(place,(field ? field : &quot;set&quot;) +&quot; password&quot;, &quot;enter a password for this field&quot;,this.onClickSetPassword);
+		if (field) btn.setAttribute(&quot;field&quot;,field);
+		if (macro) btn.setAttribute(&quot;macro&quot;,macro);
+		if (tiddler) btn.setAttribute(&quot;tiddler&quot;,tiddler.title);
+		if (param1) btn.setAttribute(&quot;param1&quot;,param1);
+		if (param2) btn.setAttribute(&quot;param2&quot;,param2);
+        },
+        onClickSetPassword:function(){
+		var field= this.getAttribute(&quot;field&quot;);
+		field = field ? field : prompt(&quot;field name&quot;);
+		var macro= this.getAttribute(&quot;macro&quot;);
+		var title = this.getAttribute(&quot;tiddler&quot;);
+		var param1 = this.getAttribute(&quot;param1&quot;);
+		var param2 = this.getAttribute(&quot;param2&quot;);
+		if (field) {
+	        	config.passwords[field]=prompt(&quot;enter a password for &quot;+field,config.passwords[field] ? config.passwords[field] : &quot;&quot; );
+			if (title &amp;&amp; macro) {
+				var parent = this.parentNode;
+				while (parent.childNodes.length&gt;0) parent.removeChild(parent.firstChild);
+				config.macros[macro].handler(parent, macro, [field,param1,param2],null,null, store.getTiddler(title));
+			}
+		}
+		return false;
+        },
+		callDecrypted: function(place,macroName,params,tiddler, callBack){
+			var field = params[0];
+			if (field) {
+				var value = store.getValue(tiddler,field);
+				value = value ? value : &quot;&quot;;
+				var isEncrypted = (value.substr(0,15)==&quot;cryptoMXPrefix@&quot;);
+				var isPasswordSet = config.passwords[field] ? true : false;
+				var decrypt = (isEncrypted &amp;&amp; isPasswordSet) ? Crypto.cryptomx.decrypt(config.passwords[field],value.substr(15)): null;
+				var isDecrypted = (decrypt!=null);
+				var isFalsePassword = (isEncrypted &amp;&amp; isPasswordSet &amp;&amp; !isDecrypted);
+				if (!isPasswordSet||isFalsePassword) config.macros.setPassword.handler(place,null,[field,macroName, params[1], params[2]], null, null, tiddler);
+				if (!isEncrypted) createTiddlyText(place, this.messages.NotProtected);
+				if (isEncrypted &amp;&amp; !isPasswordSet) createTiddlyText(place, this.messages.Protected);
+				if (isFalsePassword) createTiddlyText(place, this.messages.badPassword);
+				if (isDecrypted) value=decrypt;
+				if (!isEncrypted) callBack(place, params, tiddler, value);		
+				if (isDecrypted) callBack(place, params, tiddler, decrypt);
+			}
+		},
+		messages : {
+			badPassword : &quot;(bad password)&quot;,
+			Protected :&quot;(password protected field)&quot;,
+			NotProtected :&quot;(this field is not yet encrypted)&quot;
+		}
+}
+
+config.passwords = [];
+
+Story.prototype.previousGatherSaveEditEncrypted = Story.prototype.previousGatherSaveEditEncrypted ? Story.prototype.previousGatherSaveEditEncrypted : Story.prototype.gatherSaveFields; // to avoid looping if this line is called several times
+Story.prototype.gatherSaveFields = function(e,fields){
+	if(e &amp;&amp; e.getAttribute) {
+		var f = e.getAttribute(&quot;editEncrypted&quot;);
+		if(f){
+			fields[f] = config.macros.editEncrypted.gather(e,f);
+		}
+		this.previousGatherSaveEditEncrypted(e, fields);
+	}
+};
+
+//}}}
+
+/***
+Cryptomx code from http://cryptomx.sourceforge.net
+***/
+//{{{
+Crypto.cryptomx = {
+	dg :'',
+	makeArray: function(n) {
+		for (var i=1; i&lt;=n; i++) {
+			this[i]=0
+		}
+		return this
+	},
+	rc4: function(key, text) {
+		var i, x, y, t, x2;
+		this.status(&quot;rc4&quot;)
+		s=this.makeArray(0);
+		
+		for (i=0; i&lt;256; i++) {
+			s[i]=i
+		}
+		y=0
+		for (x=0; x&lt;256; x++) {
+			y=(key.charCodeAt(x % key.length) + s[x] + y) % 256
+			t=s[x]; s[x]=s[y]; s[y]=t
+		}
+		x=0;  y=0;
+		var z=&quot;&quot;
+		for (x=0; x&lt;text.length; x++) {
+			x2=x % 256
+			y=( s[x2] + y) % 256
+			t=s[x2]; s[x2]=s[y]; s[y]=t
+			z+= String.fromCharCode((text.charCodeAt(x) ^ s[(s[x2] + s[y]) % 256]))
+		}
+		return z
+	},
+	badd: function(a,b) { // binary add
+		var r=''
+		var c=0
+		while(a || b) {
+			c=this.chop(a)+this.chop(b)+c
+			a=a.slice(0,-1); b=b.slice(0,-1)
+			if(c &amp; 1) {
+				r=&quot;1&quot;+r
+			} else {
+				r=&quot;0&quot;+r
+			}
+			c&gt;&gt;=1
+		}
+		if(c) {r=&quot;1&quot;+r}
+		return r
+	},
+	chop:function(a) {
+		if(a.length) {
+			return parseInt(a.charAt(a.length-1))
+		} else {
+			return 0
+		}
+	},
+	bsub:function(a,b) { // binary subtract
+		var r=''
+		var c=0
+		while(a) {
+			c=this.chop(a)-this.chop(b)-c
+			a=a.slice(0,-1); b=b.slice(0,-1)
+			if(c==0) {
+				r=&quot;0&quot;+r
+			}
+			if(c == 1) {
+				r=&quot;1&quot;+r
+				c=0
+			}
+			if(c == -1) {
+				r=&quot;1&quot;+r
+				c=1
+			}
+			if(c==-2) {
+				r=&quot;0&quot;+r
+				c=1
+			}
+		}
+		if(b || c) {return ''}
+		return this.bnorm(r)
+	},
+	bnorm:function(r) { // trim off leading 0s
+		var i=r.indexOf('1')
+		if(i == -1) {
+			return '0'
+		} else {
+			return r.substr(i)
+		}
+	},
+	bmul:function(a,b) { // binary multiply
+		var r=''; var p=''
+		while(a) {
+			if(this.chop(a) == '1') {
+				r=this.badd(r,b+p)
+			}
+			a=a.slice(0,-1)
+			p+='0'
+		}
+		return r;
+	},
+	bmod:function(a,m) { // binary modulo
+		return this.bdiv(a,m).mod
+	},
+	bdiv:function(a,m) { // binary divide &amp; modulo
+		// this.q = quotient this.mod=remainder
+		var lm=m.length, al=a.length
+		var p='',d
+		this.q=''
+		for(n=0; n&lt;al; n++) {
+			p=p+a.charAt(n);
+			if(p.length&lt;lm || (d=this.bsub(p,m)) == '') {
+				this.q+='0'
+			} else {
+				if(this.q.charAt(0)=='0') {
+					this.q='1'
+				} else {
+					this.q+=&quot;1&quot;
+				}
+				p=d
+			}
+		}
+		this.mod=this.bnorm(p)
+		return this
+	},
+	bmodexp:function(x,y,m) { // binary modular exponentiation
+		var r='1'
+		this.status(&quot;bmodexp &quot;+x+&quot; &quot;+y+&quot; &quot;+m)
+		
+		while(y) {
+			if(this.chop(y) == 1) {
+				r=this.bmod(this.bmul(r,x),m)
+			}
+			y=y.slice(0,y.length-1)
+			x=this.bmod(this.bmul(x,x),m)
+		}
+		return this.bnorm(r)
+	},
+	modexp:function(x,y,m) { // modular exponentiation
+		// convert packed bits (text) into strings of 0s and 1s
+		return this.b2t(this.bmodexp(this.t2b(x),this.t2b(y),this.t2b(m)))
+	},
+	i2b: function(i) { // convert integer to binary
+		var r=''
+		while(i) {
+			if(i &amp; 1) { r=&quot;1&quot;+r} else {r=&quot;0&quot;+r}
+			i&gt;&gt;=1;
+		}
+		return r? r:'0'
+	},
+	t2b:function(s) {
+		var r=''
+		if(s=='') {return '0'}
+		while(s.length) {
+			var i=s.charCodeAt(0)
+			s=s.substr(1)
+			for(n=0; n&lt;8; n++) {
+				r=((i &amp; 1)? '1':'0') + r
+				i&gt;&gt;=1;
+			}
+		}
+		return this.bnorm(r)
+	},
+	b2t:function(b) {
+		var r=''; var v=0; var m=1
+		while(b.length) {
+			v|=this.chop(b)*m
+			b=b.slice(0,-1)
+			m&lt;&lt;=1
+			if(m==256 || b=='') {
+				r+=String.fromCharCode(v)
+				v=0; m=1
+			}
+		}
+		return r
+	},
+	b64s:'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_&quot;',
+	textToBase64:function(t) {
+		this.status(&quot;t 2 b64&quot;)
+		var r=''; var m=0; var a=0; var tl=t.length-1; var c
+		for(n=0; n&lt;=tl; n++) {
+			c=t.charCodeAt(n)
+			r+=this.b64s.charAt((c &lt;&lt; m | a) &amp; 63)
+			a = c &gt;&gt; (6-m)
+			m+=2
+			if(m==6 || n==tl) {
+				r+=this.b64s.charAt(a)
+				if((n%45)==44) {r+=&quot;\n&quot;}
+				m=0
+				a=0
+			}
+		}
+		return r
+	},
+	base64ToText:function(t) {
+		this.status(&quot;b64 2 t&quot;)
+		var r=''; var m=0; var a=0; var c
+		for(n=0; n&lt;t.length; n++) {
+			c=this.b64s.indexOf(t.charAt(n))
+			if(c &gt;= 0) {
+				if(m) {
+					r+=String.fromCharCode((c &lt;&lt; (8-m))&amp;255 | a)
+				}
+				a = c &gt;&gt; m
+				m+=2
+				if(m==8) { m=0 }
+			}
+		}
+		return r
+	},
+
+	rand:function(n) {  return Math.floor(Math.random() * n) },
+	rstring:function(s,l) {
+		var r=&quot;&quot;
+		var sl=s.length
+		while(l&gt;0) {
+			l=l-1;
+			r+=s.charAt(rand(sl))
+		}
+		//status(&quot;rstring &quot;+r)
+		return r
+	},
+	key2:function(k) {
+		var l=k.length
+		var kl=l
+		var r=''
+		while(l--) {
+			r+=k.charAt((l*3)%kl)
+		}
+		return r
+	},
+	rsaEncrypt:function(keylen,key,mod,text) {
+		// I read that rc4 with keys larger than 256 bytes doesn't significantly
+		// increase the level of rc4 encryption because it's sbuffer is 256 bytes
+		// makes sense to me, but what do i know...
+
+		this.status(&quot;encrypt&quot;)
+		if(text.length &gt;= keylen) {
+			var sessionkey=this.rc4(rstring(text,keylen),rstring(text,keylen))
+
+			// session key must be less than mod, so mod it
+			sessionkey=this.b2t(bmod(t2b(sessionkey),t2b(mod)))
+			alert(&quot;sessionkey=&quot;+sessionkey)
+
+			// return the rsa encoded key and the encrypted text
+			// i'm double encrypting because it would seem to me to
+			// lessen known-plaintext attacks, but what do i know
+			return this.modexp(sessionkey,key,mod) +
+			this.rc4(this.key2(sessionkey),this.rc4(sessionkey,text))
+		} else {
+
+			// don't need a session key
+			return this.modexp(text,key,mod)
+		}
+	},
+	rsaDecrypt:function(keylen,key,mod,text) {
+		this.status(&quot;decrypt&quot;)
+		if(text.length &lt;= keylen) {
+			return this.modexp(text,key,mod)
+		} else {
+
+			// sessionkey is first keylen bytes
+			var sessionkey=text.substr(0,keylen)
+			text=text.substr(keylen)
+
+			// un-rsa the session key
+			sessionkey=this.modexp(sessionkey,key,mod)
+			alert(&quot;sessionkey=&quot;+sessionkey)
+
+			// double decrypt the text
+			return this.rc4(sessionkey,this.rc4(this.key2(sessionkey,text),text))
+		}
+	},
+	trim2:function(d) { return d.substr(0,d.lastIndexOf('1')+1) },
+	bgcd:function(u,v) { // return greatest common divisor
+		// algorythm from http://algo.inria.fr/banderier/Seminar/Vallee/index.html
+		var d, t
+		while(1) {
+			d=this.bsub(v,u)
+			//alert(v+&quot; - &quot;+u+&quot; = &quot;+d)
+			if(d=='0') {return u}
+			if(d) {
+				if(d.substr(-1)=='0') {
+					v=d.substr(0,d.lastIndexOf('1')+1) // v=(v-u)/2^val2(v-u)
+				} else v=d
+			} else {
+				t=v; v=u; u=t // swap u and v
+			}
+		}
+	},
+
+	isPrime:function(p) {
+		var n,p1,p12,t
+		p1=this.bsub(p,'1')
+		t=p1.length-p1.lastIndexOf('1')
+		p12=this.trim2(p1)
+		for(n=0; n&lt;2; n+=this.mrtest(p,p1,p12,t)) {
+			if(n&lt;0) return 0
+		}
+		return 1
+	},
+	mrtest:function(p,p1,p12,t) {
+		// Miller-Rabin test from forum.swathmore.edu/dr.math/
+		var n,a,u
+		a='1'+this.rstring('01',Math.floor(p.length/2)) // random a
+		//alert(&quot;mrtest &quot;+p+&quot;, &quot;+p1+&quot;, &quot;+a+&quot;-&quot;+p12)
+		u=this.bmodexp(a,p12,p)
+		if(u=='1') {return 1}
+		for(n=0;n&lt;t;n++) {
+			u=this.bmod(this.bmul(u,u),p)
+			//dg+=u+&quot; &quot;
+			if(u=='1') return -100
+			if(u==p1) return 1
+		}
+		return -100
+	},
+	pfactors:'11100011001110101111000110001101',
+	// this number is 3*5*7*11*13*17*19*23*29*31*37
+	prime:function(bits) {
+		// return a prime number of bits length
+		var p='1'+this.rstring('001',bits-2)+'1'
+		while( ! this.isPrime(p)) {
+			p=badd(p,'10'); // add 2
+		}
+		alert(&quot;p is &quot;+p)
+		return p
+	},
+	genkey:function(bits) {
+		q=prime(bits)
+		do {
+			p=q
+			q=prime(bits)
+		} while(bgcd(p,q)!='1')
+		p1q1=this.bmul(this.bsub(p,'1'),this.bsub(q,'1'))
+		// now we need a d, e,  and an n so that:
+		//  p1q1*n-1=de  -&gt; bmod(bsub(bmul(d,e),'1'),p1q1)='0'
+		// or more specifically an n so that d &amp; p1q1 are rel prime and factor e
+		n='1'+this.rstring('001',Math.floor(bits/3)+2)
+		alert('n is '+n)
+		factorMe=this.badd(this.bmul(p1q1,n),'1')
+		alert('factor is '+factorMe)
+		//e=bgcd(factorMe,p1q1)
+		//alert('bgcd='+e)
+		e='1'
+		// is this always 1?
+		//r=bdiv(factorMe,e)
+		//alert('r='+r.q+&quot; &quot;+r.mod)
+		//if(r.mod != '0') {alert('Mod Error!')}
+		//factorMe=r.q
+		d=this.bgcd(factorMe,'11100011001110101111000110001101')
+		alert('d='+d)
+		if(d == '1' &amp;&amp; e == '1') {alert('Factoring failed '+factorMe+' p='+p+' q='+q)}
+		e=this.bmul(e,d)
+		r=this.bdiv(factorMe,d)
+		d=r.q
+		if(r.mod != '0') {alert('Mod Error 2!')}
+
+		this.mod=this.b2t(bmul(p,q))
+		this.pub=this.b2t(e)
+		this.priv=this.b2t(d)
+	},
+	status:function(a) { },//alert(a)}
+	encrypt:function(key,text) {
+		return this.textToBase64(this.rc4(key,&quot;check:&quot;+text));
+	},
+	decrypt:function(key,text){
+		var uncrypt = this.rc4(key,this.base64ToText(text));
+		return (uncrypt.substr(0,6)==&quot;check:&quot;) ? uncrypt.substr(6) : null;
+	}
+}
+
+//}}}</pre>
+</div>
 <div title="ExportTiddlersPlugin" modifier="ELSDesignStudios" created="200512240702" modified="201102141410" tags="systemConfig ImportExportPackage">
 <pre>/***
 |Name|ExportTiddlersPlugin|
@@ -12937,6 +13911,138 @@ h3 {font-size: 14px;}
 [[MyStyles]]
 /*}}}*/</pre>
 </div>
+<div title="HaloscanMacro" creator="Wang Yanshu" modifier="Wang Yanshu" created="202407251417" changecount="1">
+<pre>/***
+|Name|HaloscanMacro|
+|Created by|JimSpeth|
+|Location|http://end.com/~speth/HaloscanMacro.html|
+|Version|1.1.0|
+|Requires|~TW2.x|
+
+!Description
+Comment and trackback support for TiddlyWiki (via Haloscan).
+
+!History
+* 16-Feb-06, version 1.1.0, drastic changes, now uses settings from haloscan account config
+* 31-Jan-06, version 1.0.1, fixed display of counts for default tiddlers
+* 30-Jan-06, version 1.0, initial release
+
+!Examples
+|!Source|!Output|h
+|{{{&lt;&lt;haloscan comments&gt;&gt;}}}|&lt;&lt;haloscan comments&gt;&gt;|
+|{{{&lt;&lt;haloscan trackbacks&gt;&gt;}}}|&lt;&lt;haloscan trackbacks&gt;&gt;|
+
+!Installation
+Register for a [[Haloscan|http://www.haloscan.com]] account.  It's free and painless.
+Install the HaloscanMacro in a new tiddler with a tag of systemConfig (save and reload to activate).
+In the macro configuration code (below), change //YourName// to your Haloscan account name.
+Use the macro somewhere in a tiddler (see ViewTemplate for an example).
+
+!Settings
+You can adjust various options for your account in the member configuration area of Haloscan's web site.  The macro will use these settings when formatting the links.
+
+!Code
+***/
+//{{{
+
+/* change &quot;YourName&quot; to your Haloscan account name */
+config.macros.haloscan = {account: &quot;YourName&quot;, baseURL: &quot;http://www.haloscan.com/load/&quot;};
+
+var haloscanLoaded = 0;
+config.macros.haloscan.load = function ()
+{
+    if (haloscanLoaded == 1)
+        return;
+    
+    account = config.macros.haloscan.account;
+    if (!account || (account == &quot;YourName&quot;))
+        account = store.getTiddlerText(&quot;SiteTitle&quot;);
+    
+    var el = document.createElement('script');
+    el.language = 'JavaScript'; 
+    el.type = 'text/javascript'; 
+    el.src = config.macros.haloscan.baseURL + account;
+    document.documentElement.childNodes[0].appendChild(el);
+    
+    haloscanLoaded = 1;
+}
+config.macros.haloscan.load();
+
+/* this totally clobbers document.write, i hope that's ok */
+var safeWrite = function(s)
+{
+    document.written = s;
+    return s;
+};
+document.write = safeWrite;
+
+config.macros.haloscan.refreshDefaultTiddlers = function ()
+{
+    var start = store.getTiddlerText(&quot;DefaultTiddlers&quot;);
+    if (start)
+    {
+        var titles = start.readBracketedList();
+        for (var t=titles.length-1; t&gt;=0; t--)
+            story.refreshTiddler(titles[t], DEFAULT_VIEW_TEMPLATE, 1);
+    }
+}
+
+var haloscanRefreshed = 0;
+config.macros.haloscan.handler = function (place, macroName, params, wikifier, paramString, tiddler)
+{
+    if (typeof HaloScan == 'undefined')
+    {
+        if (haloscanRefreshed == 0)
+        {
+            setTimeout(&quot;config.macros.haloscan.refreshDefaultTiddlers()&quot;, 1);
+            haloscanRefreshed = 1;
+        }
+        return;
+    }
+    
+    var id = story.findContainingTiddler(place).id.substr(7);
+    var hs_search = new RegExp('\\W','gi');
+    id = id.replace(hs_search,&quot;_&quot;);
+    
+    account = config.macros.haloscan.account;
+    if (!account || (account == &quot;YourName&quot;))
+        account = store.getTiddlerText(&quot;SiteTitle&quot;);
+    
+    var haloscanError = function (msg)
+    {
+        createTiddlyError(place, config.messages.macroError.format([&quot;HaloscanMacro&quot;]), config.messages.macroErrorDetails.format([&quot;HaloscanMacro&quot;, msg]));
+    }
+    
+    if (params.length == 1)
+    {
+        if (params[0] == &quot;comments&quot;)
+        {
+            postCount(id);
+            commentsLabel = document.written;
+            commentsPrompt = &quot;Comments on this tiddler&quot;;
+            var commentsHandler = function(e) { HaloScan(id); return false; };
+            var commentsButton = createTiddlyButton(place, commentsLabel, commentsPrompt, commentsHandler);
+        }
+        else if (params[0] == &quot;trackbacks&quot;)
+        {
+            postCountTB(id);
+            trackbacksLabel = document.written;
+            trackbacksPrompt = &quot;Trackbacks for this tiddler&quot;;
+            var trackbacksHandler = function(e) { HaloScanTB(id); return false; };
+            var trackbackButton = createTiddlyButton(place, trackbacksLabel, trackbacksPrompt, trackbacksHandler);
+        }
+        else
+            haloscanError(&quot;unknown parameter: &quot; + params[0]);
+    }
+    else if (params.length == 0)
+        haloscanError(&quot;missing parameter&quot;);
+    else
+        haloscanError(&quot;bad parameter count&quot;);
+}
+
+//}}}
+</pre>
+</div>
 <div title="Hobbies" modifier="Wang Yanshu" created="202402201522" modified="202406221409" changecount="1">
 <pre>!GNU/Linux and FOSS software enthusiast
 I have a laptop running opensuse leap and stay active in several local {{{LUGs}}}.
@@ -13041,7 +14147,7 @@ This site is my html playground. You can visit my academic site at https://wangy
 &lt;&lt;tagCloud excludeLists excludeSearch systemConfig systemServer PluginInfo Plugin excludeMissing excludePublisher takenotepackage app DiscoveryPackage NavigationPackage IconPackage TidIDEPackage TaskPackage ScrollbarPackage MediaPackage pluginInfo @cdent @developers @ricardoperes Administration follow tips Content System systemConfigDisable AttachFilePackage IFramePackage QuickEditPackage Tag ThemePackage attachment package sample settings story tiddlyLife BasicsPackage BookmarkPackage CD CSS DiscussionPackage ImportExportPackage InputPackage JashPackage MoveablePanelPackage PasetUpPackage PasteUpPackage TiddlyTools [[To Do]] alpha animation blank bookmarklet catalog demo discussion excludeTheme framedLinks html media moveable panelmap patch script setup stylesheet stylesheets systemTheme template test translate nonacademic transclusion locked silk Decrypt(Ramanujan) Trash Plugins&gt;&gt;
 </pre>
 </div>
-<div title="HoverMenu" modifier="YourName" created="201206141003" modified="202406160417" tags="Administration System" changecount="1" _hash="af62a178b2914b0d8acae58dea5fd136b93e7a20">
+<div title="HoverMenu" modifier="YourName" created="201206141003" modified="202406160417" tags="Administration System" _hash="af62a178b2914b0d8acae58dea5fd136b93e7a20" changecount="1">
 <pre>&lt;&lt;top&gt;&gt;
 &lt;&lt;jump j '' top&gt;&gt;
 &lt;&lt;toggleSideBar&gt;&gt;&lt;&lt;renameButton '&gt;' &gt;&gt;
@@ -13463,7 +14569,7 @@ config.macros.Image.handler= function(place,macroName,params) {
 //}}}
  </pre>
 </div>
-<div title="ImageMacroPlugin" modifier="YourName" created="201311111923" modified="202406070450" tags="excludeLists systemConfig" _hash="3f1696962a1dff3028ea1a4307d8b95c3b3ceb65" changecount="1">
+<div title="ImageMacroPlugin" modifier="YourName" created="201311111923" modified="202406070450" tags="excludeLists systemConfig" changecount="1" _hash="3f1696962a1dff3028ea1a4307d8b95c3b3ceb65">
 <pre>/***
 |''Name''|ImageMacroPlugin|
 |''Version''|0.9.4|
@@ -15118,6 +16224,727 @@ html&gt;body #JashTextareaWrap {
 
 This package includes a whitespace-compressed version of the Jash source code ([[Jash.js]]), accompanied by the appropriate stylesheet definitions necessary to render the Jash interface ([[Jash.css]]).  Additionally, [[JashCommand]] provides a simple ~HTML-based command link that toggles the display of the Jash interface with a single click.</pre>
 </div>
+<div title="Javascript Shell" creator="Wang Yanshu" modifier="Wang Yanshu" created="202407251506" changecount="1">
+<pre>/%
+
+Derived from http://www.squarefree.com/shell/?ignoreReferrerFrom=shell1.4
+
+%/&lt;html&gt;&lt;div class=&quot;shell&quot;&gt;&lt;div id=&quot;output&quot;&gt;&lt;/div&gt;&lt;input type=text
+		onkeydown=&quot;jsshell.inputKeydown(event)&quot;
+		id=&quot;input&quot; class=&quot;input&quot; wrap=&quot;off&quot; autocomplete=&quot;off&quot;
+		title=&quot;TAB=auto-complete property names, Ctrl+Up/Down=history&quot;
+		style=&quot;width:100%;margin-top:.2em;border:1px solid;color:#000;background:#fff;&quot;&gt;&lt;span style=&quot;float:right&quot;&gt;height: &lt;input type=&quot;text&quot; name=&quot;height&quot; value=&quot;20em&quot; size=&quot;2&quot; style=&quot;width:3em;padding:0;margin:0;&quot; onchange=&quot;document.getElementById('output').style.height=this.value&quot;&gt; &lt;input type=&quot;button&quot; onclick=&quot;jsshell.go('clear()')&quot;value=&quot;clear&quot;&gt;&lt;/span&gt;&lt;!--
+	--&gt;&lt;div&gt;enter a javascript expression or shell function:
+	ans, load(URL), scope(obj), &lt;!--
+	--&gt;&lt;a accesskey=&quot;M&quot; href=&quot;javascript:jsshell.go('scope(Math); mathHelp();');&quot;&gt;Math&lt;/a&gt;, &lt;!--
+	--&gt;&lt;a accesskey=&quot;P&quot; href=&quot;javascript:jsshell.go('props(ans)')&quot;&gt;props(obj)&lt;/a&gt;, &lt;!--
+	--&gt;&lt;a accesskey=&quot;B&quot; href=&quot;javascript:jsshell.go('blink(ans)')&quot;&gt;blink(node)&lt;/a&gt;, &lt;!--
+	--&gt;&lt;a href=&quot;javascript:jsshell.go('wikify(ans)')&quot;&gt;wikify(text)&lt;/a&gt;, &lt;!--
+	--&gt;&lt;a href=&quot;javascript:jsshell.go('print(ans)')&quot;&gt;print(text)&lt;/a&gt;&lt;/div&gt;&lt;/div&gt;&lt;/html&gt;&lt;script&gt;
+
+var shellstyles=&quot;&quot;;
+shellstyles+=&quot;.shell #output { height:20em;width:100%;white-space:normal;overflow:auto; }&quot;;
+shellstyles+=&quot;.shell #output { border:1px solid #999;background:#000 !important; }&quot;;
+shellstyles+=&quot;.shell #output .input { color:#fff !important; }&quot;; // white
+shellstyles+=&quot;.shell #output .error { color:#f00 !important; }&quot;; // red
+shellstyles+=&quot;.shell #output .normalOutput { color:#0c0 !important; }&quot;; // green
+shellstyles+=&quot;.shell #output .propList { color:#0c0 !important; }&quot;; // green
+shellstyles+=&quot;.shell #output .print { color:#ccc !important; }&quot;; // gray
+shellstyles+=&quot;.shell #output .tabcomplete { color:#ff0 !important; }&quot;; // yellow
+shellstyles+=&quot;.shell #output .message { color:#0ff !important; }&quot;; // cyan
+setStylesheet(shellstyles,&quot;JavascriptShellStyles&quot;);
+
+window.jsshell = {}; // Put our functions in the global namespace.
+
+window.jsshell.refocus = function()
+{
+  jsshell._in.blur(); // Needed for Mozilla to scroll correctly.
+  jsshell._in.focus();
+}
+
+window.jsshell.initTarget = function()
+{
+  window.print = jsshell.shellCommands.print;
+}
+
+// Unless the user is selected something, refocus the textbox.
+// (requested by caillon, brendan, asa)
+window.jsshell.keepFocusInTextbox = function(e) 
+{
+  var g = e.srcElement ? e.srcElement : e.target; // IE vs. standard
+  
+  while (!g.tagName)
+    g = g.parentNode;
+  var t = g.tagName.toUpperCase();
+  if (t==&quot;A&quot; || t==&quot;INPUT&quot;)
+    return;
+    
+  if (window.getSelection) {
+    // Mozilla
+    if (String(window.getSelection()))
+      return;
+  }
+  else if (document.getSelection) {
+    // Opera? Netscape 4?
+    if (document.getSelection())
+      return;
+  }
+  else {
+    // IE
+    if ( document.selection.createRange().text )
+      return;
+  }
+  
+  jsshell.refocus();
+}
+
+//function inputKeydown(e) {
+window.jsshell.inputKeydown = function(e) {
+  // Use onkeydown because IE doesn't support onkeypress for arrow keys
+
+  //alert(e.keyCode + &quot; ^ &quot; + e.keycode);
+
+  if (e.shiftKey &amp;&amp; e.keyCode == 13) { // shift-enter
+    // don't do anything; allow the shift-enter to insert a line break as normal
+  } else if (e.keyCode == 13) { // enter
+    // execute the input on enter
+    try { jsshell.go(); } catch(er) { alert(er); };
+    setTimeout(function() { jsshell._in.value = &quot;&quot;; }, 0); // can't preventDefault on input, so clear it later
+  } else if (e.keyCode == 38) { // up
+    // go up in history if at top or ctrl-up
+    if (e.ctrlKey || jsshell.caretInFirstLine(jsshell._in))
+      jsshell.hist(true);
+  } else if (e.keyCode == 40) { // down
+    // go down in history if at end or ctrl-down
+    if (e.ctrlKey || jsshell.caretInLastLine(jsshell._in))
+      jsshell.hist(false);
+  } else if (e.keyCode == 9) { // tab
+    jsshell.tabcomplete();
+    setTimeout(function() { jsshell.refocus(); }, 0); // refocus because tab was hit
+  } else { }
+
+  setTimeout(jsshell.recalculateInputHeight, 0);
+  
+  //return true;
+};
+
+window.jsshell.caretInFirstLine = function(textbox)
+{
+  // IE doesn't support selectionStart/selectionEnd
+  if (textbox.selectionStart == undefined)
+    return true;
+
+  var firstLineBreak = textbox.value.indexOf(&quot;\n&quot;);
+
+  return ((firstLineBreak == -1) || (textbox.selectionStart &lt;= firstLineBreak));
+}
+
+window.jsshell.caretInLastLine = function(textbox)
+{
+  // IE doesn't support selectionStart/selectionEnd
+  if (textbox.selectionEnd == undefined)
+    return true;
+
+  var lastLineBreak = textbox.value.lastIndexOf(&quot;\n&quot;);
+  
+  return (textbox.selectionEnd &gt; lastLineBreak);
+}
+
+window.jsshell.recalculateInputHeight = function()
+{
+  var rows = jsshell._in.value.split(/\n/).length
+    + 1 // prevent scrollbar flickering in Mozilla
+    + (window.opera ? 1 : 0); // leave room for scrollbar in Opera
+
+  if (jsshell._in.rows != rows) // without this check, it is impossible to select text in Opera 7.60 or Opera 8.0.
+    jsshell._in.rows = rows;
+}
+
+window.jsshell.println = function(s, type)
+{
+  if((s=String(s)))
+  {
+    var newdiv = document.createElement(&quot;div&quot;);
+    newdiv.appendChild(document.createTextNode(s));
+    newdiv.className = type;
+    jsshell._out.appendChild(newdiv);
+    jsshell._out.scrollTop=jsshell._out.scrollHeight-jsshell._out.clientHeight; // ELS: scroll output into view
+    return newdiv;
+  }
+}
+
+window.jsshell.printWithRunin = function(h, s, type)
+{
+  var div = jsshell.println(s, type);
+  var head = document.createElement(&quot;strong&quot;);
+  head.appendChild(document.createTextNode(h + &quot;: &quot;));
+  div.insertBefore(head, div.firstChild);
+}
+
+window.jsshell.shellCommands = 
+{
+load : function load(url)
+{
+  var s = document.createElement(&quot;script&quot;);
+  s.type = &quot;text/javascript&quot;;
+  s.src = url;
+  document.getElementsByTagName(&quot;head&quot;)[0].appendChild(s);
+  jsshell.println(&quot;Loading &quot; + url + &quot;...&quot;, &quot;message&quot;);
+},
+
+clear : function clear()
+{
+    jsshell._out.innerHTML = &quot;&quot;;
+},
+
+wikify : function wikify(text)
+{
+    window.wikify(text, jsshell._out);
+},
+
+print : function print(s) { jsshell.println(s, &quot;print&quot;); },
+
+// the normal function, &quot;print&quot;, shouldn't return a value
+// (suggested by brendan; later noticed it was a problem when showing others)
+pr : function pr(s) 
+{ 
+  jsshell.shellCommands.print(s); // need to specify shellCommands so it doesn't try window.print()!
+  return s;
+},
+
+props : function props(e, onePerLine)
+{
+  if (e === null) {
+    jsshell.println(&quot;props called with null argument&quot;, &quot;error&quot;);
+    return;
+  }
+
+  if (e === undefined) {
+    jsshell.println(&quot;props called with undefined argument&quot;, &quot;error&quot;);
+    return;
+  }
+
+  var ns = [&quot;Methods&quot;, &quot;Fields&quot;, &quot;Unreachables&quot;];
+  var as = [[], [], []]; // array of (empty) arrays of arrays!
+  var p, j, i; // loop variables, several used multiple times
+
+  var protoLevels = 0;
+
+  for (p = e; p; p = p.__proto__)
+  {
+    for (i=0; i&lt;ns.length; ++i)
+      as[i][protoLevels] = [];
+    ++protoLevels;
+  }
+
+  for(var a in e)
+  {
+    // Shortcoming: doesn't check that VALUES are the same in object and prototype.
+
+    var protoLevel = -1;
+    try
+    {
+      for (p = e; p &amp;&amp; (a in p); p = p.__proto__)
+        ++protoLevel;
+    }
+    catch(er) { protoLevel = 0; } // &quot;in&quot; operator throws when param to props() is a string
+
+    var type = 1;
+    try
+    {
+      if ((typeof e[a]) == &quot;function&quot;)
+        type = 0;
+    }
+    catch (er) { type = 2; }
+
+    as[type][protoLevel].push(a);
+  }
+
+  function times(s, n) { return n ? s + times(s, n-1) : &quot;&quot;; }
+
+  for (j=0; j&lt;protoLevels; ++j)
+    for (i=0;i&lt;ns.length;++i)
+      if (as[i][j].length) 
+        jsshell.printWithRunin(
+          ns[i] + times(&quot; of prototype&quot;, j), 
+          (onePerLine ? &quot;\n\n&quot; : &quot;&quot;) + as[i][j].sort().join(onePerLine ? &quot;\n&quot; : &quot;, &quot;) + (onePerLine ? &quot;\n\n&quot; : &quot;&quot;), 
+          &quot;propList&quot;
+        );
+},
+
+blink : function blink(node)
+{
+  if (!node)                     throw(&quot;blink: argument is null or undefined.&quot;);
+  if (node.nodeType == null)     throw(&quot;blink: argument must be a node.&quot;);
+  if (node.nodeType == 3)        throw(&quot;blink: argument must not be a text node&quot;);
+  if (node.documentElement)      throw(&quot;blink: argument must not be the document object&quot;);
+
+  function setOutline(o) { 
+    return function() {
+      if (node.style.outline != node.style.bogusProperty) {
+        // browser supports outline (Firefox 1.1 and newer, CSS3, Opera 8).
+        node.style.outline = o;
+      }
+      else if (node.style.MozOutline != node.style.bogusProperty) {
+        // browser supports MozOutline (Firefox 1.0.x and older)
+        node.style.MozOutline = o;
+      }
+      else {
+        // browser only supports border (IE). border is a fallback because it moves things around.
+        node.style.border = o;
+      }
+    }
+  } 
+  
+  function focusIt(a) {
+    return function() {
+      a.focus(); 
+    }
+  }
+
+  if (node.ownerDocument) {
+    var windowToFocusNow = (node.ownerDocument.defaultView || node.ownerDocument.parentWindow); // Moz vs. IE
+    if (windowToFocusNow)
+      setTimeout(focusIt(windowToFocusNow.top), 0);
+  }
+
+  for(var i=1;i&lt;7;++i)
+    setTimeout(setOutline((i%2)?'3px solid red':'none'), i*100);
+
+  setTimeout(focusIt(window), 800);
+  setTimeout(focusIt(jsshell._in), 810);
+},
+
+scope : function scope(sc)
+{
+  if (!sc) sc = {};
+  jsshell._scope = sc;
+  jsshell.println(&quot;Scope is now &quot; + sc + &quot;.  If a variable is not found in this scope, window will also be searched.  New variables will still go on window.&quot;, &quot;message&quot;);
+},
+
+mathHelp : function mathHelp()
+{
+  jsshell.printWithRunin(&quot;Math constants&quot;, &quot;E, LN2, LN10, LOG2E, LOG10E, PI, SQRT1_2, SQRT2&quot;, &quot;propList&quot;);
+  jsshell.printWithRunin(&quot;Math methods&quot;, &quot;abs, acos, asin, atan, atan2, ceil, cos, exp, floor, log, max, min, pow, random, round, sin, sqrt, tan&quot;, &quot;propList&quot;);
+},
+
+ans : undefined
+};
+
+
+window.jsshell.hist = function(up)
+{
+  // histList[0] = first command entered, [1] = second, etc.
+  // type something, press up --&gt; thing typed is now in &quot;limbo&quot;
+  // (last item in histList) and should be reachable by pressing 
+  // down again.
+
+  var L = jsshell.histList.length;
+
+  if (L == 1)
+    return;
+
+  if (up)
+  {
+    if (jsshell.histPos == L-1)
+    {
+      // Save this entry in case the user hits the down key.
+      jsshell.histList[jsshell.histPos] = jsshell._in.value;
+    }
+
+    if (jsshell.histPos &gt; 0)
+    {
+      jsshell.histPos--;
+      // Use a timeout to prevent up from moving cursor within new text
+      // Set to nothing first for the same reason
+      setTimeout(
+        function() {
+          jsshell._in.value = ''; 
+          jsshell._in.value = jsshell.histList[jsshell.histPos];
+          var caretPos = jsshell._in.value.length;
+          if (jsshell._in.setSelectionRange) 
+            jsshell._in.setSelectionRange(caretPos, caretPos);
+        },
+        0
+      );
+    }
+  } 
+  else // down
+  {
+    if (jsshell.histPos &lt; L-1)
+    {
+      jsshell.histPos++;
+      jsshell._in.value = jsshell.histList[jsshell.histPos];
+    }
+    else if (jsshell.histPos == L-1)
+    {
+      // Already on the current entry: clear but save
+      if (jsshell._in.value)
+      {
+        jsshell.histList[jsshell.histPos] = jsshell._in.value;
+        ++jsshell.histPos;
+        jsshell._in.value = &quot;&quot;;
+      }
+    }
+  }
+}
+
+window.jsshell.tabcomplete = function()
+{
+  /*
+   * Working backwards from s[from], find the spot
+   * where this expression starts.  It will scan
+   * until it hits a mismatched ( or a space,
+   * but it skips over quoted strings.
+   * If stopAtDot is true, stop at a '.'
+   */
+  function findbeginning(s, from, stopAtDot)
+  {
+    /*
+     *  Complicated function.
+     *
+     *  Return true if s[i] == q BUT ONLY IF
+     *  s[i-1] is not a backslash.
+     */
+    function equalButNotEscaped(s,i,q)
+    {
+      if(s.charAt(i) != q) // not equal go no further
+        return false;
+
+      if(i==0) // beginning of string
+        return true;
+
+      if(s.charAt(i-1) == '\\') // escaped?
+        return false;
+
+      return true;
+    }
+
+    var nparens = 0;
+    var i;
+    for(i=from; i&gt;=0; i--)
+    {
+      if(s.charAt(i) == ' ')
+        break;
+
+      if(stopAtDot &amp;&amp; s.charAt(i) == '.')
+        break;
+        
+      if(s.charAt(i) == ')')
+        nparens++;
+      else if(s.charAt(i) == '(')
+        nparens--;
+
+      if(nparens &lt; 0)
+        break;
+
+      // skip quoted strings
+      if(s.charAt(i) == '\'' || s.charAt(i) == '\&quot;')
+      {
+        //dump(&quot;skipping quoted chars: &quot;);
+        var quot = s.charAt(i);
+        i--;
+        while(i &gt;= 0 &amp;&amp; !equalButNotEscaped(s,i,quot)) {
+          //dump(s.charAt(i));
+          i--;
+        }
+        //dump(&quot;\n&quot;);
+      }
+    }
+    return i;
+  }
+
+  // XXX should be used more consistently (instead of using selectionStart/selectionEnd throughout code)
+  // XXX doesn't work in IE, even though it contains IE-specific code
+  function getcaretpos(inp)
+  {
+    if(inp.selectionEnd != null)
+      return inp.selectionEnd;
+      
+    if(inp.createTextRange)
+    {
+      var docrange = document.selection.createRange();
+      var inprange = inp.createTextRange();
+      if (inprange.setEndPoint)
+      {
+        inprange.setEndPoint('EndToStart', docrange);
+        return inprange.text.length;
+      }
+    }
+
+    return inp.value.length; // sucks, punt
+  }
+
+  function setselectionto(inp,pos)
+  {
+    if(inp.selectionStart) {
+      inp.selectionStart = inp.selectionEnd = pos;
+    }
+    else if(inp.createTextRange) {
+      var docrange = document.selection.createRange();
+      var inprange = inp.createTextRange();
+      inprange.move('character',pos);
+      inprange.select();
+    }
+    else { // err...
+    /*
+      inp.select();
+      if(document.getSelection())
+        document.getSelection() = &quot;&quot;;
+        */
+    }
+  }
+    // get position of cursor within the input box
+    var caret = getcaretpos(jsshell._in);
+
+    if(caret) {
+      //dump(&quot;----\n&quot;);
+      var dotpos, spacepos, complete, obj;
+      //dump(&quot;caret pos: &quot; + caret + &quot;\n&quot;);
+      // see if there's a dot before here
+      dotpos = findbeginning(jsshell._in.value, caret-1, true);
+      //dump(&quot;dot pos: &quot; + dotpos + &quot;\n&quot;);
+      if(dotpos == -1 || jsshell._in.value.charAt(dotpos) != '.') {
+        dotpos = caret;
+//dump(&quot;changed dot pos: &quot; + dotpos + &quot;\n&quot;);
+      }
+
+      // look backwards for a non-variable-name character
+      spacepos = findbeginning(jsshell._in.value, dotpos-1, false);
+      //dump(&quot;space pos: &quot; + spacepos + &quot;\n&quot;);
+      // get the object we're trying to complete on
+      if(spacepos == dotpos || spacepos+1 == dotpos || dotpos == caret)
+      {
+        // try completing function args
+        if(jsshell._in.value.charAt(dotpos) == '(' ||
+ (jsshell._in.value.charAt(spacepos) == '(' &amp;&amp; (spacepos+1) == dotpos))
+        {
+          var fn,fname;
+  var from = (jsshell._in.value.charAt(dotpos) == '(') ? dotpos : spacepos;
+          spacepos = findbeginning(jsshell._in.value, from-1, false);
+
+          fname = jsshell._in.value.substr(spacepos+1,from-(spacepos+1));
+  //dump(&quot;fname: &quot; + fname + &quot;\n&quot;);
+          try {
+            with(window)
+              with(jsshell._scope)
+                with(jsshell.shellCommands)
+                  fn = eval(fname);
+          }
+          catch(er) {
+            //dump('fn is not a valid object\n');
+            return;
+          }
+          if(fn == undefined) {
+             //dump('fn is undefined');
+             return;
+          }
+          if(fn instanceof Function)
+          {
+            // Print function definition, including argument names, but not function body
+            if(!fn.toString().match(/function .+?\(\) +\{\n +\[native code\]\n\}/))
+              jsshell.println(fn.toString().match(/function .+?\(.*?\)/), &quot;tabcomplete&quot;);
+          }
+
+          return;
+        }
+        else
+          obj = window;
+      }
+      else
+      {
+        var objname = jsshell._in.value.substr(spacepos+1,dotpos-(spacepos+1));
+        //dump(&quot;objname: |&quot; + objname + &quot;|\n&quot;);
+        try {
+          with(jsshell._scope)
+            with(window)
+                obj = eval(objname);
+        }
+        catch(er) {
+          jsshell.printError(er); 
+          return;
+        }
+        if(obj == undefined) {
+          // sometimes this is tabcomplete's fault, so don't print it :(
+          // e.g. completing from &quot;print(document.getElements&quot;
+          // jsshell.println(&quot;Can't complete from null or undefined expression &quot; + objname, &quot;error&quot;);
+          return;
+        }
+      }
+      //dump(&quot;obj: &quot; + obj + &quot;\n&quot;);
+      // get the thing we're trying to complete
+      if(dotpos == caret)
+      {
+        if(spacepos+1 == dotpos || spacepos == dotpos)
+        {
+          // nothing to complete
+          //dump(&quot;nothing to complete\n&quot;);
+          return;
+        }
+
+        complete = jsshell._in.value.substr(spacepos+1,dotpos-(spacepos+1));
+      }
+      else {
+        complete = jsshell._in.value.substr(dotpos+1,caret-(dotpos+1));
+      }
+      //dump(&quot;complete: &quot; + complete + &quot;\n&quot;);
+      // ok, now look at all the props/methods of this obj
+      // and find ones starting with 'complete'
+      var matches = [];
+      var bestmatch = null;
+      for(var a in obj)
+      {
+        //a = a.toString();
+        //XXX: making it lowercase could help some cases,
+        // but screws up my general logic.
+        if(a.substr(0,complete.length) == complete) {
+          matches.push(a);
+          ////dump(&quot;match: &quot; + a + &quot;\n&quot;);
+          // if no best match, this is the best match
+          if(bestmatch == null)
+          {
+            bestmatch = a;
+          }
+          else {
+            // the best match is the longest common string
+            function min(a,b){ return ((a&lt;b)?a:b); }
+            var i;
+            for(i=0; i&lt; min(bestmatch.length, a.length); i++)
+            {
+              if(bestmatch.charAt(i) != a.charAt(i))
+                break;
+            }
+            bestmatch = bestmatch.substr(0,i);
+            ////dump(&quot;bestmatch len: &quot; + i + &quot;\n&quot;);
+          }
+          ////dump(&quot;bestmatch: &quot; + bestmatch + &quot;\n&quot;);
+        }
+      }
+      bestmatch = (bestmatch || &quot;&quot;);
+      ////dump(&quot;matches: &quot; + matches + &quot;\n&quot;);
+      var objAndComplete = (objname || obj) + &quot;.&quot; + bestmatch;
+      //dump(&quot;matches.length: &quot; + matches.length + &quot;, jsshell.tooManyMatches: &quot; + jsshell.tooManyMatches + &quot;, objAndComplete: &quot; + objAndComplete + &quot;\n&quot;);
+      if(matches.length &gt; 1 &amp;&amp; (jsshell.tooManyMatches == objAndComplete || matches.length &lt;= 10)) {
+
+        jsshell.printWithRunin(&quot;Matches: &quot;, matches.join(', '), &quot;tabcomplete&quot;);
+        jsshell.tooManyMatches = null;
+      }
+      else if(matches.length &gt; 10)
+      {
+        jsshell.println(matches.length + &quot; matches.  Press tab again to see them all&quot;, &quot;tabcomplete&quot;);
+        jsshell.tooManyMatches = objAndComplete;
+      }
+      else {
+        jsshell.tooManyMatches = null;
+      }
+      if(bestmatch != &quot;&quot;)
+      {
+        var sstart;
+        if(dotpos == caret) {
+          sstart = spacepos+1;
+        }
+        else {
+          sstart = dotpos+1;
+        }
+        jsshell._in.value = jsshell._in.value.substr(0, sstart)
+                  + bestmatch
+                  + jsshell._in.value.substr(caret);
+        setselectionto(jsshell._in,caret + (bestmatch.length - complete.length));
+      }
+    }
+}
+
+window.jsshell.printQuestion = function(q)
+{
+  jsshell.println(q, &quot;input&quot;);
+}
+
+window.jsshell.printAnswer = function(a)
+{
+  if (a !== undefined) {
+    jsshell.println(a, &quot;normalOutput&quot;);
+    jsshell.shellCommands.ans = a;
+  }
+}
+
+window.jsshell.printError = function(er)
+{ 
+  var lineNumberString;
+
+  lastError = er; // for debugging the shell
+  if (er.name)
+  {
+    // lineNumberString should not be &quot;&quot;, to avoid a very wacky bug in IE 6.
+    lineNumberString = (er.lineNumber != undefined) ? (&quot; on line &quot; + er.lineNumber + &quot;: &quot;) : &quot;: &quot;;
+    jsshell.println(er.name + lineNumberString + er.message, &quot;error&quot;); // Because IE doesn't have error.toString.
+  }
+  else
+    jsshell.println(er, &quot;error&quot;); // Because security errors in Moz /only/ have toString.
+}
+
+window.jsshell.go = function(s)
+{
+  jsshell._in.value = jsshell.question = s ? s : jsshell._in.value;
+
+  if (jsshell.question == &quot;&quot;)
+    return;
+
+  jsshell.histList[jsshell.histList.length-1] = jsshell.question;
+  jsshell.histList[jsshell.histList.length] = &quot;&quot;;
+  jsshell.histPos = jsshell.histList.length - 1;
+  
+  // Unfortunately, this has to happen *before* the JavaScript is run, so that 
+  // print() output will go in the right place.
+  jsshell._in.value='';
+  jsshell.recalculateInputHeight();
+  jsshell.printQuestion(jsshell.question);
+
+  if (window.closed) {
+    jsshell.printError(&quot;Target window has been closed.&quot;);
+    return;
+  }
+  
+  try { (&quot;jsshell&quot; in window) }
+  catch(er) {
+    jsshell.printError(&quot;The JavaScript Shell cannot access variables in the target window.  The most likely reason is that the target window now has a different page loaded and that page has a different hostname than the original page.&quot;);
+    return;
+  }
+
+  if (!(&quot;jsshell&quot; in window))
+    initTarget(); // silent
+
+  // Evaluate Shell.question using _win's eval (this is why eval isn't in the |with|, IIRC).
+//  window.location.href = &quot;javascript:try{ jsshell.printAnswer(eval('with(jsshell._scope) with(jsshell.shellCommands) {' + jsshell.question + String.fromCharCode(10) + '}')); } catch(er) { jsshell.printError(er); }; setTimeout(jsshell.refocus, 0); void 0&quot;;
+  try { 
+      jsshell.printAnswer(eval(
+          'with(jsshell._scope) with(jsshell.shellCommands) {' 
+              + jsshell.question + String.fromCharCode(10) + 
+          '}')); 
+  } catch(er) { 
+      jsshell.printError(er); 
+  }; 
+  setTimeout(jsshell.refocus, 0);
+}
+
+window.jsshell.histList = [&quot;&quot;]; 
+window.jsshell.histPos = 0; 
+window.jsshell._scope = {}; 
+window.jsshell.question;
+window.jsshell._in;
+window.jsshell._out;
+window.jsshell.tooManyMatches = null;
+window.jsshell.lastError = null;
+
+jsshell._in = document.getElementById(&quot;input&quot;);
+jsshell._out = document.getElementById(&quot;output&quot;);
+
+jsshell.initTarget();
+
+jsshell.recalculateInputHeight();
+jsshell.refocus();
+
+&lt;/script&gt;</pre>
+</div>
 <div title="LastUpdates" modifier="acarvalho" created="201206161153" modified="201304121409" tags="excludeLists" _hash="1c98a8c2d97a946b560f9a81e8cb4646703a18dd">
 <pre>|Last 30 tiddlers created|Last 30 tiddlers modified|h
 |&lt;&lt;ContentTimeline created 30&gt;&gt;|&lt;&lt;ContentTimeline modified 30&gt;&gt;|
@@ -15159,6 +16986,138 @@ Description: Shows the last updates in this wiki.
 
 ref:https://tex.stackexchange.com/questions/637967/make-repeating-watermark-with-tiling
 https://tex.stackexchange.com/questions/60582/how-do-i-place-a-simple-javascript-in-the-resulting-pdf</pre>
+</div>
+<div title="LaunchApplicationPlugin" creator="Wang Yanshu" modifier="Wang Yanshu" created="202407251507" changecount="1">
+<pre>/***
+|Launch Application Plugin|
+|Authors: Lyall Pearce, modified by Bradley Meck|
+|Bug Finders: HarryC|
+|Source: http://bradleymeck.tiddlyspot.com/#LaunchApplicationPlugin|
+|License: [[Creative Commons Attribution-ShareAlike 2.5 License|http://creativecommons.org/licenses/by-sa/2.5/]]|
+|Version: 1.1.0|
+|Description: Launch an application from within TiddlyWiki using a button|
+|Usage: {{{&lt;&lt;LaunchApplication &quot;buttonLabel&quot; &quot;tooltip&quot; &quot;application&quot; &quot;argument1&quot; &quot;argument2&quot;...&gt;&gt;}}}|
+
+!Example
+@@PLEASE DO NOT USE THIS IF YOU ARE WORRIED ABOUT SECURITY,
+TIDDLYSPOT, LYALL PEARCE AND MYSELF ARE NOT RESPONSIBLE FOR ANY MIS-USE OF THIS PLUGIN@@
+{{{
+&lt;&lt;LaunchApplication &quot;Open Notepad&quot; &quot;Text Editing&quot;
+&quot;file:///c:/Windows/notepad.exe&quot;&gt;&gt;
+}}}
+&lt;&lt;LaunchApplication &quot;Open Notepad&quot; &quot;Text Editing&quot;
+&quot;file:///c:/Windows/notepad.exe&quot;&gt;&gt;
+
+{{{
+&lt;&lt;LaunchApplication &quot;C Drive&quot; &quot;Folder&quot; &quot;file:///c:/&quot;&gt;&gt;
+}}}
+&lt;&lt;LaunchApplication &quot;C Drive&quot; &quot;Folder&quot; &quot;file:///c:/&quot;&gt;&gt;
+
+!To Do
+*Support true XPaths
+**relative paths
+***{{{..}}} : parent-directory
+***{{{/}}} : root-directory
+**wild-cards
+***{{{*}}} : unknown-name
+
+!Revisions
+*11/07/2006 : Problem with application parameters was fixed in IE.
+*11/06/2006 : Problem with application parameters appeared again. Fixed in Firefox for now. Thanks to HarryC for bringing up the bug.
+*11/04/2006 : Problem with application parameters was fixed so that they work now.
+*10/29/2006 : Removed Alert of the address being launched and added support for non-application files in Firefox. Fixed a problem from the current directory being recieved by the W.Shell object by using decodeURI. Added absolute paths if the URL has &quot;file:///&quot; as its beginning. Clicking did not return false and was firing beforeUnLoad(), fixed that.
+*10/28/2006 : Added Support for Firefox in Windows (changes how nsILocalFile is recieved) and changes the functions to use decodeURI for more compatibility.
+
+***/
+//{{{
+version.extensions.LaunchApplication = {major: 1, minor: 1, revision: 0, date: new Date(2006,11,07)};
+config.macros.LaunchApplication = {};
+
+function LaunchApplication(appToLaunch,appParams) {
+ if(! appToLaunch)
+ return;
+ if(config.browser.isIE) {
+ // want where the tiddly is actually located, excluding tiddly html file
+ var tiddlyBaseDir = self.location.pathname.substring(0,self.location.pathname.lastIndexOf(&quot;\\&quot;)+1);
+ if(!tiddlyBaseDir || tiddlyBaseDir == &quot;&quot;) {
+ tiddlyBaseDir = self.location.pathname.substring(0,self.location.pathname.lastIndexOf(&quot;/&quot;)+1);
+ }
+ // if Returns with a leading slash, we don't want that.
+ if(tiddlyBaseDir.substring(0,1) == &quot;/&quot;) {
+ tiddlyBaseDir = tiddlyBaseDir.substring(1);
+ }
+ var theShell = new ActiveXObject(&quot;WScript.Shell&quot;);
+ if(theShell) {
+ // the app name may have a directory component, need that too
+ // as we want to start with current working dir as the location
+ // of the app.
+ if(appToLaunch.indexOf(&quot;file:///&quot;) == 0)
+ {
+ tiddlyBaseDir = &quot;&quot;;
+ appToLaunch = appToLaunch.substring(8);
+ }
+ var appDir = appToLaunch.substring(0, appToLaunch.lastIndexOf(&quot;\\&quot;));
+ if(! appDir || appDir == &quot;&quot;) {
+ appDir = appToLaunch.substring(0, appToLaunch.lastIndexOf(&quot;/&quot;));
+ }
+ appParams = appParams.length&gt;0?&quot; \&quot;&quot;+appParams.join(&quot;\&quot; \&quot;&quot;)+&quot;\&quot;&quot;:&quot;&quot;;
+ theShell.CurrentDirectory = decodeURI(tiddlyBaseDir + appDir);
+ var commandString = ('&quot;' +decodeURI(tiddlyBaseDir+appToLaunch) + '&quot; ' + appParams);
+ pluginInfo.log.push(commandString);
+ theShell.run(commandString);
+ } else {
+ pluginInfo.log.push(&quot;WScript.Shell object not created&quot;);
+ }
+ } else {
+ // want where the tiddly is actually located, excluding tiddly html file
+ var tiddlyBaseDir = self.location.href.substring(0,self.location.href.lastIndexOf(&quot;\\&quot;)+1);
+ if(!tiddlyBaseDir || tiddlyBaseDir == &quot;&quot;) {
+ tiddlyBaseDir = self.location.href.substring(0,self.location.href.lastIndexOf(&quot;/&quot;)+1);
+ }
+ netscape.security.PrivilegeManager.enablePrivilege(&quot;UniversalXPConnect&quot;);
+ var file = Components.classes[&quot;@mozilla.org/file/local;1&quot;].createInstance(Components.interfaces.nsILocalFile);
+ if(appToLaunch.indexOf(&quot;file:///&quot;) == 0)
+ {
+ tiddlyBaseDir = &quot;&quot;;
+ appToLaunch = appToLaunch.substring(8);
+ }
+ file.initWithPath(decodeURI(tiddlyBaseDir+appToLaunch).replace(/\//g,&quot;\\&quot;))
+ if (file.isFile() &amp;&amp; file.isExecutable()) {
+ var process = Components.classes['@mozilla.org/process/util;1'].createInstance(Components.interfaces.nsIProcess);
+ process.init(file);
+ process.run(false, appParams, appParams.length);
+ }
+ else
+ {
+ file.launch();
+ }
+ }
+};
+
+config.macros.LaunchApplication.handler = function (place,macroName,params,wikifier,paramString,tiddler) {
+ // 0=ButtonText, 1=toolTop, 2=AppToLaunch, 3...AppParameters
+ if (params[0] &amp;&amp; params[1] &amp;&amp; params[2]) {
+ var theButton = createTiddlyButton(place, params[0], params[1], onClickLaunchApplication);
+ theButton.setAttribute(&quot;appToLaunch&quot;, params[2]);
+ var appParams = [];
+ for (var i = 3; i &lt;params.length; i++) {
+ appParams.push(params[i]);
+ }
+ theButton.appParameters = appParams;
+ return;
+ }
+}
+
+function onClickLaunchApplication(e) {
+ var theAppToLaunch = this.getAttribute(&quot;appToLaunch&quot;);
+
+ var theAppParams = this.appParameters ;
+ LaunchApplication(theAppToLaunch,theAppParams);
+ return false;
+ }
+
+//}}}
+</pre>
 </div>
 <div title="LetsGetTanked" modifier="ELSDesignStudios" created="200607160348" modified="200801230101" tags="CSS ThemePackage stylesheets systemTheme">
 <pre>/***
@@ -15225,7 +17184,7 @@ http://www.TiddlyTools.com/images/fish.jpg
 <div title="Liouville-Theorem-Subharmonic" modifier="YourName" created="202404131555">
 <pre>https://math.berkeley.edu/~vvdatar/m185f16/notes/Lecture-17_Liouville.pdf</pre>
 </div>
-<div title="ListboxPlugin" modifier="ELSDesignStudios" created="200705121851" modified="201003151241" tags="MediaPackage TaskPackage systemConfig InputPackage" thing="meenie" color="#00FF00" size="34">
+<div title="ListboxPlugin" modifier="ELSDesignStudios" created="200705121851" modified="201003151241" tags="MediaPackage TaskPackage systemConfig InputPackage" size="34" color="#00FF00" thing="meenie">
 <pre>/***
 |Name|ListboxPlugin|
 |Source|http://www.TiddlyTools.com/#ListboxPlugin|
@@ -15499,7 +17458,7 @@ config.macros.select = {
 }
 //}}}</pre>
 </div>
-<div title="ListboxPluginInfo" modifier="ELSDesignStudios" created="200801090449" modified="201003151240" tags="pluginInfo" thing="eenie" color="#0000FF" size="30" gender="Male" plugins="AdvancedOptionsPlugin">
+<div title="ListboxPluginInfo" modifier="ELSDesignStudios" created="200801090449" modified="201003151240" tags="pluginInfo" plugins="AdvancedOptionsPlugin" gender="Male" size="30" color="#0000FF" thing="eenie">
 <pre>|Name|ListboxPlugin|
 |Source|http://www.TiddlyTools.com/#ListboxPlugin|
 |Documentation|http://www.TiddlyTools.com/#ListboxPluginInfo|
@@ -16431,7 +18390,7 @@ window.getLooseLinksMap=function(title) {
 store.addNotification(null,window.getLooseLinksMap); // notify
 //}}}</pre>
 </div>
-<div title="MainMenu" modifier="Wang Yanshu" created="202312221102" modified="202407250722" changecount="52">
+<div title="MainMenu" modifier="Wang Yanshu" created="202312221102" modified="202407251532" changecount="69">
 <pre>&lt;html&gt;
 &lt;div id=&quot;mc_embed_signup&quot; style=&quot;width:190px; background-color: transparent; &quot;&gt;
     &lt;form action=&quot;https://github.us22.list-manage.com/subscribe/post?u=86627690321a510f57710f560&amp;amp;id=dedd244e72&amp;amp;f_id=002ed3e1f0&quot; method=&quot;post&quot; id=&quot;mc-embedded-subscribe-form&quot; name=&quot;mc-embedded-subscribe-form&quot; class=&quot;validate&quot; target=&quot;_blank&quot;&gt;
@@ -16542,6 +18501,7 @@ store.addNotification(null,window.getLooseLinksMap); // notify
 [[Don't Click|c]]
 ----
 !News from Other Sites
+/%
 &lt;html&gt;
 &lt;iframe src=&quot;//rss.bloople.net/?url=https%3A%2F%2Frss.arxiv.org%2Frss%2Fmath.NT&amp;detail=-1&amp;limit=10&amp;showtitle=false&amp;type=html&quot; style=&quot;background: #ffc;height: 700px;width: 193px;&quot;&gt;&lt;/iframe&gt;
 &lt;/html&gt;
@@ -16549,6 +18509,47 @@ store.addNotification(null,window.getLooseLinksMap); // notify
 
 &lt;html&gt;
 &lt;iframe src=&quot;//rss.bloople.net/?url=https%3A%2F%2Fmathblogging.org%2Findex.xml&amp;detail=-1&amp;limit=10&amp;showtitle=false&amp;type=html&quot; style=&quot;background: #ffc;height: 700px;width: 193px;&quot;&gt;&lt;/iframe&gt;
+&lt;/html&gt;
+%/
+
+&lt;html&gt;
+&lt;style&gt;
+.container3 {
+  position: relative;
+  width: 270px;
+  height: 800px;
+  overflow: hidden;
+  padding-top: 56.25%; /* 16:9 Aspect Ratio */
+}
+
+.responsive-iframe3 {
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  width: 100%;
+  height: 100%;
+  border: none;
+  -moz-transform: scale(0.8, 0.8); 
+  -webkit-transform: scale(0.8, 0.8); 
+  -o-transform: scale(0.8, 0.8);
+  -ms-transform: scale(0.8, 0.8);
+  transform: scale(0.8, 0.8); 
+  -moz-transform-origin: top left;
+  -webkit-transform-origin: top left;
+  -o-transform-origin: top left;
+  -ms-transform-origin: top left;
+  transform-origin: top left;
+}
+&lt;/style&gt;
+&lt;div class=&quot;container3&quot;&gt; 
+&lt;iframe class=&quot;responsive-iframe3&quot; src=&quot;https://wangyenshu.github.io/arxiv-feed/&quot;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
+
+&lt;div class=&quot;container3&quot;&gt; 
+&lt;iframe class=&quot;responsive-iframe3&quot; src=&quot;https://wangyenshu.github.io/mathblogging-feed/&quot;&gt;&lt;/iframe&gt;
+&lt;/div&gt;
 &lt;/html&gt;
 ----
 !Software and Database
@@ -16619,14 +18620,15 @@ Unsaved Changes:
 
 </pre>
 </div>
-<div title="MarkupPostBody" creator="Wang Yanshu" modifier="Wang Yanshu" created="202406190950" modified="202406191012" changecount="6">
-<pre></pre>
+<div title="MarkupPostBody" creator="Wang Yanshu" modifier="Wang Yanshu" created="202406190950" modified="202407261009" changecount="7">
+<pre>&lt;div id=&quot;audio&quot;&gt;&lt;/div&gt;</pre>
 </div>
 <div title="MarkupPostHead" creator="YourName" modifier="Wang Yanshu" created="202405291601" modified="202406191007" changecount="8">
 <pre></pre>
 </div>
-<div title="MarkupPreBody" creator="Wang Yanshu" modifier="Wang Yanshu" created="202406170209" modified="202407241346" changecount="38">
+<div title="MarkupPreBody" creator="Wang Yanshu" modifier="Wang Yanshu" created="202406170209" modified="202407261007" changecount="39">
 <pre>&lt;script src=&quot;https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/sienna.min.js&quot; defer&gt;&lt;/script&gt;
+&lt;script src=&quot;speakClient.js&quot;&gt;&lt;/script&gt;
 &lt;script src=&quot;https://togetherjs.com/togetherjs-min.js&quot;&gt;&lt;/script&gt;
 &lt;!--
 &lt;script src=&quot;https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/audioPlaylist.js&quot;&gt;&lt;/script&gt;
@@ -17343,18 +19345,18 @@ config.formatters.push({
 <div title="MediaPackage" modifier="ELSDesignStudios" created="200807230227" modified="200807230235" tags="package MediaPackage">
 <pre>These plugins enable you to easily add various types of media (audio, video, flash, etc.) to your tiddler content.  The package includes several different kinds of embedded media players and a number of examples that define and present media content using custom templates, along with supporting plugins to provide additional rendering/formatting for the content surrounding the embedded player.</pre>
 </div>
-<div title="MediaSample - Image" modifier="ELSDesignStudios" created="200706230356" modified="200709030203" tags="media" mediatype="image" autoplay="false" rpgretry="" rpgok="" rpgaction="" height="auto" width="auto" mediaurl="images/JR+ELS_1024.jpg" groupid="photo" itemid="sample" mediatitle="Tiddly Wizards" next="" previous="" showcontrols="true">
+<div title="MediaSample - Image" modifier="ELSDesignStudios" created="200706230356" modified="200709030203" tags="media" showcontrols="true" previous="" next="" mediatitle="Tiddly Wizards" itemid="sample" groupid="photo" mediaurl="images/JR+ELS_1024.jpg" width="auto" height="auto" rpgaction="" rpgok="" rpgretry="" autoplay="false" mediatype="image">
 <pre>Jeremy Ruston (TiddlyWiki) and Eric Shulman (TiddlyTools)
 Yerba Buena Gardens, The Metreon, San Francisco, CA
 1/28/06 3:45pm</pre>
 </div>
-<div title="MediaSample - QuickTime" modifier="ELSDesignStudios" created="200706210143" modified="200709030205" tags="MediaPackage media sample" copyright="&amp;copy; expired/public domain" website="http://www.AmericaFree.tv" genre="old-time comedy movies" mediatype="auto" year="expired/public domain" artist="various (see below)" autoplay="false" rpgretry="" rpgok="" rpgaction="" height="320" width="400" mediaurl="http://www.americafree.tv/unicast_mov/AmericaFreeTVComedy.mov" groupid="AFTV" itemid="COM" mediatitle="America Free TV: Classic Comedy" next="" previous="" showcontrols="true" videourl="http://www.americafree.tv/unicast_mov/AmericaFreeTVComedy.mov" videotitle="{{medium{[[AmericaFree.TV|http://www.AmericaFree.tv]] - Classic Comedy}}}">
+<div title="MediaSample - QuickTime" modifier="ELSDesignStudios" created="200706210143" modified="200709030205" tags="MediaPackage media sample" videotitle="{{medium{[[AmericaFree.TV|http://www.AmericaFree.tv]] - Classic Comedy}}}" videourl="http://www.americafree.tv/unicast_mov/AmericaFreeTVComedy.mov" showcontrols="true" previous="" next="" mediatitle="America Free TV: Classic Comedy" itemid="COM" groupid="AFTV" mediaurl="http://www.americafree.tv/unicast_mov/AmericaFreeTVComedy.mov" width="400" height="320" rpgaction="" rpgok="" rpgretry="" autoplay="false" artist="various (see below)" year="expired/public domain" mediatype="auto" genre="old-time comedy movies" website="http://www.AmericaFree.tv" copyright="&amp;copy; expired/public domain">
 <pre>[[AmericaFree.TV|http://www.AmericaFree.tv]] offers FREE ~QuickTime video streams of classic comedy films such as //&quot;Arsenic and Old Lace&quot;//, as well as movies/TV shows from Abbott &amp; Costello, The Three Stooges, Laurel &amp; Hardy, and others.
 
 Other streams from ~AmericaFree.TV include &quot;Classic Movies&quot; and &quot;~B-Movies&quot; from the 1950's and 1960's.  Visit [[AmericaFree.TV|http://www.AmericaFree.tv]] for details and links.
 </pre>
 </div>
-<div title="MediaSample - Windows" modifier="ELSDesignStudios" created="200706212055" modified="200709030204" tags="MediaPackage media sample" copyright="(c) 2007" website="http://www.earthcam.com" genre="webcam" mediatype="windows" artist="~EarthCam, Inc." autoplay="true" rpgretry="" rpgok="" rpgaction="" height="300" width="400" mediaurl="http://www.earthcam.com/usa/newyork/timessquare/asx/tsq_stream.asx" groupid="webcam" itemid="TIMESSQUARE" mediatitle="LIVE: Times Square, NY" next="" previous="" showcontrols="true" videotitle="~EarthCam: Times Square">
+<div title="MediaSample - Windows" modifier="ELSDesignStudios" created="200706212055" modified="200709030204" tags="MediaPackage media sample" videotitle="~EarthCam: Times Square" showcontrols="true" previous="" next="" mediatitle="LIVE: Times Square, NY" itemid="TIMESSQUARE" groupid="webcam" mediaurl="http://www.earthcam.com/usa/newyork/timessquare/asx/tsq_stream.asx" width="400" height="300" rpgaction="" rpgok="" rpgretry="" autoplay="true" artist="~EarthCam, Inc." mediatype="windows" genre="webcam" website="http://www.earthcam.com" copyright="(c) 2007">
 <pre>Live webcam views of Times Square, New York, complete with audio.  Automatically switches between several cameras from various vantage points.</pre>
 </div>
 <div title="MediaViewTemplate" modifier="ELSDesignStudios" created="200706210043" modified="200709030447" tags="MediaPackage template">
@@ -17621,6 +19623,326 @@ Example
 !end
 %/&lt;&lt;tiddler {{tiddler&amp;&amp;tiddler.title=='MicroCalc'?'MicroCalc##info':'MicroCalc##show'}}
 	with: {{'$1'!='$'+'1'?'$1':'auto'}}&gt;&gt;</pre>
+</div>
+<div title="Minesweeper" creator="Wang Yanshu" modifier="Wang Yanshu" created="202407251405" tags="systemConfig" changecount="1">
+<pre>/***
+|''Name:''|Minesweeper|
+|''Version:''|0.72 (12 Oct 2005)|
+|''Source:''|Tiddly W;nks (http://www.bur.st/~blazeoz/tiddlywinks/)|
+|''Author:''|[[Daniel Baird]]|
+|''Type:''|Macro|
+!Description
+It's minesweeper!
+
+!Syntax/Example usage
+{{{&lt;&lt;minesweeper&gt;&gt;}}} or {{{&lt;&lt;minesweeper [width] [height] [bombs]&gt;&gt;}}}
+&lt;&lt;minesweeper&gt;&gt;
+
+!Notes
+* Let me know if you want graphics, or that MSWindows Minesweeper thing where you can click with both buttons on a numbered square, and it does the thinking for you..
+
+!Revision History
+* 0.5.0 (2-Oct-05)
+** original version (Daniel)
+* 0.5.1 (3-Oct-05)
+** added the css styles via set~StyleSheet (Simon)
+* 0.5.2 (3-Oct-05)
+** added parameters to macro and fixed bug preventing detection of win (Simon)
+* 0.6 (5-Oct-05)
+** Fixed the problem with multiple games on screen at once.
+** Cleaned up the JavaScript warning generated when you clicked anywhere but on a square.
+* 0.7 (6-Oct-05)
+** Integrated sweet additions from Genesis_mage (genisis329 at gmail dot com) that:
+*** allows winning by having all non-mines clicked (without having to mark every mine)
+*** added a mark button to mark and unmark mines without the keyboard
+** Win time now shows tenths of a second.
+* 0.71 (10-Oct-05)
+** tweaked a style to make the mark button work better in IE
+* 0.72 (12-Oct-05)
+** worked out how to use a closure as a event handler, which means that the code added in 0.6 could be made a lot simpler.
+
+***/
+/*{{{*/
+
+version.extensions.minesweeper = {major: 0, minor: 7, revision: 2};
+
+config.macros.minesweeper = {};
+
+config.macros.minesweeper.handler = function(place,macroName,params) {
+    var width = params[0];
+    var height = params[1];
+    var bombs = params[2];
+
+    if (width == undefined) width = 9;
+    if (height == undefined) height = width;
+    if (bombs == undefined) bombs = Math.round(width * height /  8)
+    if (bombs &gt; width * height) bombs = width * height;
+
+    var aGame = new MinesweeperGame();
+
+    createTiddlyElement(place,'div',aGame.id,null,'If you see this, Minesweeper is broken.  Let Daniel know (DanielBaird at gmail dot com).');
+    aGame.newGame(width, height, bombs);
+}
+// =======================================================================
+function MinesweeperGame() {
+    this.idprefix = 'mines';
+    this.version = '0.72 beta';
+    this.id = this.idprefix + MinesweeperGame.prototype.nextid;
+    MinesweeperGame.prototype.nextid++;
+    return this;
+}
+// -----------------------------------------------------------------------
+MinesweeperGame.prototype.nextid = 0;
+// -----------------------------------------------------------------------
+MinesweeperGame.prototype.newGame = function(height, width, mines) {
+    this.height = height;
+    this.width = width;
+    this.mines = mines;
+    this.total = height * width;
+    this.markMode = false;
+
+    this.startGame();
+}
+// -----------------------------------------------------------------------
+MinesweeperGame.prototype.startGame = function() {
+
+    this.gamestate = 'ready';
+    this.clicks = 0;
+    this.marks = 0;
+    this.message = 'click on the board to begin';
+
+    this.starttime = null;
+    this.wintime = null;
+    this.board = new Array();
+
+    // create the squares
+    for (var x = 0; x &lt; this.height; x++) {
+        var row = new Array();
+        for (var y = 0; y &lt; this.width; y++) {
+            row.push( {count: 0, mine: false, clicked: false, marked: false} );
+        }
+        this.board.push(row);
+    }
+
+    // add mines
+    for (var m = 0; m &lt; this.mines; m++) {
+        var mx = Math.round((this.height-1)*Math.random());
+        var my = Math.round((this.width-1)*Math.random());
+        if (this.board[mx][my].mine) {
+            m--;
+        } else {
+            this.board[mx][my].mine = true;
+        }
+    }
+
+    // work out counts
+    for (var cx = 0; cx &lt; this.height; cx++) {
+        for (var cy = 0; cy &lt; this.width; cy++) {
+            var count = 0;
+            for (var dx = -1; dx &lt; 2; dx++) {
+                for (var dy = -1; dy &lt; 2; dy++) {
+                    var nx = cx + dx;
+                    var ny = cy + dy;
+                    if ( (!(dx==0 &amp;&amp; dy==0))
+                            &amp;&amp; (nx &gt;= 0) &amp;&amp; (nx &lt; this.height)
+                            &amp;&amp; (ny &gt;= 0) &amp;&amp; (ny &lt; this.width)
+                            &amp;&amp; this.board[nx][ny].mine) {
+                        count++;
+                    }
+                }
+            }
+            this.board[cx][cy].count = count;
+        }
+    }
+    this.showBoard();
+}
+// -----------------------------------------------------------------------
+MinesweeperGame.prototype.showBoard = function() {
+    var node = document.getElementById(this.id);
+    var html = new Array();
+    html.push('&lt;table class=&quot;minefield&quot; cellspacing=&quot;2&quot;&gt;');
+    html.push('&lt;tr&gt;&lt;td class=&quot;info&quot; colspan=&quot;'+this.width+'&quot;&gt;');
+    html.push('Minesweeper '+this.version+'&lt;br /&gt;&lt;b&gt;'+this.gamestate+'&lt;/b&gt;');
+    if (this.gamestate == 'playing') {
+        this.message = (this.mines - this.marks)+' mines unmarked';
+    }
+    html.push('&lt;/td&gt;&lt;/tr&gt;');
+    for (var x = 0; x &lt; this.height; x++) {
+        html.push('&lt;tr&gt;');
+        for (var y = 0; y &lt; this.width; y++) {
+            html.push( this.makeSquare(x,y) );
+        }
+        html.push('&lt;/tr&gt;');
+    }
+    var cls = 'un';
+    if (this.markMode) cls = '';
+    html.push('&lt;tr&gt;&lt;td id=&quot;'+this.id+'_markbtn&quot; class=&quot;'+cls+'clicked widebtn&quot; colspan=&quot;'+this.width+'&quot;&gt;mark / unmark mines&lt;/td&gt;&lt;/tr&gt;');
+    html.push('&lt;tr&gt;&lt;td class=&quot;info&quot; colspan=&quot;'+this.width+'&quot;&gt;'+this.message);
+    html.push('&lt;small&gt;');
+    html.push('&lt;br /&gt;&lt;span class=&quot;minesweeper' + cls + 'show&quot;&gt;ctrl- shift- or alt-&lt;/span&gt;click to reveal a square');
+    html.push('&lt;br /&gt;&lt;span class=&quot;minesweeper' + cls + 'hide&quot;&gt;ctrl- shift- or alt-&lt;/span&gt;click to mark a mine');
+    html.push('&lt;/small&gt;');
+    html.push('&lt;/td&gt;&lt;/tr&gt;');
+    html.push('&lt;/table&gt;');
+    node.innerHTML = html.join('');
+    node.onclick = this.getClickHandler();
+}
+// -----------------------------------------------------------------------
+MinesweeperGame.prototype.makeSquare = function(x,y) {
+    var sq = this.board[x][y];
+    var reveal = (this.gamestate != 'playing' &amp;&amp; this.gamestate != 'ready');
+    var html = new Array();
+    if (sq.clicked) {
+        html.push('&lt;td class=&quot;clicked&quot; id=&quot;'+this.id+'_x-'+x+'_y-'+y+'&quot;&gt;');
+        if (!sq.marked &amp;&amp; reveal &amp;&amp; sq.mine) {
+            html.push('B!');
+        } else if (!sq.marked &amp;&amp; reveal &amp;&amp; sq.mine) {
+            html.push('B!');
+        } else if (sq.count &gt; 0){
+            html.push(sq.count);
+        } else {
+            html.push('&amp;nbsp;');
+        }
+    } else {
+        html.push('&lt;td class=&quot;unclicked&quot; id=&quot;'+this.id+'_x-'+x+'_y-'+y+'&quot;&gt;');
+        if (sq.marked &amp;&amp; !reveal) {
+            html.push('B?');
+        } else if (sq.marked &amp;&amp; sq.mine &amp;&amp; reveal) {
+            html.push('B');
+        } else if (sq.marked &amp;&amp; !sq.mine &amp;&amp; reveal) {
+            html.push('X');
+        } else if (sq.mine &amp;&amp; reveal) {
+            html.push('B!');
+        } else {
+            html.push('&amp;nbsp;');
+        }
+    }
+    html.push('&lt;/td&gt;');
+    return html.join('');
+}
+// -------------------------------------------------------------------
+MinesweeperGame.prototype.clickSquare = function(cx,cy,modifier) {
+    if (this.gamestate == 'ready') {
+        this.starttime = new Date();
+        this.gamestate = 'playing';
+    }
+    if (this.gamestate == 'playing') {
+        if (!this.board[cx][cy].clicked) {
+            if ( (modifier &amp;&amp; !this.markMode) || (!modifier &amp;&amp; this.markMode) ) {
+                if (this.board[cx][cy].marked) {
+                    this.marks--;
+                    this.board[cx][cy].marked = false;
+                } else {
+                    this.marks++;
+                    this.board[cx][cy].marked = true;
+                }
+            } else if (!this.board[cx][cy].clicked &amp;&amp; !this.board[cx][cy].marked) {
+                this.revealSquare(cx,cy);
+            }
+            this.markMode = false;
+        }
+        this.checkWin();
+        this.showBoard();
+    } else {
+        // clicked when we're not playing..
+        this.startGame();
+    }
+}
+// -------------------------------------------------------------------
+MinesweeperGame.prototype.revealSquare = function(x,y) {
+    if (this.board[x][y].clicked == false &amp;&amp; this.board[x][y].marked == false) {
+        this.board[x][y].clicked = true;
+        this.clicks++;
+        if (this.board[x][y].mine) {
+            this.gamestate = 'boom!';
+            this.message = 'click board to play again';
+        } else if (this.board[x][y].count == 0) {
+            // if it's a zero, we might have to reveal some other squares..
+            for (var dx = -1; dx &lt; 2; dx++) {
+                for (var dy = -1; dy &lt; 2; dy++) {
+                    var nx = x + dx;
+                    var ny = y + dy;
+                    if ( (!(dx==0 &amp;&amp; dy==0)) &amp;&amp; (nx &gt;= 0) &amp;&amp; (nx &lt; this.height) &amp;&amp; (ny &gt;= 0) &amp;&amp; (ny &lt; this.width) ) {
+                        this.revealSquare(nx,ny);
+                    }
+                }
+            }
+        }
+    }
+}
+// -------------------------------------------------------------------
+MinesweeperGame.prototype.handleClick = function(e) {
+    // work out which cell was clicked
+    if (!e) var e = window.event;
+    var str = resolveTarget(e).id;
+    if (str &amp;&amp; str != undefined) {
+        if (str == this.id + '_markbtn') {
+            this.markMode = !this.markMode;
+            this.showBoard();
+        } else {
+            var cx = parseInt(str.substr( str.indexOf('x-')+2 ));
+            var cy = parseInt(str.substr( str.indexOf('y-')+2 ));
+            if ( !isNaN(cx) &amp;&amp; !isNaN(cy) ) {
+                this.clickSquare(cx,cy,(e.altKey || e.shiftKey || e.ctrlKey));
+            }
+        }
+    }
+}
+// -------------------------------------------------------------------
+MinesweeperGame.prototype.getClickHandler = function() {
+    var thisGame = this;
+    return function(e) {
+        thisGame.handleClick(e);
+    }
+}
+// -------------------------------------------------------------------
+MinesweeperGame.prototype.checkWin = function() {
+    if (this.clicks == this.total - this.mines &amp;&amp; this.gamestate !='boom!') {
+        this.gamestate = 'win';
+        this.wintime = new Date();
+        this.message = 'You won in '+Math.round(((this.wintime - this.starttime)/100))/10+' seconds';
+        this.message = this.message + '&lt;br /&gt;click board to play again';
+    }
+}
+// -----------------------------------------------------------------------
+
+setStylesheet(
+	&quot;.viewer .minefield { &quot;+
+		&quot;background: #ddd; &quot;+
+		&quot;border: double 3px black; &quot;+
+		&quot;border-collapse: separate; &quot;+
+		&quot;border-spacing: 2px; &quot;+
+	&quot;} \n&quot;+
+
+	&quot;.viewer .minefield td { &quot;+
+		&quot;cursor: default; &quot;+
+		&quot;width: 1.3em; &quot;+
+		&quot;height: 1.1em; &quot;+
+		&quot;text-align: center; &quot;+
+		&quot;vertical-align: center; &quot;+
+		&quot;background: #ddd; &quot;+
+		&quot;border: 1px solid #ccc; &quot;+
+	&quot;} \n&quot;+
+
+	&quot;.viewer .minefield td.info, .viewer .minefield td.widebtn { &quot;+
+		&quot;width: auto; &quot;+
+	&quot;} \n&quot;+
+
+	&quot;.minesweeperhide, .minesweeperunshow { &quot;+
+		&quot;display: none; &quot;+
+	&quot;} \n&quot;+
+
+	&quot;.viewer .minefield td.unclicked { &quot;+
+		&quot;cursor: pointer; &quot;+
+		&quot;border-color: #fff; &quot;+
+		&quot;border-right-color: #999; &quot;+
+		&quot;border-bottom-color: #999; &quot;+
+	&quot;} \n&quot;+
+	&quot;&quot;,
+	&quot;MinesweeperGame&quot;);
+
+/*}}}*/
+</pre>
 </div>
 <div title="MiniBrowserList" modifier="ELSDesignStudios" created="200608211935" modified="200801191749" tags="settings">
 <pre>TiddlyWiki.com - official release
@@ -27172,6 +29494,282 @@ config.macros.quote.handler = function(place,macroName,params) {
 }}}
 </pre>
 </div>
+<div title="RSSReaderPlugin" creator="Wang Yanshu" modifier="Wang Yanshu" created="202407251450" changecount="1">
+<pre>/***
+|''Name:''|RSSReaderPlugin|
+|''Description:''|This plugin provides a RSSReader for TiddlyWiki|
+|''Version:''|1.1.1|
+|''Date:''|Apr 21, 2007|
+|''Source:''|http://tiddlywiki.bidix.info/#RSSReaderPlugin|
+|''Documentation:''|http://tiddlywiki.bidix.info/#RSSReaderPluginDoc|
+|''Author:''|BidiX (BidiX (at) bidix (dot) info)|
+|''Credit:''|BramChen for RssNewsMacro|
+|''License:''|[[BSD open source license|http://tiddlywiki.bidix.info/#%5B%5BBSD%20open%20source%20license%5D%5D ]]|
+|''~CoreVersion:''|2.2.0|
+|''OptionalRequires:''|http://www.tiddlytools.com/#NestedSlidersPlugin|
+***/
+//{{{
+version.extensions.RSSReaderPlugin = {
+	major: 1, minor: 1, revision: 1,
+	date: new Date(&quot;Apr 21, 2007&quot;),
+	source: &quot;http://TiddlyWiki.bidix.info/#RSSReaderPlugin&quot;,
+	author: &quot;BidiX&quot;,
+	coreVersion: '2.2.0'
+};
+
+config.macros.rssReader = {
+	dateFormat: &quot;DDD, DD MMM YYYY&quot;,
+	itemStyle: &quot;display: block;border: 1px solid black;padding: 5px;margin: 5px;&quot;, //useed  '@@'+itemStyle+itemText+'@@'
+	msg:{
+		permissionDenied: &quot;Permission to read preferences was denied.&quot;,
+		noRSSFeed: &quot;No RSS Feed at this address %0&quot;,
+		urlNotAccessible: &quot; Access to %0 is not allowed&quot;
+	},
+	cache: [], 	// url =&gt; XMLHttpRequest.responseXML
+	desc: &quot;noDesc&quot;,
+	
+	handler: function(place,macroName,params,wikifier,paramString,tiddler) {
+		var desc = params[0];
+		var feedURL = params[1];
+		var toFilter = (params[2] ? true : false);
+		var filterString = (toFilter?(params[2].substr(0,1) == ' '? tiddler.title:params[2]):'');
+		var place = createTiddlyElement(place, &quot;div&quot;, &quot;RSSReader&quot;);
+		wikify(&quot;^^&lt;&lt;rssFeedUpdate &quot;+feedURL+&quot; [[&quot; + tiddler.title + &quot;]]&gt;&gt;^^\n&quot;,place);
+		if (this.cache[feedURL]) {
+			this.displayRssFeed(this.cache[feedURL], feedURL, place, desc, toFilter, filterString);
+		}
+		else {
+			var r = loadRemoteFile(feedURL,config.macros.rssReader.processResponse, [place, desc, toFilter, filterString]);
+			if (typeof r == &quot;string&quot;)
+				displayMessage(r);
+		}
+		
+	},
+
+	// callback for loadRemoteFile 
+	// params : [place, desc, toFilter, filterString]
+	processResponse: function(status, params, responseText, url, xhr) { // feedURL, place, desc, toFilter, filterString) {	
+		if (window.netscape){
+			try {
+				if (document.location.protocol.indexOf(&quot;http&quot;) == -1) {
+					netscape.security.PrivilegeManager.enablePrivilege(&quot;UniversalBrowserRead&quot;);
+				}
+			}
+			catch (e) { displayMessage(e.description?e.description:e.toString()); }
+		}
+		if (xhr.status == httpStatus.NotFound)
+		 {
+			displayMessage(config.macros.rssReader.noRSSFeed.format([url]));
+			return;
+		}
+		if (!status)
+		 {
+			displayMessage(config.macros.rssReader.noRSSFeed.format([url]));
+			return;
+		}
+		if (xhr.responseXML) {
+			// response is interpreted as XML
+			config.macros.rssReader.cache[url] = xhr.responseXML;
+			config.macros.rssReader.displayRssFeed(xhr.responseXML, params[0], url, params[1], params[2], params[3]);
+		}
+		else {
+			if (responseText.substr(0,5) == &quot;&lt;?xml&quot;) {
+				// response exists but not return as XML -&gt; try to parse it 
+				var dom = (new DOMParser()).parseFromString(responseText, &quot;text/xml&quot;); 
+				if (dom) {
+					// parsing successful so use it
+					config.macros.rssReader.cache[url] = dom;
+					config.macros.rssReader.displayRssFeed(dom, params[0], url, params[1], params[2], params[3]);
+					return;
+				}
+			}
+			// no XML display as html 
+			wikify(&quot;&lt;html&gt;&quot; + responseText + &quot;&lt;/html&gt;&quot;, params[0]);
+			displayMessage(config.macros.rssReader.msg.noRSSFeed.format([url]));
+		}
+	},
+
+	// explore down the DOM tree
+	displayRssFeed: function(xml, place, feedURL, desc, toFilter, filterString){
+		// Channel
+		var chanelNode = xml.getElementsByTagName('channel').item(0);
+		var chanelTitleElement = (chanelNode ? chanelNode.getElementsByTagName('title').item(0) : null);
+		var chanelTitle = &quot;&quot;;
+		if ((chanelTitleElement) &amp;&amp; (chanelTitleElement.firstChild)) 
+			chanelTitle = chanelTitleElement.firstChild.nodeValue;
+		var chanelLinkElement = (chanelNode ? chanelNode.getElementsByTagName('link').item(0) : null);
+		var chanelLink = &quot;&quot;;
+		if (chanelLinkElement) 
+			chanelLink = chanelLinkElement.firstChild.nodeValue;
+		var titleTxt = &quot;!![[&quot;+chanelTitle+&quot;|&quot;+chanelLink+&quot;]]\n&quot;;
+		var title = createTiddlyElement(place,&quot;div&quot;,null,&quot;ChanelTitle&quot;,null);
+		wikify(titleTxt,title);
+		// ItemList
+		var itemList = xml.getElementsByTagName('item');
+		var article = createTiddlyElement(place,&quot;ul&quot;,null,null,null);
+		var lastDate;
+		var re;
+		if (toFilter) 
+			re = new RegExp(filterString.escapeRegExp());
+		for (var i=0; i&lt;itemList.length; i++){
+			var titleElm = itemList[i].getElementsByTagName('title').item(0);
+			var titleText = (titleElm ? titleElm.firstChild.nodeValue : '');
+			if (toFilter &amp;&amp; ! titleText.match(re)) {
+				continue;
+			}
+			var descText = '';
+			descElem = itemList[i].getElementsByTagName('description').item(0);
+			if (descElem){
+				try{
+					for (var ii=0; ii&lt;descElem.childNodes.length; ii++) {
+						descText += descElem.childNodes[ii].nodeValue;
+					}
+				}
+				catch(e){}
+				descText = descText.replace(/&lt;br \/&gt;/g,'\n');
+				if (desc == &quot;asHtml&quot;)
+					descText = &quot;&lt;html&gt;&quot;+descText+&quot;&lt;/html&gt;&quot;;
+			}
+			var linkElm = itemList[i].getElementsByTagName(&quot;link&quot;).item(0);
+			var linkURL = linkElm.firstChild.nodeValue;
+			var pubElm = itemList[i].getElementsByTagName('pubDate').item(0);
+			var pubDate;
+			if (!pubElm) {
+				pubElm = itemList[i].getElementsByTagName('date').item(0); // for del.icio.us
+				if (pubElm) {
+					pubDate = pubElm.firstChild.nodeValue;
+					pubDate = this.formatDateString(this.dateFormat, pubDate);
+					}
+					else {
+						pubDate = '0';
+					}
+				}
+			else {
+				pubDate = (pubElm ? pubElm.firstChild.nodeValue : 0);
+				pubDate = this.formatDate(this.dateFormat, pubDate);
+			}
+			titleText = titleText.replace(/\[|\]/g,'');
+			var rssText = '*'+'[[' + titleText + '|' + linkURL + ']]' + '' ;
+			if ((desc != &quot;noDesc&quot;) &amp;&amp; descText){
+				rssText = rssText.replace(/\n/g,' ');
+				descText = '@@'+this.itemStyle+descText + '@@\n';				
+				if (version.extensions.nestedSliders){
+					descText = '+++[...]' + descText + '===';
+				}
+				rssText = rssText + descText;
+			}
+			var story;
+			if ((lastDate != pubDate) &amp;&amp; ( pubDate != '0')) {
+				story = createTiddlyElement(article,&quot;li&quot;,null,&quot;RSSItem&quot;,pubDate);
+				lastDate = pubDate;
+			}
+			else {
+				lastDate = pubDate;
+			}
+			story = createTiddlyElement(article,&quot;div&quot;,null,&quot;RSSItem&quot;,null);
+			wikify(rssText,story);
+		}
+	},
+	
+	formatDate: function(template, date){
+		var dateString = new Date(date);
+		// template = template.replace(/hh|mm|ss/g,'');
+		return dateString.formatString(template);
+	},
+	
+	formatDateString: function(template, date){
+		var dateString = new Date(date.substr(0,4), date.substr(5,2) - 1, date.substr(8,2)
+			);
+		return dateString.formatString(template);
+	}
+	
+};
+
+config.macros.rssFeedUpdate = {
+	label: &quot;Update&quot;,
+	prompt: &quot;Clear the cache and redisplay this RssFeed&quot;,
+	handler: function(place,macroName,params) {
+		var feedURL = params[0];
+		var tiddlerTitle = params[1];
+		createTiddlyButton(place, this.label, this.prompt, 
+			function () {
+				if (config.macros.rssReader.cache[feedURL]) {
+					config.macros.rssReader.cache[feedURL] = null; 
+			}
+			story.refreshTiddler(tiddlerTitle,null, true);
+		return false;});
+	}
+};
+
+//}}}
+</pre>
+</div>
+<div title="RSSReaderPluginDoc" creator="Wang Yanshu" modifier="Wang Yanshu" created="202407251451" changecount="1">
+<pre>//last update: RSSReaderPlugin v 1.1.1//
+
+!Description
+This plugin provides a RSSReader for TiddlyWiki
+* It accesses asynchronously an RSSFeed
+*Depending on the chanel item format, each item could be written as :
+**simple text wikified
+**html
+
+!Usage
+{{{
+&lt;&lt;rssReader noDesc|asHtml|asText rssUrl ['filtering string']&gt;&gt;
+	noDesc: only title of item is printed
+
+	asHtml: if you know that description contain html (links, img ...), 
+		the text is enclosed with &lt;html&gt; &lt;/html&gt; tags
+
+ 	asText: if the description should not be interpreted as html the 
+		description is wikified
+
+	rssUrl: the rssFeed url that could be accessed. 
+	
+	'filtering string': if present, the rssfeed item title must contained 
+		this string to be displayed. 
+		If 'filering string' contained space characters only, the tiddler 
+		title is used for filtering.
+
+}}}
+
+For security reasons, if the TiddlyWiki is accessed from http, a ProxyService should be used to access an rssFeed from an other site.
+
+!examples
+| !reader | !RSSFeed type | !working from |
+| BidiXTWRSS | Description asHtml | file: or tiddlywiki.bidix.info |
+| [[Le Monde]] | Description asText | file: or tiddlywiki.bidix.info using proxy |
+| YahooNewsSport | Description asHtml | file: or tiddlywiki.bidix.info using proxy |
+| TiddlyWikiRSS | Description asHtml | file: or tiddlywiki.bidix.info using proxy |
+| [[Libération]] | noDesc | file: or tiddlywiki.bidix.info using proxy |
+| [[TestComment]] | asText and filters | file: or tiddlywiki.bidix.info using proxy |
+see : &lt;&lt;tag RSSFeed&gt;&gt; for the full list.
+
+!Revision history
+* V1.1.0 (2207/04/13)
+**No more import functions
+* V1.0.0 (2006/11/11)
+**refactoring using core loadRemoteFile function
+**import using new tiddlywiki:tiddler element
+**import and presentation preserved without EricShulman's NestedSliderPlugin
+**better display of items 
+* v0.3.0 (24/08/2006)
+** Filter on RSS item title
+** Place to display redefined for asynchronous processing
+* v0.2.2 (22/08/2006)
+**Haloscan feed has no pubDate.
+* v0.2.1 (08/05/2006)
+* v0.2.0 (01/05/2006)
+**Small adapations for del.icio.us feed
+* v0.1.1 (28/04/2006)
+**Bug : Channel without title 
+* v0.1.0 (24/04/2006)
+** initial release
+
+
+</pre>
+</div>
 <div title="RearrangeTiddlersPlugin" modifier="ELSDesignStudios" created="200607012228" modified="201011301922" tags="systemConfig NavigationPackage">
 <pre>/***
 |Name|RearrangeTiddlersPlugin|
@@ -28919,6 +31517,84 @@ config.macros.runTiddler = {
 			return config.commands.runTiddler.invoke(this.getAttribute(&quot;tid&quot;),true,false);
 		},&quot;button&quot;).setAttribute(&quot;tid&quot;,tid);
 	}
+}
+//}}}</pre>
+</div>
+<div title="SQLQueryPlugin" creator="Wang Yanshu" modifier="Wang Yanshu" created="202407251444" tags="Plugin systemConfig" changecount="1">
+<pre>/***
+|''Name:''|SQLQueryPlugin|
+|''Version:''|0.1|
+|''Source''|http://jackparke.googlepages.com/jtw.html#SQLQueryPlugin ([[del.icio.us|http://del.icio.us/post?url=http://jackparke.googlepages.com/jtw.html%23SQLQueryPlugin]])|
+|''Author:''|[[Jack]]|
+
+!Description
+Query a SQL database (defined in [[SQLConfig]]) and display results in a tiddler. See [[SQLExamples]].
+See http://www.connectionstrings.com for connection strings examples.
+
+!Usage
+{{{&lt;&lt;SQLQuery sql:&quot;SELECT * FROM Products&quot;&gt;&gt;}}}
+
+!Advanced Usage
+{{{&lt;&lt;SQLQuery sql:&quot;SELECT * FROM Products&quot; connection:pubs rowstart:&quot;*&quot; colsep:&quot;,&quot; rowend:{{\n}} headerstart:!&gt;&gt;}}}
+
+!Configuration
+Define all database connection strings (ADO) in the [[SQLConfig]] tiddler.
+Example:
+{{{
+Northwind: DRIVER={SQL Server};SERVER=(local);DATABASE=Northwind;
+pubs: DRIVER={SQL Server};SERVER=(local);DATABASE=pubs;
+CompanyContacts: DRIVER={SQL Server};SERVER=MyCompanyServer;DATABASE=Contacts;UID=sa;pwd=admin;
+}}}
+!Code
+***/
+//{{{
+version.extensions.SQLQuery= {major: 0, minor: 1, revision: 0, date: new Date(&quot;Aug 23, 2007&quot;)};
+
+config.macros.SQLQuery= {};
+//config.shadowTiddlers.SQLConfig = 'Connection1: DRIVER={SQL Server};SERVER=(local);DATABASE=Northwind;';
+config.macros.SQLQuery.handler = function(place,macroName,params,wikifier,paramString,tiddler) {
+ var parameters = paramString.parseParams('name',null,true);
+ var pSQL = parameters[0]['sql']?parameters[0]['sql'][0]:-1;
+ if (!pSQL) return false;
+ var Connection = parameters[0]['connection']?parameters[0]['connection'][0]:'Connection1';
+ var SQLConnection = store.getTiddlerText('SQLConfig::' + Connection)
+ if (!SQLConnection) return wikify('Please configure this connection \'' + Connection + '\' in [[SQLConfig]]!', place, null, tiddler);
+ var RowStart = parameters[0]['rowstart']?parameters[0]['rowstart'][0]:'|';
+ var ColSep = parameters[0]['colsep']?parameters[0]['colsep'][0]:'|';
+ var RowEnd = parameters[0]['rowend']?parameters[0]['rowend'][0]:'|\n';
+ var HeaderStart = parameters[0]['headerstart']?parameters[0]['headerstart'][0]:'!~';
+ try {
+  var strResult = sql_DBQuery(SQLConnection, pSQL, RowStart, ColSep, RowEnd, HeaderStart, 'No results')
+  wikify(strResult,place, null, tiddler)
+ } catch (err) {
+  wikify('Error ' + err.message,place, null, tiddler)
+ }
+}
+function sql_DBQuery(ConnStr, SQL, RowStart, ColSep, RowEnd, HeaderStart, NoData) {
+ var Conn = new ActiveXObject('ADODB.Connection');
+ Conn.open(ConnStr);
+ var RS = Conn.execute(SQL);
+ var strOut='';
+ if (!RS.eof) {
+  strOut += RowStart;
+  for (var i=0; i &lt; RS.Fields.Count; i++) {
+     strOut += HeaderStart + RS.Fields(i).name.toString() + (i&lt;RS.Fields.Count-1?ColSep:'');
+  }
+  strOut += RowEnd;
+  while (!RS.eof) {
+    strOut += RowStart;
+    for (var i=0; i &lt; RS.Fields.Count; i++) {
+       strOut += RS.Fields(i).Value.toString() + (i&lt;RS.Fields.Count-1?ColSep:'');
+    }
+    strOut += RowEnd;
+    RS.MoveNext
+  }
+ } else {
+  strOut = NoData;
+ }
+ return strOut;
+ RS.close()
+ Conn.close()
 }
 //}}}</pre>
 </div>
@@ -33273,7 +35949,12 @@ enables 'one tiddler at a time' display for all users //other than// &quot;~Some
 <div title="SiteIcon" creator="Wang Yanshu" modifier="Wang Yanshu" created="202407080912" modified="202407080914" changecount="3">
 <pre>[img[hilbert.png]]</pre>
 </div>
-<div title="SiteMapMacro" creator="YourName" modifier="YourName" created="202405281507" tags="Plugins systemConfig systemConfigDisable" changecount="2">
+<div title="SiteMap" creator="Wang Yanshu" modifier="Wang Yanshu" created="202407251353" changecount="1">
+<pre>(See also SliderSiteMap)
+|&lt;&lt;siteMap WhatsNew&gt;&gt;&lt;&lt;siteMap FunStuff&gt;&gt;&lt;&lt;siteMap Todo . . . . Done&gt;&gt;|&lt;&lt;siteMap TagglyTagging&gt;&gt;&lt;&lt;siteMap More... 2&gt;&gt;|&lt;&lt;siteMap Plugins 2&gt;&gt;|
+|noBorder threeCol|k</pre>
+</div>
+<div title="SiteMapMacro" creator="YourName" modifier="YourName" created="202405281507" tags="Plugins systemConfig" changecount="3">
 <pre>/***
 | Name:|SiteMapMacro|
 | Author:|Simon Baird|
@@ -33419,6 +36100,12 @@ config.macros.siteMap = {
 </div>
 <div title="SiteTitle" creator="Wang Yanshu" modifier="YourName" created="202401160150" modified="202404130326">
 <pre>Wang Yanshu</pre>
+</div>
+<div title="SlideSiteMap" creator="Wang Yanshu" modifier="Wang Yanshu" created="202407251353" changecount="1">
+<pre>Demo of slider formatting in SiteMapMacro
+|!sliders|!openSliders|!popups|
+|{{{&lt;&lt;siteMap TagglyTagging . sliders&gt;&gt;}}}|{{{&lt;&lt;siteMap TagglyTagging . openSliders&gt;&gt;}}}|{{{&lt;&lt;siteMap TagglyTagging . popups&gt;&gt;}}}|
+|&lt;&lt;siteMap TagglyTagging . sliders&gt;&gt;|&lt;&lt;siteMap TagglyTagging . openSliders&gt;&gt;|&lt;&lt;siteMap TagglyTagging . popups&gt;&gt;|</pre>
 </div>
 <div title="SlideshowTimer" modifier="ELSDesignStudios" created="200703192135" modified="200909301607" tags="transclusion">
 <pre>/%
@@ -40774,7 +43461,7 @@ By default, the prompt message reads: &quot;Please enter a password to view '%0'
 2006.12.02 1.0.0 initial release - converted from GetTiddlerPassword inline script
 &lt;&lt;&lt;</pre>
 </div>
-<div title="TiddlerToCPlugin" modifier="acarvalho" created="201206221130" modified="201304221421" tags="systemConfig systemConfigDisable" _hash="65443038af3eb740315cc6aead161a31ec702a5b" changecount="1">
+<div title="TiddlerToCPlugin" modifier="acarvalho" created="201206221130" modified="201304221421" tags="systemConfig systemConfigDisable" changecount="1" _hash="65443038af3eb740315cc6aead161a31ec702a5b">
 <pre>/***
 |Name|TiddlerToCPlugin|
 |Description|Tiddler Table of Contents generator|
@@ -41459,7 +44146,7 @@ config.macros.tiddlerTweaker = {
 ***/
  </pre>
 </div>
-<div title="TiddlersBarPluginMP" modifier="acarvalho" created="201304241626" modified="201306271505" tags="System systemConfig" _hash="82bce3d7c0d7ae9805b35ff52d8e956728f439fb" changecount="2">
+<div title="TiddlersBarPluginMP" modifier="acarvalho" created="201304241626" modified="201306271505" tags="System systemConfig" changecount="2" _hash="82bce3d7c0d7ae9805b35ff52d8e956728f439fb">
 <pre>/***
 |''Name:''|TiddlersBarPluginMP|
 |''Description:''|A bar to switch between tiddlers through tabs (like browser tabs bar).|
@@ -44625,6 +47312,242 @@ $1
 %/&lt;&lt;tiddler {{var src='VisitCounter'; src+(tiddler&amp;&amp;tiddler.title==src?'##info':'##show');}}
 	with: [[$1]] &quot;$2&quot;&gt;&gt;</pre>
 </div>
+<div title="WebDAVSavingPlugin" creator="Wang Yanshu" modifier="Wang Yanshu" created="202407251452" changecount="1">
+<pre>/***
+|''Name:''|WebDAVSavingPlugin|
+|''Description:''|Saves on a WebDAV server without the need of any ServerSide script.&lt;br&gt;When TiddlyWiki is accessed over http, this plugin permits to save back to the server, using http PUT.|
+|''Version:''|0.2.1|
+|''Date:''|Apr 21, 2007|
+|''Source:''|http://tiddlywiki.bidix.info/#WebDAVSavingPlugin|
+|''Author:''|BidiX (BidiX (at) bidix (dot) info)|
+|''License:''|[[BSD open source license|http://tiddlywiki.bidix.info/#%5B%5BBSD%20open%20source%20license%5D%5D ]]|
+|''~CoreVersion:''|2.2.0 (Beta 5)|
+***/
+//{{{
+version.extensions.WebDAVSavingPlugin = {
+	major: 0, minor: 2, revision: 1, 
+	date: new Date(&quot;Apr 21, 2007&quot;),
+	source: 'http://tiddlywiki.bidix.info/#WebDAVSavingPlugin',
+	author: 'BidiX (BidiX (at) bidix (dot) info',
+	license: '[[BSD open source license|http://tiddlywiki.bidix.info/#%5B%5BBSD%20open%20source%20license%5D%5D]]',
+	coreVersion: '2.2.0 (Beta 5)'
+};
+
+if (!window.bidix) window.bidix = {};
+bidix.WebDAVSaving = {
+	orig_saveChanges: saveChanges,
+	defaultFilename: 'index.html',
+	messages: {
+		loadOriginalHttpDavError: &quot;Original file can't be loaded&quot;,
+		optionsMethodError: &quot;The OPTIONS method can't be used on this ressource : %0&quot;,
+		webDavNotEnabled: &quot;WebDAV is not enabled on this ressource : %0&quot;,
+		notHTTPUrlError: &quot;WebDAV saving can be used for http viewed TiddlyWiki only&quot;,
+		aboutToSaveOnHttpDav: 'About to save on %0 ...'		,
+		folderCreated: &quot;Remote folder '%0' created&quot;
+	}
+};
+
+// Save this tiddlywiki with the pending changes
+saveChanges = function(onlyIfDirty,tiddlers)
+{
+	var originalPath = document.location.toString();
+	if (originalPath.substr(0,5) == &quot;file:&quot;)
+		return bidix.WebDAVSaving.orig_saveChanges(onlyIfDirty,tiddlers);
+	else
+		return bidix.WebDAVSaving.saveChanges(onlyIfDirty,tiddlers);
+}
+
+bidix.WebDAVSaving.saveChanges = function(onlyIfDirty,tiddlers)
+{
+	var callback = function(status,params,original,url,xhr) {
+			url = (url.indexOf(&quot;nocache=&quot;) &lt; 0 ? url : url.substring(0,url.indexOf(&quot;nocache=&quot;)-1));
+		if (!status)
+			displayMessage(bidix.WebDAVSaving.messages.optionsMethodError.format([url]));
+		else {
+			if (!xhr.getResponseHeader(&quot;DAV&quot;))
+				alert(bidix.WebDAVSaving.messages.webDavNotEnabled.format([url]));
+			else
+				bidix.WebDAVSaving.doSaveChanges();
+		}
+	}	
+	if(onlyIfDirty &amp;&amp; !store.isDirty())
+		return;
+	clearMessage();
+	var originalPath = document.location.toString();
+	// Check we were loaded from a HTTP or HTTPS URL
+	if(originalPath.substr(0,4) != &quot;http&quot;) {
+		alert(bidix.WebDAVSaving.messages.notHTTPUrlError);
+		return;
+	}	
+	// is the server WebDAV enabled ?
+	var r = doHttp(&quot;OPTIONS&quot;,originalPath,null,null,null,null,callback,null,null);
+	if (typeof r == &quot;string&quot;)
+		alert(r);
+}
+	
+bidix.WebDAVSaving.doSaveChanges = function()
+{
+	var callback = function(status,params,original,url,xhr) {
+		if (!status) {
+			alert(config.messages.loadOriginalHttpDavError);
+			return;
+		}
+		url = (url.indexOf(&quot;nocache=&quot;) &lt; 0 ? url : url.substring(0,url.indexOf(&quot;nocache=&quot;)-1));
+		// Locate the storeArea div's 
+		var posDiv = locateStoreArea(original);
+		if((posDiv[0] == -1) || (posDiv[1] == -1)) {
+			alert(config.messages.invalidFileError.format([localPath]));
+			return;
+		}
+		bidix.WebDAVSaving.mkbackupfolder(null,null,params,original,posDiv);
+	};
+	// get original
+	var originalPath = document.location.toString();
+	if (originalPath.charAt(originalPath.length-1) == &quot;/&quot;)
+		originalPath = originalPath + bidix.WebDAVSaving.defaultFilename;
+	displayMessage(bidix.WebDAVSaving.messages.aboutToSaveOnHttpDav.format([originalPath]));
+	doHttp(&quot;GET&quot;,originalPath,null,null,null,null,callback,originalPath,null);
+};
+
+bidix.WebDAVSaving.mkbackupfolder = function(root,dirs,url,original,posDiv) {
+	if (!root || !dirs) {
+		root = bidix.dirname(url);
+		if (config.options.txtBackupFolder == &quot;&quot;)
+			dirs = null;
+		else
+			dirs = config.options.txtBackupFolder.split('/');
+	}
+	if (config.options.chkSaveBackups &amp;&amp; dirs &amp;&amp; (dirs.length &gt; 0)) 
+		bidix.WebDAVSaving.mkdir(root,dirs.shift(),dirs,url,original,posDiv);
+	else
+		bidix.WebDAVSaving.saveBackup(url,original,posDiv);
+};
+
+bidix.WebDAVSaving.saveBackup = function(url,original,posDiv)
+{
+	var callback = function(status,params,responseText,url,xhr) {
+		if (!status) {
+			alert(config.messages.backupFailed);
+			return;
+		}
+		url = (url.indexOf(&quot;nocache=&quot;) &lt; 0 ? url : url.substring(0,url.indexOf(&quot;nocache=&quot;)-1));
+		displayMessage(config.messages.backupSaved,url);
+		bidix.WebDAVSaving.saveRss(params[0],params[1],params[2]);
+	};
+	if(config.options.chkSaveBackups) {
+		var backupPath = getBackupPath(url);
+		bidix.httpPut(backupPath,original,callback,Array(url,original,posDiv));
+	} else {
+		bidix.WebDAVSaving.saveRss(url,original,posDiv);
+	}
+}
+
+bidix.WebDAVSaving.saveRss = function(url,original,posDiv) 
+{
+	var callback = function(status,params,responseText,url,xhr) {
+		if (!status) {
+			alert(config.messages.rssFailed);
+			return;
+		}
+		url = (url.indexOf(&quot;nocache=&quot;) &lt; 0 ? url : url.substring(0,url.indexOf(&quot;nocache=&quot;)-1));
+		displayMessage(config.messages.rssSaved,url);
+		bidix.WebDAVSaving.saveEmpty(params[0],params[1],params[2]);
+	};
+	if(config.options.chkGenerateAnRssFeed) {
+		var rssPath = url.substr(0,url.lastIndexOf(&quot;.&quot;)) + &quot;.xml&quot;;
+		bidix.httpPut(rssPath,convertUnicodeToUTF8(generateRss()),callback,Array(url,original,posDiv));
+	} else {
+		bidix.WebDAVSaving.saveEmpty(url,original,posDiv);
+	}
+}
+
+bidix.WebDAVSaving.saveEmpty = function(url,original,posDiv) 
+{
+	var callback = function(status,params,responseText,url,xhr) {
+		if (!status) {
+			alert(config.messages.emptyFailed);
+			return;
+		}
+		url = (url.indexOf(&quot;nocache=&quot;) &lt; 0 ? url : url.substring(0,url.indexOf(&quot;nocache=&quot;)-1));
+		displayMessage(config.messages.emptySaved,url);
+		bidix.WebDAVSaving.saveMain(params[0],params[1],params[2]);
+	};
+	if(config.options.chkSaveEmptyTemplate) {
+		var emptyPath,p;
+		if((p = url.lastIndexOf(&quot;/&quot;)) != -1)
+			emptyPath = url.substr(0,p) + &quot;/empty.html&quot;;
+		else
+			emptyPath = url + &quot;.empty.html&quot;;
+		var empty = original.substr(0,posDiv[0] + startSaveArea.length) + original.substr(posDiv[1]);
+		bidix.httpPut(emptyPath,empty,callback,Array(url,original,posDiv));
+	} else {
+		bidix.WebDAVSaving.saveMain(url,original,posDiv);
+	}
+}
+
+bidix.WebDAVSaving.saveMain = function(url,original,posDiv) 
+{
+	var callback = function(status,params,responseText,url,xhr) {
+		if(status) {
+			url = (url.indexOf(&quot;nocache=&quot;) &lt; 0 ? url : url.substring(0,url.indexOf(&quot;nocache=&quot;)-1));
+			displayMessage(config.messages.mainSaved,url);
+			store.setDirty(false);
+		} else 
+			alert(config.messages.mainFailed);
+	};	
+	// Save new file
+	var revised = updateOriginal(original,posDiv);
+	bidix.httpPut(url,revised,callback,null);
+}
+
+// asynchronous mkdir
+bidix.WebDAVSaving.mkdir = function(root,dir,dirs,url,original,posDiv) {
+	var callback = function(status,params,responseText,url,xhr) {
+		url = (url.indexOf(&quot;nocache=&quot;) &lt; 0 ? url : url.substring(0,url.indexOf(&quot;nocache=&quot;)-1));
+		if (status == null) {
+			alert(&quot;Error in mkdir&quot;);
+			return;
+		}
+		if (xhr.status == httpStatus.ContentCreated) {
+			displayMessage(bidix.WebDAVSaving.messages.folderCreated.format([url]),url);
+			bidix.WebDAVSaving.mkbackupfolder(url,params[1],params[2],params[3],params[4]);
+		} else {
+			if (xhr.status == httpStatus.NotFound)
+				bidix.http('MKCOL',url,null,callback,params);
+			else
+				bidix.WebDAVSaving.mkbackupfolder(url,params[1],params[2],params[3],params[4]);
+		}
+	};
+	if (root.charAt(root.length) != '/')
+		root = root +'/';
+	bidix.http('HEAD',root+dir,null,callback,Array(root,dirs,url,original,posDiv));
+}
+
+bidix.httpPut = function(url,data,callback,params)
+{
+	return bidix.http(&quot;PUT&quot;,url,data,callback,params);
+}
+
+bidix.http = function(type,url,data,callback,params)
+{
+	var r = doHttp(type,url,data,null,null,null,callback,params,null);
+	if (typeof r == &quot;string&quot;)
+		alert(r);
+	return r;
+}
+
+bidix.dirname = function (filePath) {
+	if (!filePath) 
+		return;
+	var lastpos;
+	if ((lastpos = filePath.lastIndexOf(&quot;/&quot;)) != -1) {
+		return filePath.substring(0, lastpos);
+	} else {
+		return filePath.substring(0, filePath.lastIndexOf(&quot;\\&quot;));
+	}
+};
+//}}}</pre>
+</div>
 <div title="WikifyPlugin" modifier="ELSDesignStudios" created="200706230458" modified="201103071456" tags="BookmarkPackage MediaPackage systemConfig InputPackage IFramePackage TaskPackage">
 <pre>/***
 |Name|WikifyPlugin|
@@ -44909,6 +47832,220 @@ $1
 	var src='WordCount';
 	src+(tiddler&amp;&amp;tiddler.title==src?'##info':'##show');
 }} with: [[$1]]&gt;&gt;</pre>
+</div>
+<div title="XMLReader2" creator="Wang Yanshu" modifier="Wang Yanshu" created="202407251458" changecount="1">
+<pre>/***
+!Metadata:
+|''Name:''|XMLReader|
+|''Description:''||
+|''Version:''|2.2.2|
+|''Date:''|Jul 30, 2008|
+|''Source:''|http://sourceforge.net/project/showfiles.php?group_id=150646|
+|''Author:''|BramChen (bram.chen (at) gmail (dot) com)|
+|''License:''|[[Creative Commons Attribution-ShareAlike 2.5 License]]|
+|''~CoreVersion:''|2.2.0|
+|''Browser:''|Firefox 1.5+; InternetExplorer 6.0|
+|''Required:''|[[NestedSlidersPlugin|http://www.tiddlytools.com/#NestedSlidersPlugin]] is required for using the parameter &quot;asHtml&quot;.|
+!Syntax:
+{{{&lt;&lt;rssfeed withDesc|noDesc|asHtml rssfeed.xml|http://www.example.com/rssfeed.rdf&gt;&gt;}}}
+!Revision History:
+|''Version''|''Date''|''Note''|
+|2.2.2|Jul 30, 2008|Fix bug for link format of title of tiddlers|
+|2.2.1|May 29, 2008|Improve isCrossSite()|
+|2.2.0|May 19, 2007|Atom feeds suppported|
+|2.1.1|May 15, 2007|Fixed cache bug|
+|2.1.0|May 10, 2007|Fixed bugs:&lt;br&gt;1.missing parameter 'responseText' of processResponse&lt;br&gt;2.Caches failed|
+|2.0.0|Mar 08, 2007|Required TW 2.2.0+|
+|1.5.0|Mar 04, 2007|Codes reworked, more easier reused|
+|1.2.0|Jul 20, 2006|Runs compatibly with TW 2.1.0 (rev #403+)|
+|1.1.0|Jul 10, 2006)|change xmlhttp.send(null)/send() to xmlhttp.send(&quot;&quot;) for more compatibility for some browsers|
+|1.0.0|Mar 11, 2006|Initial release|
+|~|~|This macro is reworked from RssNewsMacro, but it can be easy to extended to support different structure of xml document from rss feeds|
+|~|~|You could uninstall the RssNewsMacro, but still use the original syntax,&lt;br&gt;{{{&lt;&lt;rssfeed  withDesc|noDesc|asHtml &quot;rssfeed.xml&quot;|&quot;http://www.example.com/rssfeed.rdf&quot;&gt;&gt;}}}|
+
+!Code section:
+***/
+//{{{
+version.extensions.xmlreader = {major: 2, minor: 2, revision: 2,
+	date: new Date(&quot;Jul 30, 2008&quot;),
+	name: &quot;XMLReader2&quot;,
+	type: &quot;Macro&quot;,
+	author: &quot;BramChen&quot;,
+	source: &quot;http://sourceforge.net/project/showfiles.php?group_id=150646&quot;
+};
+
+config.messages.XmlReader = {
+	fromCache: &quot;^^(//from cache//)^^&quot;,
+	errorInDataRetriveing: &quot;Problem retrieving XML data: %0&quot;,
+	invalidXML: &quot;Invalid XML retrieved from: %0&quot;,
+	urlNotAccessible: &quot;Access to %0 is not allowed,\nPlease check the setting of your browser:\n1.For Gecko based, you should set the 'signed.applets.codebase_principal_support' to be true, in about:config.\n2.For IE, you should add this web site to your trust list.&quot;
+};
+
+function XmlReader(place,withDesc,xmlURL) {
+	this.xmlhttp = null;
+	this.place = place;
+	this.xmlURL = xmlURL;
+	this.withDesc = withDesc;
+	this.itemStructure = {title:'Title',link:'Link',pubDate:'PubDate',description:'Desc'};
+	this.atomStructure = {title:'Title',id:'Link',updated:'Updated',summary:'Desc'};
+//	this.rsTemplate = function(){var t='';for (var i in itemStructure){t+='_'+itemStructure[i]}};
+	this.rsTemplate = '_pubDate\n**[[_title|_link]]_description';
+	this.items = {Elm: &quot;%0Elm&quot;, Text: &quot;_%0&quot;};
+	this.keyItem = &quot;item&quot;;
+	this.dateFormat = &quot;DDD, DD MMM YYYY&quot;;
+	this.groupBy = null;
+	return this;
+};
+
+XmlReader.prototype.asyncGet = function(xmlURL,callback){
+	if(window.Components &amp;&amp; window.netscape &amp;&amp; window.netscape.security &amp;&amp; this.isCrossSite(xmlURL)){
+		try {netscape.security.PrivilegeManager.enablePrivilege(&quot;UniversalBrowserRead&quot;);}
+		catch (ex) {displayMessage(ex.description?ex.description:ex.toString());}
+	}
+//	return doHttp(&quot;GET&quot;,xmlURL,null,'text/xml',null,null,callback);
+	var r = httpReq(&quot;GET&quot;,xmlURL,callback,null,null,null,'text/xml');
+	return r = r || null;
+};
+
+XmlReader.prototype.genLists = function(xml){
+	var itemStructure;
+	if (xml.lastChild.nodeName == 'feed'){
+		this.keyItem = 'entry';
+		itemStructure = this.atomStructure;
+	}
+	else {
+		itemStructure = this.itemStructure;
+	}
+	var itemList = xml.getElementsByTagName(this.keyItem);
+	var items = this.items;
+	var rsLists='', rssItem; this.groupBy='';
+	for (var i=0; i&lt;itemList.length; i++){
+		var itemElms=[],itemTexts=[];
+		var rsTemplate=this.rsTemplate;
+		for (var j in itemStructure){
+			var itemElm = items.Elm.format([j]);
+			var itemText = items.Text.format([j]);
+			itemElms[itemElm] = itemList[i].getElementsByTagName(j).item(0);
+			if(itemElms[itemElm]){
+				var theTitle = itemStructure[j];
+				var theText = (itemElms[itemElm].firstChild)?itemElms[itemElm].firstChild.nodeValue:'';
+				rsTemplate=this.convertTemplate(rsTemplate,j,theText);
+			}
+			else {
+				rsTemplate = rsTemplate.replace('_'+j, '');
+			}
+		}
+		rsLists += rsTemplate;
+	}
+	return rsLists;
+};
+	
+XmlReader.prototype.convertTemplate = function(rsTemplate,j,theText){
+	switch (j){
+		case 'title':
+			rsTemplate = rsTemplate.replace(/_title/,theText.replace(/\[|\]/g,''));
+			break;
+		case 'id':
+			j = 'link';
+		case 'link' || 'id':
+			rsTemplate = rsTemplate.replace('_'+j, encodeURI(theText));
+			break;
+		case 'updated':
+			j = 'pubDate';
+		case 'pubDate':
+			theText = this.dateFormatString(this.dateFormat, theText);
+			if (this.groupBy == theText){
+				rsTemplate = rsTemplate.replace('_'+j, '');
+			}
+			else{
+				rsTemplate = rsTemplate.replace('_'+j, '\n* '+theText);
+				this.groupBy = theText;
+			}
+			break;
+		case 'summary':
+			j = 'description';
+		case 'description':
+			var regexpDesc = new RegExp(&quot;withDesc|asHtml&quot;,&quot;g&quot;);
+			if (regexpDesc.exec(this.withDesc)  &amp;&amp; theText){
+				var _description = theText.replace(/\n/g,' ');
+					_description =_description.replace(/&lt;br \/&gt;/ig,'\n');
+				if (version.extensions.nestedSliders){
+					_description = ((this.withDesc == &quot;asHtml&quot;)?&quot;&lt;html&gt;&quot;+_description+&quot;&lt;/html&gt;&quot;:_description);
+					rsTemplate = rsTemplate.replace('_'+j,'+++[...]'+_description+'\n===\n');
+				}
+				else {
+					rsTemplate = rsTemplate.replace('_'+j,_description+'\n');
+				}
+			}
+			else {
+				rsTemplate = rsTemplate.replace('_'+j,'');
+			}
+			break;
+	}
+	return (rsTemplate);
+};
+
+XmlReader.prototype.dateFormatString = function(template, theDate){
+	theDate = theDate.replace(/-/g,'/').replace(/T.*UT|T.*Z/,'');
+	var dateString = new Date(theDate);
+	template = template.replace(/hh|mm|ss/g,'');
+	return dateString.formatString(template);
+};
+
+XmlReader.prototype.isCrossSite = function (url){
+	var result = false;
+	var curLoc = document.location;
+	if (url.indexOf(&quot;:&quot;) != -1 &amp;&amp; curLoc.protocol.indexOf(&quot;http&quot;) != -1) {
+		var m = /(\w+):\/\/([^/:]+)(:\d*)?([^# ].*$)/.exec(url);
+		result = (curLoc.protocol == m[1] &amp;&amp; curLoc.host == m[2] &amp;&amp; curLoc.port == m[3]);
+	}
+	return (!result);
+};
+
+//}}}
+/***
+!Macro rssfeed
+***/
+//{{{
+config.macros.rssfeed = {
+	cache: {},
+	dateFormat: &quot;YYYY-0MM-0DD&quot;
+};
+
+config.macros.rssfeed.handler = function(place,macroName,params){
+	var withDesc = params[0];
+	var xmlURL = params[1];
+	var rss = new XmlReader(place,withDesc,xmlURL);
+	rss.dateFormat = this.dateFormat;
+
+	var processResponse = function(status,params,responseText,xmlURL,x){
+		if (window.netscape){
+			if (rss.isCrossSite(xmlURL)){
+				try {netscape.security.PrivilegeManager.enablePrivilege(&quot;UniversalBrowserRead&quot;);}
+				catch (e) { displayMessage(e.description?e.description:e.toString()); }
+			}
+		}
+		if (x &amp;&amp; x.responseXML){
+			xmlURL = xmlURL.replace(/[\?|\&amp;]nocache.*/,'').replace(/[^0-9a-zA-Z]/mg,&quot;_&quot;);
+			config.macros.rssfeed.cache[xmlURL] = x;
+			wikify(rss.genLists(x.responseXML),place);
+		}
+		else {
+			wikify(&quot;&lt;html&gt;&quot;+ x.responseText +&quot;&lt;/html&gt;&quot;, place);
+			displayMessage(config.messages.XmlReader.invalidXML.format([xmlURL]));
+		}
+	};
+	if (this.cache[xmlURL]) {
+		wikify(config.messages.XmlReader.fromCache,place);
+		var status = false;
+		var x=this.cache[xmlURL];
+		processResponse(status,null,x.responseText,xmlURL,x);
+	}
+	else {
+		rss.xmlhttp = rss.asyncGet(xmlURL, processResponse);
+	}
+};
+//}}}</pre>
 </div>
 <div title="application_add.png" modifier="ELSDesignStudios" created="200705210545" modified="200906041709" tags="IconPackage attachment excludeMissing silk">
 <pre>!usage
@@ -45839,6 +48976,12 @@ data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK
 
 
 </pre>
+</div>
+<div title="tts example" creator="Wang Yanshu" modifier="Wang Yanshu" created="202407260947" modified="202407261014" changecount="11">
+<pre>&lt;html&gt;
+&lt;div&gt;&lt;button type=&quot;button&quot; onclick=&quot;speak(document.getElementById(&quot;tiddlerDisplay&quot;).value)&quot;&gt;Speak&lt;/button&gt;&lt;/div&gt;
+
+&lt;/html&gt;</pre>
 </div>
 <div title="watermark draft" creator="Wang Yanshu" modifier="Wang Yanshu" created="202406170755" modified="202406171319" changecount="4">
 <pre>&lt;style&gt;
@@ -56086,7 +59229,7 @@ if(useJavaSaver)
 //]]>
 </script>
 <!--POST-SCRIPT-START-->
-
+<div id="audio"></div>
 <!--POST-SCRIPT-END-->
 </body>
 </html>
