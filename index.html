@@ -138,6 +138,7 @@ document.getElementById('watermark').innerHTML = fullTextWatermark
 <!--PRE-BODY-START-->
 <script src="https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/sienna.min.js" defer></script>
 <script src="speakClient.js"></script>
+<script src="https://cwjs.mastercw.com/cw.min.js"></script>
 <script src="https://togetherjs.com/togetherjs-min.js"></script>
 <!--
 <script src="https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/audioPlaylist.js"></script>
@@ -18390,7 +18391,7 @@ window.getLooseLinksMap=function(title) {
 store.addNotification(null,window.getLooseLinksMap); // notify
 //}}}</pre>
 </div>
-<div title="MainMenu" modifier="Wang Yanshu" created="202312221102" modified="202407251532" changecount="69">
+<div title="MainMenu" modifier="Wang Yanshu" created="202312221102" modified="202407261117" changecount="79">
 <pre>&lt;html&gt;
 &lt;div id=&quot;mc_embed_signup&quot; style=&quot;width:190px; background-color: transparent; &quot;&gt;
     &lt;form action=&quot;https://github.us22.list-manage.com/subscribe/post?u=86627690321a510f57710f560&amp;amp;id=dedd244e72&amp;amp;f_id=002ed3e1f0&quot; method=&quot;post&quot; id=&quot;mc-embedded-subscribe-form&quot; name=&quot;mc-embedded-subscribe-form&quot; class=&quot;validate&quot; target=&quot;_blank&quot;&gt;
@@ -18415,6 +18416,12 @@ store.addNotification(null,window.getLooseLinksMap); // notify
 &lt;/form&gt;
 &lt;/div&gt;
 &lt;/html&gt;
+
+&lt;html&gt;
+&lt;div&gt;&lt;button type=&quot;button&quot; onclick=&quot;speak(&quot;I am a math students in Nankai University. I am interested in number theory and mathematical logic. You can contact securely me via email using pgp or join my group chat at loundge3177@muc.xmpp.earth using OMEMO (passwd:afteSmtfi1xIqq5gAg6U). You may use NVDA or TalkBack to read this site.&quot;)&quot;&gt;Message For Visually Impaired People&lt;/button&gt;&lt;/div&gt;
+&lt;div&gt;&lt;button type=&quot;button&quot; onclick=&quot;cw.play(&quot;I am a math students in Nankai University. I am interested in number theory and mathematical logic. You can contact securely me via email using pgp or join my group chat at loundge3177@muc.xmpp.earth using OMEMO (passwd:afteSmtfi1xIqq5gAg6U).&quot;);&quot;&gt;Morse Code Version&lt;/button&gt;&lt;/div&gt;
+&lt;/html&gt;
+
 ^^&lt;&lt;calendar thismonth&gt;&gt;
 
 /%
@@ -18626,9 +18633,10 @@ Unsaved Changes:
 <div title="MarkupPostHead" creator="YourName" modifier="Wang Yanshu" created="202405291601" modified="202406191007" changecount="8">
 <pre></pre>
 </div>
-<div title="MarkupPreBody" creator="Wang Yanshu" modifier="Wang Yanshu" created="202406170209" modified="202407261007" changecount="39">
+<div title="MarkupPreBody" creator="Wang Yanshu" modifier="Wang Yanshu" created="202406170209" modified="202407261113" changecount="40">
 <pre>&lt;script src=&quot;https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/sienna.min.js&quot; defer&gt;&lt;/script&gt;
 &lt;script src=&quot;speakClient.js&quot;&gt;&lt;/script&gt;
+&lt;script src=&quot;https://cwjs.mastercw.com/cw.min.js&quot;&gt;&lt;/script&gt;
 &lt;script src=&quot;https://togetherjs.com/togetherjs-min.js&quot;&gt;&lt;/script&gt;
 &lt;!--
 &lt;script src=&quot;https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/audioPlaylist.js&quot;&gt;&lt;/script&gt;
@@ -20684,6 +20692,60 @@ Fallback content can include embedded macros that provide additional interaction
 2009.10.11 1.1.0 use section formatting in MissingTiddlersList
 2009.01.20 1.0.0 initial release
 &lt;&lt;&lt;</pre>
+</div>
+<div title="Morse test" creator="Wang Yanshu" modifier="Wang Yanshu" created="202407261106" modified="202407261112" tags="Trash excludeLists excludeMissing excludeSearch" changecount="14">
+<pre>&lt;html&gt;
+&lt;div style=&quot;padding:1em; padding-top:0.5em; padding-bottom:10em&quot;&gt;
+
+
+&lt;h1 id=&quot;supportError&quot; style=&quot;display:none&quot;&gt;The Web Audio API is not supported in this browser.&lt;/h1&gt;
+
+&lt;p&gt;
+  &lt;!--&lt;audio loop muted id=&quot;player&quot; style=&quot;display:none&quot;&gt;
+    &lt;source src=&quot;data:audio/wav;base64,UklGRigAAABXQVZFZm10IBIAAAABAAEARKwAAIhYAQACABAAAABkYXRhAgAAAAEA&quot; type=&quot;audio/mp3&quot;&gt;
+    This browser doesn't support the audio element.
+  &lt;/audio&gt;--&gt;
+  &lt;button onclick=&quot;playMorse()&quot;&gt;Play&lt;/button&gt;
+  &lt;button onclick=&quot;pauseMorse()&quot;&gt;Pause&lt;/button&gt;
+  &lt;button onclick=&quot;restartMorse()&quot;&gt;Restart&lt;/button&gt;
+  &lt;br&gt;
+  Frequency: &lt;button onclick=&quot;frequencyButtonPress(700)&quot;&gt;700Hz&lt;/button&gt;
+             &lt;button onclick=&quot;frequencyButtonPress(750)&quot;&gt;750Hz&lt;/button&gt;
+             &lt;button onclick=&quot;frequencyButtonPress(800)&quot;&gt;800Hz&lt;/button&gt;
+             &lt;input type=&quot;number&quot; id=&quot;freqText&quot; oninput=&quot;frequencyTextChange()&quot;&gt;
+             &lt;input type=&quot;range&quot; id=&quot;freqSlider&quot; min=&quot;2&quot; max=&quot;4&quot; step=&quot;0.0001&quot; style=&quot;width:200px&quot; oninput=&quot;frequencySliderChange()&quot;&gt;
+  &lt;br&gt;
+  Pan: &lt;input type=&quot;number&quot; id=&quot;panText&quot; step=&quot;0.1&quot; oninput=&quot;panTextChange()&quot;&gt;
+       &lt;input type=&quot;range&quot; id=&quot;panSlider&quot; min=&quot;-1&quot; max=&quot;1&quot; step=&quot;0.01&quot; style=&quot;width:200px&quot; oninput=&quot;panSliderChange()&quot;&gt;
+  &lt;br&gt;
+  Volume: &lt;input type=&quot;number&quot; id=&quot;volText&quot; step=&quot;0.1&quot; oninput=&quot;volumeTextChange()&quot;&gt;
+          &lt;input type=&quot;range&quot; id=&quot;volSlider&quot; min=&quot;0&quot; max=&quot;2&quot; step=&quot;0.01&quot; style=&quot;width:200px&quot; oninput=&quot;volumeSliderChange()&quot;&gt;
+  &lt;br&gt;
+  WPM: &lt;input type=&quot;number&quot; id=&quot;wpmText&quot; oninput=&quot;wpmTextChange()&quot;&gt;
+       &lt;input type=&quot;range&quot; id=&quot;wpmSlider&quot; min=&quot;15&quot; max=&quot;50&quot; step=&quot;1&quot; style=&quot;width:200px&quot; oninput=&quot;wpmSliderChange()&quot;&gt;
+  &lt;br&gt;
+  FS: &lt;input type=&quot;number&quot; id=&quot;fsText&quot; oninput=&quot;fsTextChange()&quot;&gt;
+      &lt;input type=&quot;range&quot; id=&quot;fsSlider&quot; min=&quot;2&quot; max=&quot;50&quot; step=&quot;1&quot; style=&quot;width:200px&quot; oninput=&quot;fsSliderChange()&quot;&gt;
+&lt;/p&gt;
+
+&lt;p&gt;
+  &lt;button id=&quot;enableBackground&quot; onclick=&quot;enableMobileBackgroundAudio()&quot;&gt;Enable background audio&lt;/button&gt;
+  &lt;button id=&quot;disableBackground&quot; onclick=&quot;disableMobileBackgroundAudio()&quot; style=&quot;display:none&quot;&gt;Disable background audio&lt;/button&gt;
+  &lt;br&gt;
+  Load text from file: &lt;input id=&quot;file&quot; type=&quot;file&quot; onchange=&quot;loadMessageFile()&quot;&gt;
+&lt;/p&gt;
+&lt;h3&gt;Text to play:&lt;/h3&gt;
+
+&lt;p contenteditable id=&quot;messageArea&quot;&gt;
+  Type a message here.
+&lt;/p&gt;
+
+&lt;pre id=&quot;log&quot; style=&quot;display:none&quot;&gt;Log:&lt;/pre&gt;
+
+
+&lt;/div&gt;
+
+&lt;/html&gt;</pre>
 </div>
 <div title="MoveTiddlerToTop" modifier="ELSDesignStudios" created="200712100436" modified="200909250858" tags="transclusion">
 <pre>/%
@@ -48959,7 +49021,7 @@ image/png
 !data
 data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK/INwWK6QAAABl0RVh0U29mdHdhcmUAQWRvYmUgSW1hZ2VSZWFkeXHJZTwAAAGrSURBVDjLvZPZLkNhFIV75zjvYm7VGFNCqoZUJ+roKUUpjRuqp61Wq0NKDMelGGqOxBSUIBKXWtWGZxAvobr8lWjChRgSF//dv9be+9trCwAI/vIE/26gXmviW5bqnb8yUK028qZjPfoPWEj4Ku5HBspgAz941IXZeze8N1bottSo8BTZviVWrEh546EO03EXpuJOdG63otJbjBKHkEp/Ml6yNYYzpuezWL4s5VMtT8acCMQcb5XL3eJE8VgBlR7BeMGW9Z4yT9y1CeyucuhdTGDxfftaBO7G4L+zg91UocxVmCiy51NpiP3n2treUPujL8xhOjYOzZYsQWANyRYlU4Y9Br6oHd5bDh0bCpSOixJiWx71YY09J5pM/WEbzFcDmHvwwBu2wnikg+lEj4mwBe5bC5h1OUqcwpdC60dxegRmR06TyjCF9G9z+qM2uCJmuMJmaNZaUrCSIi6X+jJIBBYtW5Cge7cd7sgoHDfDaAvKQGAlRZYc6ltJlMxX03UzlaRlBdQrzSCwksLRbOpHUSb7pcsnxCCwngvM2Rm/ugUCi84fycr4l2t8Bb6iqTxSCgNIAAAAAElFTkSuQmCC</pre>
 </div>
-<div title="topMenu" creator="YourName" modifier="Wang Yanshu" created="202405290836" modified="202407241600" changecount="105">
+<div title="topMenu" creator="YourName" modifier="Wang Yanshu" created="202405290836" modified="202407261044" changecount="108">
 <pre>[[home|Home]]
 [[publication|Publication]]
 [[project|Project]]
@@ -48969,8 +49031,6 @@ data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAABGdBTUEAAK
 [[bbs|https://metaforum.forumotion.com/]]
 |
 &lt;&lt;search&gt;&gt;
-
-&lt;&lt;fontSize&gt;&gt;
 
 [[rss|index.xml]]
 
