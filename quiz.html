@@ -50,7 +50,7 @@ for key, value in default_values.items():
     st.session_state.setdefault(key, value)
 
 # Load quiz data
-with open('content/sat.json', 'r', encoding='utf-8') as f:
+with open('https://raw.githubusercontent.com/wangyenshu/wangyenshu.github.io/main/content/sat.json', 'r', encoding='utf-8') as f:
     quiz_data = json.load(f)
 
 def restart_quiz():
@@ -129,7 +129,7 @@ if st.session_state.answer_submitted:
     else:
         st.write(f"Quiz completed! Your score is: {st.session_state.score} / {st.session_state.maxcounter * 10}")
         if st.session_state.score > (st.session_state.maxcounter-2) * 10:
-            st.write(st.secrets["secret"])
+            st.write("Well Done!")
             
         if st.button('Restart', on_click=restart_quiz):
             pass
