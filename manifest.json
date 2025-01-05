@@ -21,5 +21,9 @@
   "start_url": "https://wangyenshu.github.io/",
   "dir": "auto",
   "lang": "en",
-  "orientation": "any"
+  "orientation": "any",
+  "scope": "\"scope\": \"https://wangyenshu.github.io\"",
+  "categories": [
+    "lifestyle"
+  ]
 }
