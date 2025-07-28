@@ -46,6 +46,8 @@ jobs:
         else
           echo "Warning: 'passthrough' directory not found. Skipping copy."
         fi
+        cd docs
+        touch .nojekyll
 
     - name: Commit and push docs to build_site branch
       env:
