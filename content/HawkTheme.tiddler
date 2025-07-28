@@ -1,0 +1,154 @@
+<div title="HawkTheme" modifier="Wang Yanshu" created="202412180847">
+<pre>|Name         |HawkTheme|
+|Description  |A ~TiddlyWiki pinky hawk theme|
+|Version      |1.1|
+|Author       |?, Yakov Litvin|
+|Source       |https://yakovl.github.io/TiddlyThemes/themes/hawk.html#HawkTheme|
+|~PageTemplate|##PageTemplate|
+|~ViewTemplate|##ViewTemplate|
+|~EditTemplate|##EditTemplate|
+|~StyleSheet|##StyleSheet|
+
+Installation notes:
+* ColorPalette is not packed into the theme yet (add it manually)
+* the theme uses images that should be downloaded for full installation: [[hawk_bg_top.png|./hawk_bg_top.png]], [[hawk_tags_matrix.png|./hawk_tags_matrix.png]], [[hawk_bg_search.png|./hawk_bg_search.png]]
+* see also TopMenu, MainMenu, [[Footer]], OptionsPanel, adjusted on the demo page
+Todos:
+* pack ColorPalette into the theme as well (requires either changes like {{{[[ColorPalette::Foreground]]}}} → {{{[[HawkTheme::Foreground]]}}} or may be fixing something in the TW core)
+* check if we can avoid modifying ViewTemplate, EditTemplate (use CSS instead)
+* fix usability:
+** add [[StyleSheet]] inclusion into CSS section (and make sure it will cause refresh on edit!)
+** move tid toolbars to the right, increase font size
+** shadow tiddlers should differ visually (if not italics in titles, then something else)
+** hidden overflow doesn't work nicely with tables
+** backstage: fonts are too small!
+* fix alignment of the search button/inbox
+* get rid of the bg image hack (not flexible, opening backstage breaks it)
+* ensure responsiveness
+* review colors: at least messageArea and code don't look like a fit
+* lint the StyleSheet
+
+!PageTemplate
+<!--{{{-->
+  <div class='header'>
+      <div class='headerShadow'>
+        <span class='siteTitle' refresh='content' tiddler='SiteTitle'></span>&nbsp;
+        <span class='siteSubtitle' refresh='content' tiddler='SiteSubtitle'></span>
+      </div>
+      <div class='headerForeground'>
+        <span class='siteTitle' refresh='content' tiddler='SiteTitle'></span>&nbsp;
+        <span class='siteSubtitle' refresh='content' tiddler='SiteSubtitle'></span>
+      </div>
+  </div>
+  <div id='topMenu' refresh='content' tiddler='TopMenu'></div>
+  <div id='mainMenu' refresh='content' tiddler='MainMenu'></div>
+  <div id='displayArea'>
+    <div id='messageArea'></div>
+    <div id='tiddlerDisplay'></div>
+  </div>
+  <div id='footer' refresh='content' force='true' tiddler='Footer'></div>
+<!--}}}-->
+
+!ViewTemplate
+<!--{{{-->
+<div class='title' macro='view title'></div>
+<div class='toolbar' role='navigation' macro='toolbar [[ToolbarCommands::ViewToolbar]]'></div>
+<div class='subtitle'>
+  <span macro='view modifier link'></span>, <span macro='view modified date'></span> (<span macro='message views.wikified.createdPrompt'></span> <span macro='view created date'></span>)
+</div>
+<div class='tagging' macro='tagging'></div>
+<div class='tagged' macro='tags'></div>
+<div class='viewer' macro='view text wikified'></div>
+<div class='tagClear'></div>
+<!--}}}-->
+
+!EditTemplate
+<!--{{{-->
+<div class='title' macro='view title'></div>
+<div class='toolbar' macro='toolbar [[ToolbarCommands::EditToolbar]]'></div>
+<div class='editor' macro='edit title'></div>
+<div macro='annotations'></div>
+<div class='editor' macro='edit text'></div>
+<div class='editor' macro='edit tags'></div>
+<div class='editorFooter'>
+  <span macro='message views.editor.tagPrompt'></span><span macro='tagChooser excludeLists'></span>
+</div>
+<!--}}}-->
+
+!StyleSheet
+/*{{{*/
+body {
+	background:#fff url(hawk_bg_top.png) repeat-x top left;
+}
+
+#backstagePanel {
+	width: unset;
+	margin:0em 3em;
+}
+
+#contentWrapper { width:750px; text-align:left; margin-left:auto; margin-right:auto; position:relative; overflow:hidden; clear:both; }
+
+.header { display:block; height:80px; background:[[ColorPalette::Foreground]]; overflow:hidden; clear:both; position:relative; }
+.headerForeground { padding-top:2em; }
+.headerForeground span.siteTitle h1 { position:absolute; margin:0; padding:0; top:10px; left:8px;}
+.headerShadow { display:none; }
+
+#topMenu ul { margin:0; padding:0; list-style:none; width:100%; overflow:hidden; clear:both; }
+#topMenu ul li { float:left; margin:0; padding:0; }
+#topMenu ul li a { height:18px; vertical-align: middle; text-decoration:none; display:block; float:left; font-size:12px;  font-weight:bold; color:[[ColorPalette::Background]]; margin:0 20px 0 0; padding:5px 8px 5px 8px }
+#topMenu ul li a:hover { background-color:[[ColorPalette::MainAccentLight]]; }
+#topMenu a.button { float:right; margin:0.8em 0 0 1.5em; color:[[ColorPalette::MainAccentLight]]; border-width:0;}
+#topMenu a.button:hover { color:[[ColorPalette::MainAccent]]; background-color:[[ColorPalette::Background]];}
+
+#mainMenu { margin:30px 0 4em 0; padding:0; width:160px;  text-align:left; line-height:1em; overflow:hidden; clear:both; float:left; position: inherit;}
+#mainMenu ul { list-style:none; margin:0; padding:0; }
+#mainMenu ul li {margin:0; padding:0;}
+#mainMenu ul li a.tiddlyLink {margin:0; padding:6px 8px; display:block; text-decoration:none; font-size:1.1em; font-weight:bold; color:[[ColorPalette::Foreground]]; text-align:left; clear:left; }
+#mainMenu ul li a.tiddlyLink:hover { color:[[ColorPalette::Background]]; background-color:[[ColorPalette::Foreground]]; }
+#mainMenu a.button {margin-left:8px;  color:[[ColorPalette::MainAccentLight]]; border-width:0px; }
+#mainMenu a.button:hover { color:[[ColorPalette::MainAccent]]; background-color:[[ColorPalette::Background]];}
+#mainMenu input.txtOptionInput {border:solid 1px #ddd; border-top:solid 1px #aaa; border-bottom:solid 1px #eee; margin:4px 0 0 8px; padding:2px 4px; color:[[ColorPalette::LessSubtle]]; background:transparent url(hawk_bg_search.png) repeat-x top left;}
+
+#sidebar { top:120px; right:0; overflow:hidden; clear:both;}
+
+#displayArea { float:right; margin:30px 0 4em 10px;}
+#tiddlerDisplay { float:left; margin:0; width:570px;}
+
+#footer { margin-top:40px; border-top:solid 1px [[ColorPalette::Subtle]]; padding:20px 0; color:[[ColorPalette::Subtle]];  overflow:hidden; clear:both}
+#footer a.button { color:[[ColorPalette::MainAccent]]; border-width:0;}
+#footer a.button:hover { color:[[ColorPalette::MainAccentLight]]; background-color:[[ColorPalette::Background]];}
+
+div.tiddler { margin:0em 0 4em 0; padding-top:0em; }
+div.tiddler div.title { font-size:2em; margin-left:0; color:[[ColorPalette::MainAccent]];  display:inline;}
+div.tiddler div.viewer { font-size:1.3em; margin-left:0px; }
+div.tiddler div.subtitle { display:none; }
+div.tiddler div.toolbar { text-align:left; margin-left:0.5em; display:inline;}
+div.tiddler div.toolbar > a.button { color:[[ColorPalette::Subtle]]; border-width:0;}
+div.tiddler div.toolbar > a.button:hover { color:[[ColorPalette::LessSubtle]]; background:[[ColorPalette::Background]];}
+div.tiddler div.tagged { background-color:[[ColorPalette::Background]]; border-width:0; margin:0 0 2em 0;}
+div.tiddler div.tagged ul li.listTitle { display:none; }
+div.tiddler div.tagged ul li a { font-size:1em; display:block; border:solid 1px [[ColorPalette::Background]]; margin-bottom:2px; padding:3px 3px 3px 20px; text-decoration:none; background:transparent url(hawk_tags_matrix.png) no-repeat top left; color:[[ColorPalette::SecondAccent]]; }
+div.tiddler div.tagged ul li a:hover { border-color:[[ColorPalette::SecondAccentLight]]; background:[[ColorPalette::SecondAccentLight]] url(hawk_tags_matrix.png) no-repeat 0 -59px; background-position: 0 -59px; color:[[ColorPalette::SecondAccent]];}
+div.tiddler div.tagging { float:none; border:solid 1px [[ColorPalette::SubtleLight]]; padding:3px; background-color:[[ColorPalette::SubtleSuperLight]]; overflow:hidden; clear:both; zoom:1;}
+div.tiddler div.tagging ul li { float:left; margin:0 1.5em 0 0; color:[[ColorPalette::LessSubtle]]; }
+div.tiddler div.tagging ul li a { color:[[ColorPalette::MainAccentLight]]; }
+div.tiddler div.tagging ul li a:hover { color:[[ColorPalette::MainAccent]]; background-color:[[ColorPalette::SubtleSuperLight]];}
+div.tiddler div.viewer img { float:left; clear:left; margin:0 1em 1em 0;}
+div.tiddler table {margin:0; border-width:0px; }
+div.tiddler table tr { border-width:0px; }
+div.tiddler table tr td { border-width:0px; vertical-align:top; }
+div.tiddler table tr td * { float:left; clear:left; }
+
+.viewer pre { font-size:0.85em; }
+
+#popup { border:solid 1px [[ColorPalette::Subtle]]; border-bottom:solid 1px [[ColorPalette::LessSubtle]]; border-right:solid 1px [[ColorPalette::LessSubtle]]; background-color:[[ColorPalette::Background]]; padding:1px 0 0 0;}
+#popup li a { background-color:[[ColorPalette::SubtleSuperLight]]; color:[[ColorPalette::MuchLessSubtle]]; text-align:left;}
+#popup li a:hover { background-color:[[ColorPalette::SubtleLight]]; color:[[ColorPalette::MuchLessSubtle]];}
+#popup li.listBreak div {border-bottom:solid 1px [[ColorPalette::Background]]; border-top:solid 1px [[ColorPalette::SubtleLight]]; margin:0;}
+
+form.wizard {font-size:0.8em;}
+
+h1, h2, h3, h4, h5 { color:[[ColorPalette::MainAccentLight]] }
+
+/*}}}*/</pre>
+</div>

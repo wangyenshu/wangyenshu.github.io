@@ -1,0 +1,280 @@
+<div title="HoverMenu" modifier="Wang Yanshu" created="201206141003" modified="202506220426" tags="Administration System" _hash="af62a178b2914b0d8acae58dea5fd136b93e7a20">
+<pre><<top>>
+<<jump j '' top>>
+<<toggleSideBar>><<renameButton '>' >>
+<<fullscreen>><<renameButton ↕ 'Full Screen'>>
+<<newTiddler>><<renameButton n>>
+<<newJournal>><<renameButton j>>
+<html><nowiki><a href="javascript:;" title="Save Webpage as HTML" class="tiddlyLink button"
+onmouseover="
+    this.href='javascript:void(eval(decodeURIComponent(%22(function(){try{('
+    +encodeURIComponent(encodeURIComponent(this.onclick))
+    +')()}catch(e){alert(e.description?e.description:e.toString())}})()%22)))';"
+onclick="
+    (function() {
+        var a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([document.documentElement.outerHTML], { type: 'text/html' }));
+        a.download = document.title.replace(/\s+/g, '_') + '.html';
+        a.click();
+    })();
+    return false;
+">s</a></nowiki></html>
+<html><nowiki><a href="javascript:;" title="Zoom In" class="tiddlyLink button"
+onmouseover="
+    this.href='javascript:void(eval(decodeURIComponent(%22(function(){try{('
+    +encodeURIComponent(encodeURIComponent(this.onclick))
+    +')()}catch(e){alert(e.description?e.description:e.toString())}})()%22)))';"
+onclick="
+    (function() {
+        document.body.style.zoom = parseFloat(document.body.style.zoom || 1) + 0.1;
+    })();
+    return false;
+">+</a></nowiki></html>
+<html><nowiki><a href="javascript:;" title="Zoom Out" class="tiddlyLink button"
+onmouseover="
+    this.href='javascript:void(eval(decodeURIComponent(%22(function(){try{('
+    +encodeURIComponent(encodeURIComponent(this.onclick))
+    +')()}catch(e){alert(e.description?e.description:e.toString())}})()%22)))';"
+onclick="
+    (function() {
+        document.body.style.zoom = parseFloat(document.body.style.zoom || 1) - 0.1;
+    })();
+    return false;
+">-</a></nowiki></html>
+<html><nowiki><a href="javascript:;" title="Find and Highlight Text" class="tiddlyLink button"
+onmouseover="
+    this.href='javascript:void(eval(decodeURIComponent(%22(function(){try{('
+    +encodeURIComponent(encodeURIComponent(this.onclick))
+    +')()}catch(e){alert(e.description?e.description:e.toString())}})()%22)))';"
+onclick="
+    (function() {
+        var s = prompt('Find text:', '');
+        if (!s) return;
+        s = '(' + s + ')';
+        var x = new RegExp(s, 'gi');
+        var rn = Math.floor(Math.random() * 100);
+        var rid = 'z' + rn;
+        var b = document.body.innerHTML;
+        b = b.replace(x, '<span name=' + rid + ' id=' + rid + ' style=\'color:#000;background-color:yellow;font-weight:bold;\'>$1</span>');
+        document.body.innerHTML = b;
+        alert('Found ' + document.getElementsByName(rid).length + ' matches.');
+        window.scrollTo(0, document.getElementsByName(rid)[0].offsetTop);
+    })();
+    return false;
+">f</a></nowiki></html>
+<html><nowiki><a href="javascript:;" title="Refresh Page" class="tiddlyLink button"
+onmouseover="
+    this.href='javascript:void(eval(decodeURIComponent(%22(function(){try{('
+    +encodeURIComponent(encodeURIComponent(this.onclick))
+    +')()}catch(e){alert(e.description?e.description:e.toString())}})()%22)))';"
+onclick="
+    (function() {
+        location.reload();
+    })();
+    return false;
+">r</a></nowiki></html>
+<html><nowiki><a href="javascript:;" title="Go to URL" class="tiddlyLink button"
+onmouseover="
+    this.href='javascript:void(eval(decodeURIComponent(%22(function(){try{('
+    +encodeURIComponent(encodeURIComponent(this.onclick))
+    +')()}catch(e){alert(e.description?e.description:e.toString())}})()%22)))';"
+onclick="
+    (function() {
+        var url = prompt('Enter URL:', 'https://');
+        if (url) window.location = url;
+    })();
+    return false;
+">U</a></nowiki></html>
+<html><nowiki><a href="javascript:;" title="Go Back" class="tiddlyLink button"
+onmouseover="
+    this.href='javascript:void(eval(decodeURIComponent(%22(function(){try{('
+    +encodeURIComponent(encodeURIComponent(this.onclick))
+    +')()}catch(e){alert(e.description?e.description:e.toString())}})()%22)))';"
+onclick="
+    (function() {
+        window.history.back();
+    })();
+    return false;
+"><-</a></nowiki></html>
+<html><nowiki><a href="javascript:;" title="Go Forward" class="tiddlyLink button"
+onmouseover="
+    this.href='javascript:void(eval(decodeURIComponent(%22(function(){try{('
+    +encodeURIComponent(encodeURIComponent(this.onclick))
+    +')()}catch(e){alert(e.description?e.description:e.toString())}})()%22)))';"
+onclick="
+    (function() {
+        window.history.forward();
+    })();
+    return false;
+">>-</a></nowiki></html>
+<html><nowiki>
+<a href="javascript:;" title="Keyman" class="tiddlyLink button"
+onmouseover="
+    this.href='javascript:void(eval(decodeURIComponent(%22(function(e)%7Be%3Ddocument.createElement%28%27script%27%29%3Be.type%3D%27text%2Fjavascript%27%3Be.onload%3D%28%29%3D%3E%7BloadKeymanWebBookmarklet%28%27basic_kbdusx%27%2C%27en%27%29%3B%7D%3Be.src%3D%27https%3A%2F%2Fr.keymanweb.com%2Fcode%2Fbookmarklet_loader.js%27%3Bdocument.body.appendChild%28e%29%3B%7D%29())%22)))'"
+onclick="
+    (function(e){
+        e = document.createElement('script');
+        e.type = 'text/javascript';
+        e.onload = () => { loadKeymanWebBookmarklet('basic_kbdusx', 'en'); };
+        e.src = 'https://r.keymanweb.com/code/bookmarklet_loader.js';
+        document.body.appendChild(e);
+    })();
+    return false;
+">K</a>
+</nowiki></html>
+<html><nowiki>
+<a href="javascript:;" title="Google Search Sidebar" class="tiddlyLink button"
+onmouseover="
+    this.href='javascript:void(eval(decodeURIComponent(%22(function(){var frame = document.createElement(%22iframe%22);frame.setAttribute(%22id%22,%22sidebarView%22);var href=location.href;var x=prompt(%22Enter%20the%20URL%20to%20open%20in%20the%20sidebar,%20or%20search%20Google:%22,%22%22)||href;let%20url=x;try{var%20reg=%20/(https%3F%3A%2F%2F(?:www%2E|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]%5C.%5B%5E%5Cs%5D%7B2%2C%7D|www%2E[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]%5C.%5B%5E%5Cs%5D%7B2%2C%7D|https%3F%3A%2F%2F(?:www%2E|(?!www))[a-zA-Z0-9]+%5C.%5B%5E%5Cs%5D%7B2%2C%7D|www%2E[a-zA-Z0-9]+%5C.%5B%5E%5Cs%5D%7B2%2C%7D)%2F;if(!reg%2Etest(url)){url=%22https%3A%2F%2Fwww%2Egoogle%2Ecom%2Fsearch%3Fnum%3D10%26igu%3D1%26q%3D%22%2BencodeURIComponent(url);}else{if(url%2Eslice(0%2C4)%2ElowerCase()==%22http%22){url=encodeURI(url);}else{url=%22http%3A%2F%2F%22%2BencodeURIComponent(url);}}frame%2Esrc=url;frame%2Estyle%2Eposition=%22fixed%22;frame%2Estyle%2Etop=%220%22;frame%2Estyle%2Eright=%220%22;frame%2Estyle%2Eheight=%22100%25%22;frame%2Estyle%2Ewidth=%22450px%22;frame%2Estyle%2Eborder=%221px%20solid%20%23bbb%22;frame%2Estyle%2Ebackground=%22%23fff%22;frame%2Estyle%2EzIndex=%22100000%22;document%2Ebody%2EappendChild(frame);const%20closeBtn=document%2EcreateElement(%22button%22);closeBtn%2EsetAttribute(%22id%22,%22sidebarClose%22);closeBtn%2Eonclick=%20()=>{document%2EquerySelectorAll(%22%23sidebarView%2C%20%23sidebarClose%22)%2EforEach(function(i)%20{i%2EparentElement%2EremoveChild(i);});};closeBtn%2Estyle=%22all%3A%20unset%3B%20position%3A%20fixed%3B%20z-index%3A%20999999%3B%20top%3A%203%25%3B%20right%3A%20220px%3B%20width%3A%2028px%3B%20height%3A%2028px%3B%20border-radius%3A%2050%25%3B%20border%3A%202px%20solid%20%23bbb%3B%20background-color%3A%20%23eee%3B%22;closeBtn%2EinnerText=%22%E2%9C%95%22;document%2Ebody%2EappendChild(closeBtn);}catch(err)%2E{console%2Eerror(err);} })()' + encodeURIComponent('')}}"
+onclick="
+    (function() {
+        var frame = document.createElement('iframe');
+        frame.setAttribute('id', 'sidebarView');
+        var href = location.href;
+        var x = prompt('Enter the URL to open in the sidebar, or search Google:', '') || href;
+        let url = x;
+        try {
+            var reg = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/;
+            if (!reg.test(url)) {
+                url = 'https://www.google.com/search?num=10&igu=1&q=' + encodeURIComponent(url);
+            } else {
+                if (url.substring(0, 4).toLowerCase() == 'http') {
+                    url = encodeURI(url);
+                } else {
+                    url = 'http://' + encodeURIComponent(url);
+                }
+            }
+            frame.src = url;
+            frame.style.position = 'fixed';
+            frame.style.top = '0';
+            frame.style.right = '0';
+            frame.style.height = '100%';
+            frame.style.width = '450px';
+            frame.style.border = '1px solid #bbb';
+            frame.style.background = '#fff';
+            frame.style.zIndex = '100000';
+            document.body.appendChild(frame);
+            
+            const closeBtn = document.createElement('button');
+            closeBtn.setAttribute('id', 'sidebarClose');
+            closeBtn.onclick = () => {
+                document.querySelectorAll('#sidebarView, #sidebarClose').forEach(function(i) {
+                    i.parentElement.removeChild(i);
+                });
+            };
+            closeBtn.style = 'all: unset; position: fixed; z-index: 999999; top: 3%; right: 220px; width: 28px; height: 28px; border-radius: 50%; border: 2px solid #bbb; background-color: #eee;';
+            closeBtn.innerText = '❌';
+            document.body.appendChild(closeBtn);
+        } catch (err) {
+            console.error(err);
+        }
+    })();
+    return false;
+">g</a>
+</nowiki></html>
+<html><nowiki><a href="javascript:;" title="Toggle Piano" class="tiddlyLink button"
+onmouseover="
+    this.href='javascript:void(eval(decodeURIComponent(%22(function(){try{('
+    +encodeURIComponent(encodeURIComponent(this.onclick))
+    +')()}catch(e){alert(e.description?e.description:e.toString())}})()%22)))';"
+onclick="
+    (function() {
+        var script = document.createElement('script');
+        script.src = 'https://rawgit.com/Krazete/bookmarklets/master/piano.js';
+        script.onerror = function() { alert('Sorry, the script could not be loaded.'); };
+        document.body.appendChild(script);
+    })();
+    return false;
+">p</a></nowiki></html>
+<html><nowiki>
+<a href="javascript:;" title="Snow" class="tiddlyLink button"
+onmouseover="
+&nbsp;&nbsp;&nbsp; this.href='javascript:void(eval(decodeURIComponent(%22(function(){try{('
+&nbsp;&nbsp;&nbsp; +encodeURIComponent(encodeURIComponent(this.onclick))
+&nbsp;&nbsp;&nbsp; +')()}catch(e){alert(e.description?e.description:e.toString())}})()%22)))';"
+onclick="
+&nbsp;&nbsp;&nbsp; (t=>{function i(){this.D=function(){const t=h.atan(this.i/this.d);l.save(),l.translate(this.b,this.a),l.rotate(-t),l.scale(this.e,this.e*h.max(1,h.pow(this.j,.7)/15)),l.drawImage(m,-v/2,-v/2),l.restore()}}window;const h=Math,r=h.random,a=document,o=Date.now;e=(t=>{l.clearRect(0,0,_,f),l.fill(),requestAnimationFrame(e);const i=.001*y.et;y.r();const s=L.et*g;for(var n=0;n<C.length;++n){const t=C[n];t.i=h.sin(s+t.g)*t.h,t.j=h.sqrt(t.i*t.i+t.f),t.a+=t.d*i,t.b+=t.i*i,t.a>w&&(t.a=-u),t.b>b&&(t.b=-u),t.b<-u&&(t.b=b),t.D()}}),s=(t=>{for(var e=0;e<p;++e)C[e].a=r()*(f+u),C[e].b=r()*_}),n=(t=>{c.width=_=innerWidth,c.height=f=innerHeight,w=f+u,b=_+u,s()});class d{constructor(t,e=!0){this._ts=o(),this._p=!0,this._pa=o(),this.d=t,e&&this.s()}get et(){return this.ip?this._pa-this._ts:o()-this._ts}get rt(){return h.max(0,this.d-this.et)}get ip(){return this._p}get ic(){return this.et>=this.d}s(){return this._ts=o()-this.et,this._p=!1,this}r(){return this._pa=this._ts=o(),this}p(){return this._p=!0,this._pa=o(),this}st(){return this._p=!0,this}}const c=a.createElement('canvas');H=c.style,H.position='fixed',H.left=0,H.top=0,H.width='100vw',H.height='100vh',H.zIndex='100000',H.pointerEvents='none',a.body.insertBefore(c,a.body.children[0]);const l=c.getContext('2d'),p=300,g=5e-4,u=20;let _=c.width=innerWidth,f=c.height=innerHeight,w=f+u,b=_+u;const v=15.2,m=a.createElement('canvas'),E=m.getContext('2d'),x=E.createRadialGradient(7.6,7.6,0,7.6,7.6,7.6);x.addColorStop(0,'hsla(255,255%,255%,1)'),x.addColorStop(1,'hsla(255,255%,255%,0)'),E.fillStyle=x,E.fillRect(0,0,v,v);let y=new d(0,!0),C=[],L=new d(0,!0);for(var j=0;j<p;++j){const t=new i;t.a=r()*(f+u),t.b=r()*_,t.c=1*(3*r()+.8),t.d=.1*h.pow(t.c,2.5)*50*(2*r()+1),t.d=t.d<65?65:t.d,t.e=t.c/7.6,t.f=t.d*t.d,t.g=r()*h.PI/1.3,t.h=15*t.c,t.i=0,t.j=0,C.push(t)}s(),EL=a.addEventListener,EL('visibilitychange',()=>setTimeout(n,100),!1),EL('resize',n,!1),e()})();
+&nbsp;&nbsp;&nbsp; return false;
+">S</a></nowiki></html>
+<html><nowiki>
+<a href="javascript:;" title="Generate BibTeX Entry" class="tiddlyLink button"
+onmouseover="
+&nbsp;&nbsp;&nbsp; this.href='javascript:void(eval(decodeURIComponent(%22(function(){try{('
+&nbsp;&nbsp;&nbsp; +encodeURIComponent(encodeURIComponent(this.onclick))
+&nbsp;&nbsp;&nbsp; +')()}catch(e){alert(e.description?e.description:e.toString())}})()%22)))';"
+onclick="
+&nbsp;&nbsp;&nbsp; 'use strict';(function(){function copyToClipboard(text){window.prompt('Copy to clipboard: Ctrl+C, Enter',text)}function jsDate2bibTex(date){var dd=date.getDate();var mm=date.getMonth()+1;var yyyy=date.getFullYear();if(dd<10){dd='0'+dd}if(mm<10){mm='0'+mm}return yyyy+'-'+mm+'-'+dd}function date2YearTex(date){var yyyy=date.getFullYear();return''+yyyy}var title=document.title;var url=document.URL;var author_tag=document.querySelector('[name=author]');var author=author_tag==null?'':author_tag.content;var today=new Date;var urldate=jsDate2bibTex(today);var publishedTime=(document.querySelector('meta[property=\'article:published_time\']'))?.getAttribute('content');var someTimeTag=(document.querySelector('time[datetime]'))?.getAttribute('datetime');var someTimeTagWithoutDatetime=(document.querySelector('time'))?.innerHTML;var lastModifiedTime=document.lastModified;var pageTime=new Date(publishedTime||someTimeTag||someTimeTagWithoutDatetime||lastModifiedTime);var date=jsDate2bibTex(pageTime);var year=date2YearTex(pageTime);var title_key=title.replace(/[^0-9a-z]/gi,'');var citationKey=title_key+'-'+date;var type='@Online';var filename=':./references/'+window.location.pathname.slice(1).replace(/\//g,'-')+'.html:html';var title_tex=title.replace(/\u00e4/g,'\\&quot;a').replace(/\u00c4/g,'\\&quot;A').replace(/\u00f6/g,'\\&quot;o').replace(/\u00d6/g,'\\&quot;O').replace(/\u00fc/g,'\\&quot;u').replace(/\u00dc/g,'\\&quot;U').replace(/\u00DF/g,'\\&quot;s');var bibTexEntry=type+' {'+citationKey+',\r  title = {'+title_tex+'},\r  date = {'+date+'},\r  year = {'+year+'},\r'+(author?'  author = {'+author+'},\r':'')+'  file = {'+filename+'},\r  url = {'+url+'},\r  urldate = {'+urldate+'}\r}';copyToClipboard(bibTexEntry)})();
+&nbsp;&nbsp;&nbsp; return false;
+">B</a></nowiki></html>
+<html><nowiki>
+<a href="javascript:;" title="JSQR Bookmarklet" class="tiddlyLink button"
+onmouseover="
+    this.href='javascript:void(eval(decodeURIComponent(%22(function(){try{('
+    +encodeURIComponent(encodeURIComponent(this.onclick))
+    +')()}catch(e){alert(e.description?e.description:e.toString())}})()%22)))';"
+onclick="
+    (function(s){
+        s.type='text/javascript';
+        s.charset='UTF-8';
+        s.src='//code.jsqr.de/bookmarklet.js';
+        s.onerror = function() { alert('Sorry, the JSQR script could not be loaded.'); };
+        void(document.getElementsByTagName('head')[0].appendChild(s))
+    })(document.createElement('script'));
+    return false;
+">Q</a></nowiki></html>
+<html><nowiki>
+<a href="javascript:;" title="StegoWeb - Marking data" class="tiddlyLink button"
+onmouseover="
+    this.href='javascript:void(eval(decodeURIComponent(%22(function(){try{('
+    +encodeURIComponent(encodeURIComponent(this.onclick))
+    +')()}catch(e){alert(e.description?e.description:e.toString())}})()%22)))';"
+onclick="
+    (function(){
+        var headID = document.getElementsByTagName('head')[0];
+        var newScript = document.createElement('script');
+        newScript.type = 'text/javascript';
+        newScript.src = 'http://stegoweb.pet-portal.eu/stcr/xpath.js';
+        newScript.onerror = function() { alert('Sorry, the marking data script could not be loaded.'); };
+        headID.appendChild(newScript);
+    })();
+    return false;
+">M</a></nowiki></html>
+<html><nowiki>
+<a href="javascript:;" title="StegoWeb - Hiding data" class="tiddlyLink button"
+onmouseover="
+    this.href='javascript:void(eval(decodeURIComponent(%22(function(){try{('
+    +encodeURIComponent(encodeURIComponent(this.onclick))
+    +')()}catch(e){alert(e.description?e.description:e.toString())}})()%22)))';"
+onclick="
+    (function(){
+        var headID = document.getElementsByTagName('head')[0];
+        var newScript = document.createElement('script');
+        newScript.type = 'text/javascript';
+        newScript.src = 'http://stegoweb.pet-portal.eu/stcr/enstcr.js';
+        newScript.onerror = function() { alert('Sorry, the hiding data script could not be loaded.'); };
+        headID.appendChild(newScript);
+    })();
+    return false;
+">H</a></nowiki></html>
+<html><nowiki>
+<a href="javascript:;" title="StegoWeb - Revealing Data" class="tiddlyLink button"
+onmouseover="
+&nbsp;&nbsp;&nbsp; this.href='javascript:void(eval(decodeURIComponent(%22(function(){try{('
+&nbsp;&nbsp;&nbsp; +encodeURIComponent(encodeURIComponent(this.onclick))
+&nbsp;&nbsp;&nbsp; +')()}catch(e){alert(e.description?e.description:e.toString())}})()%22)))';"
+onclick="
+&nbsp;&nbsp;&nbsp; (function(){
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; var headID = document.getElementsByTagName('head')[0];
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; var newScript = document.createElement('script');
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; newScript.type = 'text/javascript';
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; newScript.src = 'http://stegoweb.pet-portal.eu/stcr/destcr.js';
+        newScript.onerror = function() { alert('Sorry, the revealing data script could not be loaded.'); };
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; headID.appendChild(newScript);
+&nbsp;&nbsp;&nbsp; })();
+&nbsp;&nbsp;&nbsp; return false;
+">R</a></nowiki></html>
+<html><nowiki>
+<a href='javascript:(function(e){const t={split(e){const t=[];for(let r=0;r<e.length;){const n=e.charCodeAt(r);let o;n>=55296&&n<=56319?(o=(n-55296<<10)+(e.charCodeAt(r+1)-56320+65536),r+=2):(o=n,++r),t.push(String.fromCodePoint(o))}return t},encode(e){const t=5-e.length %25 5;let r="";e=String.fromCharCode(t)+"\0".repeat(t-1)+e;for(let t=0;t<e.length;t+=5){let o=e.substr(t,5).split("").map(n).reduce((e,t)=>256*e+t,0);for(let e=0;e<4;++e){const e=o %25 1024;o=Math.floor(o/1024),r+=this.map[e]}}return r},decode(e){const t=this.split(e);let r="";for(let e=0;t.length;++e){let n=[];for(;n.length<4;)n.unshift(this.map.indexOf(t.shift()));let o=n.reduce((e,t)=>1024*e+t,0),l="";for(let t=0;t<5;++t){let r=o %25 256;o=Math.floor(o/256),l=String.fromCharCode(r)+l,0==e&&4==t&&(l=l.substring(r))}r+=l}return r}};t.map=t.split("♈♉♊♋♌♍♎♏♐♑♒♓⚛⛓⛔🄰🄱🄲🄳🄴🄵🄶🄷🄸🄹🄺🄻🄼🄽🄾🄿🅀🅁🅂🅃🅄🅅🅆🅇🅈🅉🅐🅑🅒🅓🅔🅕🅖🅗🅘🅙🅚🅛🅜🅝🅞🅟🅠🅡🅢🅣🅤🅥🅦🅧🅨🅩🆎🆏🆑🆒🆓🆔🆕🆖🆗🆘🆙🆚🌀🌁🌂🌃🌄🌅🌆🌇🌈🌉🌊🌋🌌🌍🌎🌏🌐🌑🌒🌓🌔🌕🌖🌗🌘🌙🌚🌛🌜🌝🌞🌟🌠🌡🌤🌥🌦🌧🌨🌩🌪🌫🌬🌭🌮🌯🌰🌱🌲🌳🌴🌵🌶🌷🌸🌹🌺🌻🌼🌽🌾🌿🍀🍁🍂🍃🍄🍅🍆🍇🍈🍉🍊🍋🍌🍍🍎🍏🍐🍑🍒🍓🍔🍕🍖🍗🍘🍙🍚🍛🍜🍝🍞🍟🍠🍡🍢🍣🍤🍥🍦🍧🍨🍩🍪🍫🍬🍭🍮🍯🍰🍱🍲🍳🍴🍵🍶🍷🍸🍹🍺🍻🍼🍽🍾🍿🎀🎁🎂🎃🎄🎅🎆🎇🎈🎉🎊🎋🎌🎍🎎🎏🎐🎑🎒🎓🎖🎗🎙🎚🎛🎞🎟🎠🎡🎢🎣🎤🎥🎦🎧🎨🎩🎪🎫🎬🎭🎮🎯🎰🎱🎲🎳🎴🎵🎶🎷🎸🎹🎺🎻🎼🎽🎾🎿🏀🏁🏂🏃🏄🏅🏆🏇🏈🏉🏊🏋🏌🏍🏎🏏🏐🏑🏒🏓🏔🏕🏖🏗🏘🏙🏚🏛🏜🏝🏞🏟🏠🏡🏢🏣🏤🏥🏦🏧🏨🏩🏪🏫🏬🏭🏮🏯🏰🏳🏴🏵🏷🏸🏹🏺🏻🏼🏽🏾🏿🐀🐁🐂🐃🐄🐅🐆🐇🐈🐉🐊🐋🐌🐍🐎🐏🐐🐑🐒🐓🐔🐕🐖🐗🐘🐙🐚🐛🐜🐝🐞🐟🐠🐡🐢🐣🐤🐥🐦🐧🐨🐩🐪🐫🐬🐭🐮🐯🐰🐱🐲🐳🐴🐵🐶🐷🐸🐹🐺🐻🐼🐽🐾🐿👀👁👂👃👄👅👆👇👈👉👊👋👌👍👎👏👐👑👒👓👔👕👖👗👘👙👚👛👜👝👞👟👠👡👢👣👤👥👦👧👨👩👪👫👬👭👮👯👰👱👲👳👴👵👶👷👸👹👺👻👼👽👾👿💀💁💂💃💄💅💆💇💈💉💊💋💌💍💎💏💐💑💒💓💔💕💖💗💘💙💚💛💜💝💞💟💠💡💢💣💤💥💦💧💨💩💪💫💬💭💮💯💰💱💲💳💴💵💶💷💸💹💺💻💼💽💾💿📀📁📂📃📄📅📆📇📈📉📊📋📌📍📎📏📐📑📒📓📔📕📖📗📘📙📚📛📜📝📞📟📠📡📢📣📤📥📦📧📨📩📪📫📬📭📮📯📰📱📲📳📴📵📶📷📸📹📺📻📼📽📿🔀🔁🔂🔃🔄🔅🔆🔇🔈🔉🔊🔋🔌🔍🔎🔏🔐🔑🔒🔓🔔🔕🔖🔗🔘🔙🔚🔛🔜🔝🔞🔟🔠🔡🔢🔣🔤🔥🔦🔧🔨🔩🔪🔫🔬🔭🔮🔯🔰🔱🔲🔳🔴🔵🔶🔷🔸🔹🔺🔻🔼🔽🕉🕊🕋🕌🕍🕎🕐🕑🕒🕓🕔🕕🕖🕗🕘🕙🕚🕛🕜🕝🕞🕟🕠🕡🕢🕣🕤🕥🕦🕧🕯🕰🕳🕴🕵🕶🕷🕸🕹🕺🖇🖊🖋🖌🖍🖐🖕🖖🖤🖥🖨🖱🖲🖼🗂🗃🗄🗑🗒🗓🗜🗝🗞🗡🗣🗨🗯🗳🗺🗻🗼🗽🗾🗿😀😁😂😃😄😅😆😇😈😉😊😋😌😍😎😏😐😑😒😓😔😕😖😗😘😙😚😛😜😝😞😟😠😡😢😣😤😥😦😧😨😩😪😫😬😭😮😯😰😱😲😳😴😵😶😷😸😹😺😻😼😽😾😿🙀🙁🙂🙃🙄🙅🙆🙇🙈🙉🙊🙋🙌🙍🙎🙏🚀🚁🚂🚃🚄🚅🚆🚇🚈🚉🚊🚋🚌🚍🚎🚏🚐🚑🚒🚓🚔🚕🚖🚗🚘🚙🚚🚛🚜🚝🚞🚟🚠🚡🚢🚣🚤🚥🚦🚧🚨🚩🚪🚫🚬🚭🚮🚯🚰🚱🚲🚳🚴🚵🚶🚷🚸🚹🚺🚻🚼🚽🚾🚿🛀🛁🛂🛃🛄🛅🛋🛌🛍🛎🛏🛐🛑🛒🛠🛡🛢🛣🛤🛥🛩🛫🛬🛰🛳🛴🛵🛶🛷🛸🤐🤑🤒🤓🤔🤕🤖🤗🤘🤙🤚🤛🤜🤝🤞🤟🤠🤡🤢🤣🤤🤥🤦🤧🤨🤩🤪🤫🤬🤭🤮🤯🤰🤱🤲🤳🤴🤵🤶🤷🤸🤹🤺🤼🤽🤾🥀🥁🥂🥃🥄🥅🥇🥈🥉🥊🥋🥌🥐🥑🥒🥓🥔🥕🥖🥗🥘🥙🥚🥛🥜🥝🥞🥟🥠🥡🥢🥣🥤🥥🥦🥧🥨🥩🥪🥫🦀🦁🦂🦃🦄🦅🦆🦇🦈🦉🦊🦋🦌🦍🦎🦏🦐🦑🦒🦓🦔🦕🦖🦗🧀🧐🧑🧒🧓🧔🧕🧖🧗🧘🧙🧚🧛🧜🧝🧞🧟🧠🧡🧢🧣🧤🧥🧦");const r={encode:e=>unescape(encodeURIComponent(e)),decode:e=>decodeURIComponent(escape(e))},n=e=>e.charCodeAt(0),o=e.getSelection,l=String.fromCharCode,s=16,a=255,c=t.decode("🌔♈♈🄱🔧😰🛶💬🐢♈🌄👺🛵💥🧔🍢💵🔛🅓🚎💏🅒🌲🐠🌥🚍😭🕒🚊🛍🤕😶🅛💮🧦🎋💓🌍🔛🕟🚇🏩🐋🍷👕🐼👄🙀😟🅟🏠🄽🐾🏽🚋🍑🔖😏👜🍣🖥😩🏛🔽🌄🦑📭🍚🎴🚬⛔🚨🥚🖤👱🗳🎂🙊🍗🎛🚧🗜😮🚧💴🐌🚜🏬🍒🄰🧜♑🍂🎃🏒🕰👷📸💎🔆🎷🆏👝😏🄴🚧🏤🥫🄸💌💴🥊🐟🤥🔳🙆🌴🎋👒🐯🕘🌽👽🏺🄵🥇🌟📜🦐😪💛🛸🎾🕚🤶🍻🥄🍧💇🍄🌬🐴🏑👅👈💖🌶🤵🌇🔗🎢🚹🖍🐙🕷🦃🏦📄🤾🅃😜🏩🔧🌥🥙🦂🚥🛴🖱🄰🍚📩📉🎵🌳👔👁💩🚹🐿💳🥔💔😸👉🔲🏎🔜🧐🤷👬🔎🤢📲🐍🚝🦖🛥🍃🕍🏥🌗🕋🏁🙊🏦😹🅥").split("").map(n),f=[0,1,2,4,8,16,32,64,128,27,54].map(e=>[e,0,0,0]),p=(e,t)=>Array.apply(null,{length:e}).map((e,r)=>t(r)),i=e=>p(32,t=>((e,t)=>e.charCodeAt(t))(e,t)),d=e=>{for(let t=0;t<4;++t)e[t]=c[e[t]];return e},g=e=>{const t=e[0];for(let t=0;t<3;++t)e[t]=e[t+1];return e[3]=t,e},u=e=>{for(let t=0;t<4;t++)for(let r=0;r<4;r++)e[t][r]=c[e[t][r]];return e},h=e=>{const t=[,,,];for(let r=1;r<4;r++){for(let n=0;n<4;n++)t[n]=e[r][(n+r) %25 4];for(let n=0;n<4;n++)e[r][n]=t[n]}return e},m=e=>{for(let t=0;t<4;t++){const r=[,,,],n=[,,,];for(let o=0;o<4;++o)r[o]=e[o][t],n[o]=128&e[o][t]?e[o][t]<<1^283:e[o][t]<<1;e[0][t]=n[0]^r[1]^n[1]^r[2]^r[3],e[1][t]=r[0]^n[1]^r[2]^n[2]^r[3],e[2][t]=r[0]^r[1]^n[2]^r[3]^n[3],e[3][t]=r[0]^n[0]^r[1]^r[2]^n[3]}return e},C=(e,t,r)=>{for(let n=0;n<4;n++)for(let o=0;o<4;o++)e[n][o]^=t[4*r+o][n];return e},A=(e,t)=>{const r=t.length/4-1;let n=[[],[],[],[]];for(let t=0;t<s;++t)n[t %25 4][Math.floor(t/4)]=e[t];n=C(n,t,0);for(let e=1;e<r;e++)n=C(m(h(u(n))),t,e);return n=C(h(u(n)),t,r),p(s,e=>n[e %25 4][Math.floor(e/4)])},y=e=>{const t=e.length/4,r=4*(t+7),n=new Array(r);for(let r=0;r<t;++r)n[r]=p(4,t=>e[4*r+t]);for(let e=t;e<r;++e){let r=n[e-1].slice();for(let t=0;t<4;t++)r[t]=n[e-1][t];if(e %25 t==0){r=d(g(r));for(let n=0;n<4;n++)r[n]^=f[e/t][n]}else t>6&&e %25 t==4&&(r=d(r));n[e]=p(4,o=>n[e-t][o]^r[o])}return n},M=(e,t=!0)=>{const r=o();if(!r.getRangeAt||!r.rangeCount)return;range=r.getRangeAt(0),range.deleteContents(),fragment=range.createContextualFragment(e);const n=fragment.firstChild,l=fragment.lastChild;range.insertNode(fragment),t&&(n&&(range.setStartBefore(n),range.setEndAfter(l)),r.removeAllRanges(),r.addRange(range))},S=(e,n)=>t.encode(((e,t)=>{const r=e.length,n=i(t),o=A(n,y(n)),c=(new Date).getTime(),f=[];for(let e=0;e<4;++e)f[e]=Math.floor(c/1e3)>>>8*e&a,f[e+4]=c %25 1e3&a;const d=l.apply(null,f),g=y(o.concat(o.slice(0,16))),u=Math.ceil(r/s);return d+p(u,t=>{for(let e=0;e<4;++e)f[15-e]=t>>>8*e&a,f[11-e]=t/4294967296>>>8*e;const n=A(f,g),o=t<u-1?s:(r-1) %25 s+1;return l.apply(null,p(o,r=>n[r]^e.charCodeAt(t*s+r)))}).join("")})(r.encode(e),r.encode(n))),R=(e,o)=>((e,t)=>{const o=i(t),c=A(o,y(o)),f=e.slice(0,8).split("").map(e=>n(e)),d=y(c.concat(c.slice(0,16))),g=Math.ceil((e.length-8)/s),u=p(g,t=>e.slice(8+t*s,8+t*s+s));return r.decode(u.map((e,t)=>{for(let e=0;e<4;++e)f[15-e]=t>>>8*e&a,f[11-e]=(t+1)/4294967296-1>>>8*e&a;const r=A(f,d);return l.apply(null,e.split("").map((e,t)=>r[t]^n(e)))}).join(""))})(t.decode(e),r.encode(o));return{go:()=>{const r=(()=>o().toString())(),n=r||e.prompt("Input");if(!n)return;const l=prompt("Passphrase","****");if(!l)return;const s=t.split(n.substr(0,2));if(t.map.indexOf(s[0])>=0){const t=R(n,l);r?M(t):e.prompt("[Decrypted text]",t)}else{const t=S(n,l);r?M(t):e.prompt("[Encrypted text]",t)}}}})(window).go();' title="AES Encrypt/Decrypt" class="tiddlyLink button">A</a>
+</nowiki></html>
+</pre>
+</div>

@@ -1,0 +1,47 @@
+<div title="MissingTiddlersList" modifier="ELSDesignStudios" created="200811121637" modified="200910120830" tags="settings">
+<pre>!NewDocumentPlugin
+{{{
+__2008.04.22 IMPORTANT NOTICE:__
+>The features previously provided by this plugin have been replaced by [[SaveAsPlugin]] and [[SnapshotPlugin]].
+}}}
+!CommentScript
+{{{
+__2008.04.12 IMPORTANT NOTICE:__
+>This inline script has been replaced by [[CommentPlugin]].
+}}}
+!SelectStylesheetPlugin
+{{{
+__2008.01.22 IMPORTANT NOTICE:__
+>As of TiddlyWiki version 2.3.0, this plugin has been replaced by [[SwitchThemePlugin]].
+}}}
+!SliceGridPlugin(Info)?
+{{{
+__2009.09.20 IMPORTANT NOTICE:__
+>This plugin has been replaced by [[GridPlugin]], which displays/edits tiddler sections and fields as well as slices.
+}}}
+!RescueStoreArea
+{{{
+__2010.03.01 IMPORTANT NOTICE:__
+>This tiddler has been replaced by [[SaveToClipboard]], which supports direct clipboard access, and outputs complete TiddlyWiki documents, including core source code.
+}}}
+!ExpandSlidersScript
+{{{
+__2010.12.28 IMPORTANT NOTICE:__
+>This inline script has been replaced by the [[ToggleSliders]] transclusion.
+}}}
+!.+PluginInfo
+{{{
+>Sorry, no additional documentation is available for this plugin.
+}}}
+!FAQ_.*
+{{{
+This TiddlyTools FAQ article has been archived in:
+>{{medium{http://www.TiddlyTools.com/faq.html#$1}}}
+<<tiddler GetTheFAQs with: [[http://www.TiddlyTools.com/faq.html]] [[faq]] [[$1]]>>
+}}}
+!http://.*
+{{{
+$1
+<html><iframe src="$1" style="width:100%;height:480px"></iframe></html>
+}}}</pre>
+</div>

@@ -1,0 +1,70 @@
+<div title="ExternalTiddlersPluginInfo" modifier="ELSDesignStudios" created="200801090036" modified="201104271821" tags="pluginInfo">
+<pre>|Name|ExternalTiddlersPluginInfo|
+|Source|http://www.TiddlyTools.com/#ExternalTiddlersPlugin|
+|Documentation|http://www.TiddlyTools.com/#ExternalTiddlersPluginInfo|
+|Version|1.3.3|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|documentation|
+|Description|documentation for ExternalTiddlersPlugin|
+This plugin extends the {{{<<tiddler>>}}} macro syntax so you can retrieve and wikify content directly from external files or remote URLs.  You can also define alternative "fallback" sources to provide basic "import on demand" handling by automatically creating/importing tiddler content from external sources when the specified ~TiddlerName does not already exist in your document.
+!!!!!Configuration
+>see ExternalTiddlersPlugin
+!!!!!Usage
+<<<
+The standard TiddlyWiki core syntax for the {{{<<tiddler>>}}} macro is:
+>{{{<<tiddler TiddlerName with: param param param ...>>}}}
+where the optional {{{with: param param param...}}} values are used to replace any corresponding "substitution markers" ($1 to $9) that may be embedded in the referenced tiddler content.
+
+This plugin allows the {{{<<tiddler>>}}} macro to ''use external file/URL references in place of the usual ~TiddlerName parameter'', so that you can render wiki-formatted source content retrieved from an external file/URL reference (as determined by the core's isExternalLink() test function), ''//as if// it had come from a tiddler in the current document''.  The external file/URL can be either ''a relative or absolute reference'' and can contain ''"plain text" or a full TiddlyWiki document''.  When using a TiddlyWiki document, you must specify which tiddlers should be included in the output by appending a permaview-like suffix to the file or URL reference, e.g.:
+>{{{<<tiddler "myfile.txt" with: param param param...>>}}}
+>or
+>{{{<<tiddler "myfile.html#TiddlerName TiddlerName..." with: param param param...>>}}}
+>or
+>{{{<<tiddler "http://www.TiddlyWiki.com/index.html#HelloThere" with: param param param...>>}}}
+If the plugin-enhanced {{{<<tiddler>>}}} macro is unable to retrieve the external content --  perhaps because the file doesn't exist or doesn't contain the requested tiddler(s), or cross-domain security blocked file access, or the network/server "timed out", etc., -- then it produces no output (i.e., just as when the standard {{{<<tiddler>>}}} macro is given a ~TiddlerName does not exist in the current document.)
+<<<
+!!!!!Using alternative "fallback" references
+<<<
+In addition to using external file/URL references in place of the usual ~TiddlerName, the plugin also allows you to use a ''fallback list'' consisting of a combination of alternative sources: tiddlers, local files, and/or URL references, each separated by "|".  The first reference in a fallback list is the "primary source"; the remaining references are "fallback sources".  The plugin will attempt to retrieve content from each fallback source until one is successfully retrieved or all alternatives have been tried.
+
+For example, if you create a tiddler called [[HelloThere]], as well as a remotely-hosted TW document containing a published tiddler, also called [[HelloThere]], then you can write:
+>{{{<<tiddler [[HelloThere|http://www.TiddlyWiki.com/#HelloThere]]>>}}}
+When [[HelloThere]] is present in the local document, it is processed in the normal manner.  However, if you delete the  local [[HelloThere]] tiddler, the plugin will attempt to retrieve the [[HelloThere]] tiddler from the indicated remote URL.
+
+Please note: although you can list any number of alternative sources, in whatever order you prefer, retrieval from a remote URL occurs asynchronously via XMLHttpRequest() processing.  As a consequence, there can be ''no more than one remote URL reference in the fallback list'', and any alternatives that follow a remote URL reference will not be processed.
+<<<
+!!!!!Automatically import/create missing tiddlers
+<<<
+When content is retrieved from an external fallback source, the plugin can automatically import/create tiddler(s) containing that content into your document, allowing you to display, modify, save and/or search for text in that tiddler from within your own document, without needing to retrieve it again from the external source.
+
+If no local ~TiddlerName(s) are specified in the fallback list (i.e., only direct file/URL references are present), then a tiddler will NOT be created, so that each time you render the tiddler display the external source will be re-read in order to render the most recently saved external file content.  To illustrate using the example from above:
+>&nbsp;&nbsp;&nbsp;{{{<<tiddler [[HelloThere|http://www.TiddlyWiki.com/#HelloThere]]>>}}}
+will automatically create a locally-stored [[HelloThere]] tiddler, so that the external source is only accessed the first time the content is rendered, while:
+>&nbsp;&nbsp;&nbsp;{{{<<tiddler [[http://www.TiddlyWiki.com/#HelloThere]]>>}}}
+will re-load the content from the external source each time the display is rendered.
+
+For easy identification, any tiddlers that are automatically created/imported are tagged with <<tag external>> (or other custom-defined tag values).  These tiddlers can also be automatically tagged with <<tag temporary>> for use with [[TemporaryTiddlersPlugin]], which will skip over those tiddlers when saving changes to your document so that when you reload the document, the temporary tiddlers will no longer be present and will be retrieved anew from the external source, on demand, when (or if) they are needed.  Important reminder: ''If you modify a temporary tiddler and want to retain it in your local document, be sure to remove the <<tag temporary>> tag from the tiddler before saving.''
+<<<
+!!!!!~XMLHttpRequest: performance and security issues
+<<<
+This plugin uses asynchronous XMLHttpRequest() processing to access external content directly from URLs hosted on remote web servers.  However, ''cross-domain access from one remote domain to another using XMLHttpRequest() processing is generally restricted for security reasons''.  As a result, URL references between server-hosted documents will not work unless those documents are located within the same domain.  In order to ensure that external content included in server-hosted documents will be displayed as intended, you should ''always use either a relative path/file reference or an http: reference located on the same domain as the published document.'' for any document you intend to publish.
+
+Note: Some hosting providers, such as http://www.TiddlySpot.com/ offer ''"proxy" services that may allow you to bypass the security restrictions'' for certain designated remote web sites.  Consult your hosting service for information regarding their proxy arrangments (if any).
+<<<
+!!!!!Revisions
+<<<
+2011.04.27 1.3.3 merge/clone defaultCustomFields for saving in TiddlySpace
+2011.02.08 1.3.2 fixed parsing of external links to allow retrieval of tiddler sections from remote files.  NOTE: //requires SectionLinksPlugin v1.4.1 or above//).  Also, calls to saveTiddler() use config.defaultCustomFields for TiddlySpace compatibility.
+2008.10.27 1.3.1 in insertTiddler(), fixed Safari bug by replacing static Array.concat(...) with new Array().concat(...)
+2008.01.08 [*.*.*] plugin size reduction: documentation moved to ExternalTiddlersPluginInfo
+2008.01.03 1.3.0 use lower-level doHttp() instead loadRemoteFile() so that optional username/password values can be used in XMLHttpRequest
+2007.12.22 1.2.2 in handler(), when reading from local file with relative path fixup, use decodeURIComponent() instead of decodeURI 
+2007.11.30 1.2.1 lots of code/documentation cleanup.  renamed option cookies.  changed auto tag value to "external".
+2007.11.27 1.2.0 added support for automatically importing external tiddlers
+2007.11.26 1.1.1 improved XMLHttpRequest() error reporting for cross-domain security issues
+2007.11.26 1.1.0 added support for multiple alternative fallback references
+2007.11.25 1.0.0 initial release - moved from CoreTweaks
+<<<</pre>
+</div>

@@ -1,0 +1,38 @@
+<div title="QuickNotePluginInfo" modifier="ELSDesignStudios" created="200909151831" modified="201106072042" tags="pluginInfo">
+<pre>/***
+|Name|QuickNotePluginInfo|
+|Source|http://www.TiddlyTools.com/#QuickNotePlugin|
+|Documentation|http://www.TiddlyTools.com/#QuickNotePluginInfo|
+|Version|2.1.0|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|documentation|
+|Description|documentation for QuickNotePlugin|
+!!!!!Usage
+<<<
+{{{
+<<quickNote tiddler:"..." dateformat:"..." taglist:"...">>
+}}}
+*''tiddler'' //(default=username)//<br>target tiddler in which to add note text.  Note: to refer to the current tiddler, use special //keyword value:// ''"here"'' (i.e., "tiddler:here")
+*''dateformat'' //(default=none)//<br>format string (e.g. """YYYY0MM0DD0hh0mm0ss""") used to generate a unique tiddler title for each new note that is created, by combining the TW username with a //timestamp// for the current time.
+*''taglist'' //(optional)//<br>one or more space-separated tag values (e.g., "tag tag [[tag with spaces]] tag tag ...") that will be added to newly created notes.
+For backward-compatibility with existing document content, you can also use the {{{<<tiddler>>}}} macro to transclude the [[QuickNote]] //shadow tiddler//, like this:
+{{{
+<<tiddler QuickNote with: "dateformat" "taglist" "tiddler">>
+}}}
+Note: transclusion uses //unnamed// parameters that ''must occur in the order shown above''.  You can use "" as placeholders to apply default parameter values.
+<<<
+!!!!!Examples
+<<<
+{{{<<quickNote dateformat:"-YYYY0MM0DD0hh0mm0ss" tags:"quicknote journal">>}}}
+<<quickNote dateformat:"-YYYY0MM0DD0hh0mm0ss" tags:"quicknote journal">>
+<<<
+!!!!!Revisions:
+<<<
+2011.06.07 2.1.0 added tiddler: macro parameter
+2011.04.27 2.0.1 merge/clone defaultCustomFields for saving on TiddlySpace
+2011.03.06 2.0.0 converted to plugin.  Handle append to existing tiddler.  Added autosave.
+2009.09.15 1.0.0 initial release (transclusion)
+<<<</pre>
+</div>

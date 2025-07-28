@@ -1,0 +1,4 @@
+<div title="D3Showcase" modifier="Wang Yanshu" created="202503262007" modified="202503262026" tags="innerTW5Plugin demo d3">
+<pre>{"title":"TW5Sandbox","text":"This is a demo of TiddlyWiki5 incorporating a plugin for the [[D3.js]] visualisation library.\n\n! Word Cloud\n\n\u003C$d3cloud data=\"CloudData\" spiral={{$:/spiral}}/>\n\n\n//[[Raw data|CloudData]]//\n\n! Bar Chart\n\n\u003C$d3bar grouped={{$:/grouped}} data=\"GraphData\"/>\n\u003C$button set=\"$:/grouped\" setTo=\"yes\">grouped\u003C/$button> \u003C$button set=\"$:/grouped\" setTo=\"no\">stacked\u003C/$button>\n\n//[[Raw data|GraphData]]//"}
+</pre>
+</div>

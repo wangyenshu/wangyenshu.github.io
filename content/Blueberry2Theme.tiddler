@@ -1,0 +1,96 @@
+<div title="Blueberry2Theme" modifier="Wang Yanshu" created="202412180845">
+<pre>|Name         |Blueberry2Theme|
+|Description  |A ~TiddlyWiki Blueberry-colors theme|
+|Version      |1.0.1|
+|Author       |? (Various ideas were shamesslessly taken from and suggested by Simon Baird, Clint Checketts and Christine Hodges); Yakov Litvin (adoption to TW 2.10.1, various updates, packing into an actual theme)|
+|Source       |https://yakovl.github.io/TiddlyThemes/themes/blackicity.html#Blueberry2Theme|
+|~PageTemplate|##PageTemplate|
+|~StyleSheet  |##StyleSheet|
+Notes:
+* Headers and links in headers should be improved (better paddings, contrast, hover colors, etc.), may require introducing extra colors
+
+!PageTemplate
+<!--{{{-->
+<div class='header' macro="gradient vert #00005a #0000ad">
+    <div id='topMenu'>
+       <span refresh='content' tiddler='SiteTitle'></span>
+       <span refresh='content' tiddler='MainMenu'></span></div>
+     </div>
+</div> 
+<div id='sidebar'>
+	<div id='sidebarOptions' refresh='content' tiddler='SideBarOptions'></div>
+	<div id='sidebarTabs' refresh='content' force='true' tiddler='SideBarTabs'></div>
+</div>
+<div id='displayArea'>
+	<div id='messageArea'></div>
+	<div id='tiddlerDisplay'></div>
+</div>
+<!--}}}-->
+!StyleSheet
+/*{{{*/
+body { background: #97a8d2; }
+
+#topMenu {
+	background: transparent;
+	color: #fff;
+	padding: 6px;
+	padding-left: 1em;
+	border-bottom: solid 3px #00005a;
+}
+#topMenu .button,  #topMenu .tiddlyLink, tiddlyLinkExisting, #topMenu .externalLink
+{
+	color: #fff;
+	text-align: center;
+	font-weight: bold;
+	font-size: 1.1em;
+	text-decoration: none;
+	letter-spacing: 1.5px;
+	background: transparent;
+	border: solid 1px transparent;
+	border-right: solid 1px #fff;
+		padding: 5px 15px 6px 15px;
+}
+#topMenu a:hover {
+	background: #00009d;
+	border: solid 1px #db4;
+}
+#topMenu br {display: none; padding-right: 1em;}
+#topMenu span .tiddlyLinkNonExisting {font-style:normal;}
+
+#sidebar {width: 171px; background: #e7ecee;border-left: solid 2px #8895bb;border-top: solid 2px #97a8d2;}
+#sidebarTabs .tabContents {width: 158px; font-weight: bold; color: #333 ;}
+#sidebarTabs .tabSelected, #sidebarTabs .tabContents {background: #dce1e3;}
+#sidebarOptions input { border: solid 2px #8895bb; background: inherit; }
+#sidebarOptions .sliderPanel { background: inherit; }
+#sidebarOptions a { border: none; }
+#sidebarOptions .sliderPanel a {border: none;color: #00005a;}
+
+#displayArea {
+	background: #fff;
+	margin-right: 15.7em;
+	margin-left: 1em;
+	border-left: solid 2px #8895bb;
+}
+.viewer {
+	line-height: 1.4em;
+	padding-bottom: 1em;
+	border-bottom:solid 1px #dedede;
+}
+.tiddler:last-child .viewer {
+	padding-bottom: 0;
+	border-bottom: none;
+}
+.viewer th, thead td {background: #00009d;border: 1px solid #666;color: #fff;}
+.title { color: #000 }
+h1,h2,h3,h4,h5 {color: #fff;background: #00009d;}
+h1 a, h2 a, h3 a, h4 a, h5 a { color: #97a8d2; }
+a { color: #00005a; }
+a:hover, .selected .toolbar a:hover { background: #00009d; color: #fff;}
+.externalLink {	text-decoration: underline; color: #000083;}
+.tagging .button, .tagged .button { border: 1px solid transparent; }
+.button:hover {color: #fff;background: #00009d; border: 1px solid #dedede;}
+
+.popup li a:hover {background: #dedede;color: #000083;}
+.popup li.disabled {color: #000;}
+/*}}}*/</pre>
+</div>

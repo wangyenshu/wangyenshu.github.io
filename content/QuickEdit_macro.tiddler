@@ -1,0 +1,49 @@
+<div title="QuickEdit_macro" modifier="ELSDesignStudios" created="200801120912" modified="200906112023" tags="QuickEditPackage">
+<pre>/%
+|Name|QuickEdit_macro|
+|Source|http://www.TiddlyTools.com/#QuickEdit_macro|
+|Version|2.4.3|
+|Author|Eric Shulman|
+|License|see http://www.TiddlyTools.com/#QuickEditPlugin|
+|Type|html|
+|Requires|QuickEditPlugin|
+|Description|quickedit - embed a macro with 'guide text'|
+
+Usage: see  http://www.TiddlyTools.com/#QuickEditToolbar
+
+Note:
+Optional 'guideText' can be used to add suggested defaults/placeholders for specific macro parameters.
+Add guideText to your own plugin-defined macros using:
+	config.macros.macroName.guideText='guide text goes here';
+
+%/<<tiddler {{
+	/* define guide text for a few common TW core macros */
+	config.macros.edit.guideText='fieldname #rows';
+	config.macros.view.guideText='fieldname (link,wikified,date) format';
+	config.macros.slider.guideText='cookie TiddlerName label tooltip';
+	config.macros.option.guideText='(txtCookieName,chkCookieName)';
+	config.macros.tiddler.guideText='TiddlerName with: params...';
+	''; /* must return blank to suppress output */ }}>>/%
+
+%/<html><hide linebreaks><a href='javascript:;' class='tiddlyLink' tabindex='-1' 
+title='add a macro - \<\<macroName ...\>\>'
+onclick="var p=Popup.create(this); if (!p) return false; p.className+=' sticky smallform';
+	var s=createTiddlyElement(p,'select'); s.button=this;
+	s.options[0]=new Option('select a macro...','');
+	var macros=[]; for (var m in config.macros) if (config.macros[m].handler) macros.push(m); macros.sort();
+	for (var i=0; i<macros.length; i++) { var m=macros[i];
+		var help=config.macros[m].guideText; if (!help) help=''; else help=' '+help;
+		s.options[s.length]=new Option(m,m+help);
+		s.options[s.length-1].title='\<\<'+m+help+'\>\>';
+	}
+	s.size=Math.min(s.length,15);
+	s.onclick=function(){ if (!this.value.length) return;
+		config.quickEdit.setSelection(this.button,'\<\<'+this.value+'\>\>');
+		Popup.remove(); return false;
+	};
+	s.onkeyup=config.quickEdit.keyup;
+	Popup.show();
+	s.focus();
+	return config.quickEdit.processed(event);"
+>macro</a></html></pre>
+</div>

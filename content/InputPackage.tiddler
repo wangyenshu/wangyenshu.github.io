@@ -1,0 +1,3 @@
+<div title="InputPackage" modifier="ELSDesignStudios" created="200708191357" modified="200708191624" tags="InputPackage package story">
+<pre>This package provides a set of TW-compatible "form input fields" for accessing and modifying custom tiddler fields, tags, options, etc.  These input fields make it easier to build application-specific View/Edit templates as well as end-user-oriented "control panels" and "fill in forms".</pre>
+</div>

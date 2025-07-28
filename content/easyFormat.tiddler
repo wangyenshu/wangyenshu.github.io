@@ -1,0 +1,66 @@
+<div title="easyFormat" modifier="Wang Yanshu" created="202412190112" modified="202412190119">
+<pre>/***
+|!''Name:''|!easyFormat|
+|''Description:''|the format command format selection according to your choice|
+|''Version:''|0.1.0|
+|''Date:''|13/01/2007|
+|''Source:''|[[TWkd|http://yann.perrin.googlepages.com/twkd.html#easyFormat]]|
+|''Author:''|[[Yann Perrin|YannPerrin]]|
+|''License:''|[[BSD open source license]]|
+|''~CoreVersion:''|2.x|
+|''Browser:''|Firefox 1.0.4+; Firefox 1.5; InternetExplorer 6.0|
+|''Requires:''|@@color:red;''[[E.A.S.E]]''@@|
+***/
+//{{{
+config.commands.format = new TWkd.Ease('Format','format selection accordingly to chosen mode');
+config.commands.format.addMode({
+ name:'Bold',
+ tooltip:'turns selection into bold text',
+ operation:function(){
+ config.commands.format.putInPlace("''"+TWkd.context.selection.content+"''",TWkd.context.selection);
+ }
+});
+config.commands.format.addMode({
+ name:'Italic',
+ tooltip:'turns selection into italic text',
+ operation:function(){
+ config.commands.format.putInPlace("//"+TWkd.context.selection.content+"//",TWkd.context.selection);
+ }
+});
+config.commands.format.addMode({
+ name:'Underlined',
+ tooltip:'turns selection into underlined text',
+ operation:function(){
+ config.commands.format.putInPlace("__"+TWkd.context.selection.content+"__",TWkd.context.selection);
+ }
+});
+config.commands.format.addMode({
+ name:'Strikethrough',
+ tooltip:'turns selection into striked text',
+ operation:function(){
+ config.commands.format.putInPlace("--"+TWkd.context.selection.content+"--",TWkd.context.selection);
+ }
+});
+config.commands.format.addMode({
+ name:'Superscript',
+ tooltip:'turns selection into superscript',
+ operation:function(){
+ config.commands.format.putInPlace("^^"+TWkd.context.selection.content+"^^",TWkd.context.selection);
+ }
+});
+config.commands.format.addMode({
+ name:'Subscript',
+ tooltip:'turns selection into subscript',
+ operation:function(){
+ config.commands.format.putInPlace("~~"+TWkd.context.selection.content+"~~",TWkd.context.selection);
+ }
+});
+config.commands.format.addMode({
+ name:'Highlight',
+ tooltip:'highlight selection',
+ operation:function(){
+ config.commands.format.putInPlace("@@"+TWkd.context.selection.content+"@@",TWkd.context.selection);
+ }
+});
+//}}}</pre>
+</div>

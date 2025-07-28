@@ -1,0 +1,70 @@
+<div title="SendTiddlerConfig" modifier="ELSDesignStudios" created="200611041638" modified="200702160331" tags="settings">
+<pre>TiddlyTools PHP ShowArgs Test (POST) - one tiddler
+<!--{{{-->
+<!-- MODIFY THE ACTION URL IN THE FOLLOWING FORM DEFINITION -->
+<form target="_blank" method="post" action="http://www.tiddlytools.com/showargs.php" enctype="multipart/form-data">
+<input type="hidden" name="source" value="%source%">
+<input type="hidden" name="title" value="%title%">
+<input type="hidden" name="created" value="%created%">
+<input type="hidden" name="modified" value="%modified%">
+<input type="hidden" name="author" value="%author%">
+<textarea style="width:100%;height:85%;font-size:8pt" rows="20" name="content">source link: %source%#%title% 
+created on: %created%
+last edit: %modified%
+by: %author%
+tags: %tags%
+
+%content%</textarea>
+<div style="text-align:center">
+<input type="submit" value="send">
+<input type="reset" value="reset">
+<input type="button" value="cancel" onclick="window.close();return false;">
+<br><font size=-2>This form is for demonstration purposes only</font><!-- remove after release -->
+<br><font size=-2>ALPHA TEST - DO NOT USE IN YOUR OWN DOCUMENT - DO NOT DISTRIBUTE</font><!-- remove after release -->
+</div>
+</form>
+<!--}}}-->
+----
+TiddlyTools PHP ShowArgs Test (POST) - all tiddlers
+<!--{{{-->
+<!-- MODIFY THE ACTION URL IN THE FOLLOWING FORM DEFINITION -->
+<form target="_blank" method="post" action="http://www.tiddlytools.com/showargs.php" enctype="multipart/form-data">
+<input type="hidden" name="source" value="%source%">
+Complete TiddlyWiki 'StoreArea' (includes ALL tiddlers):
+<textarea style="width:100%;height:75%;font-size:8pt" rows="10" name="content">%alltiddlers%</textarea>
+<div style="text-align:center">
+<input type="submit" value="send">
+<input type="reset" value="reset">
+<input type="button" value="cancel" onclick="window.close();return false;">
+<br><font size=-2>This form is for demonstration purposes only</font><!-- remove after release -->
+<br><font size=-2>ALPHA TEST - DO NOT USE IN YOUR OWN DOCUMENT - DO NOT DISTRIBUTE</font><!-- remove after release -->
+</div>
+</form>
+<!--}}}-->
+----
+TiddlyTools PHP ShowArgs Test (GET) - one tiddler
+<!--{{{-->
+<!-- MODIFY THE ACTION URL IN THE FOLLOWING FORM DEFINITION -->
+<form target="_blank" method="get" action="http://www.tiddlytools.com/showargs.php">
+<input type="hidden" name="source" value="%source%">
+<input type="hidden" name="title" value="%title%">
+<input type="hidden" name="created" value="%created%">
+<input type="hidden" name="modified" value="%modified%">
+<input type="hidden" name="author" value="%author%">
+<textarea style="width:100%;height:85%;font-size:8pt" rows="20" name="content">source link: %source%#%title% 
+created on: %created%
+last edit: %modified%
+by: %author%
+tags: %tags%
+- - - - - - - - - - -
+%content%</textarea>
+<div style="text-align:center">
+<input type="submit" value="send">
+<input type="reset" value="reset">
+<input type="button" value="cancel" onclick="window.close();return false;">
+<br><font size=-2>This form is for demonstration purposes only</font><!-- remove after release -->
+<br><font size=-2>ALPHA TEST - DO NOT USE IN YOUR OWN DOCUMENT - DO NOT DISTRIBUTE</font><!-- remove after release -->
+</div>
+</form>
+<!--}}}--></pre>
+</div>

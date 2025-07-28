@@ -1,0 +1,24 @@
+<div title="YS_Installed_Extensions" modifier="Wang Yanshu" created="202507091425" modified="202507091851" creator="Wang Yanshu">
+<pre>[
+<<forEachTiddler 
+where 
+'tiddler.tags.contains("systemConfig")'
+sortBy
+'tiddler.title'
+write 
+'"{"
++"\n"
++"\"url\": \"https://github.com/wangyenshu/YS_Installed_Extensions/blob/main/"
++tiddler.title
++".js"
++"\","
++"\n"
++"\"description\": \""
++tiddler.title
++"\""
++"\n"
++"},"
++"\n"'
+>>]
+</pre>
+</div>

@@ -1,0 +1,17 @@
+<div title="PasteUpToolbar" modifier="ELSDesignStudios" created="201105171931" modified="201109091309" tags="PasteUpPackage">
+<pre>/%
+|Name|PasteUpToolbar|
+|Source|http://www.TiddlyTools.com/#PasteUpToolbar|
+|Version|1.2.5|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.5|
+|Type|plugin|
+|Description|PasteUp Quickstart command toolbar for use within ViewTemplate|
+
+%/<<tiddler PasteUpCommands##slideshow_toolbar	if:{{config.options.chkSlideshow}}>>/%
+%/<<tiddler PasteUpCommands##addpart		if:{{!window.readOnly}}>>/%
+%/<<tiddler PasteUpCommands##addpage		if:{{!window.readOnly}}>>/%
+%/<<tiddler PasteUpCommands##deletepage		if:{{!window.readOnly}}>>
+</pre>
+</div>

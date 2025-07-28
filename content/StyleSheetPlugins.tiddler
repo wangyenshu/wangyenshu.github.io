@@ -1,0 +1,133 @@
+<div title="StyleSheetPlugins" modifier="ELSDesignStudios" created="200611070646" modified="200705092227" tags="CSS ThemePackage">
+<pre>/***
+|Name|StyleSheetPlugins|
+|Source|http://www.TiddlyTools.com/#StyleSheetPlugins|
+|Version||
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|CSS|
+|Description|custom definitions for plugin-specific ID's and classes|
+>Important Note: ''this tiddler is highly-customized for the TiddlyTools document'' and you may need to extensively modify, supplement, replace or remove portions of these definitions in order to best fit //YOUR// document needs.
+***/
+/***
+!MoveablePanelPlugin - searchResults
+***/
+/*{{{*/
+.undocked .searchResults {
+	border:1px solid #abe; -moz-border-radius:1em; -webkit-border-radius:1em;
+	padding:0em; background:#003; min-width:35em;
+}
+.undocked .searchResults .title { margin-left:.5em; }
+.undocked .searchResults .viewer { -moz-border-radius: 0 0 1em 1em; }
+.undocked .searchResults .viewer ul { max-height:20em; overflow:auto; }
+.undocked .searchResults .toolbar { margin-top:.3em; padding-right:.5em; }
+/*}}}*/
+/***
+!PageTemplate - siteMenu 
+***/
+/*{{{*/
+.siteMenu
+	{ background:transparent; padding:.5em; padding-top:0; margin:0; }
+.siteMenu a, .siteMenu .button, .siteMenu .tiddlyLinkExisting, .siteMenu .tiddlyLinkNonExisting
+	{ font-weight: normal; font-style: normal; }
+/*** LEAVE THESE OUT FOR NOW
+.siteMenu .button, .siteMenu a
+	{ border:1px solid transparent; background:transparent; margin:0px; padding:0px 1px; -moz-border-radius:.5em;-webkit-border-radius:.5em; }
+.siteMenu .button:hover, .siteMenu a:hover
+	{ border:1px solid #69c; background:#006; color:#fff; }
+***/
+/*}}}*/
+/***
+!PageTemplate - storyMenu 
+***/
+/*{{{*/
+.storyMenu
+	{ display:block; margin:0em 1em .5em 1em; }
+.storyMenu a, .storyMenu .button, .storyMenu .tiddlyLinkExisting, .storyMenu .tiddlyLinkNonExisting
+	{ font-weight: normal; font-style: normal; text-decoration:none; }
+/*}}}*/
+/***
+!NestedSlidersPlugin 
+***/
+/*{{{*/
+.floatingPanel
+	{ z-index:700; padding:1em; margin:0em; border:1px solid; -moz-border-radius:1em;-webkit-border-radius:1em; font-size:8pt; text-align:left; }
+.floatingPanel hr
+	{ margin:2px 0 1px 0; padding:0; }
+#sidebarOptions .sliderPanel
+	{ margin:0; padding:0; font-size:1em; background:transparent; }
+#sidebarOptions .sliderPanel a
+	{ font-weight:normal; }
+#sidebarOptions .sliderPanel blockquote
+	{ margin:0;padding:0;margin-left:1em; border-left:1px dotted; padding-left:1em }
+
+.selected .floatingPanel .button,
+.selected .floatingPanel a:link,
+.selected .floatingPanel a:hover,
+.selected .floatingPanel a:visited,
+.floatingPanel .button,
+.floatingPanel a:link,
+.floatingPanel a:hover,
+.floatingPanel a:visited
+	{ color:[[ColorPalette::PrimaryDark]] !important; }
+
+/*}}}*/
+/***
+!CheckboxPlugin 
+***/
+/*{{{*/
+input[type="Checkbox"]
+	{ margin-top:2px;margin-bottom:2px; }
+/*}}}*/
+/***
+!BreadcrumbsPlugin 
+***/
+/*{{{*/
+/* smaller size for bread crumbs (see BreadcrumbsPlugin) */
+#breadCrumbs
+	{ display:none; margin:0em 1em; padding-bottom:.5em; font-size:7pt; } /* display:block is set by plugin when crumbs are in use */
+/*}}}*/
+/***
+!TableOfContentsPlugin 
+***/
+/*{{{*/
+#sidebarTabs .tabContents *[class="TOCList"] /* MOZ ONLY */
+	{ background-color: transparent; border-color:transparent !important; }
+/*}}}*/
+/***
+!AttachFilePlugin 
+***/
+/*{{{*/
+#sidebar .attachPanel
+	{ right:115%; top:3em; text-align:left; }
+/*}}}*/
+/***
+!ImportTiddlersPlugin 
+***/
+/*{{{*/
+#sidebar #importPanel
+	{ right:115%; top:6em; text-align:left; }
+/*}}}*/
+/***
+!ExportTiddlersPlugin 
+***/
+/*{{{*/
+#sidebar #exportPanel
+	{ right:115%; top:9em; text-align:left; }
+/*}}}*/
+/***
+!QuoteOfTheDayPlugin
+***/
+/*{{{*/
+.QOTD
+	{ color:inherit !important; background:inherit !important; }
+/*}}}*/
+/***
+!TableSorterPlugin
+***/
+/*{{{*/
+.sortedCol
+	{ color:inherit !important; background:inherit !important; }
+/*}}}*/</pre>
+</div>

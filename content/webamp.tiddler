@@ -1,0 +1,41 @@
+<div title="webamp" modifier="Wang Yanshu" created="202406191041" modified="202406230551" creator="Wang Yanshu">
+<pre>/%
+<html>
+<div id="app"></div>
+
+<script src="https://unpkg.com/webamp"></script>
+<script>
+    const app = document.getElementById("app")
+    const webamp = new Webamp();
+    webamp.renderWhenReady(app);
+</script>
+</html>
+<script src="https://unpkg.com/webamp"></script>
+<script>
+    const app = document.getElementById("app")
+    const webamp = new Webamp();
+    webamp.renderWhenReady(app);
+</script>
+
+<html>
+<div id="app"></div>
+<script src="https://unpkg.com/webamp"></script>
+<script>new Webamp({
+    initialTracks: [{
+        metaData: {
+            artist: "The Boy is Mine",
+            title: "Brandy & Monica",
+        },
+      
+      // Be careful because mp3s use up a lot of space on your            account.
+        url: "https://sadhost.neocities.org/music/Boy.mp3",
+    }],
+    
+    initialSkin: {
+        url: 
+      // Find skins https://skins.webamp.org - download them and          host them on your website!
+     "https://github.com/wangyenshu/wangyenshu.github.io/raw/main/Excel_Skin.wsz"
+    },}).renderWhenReady(app);</script>
+</html>
+%/</pre>
+</div>

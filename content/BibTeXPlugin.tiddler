@@ -1,0 +1,205 @@
+<div title="BibTeXPlugin" modifier="Wang Yanshu" created="202411221536">
+<pre>/***
+|''Name:''|BibTeXPlugin|
+|''Description:''|Very incomplete BibTeX implementation to work with bibliographic references|
+|''Version:''|1.0.0|
+|''Date:''|Sep 12, 2007|
+|''Source:''|http://www.math.ist.utl.pt/~psoares/addons.html|
+|''Documentation:''|[[BibTeXPlugin Documentation|BibTeXPluginDoc]]|
+|''Author:''|Paulo Soares|
+|''License:''|[[Creative Commons Attribution-Share Alike 3.0 License|http://creativecommons.org/licenses/by-sa/3.0/]]|
+|''~CoreVersion:''|2.1.0|
+***/
+//{{{
+config.macros.cite = {noReference: "(??)", biblioTiddler: ""};
+config.macros.bibliography = {title: "!References"};
+
+config.macros.bibliography.handler=function(place,macroName,params,wikifier,paramString,tiddler) {
+	if(params.length==0) return;
+	var title = params[0];
+	var showAll = getParam(paramString.parseParams("list",null,true),"showAll",false);
+	var entry, entryText, start, bib, prefix;
+	var entries = new Array();
+	if(title!="") wikify(config.macros.bibliography.title, place);
+	if(showAll) {
+		if(store.tiddlerExists(title)) entryText = extractAllEntries(title);
+		for(i=0; i<entryText.length; i++) {
+			bib = processEntry(entryText[i], true);
+			entries.push(bib[1]);
+		}
+	} else {
+		var text = store.getTiddlerText(tiddler.title);
+		var idx = -1;
+		while(true) {
+			idx = text.indexOf("<<cite",idx);
+			if(idx==-1) break;
+			start = text.indexOf(" ",idx)+1;
+			idx = Math.min(text.indexOf(">>",start),text.indexOf(" ",start));
+			entry = text.substring(start,idx);
+			if(store.tiddlerExists(title)) entryText = extractEntry(title, entry);
+			idx++;
+			if(entryText != null) {
+				bib = processEntry(entryText, true);
+				entries.push(bib[1]);
+			}
+		}
+	}
+	entries.sort();
+	for (var i=0; i < entries.length; i++) {
+		prefix = (i>0) ? "\n\n" : "";
+		wikify(prefix + entries[i] , place);
+	}
+	return;
+}
+
+String.prototype.extract = extractField;
+
+config.macros.cite.handler = function(place,macroName,params,wikifier,paramString,tiddler) {
+	if(params.length==0) return;
+	var text;
+	var entry = params[0];
+	var args = paramString.parseParams("list",null,true);
+	var title = getParam(args,"bibliography",undefined);
+	if(title) {
+		config.macros.cite.biblioTiddler = title;
+	} else {title = config.macros.cite.biblioTiddler;}
+	var showAll = getParam(args,"showAll",false);
+	if(title!="" && store.tiddlerExists(title)) text = extractEntry(title, entry);
+	if(text == null) {
+		wikify(config.macros.cite.noReference, place);
+	} else {
+		var bib = processEntry(text, showAll);
+		wikify(bib[0], place);
+	}
+	return;
+}
+
+function processNames(names, showAll) {
+	var authors = names.split(" and ");
+	var entry = authors[0];
+	var numAuthors = authors.length;
+	var fullEntry = entry;
+	if (numAuthors==2) {
+		entry += " and " + authors[1];
+		fullEntry = entry;
+	}
+	if (numAuthors>2) {
+		fullEntry = entry;
+		for (var i=1; i < numAuthors; i++) {
+			if (i==numAuthors-1) {fullEntry += " and "} else {fullEntry += ", "};
+			fullEntry += authors[i];
+		}
+		if(showAll) {entry = fullEntry;} else {entry += " et al.";}
+	}
+	return [entry,fullEntry];
+}
+
+function processEntry(text,showAll) {
+	var type = text.substring(text.indexOf("@")+1,text.indexOf("{"));
+	var authors = processNames(text.extract("author"), showAll); 
+	var entry = authors[0] + " ("+text.extract("year")+")";
+	var fullEntry = authors[1] + " ("+text.extract("year")+").";
+	var url = text.extract("url");
+	var title = (url) ? "[[" + text.extract("title") + "|" + url + "]]" : text.extract("title") ;
+	switch(type.toLowerCase()) {
+		case "article":
+			fullEntry += " " + title + ". //" + text.extract("journal") + "// \'\'" + text.extract("volume") + "\'\', " + text.extract("pages") + ".";
+			break;
+		case "book":
+			fullEntry += " //" + title + "//. "  + text.extract("publisher") + ".";
+			break;
+		case "inproceedings":
+			fullEntry += " " + title + ". In " + processNames(text.extract("editor"),true)[1] + " (Eds.), //" + text.extract("booktitle") + "//, " + text.extract("pages") + ". " + text.extract("publisher") + ".";
+			break;
+		case "incollection":
+			fullEntry += " " + title + ". In " + processNames(text.extract("editor"),true)[1] + " (Eds.), //" + text.extract("booktitle") + "//, " + text.extract("pages") + ". " + text.extract("publisher") + ".";
+			break;
+		case "techreport":
+			fullEntry += " " + title + ". Technical report, " + text.extract("institution") + ".";
+			break;
+		case "manual":
+			fullEntry += " //" + title + "//. " + text.extract("organization") + ".";
+			break;
+		case "unpublished":
+			fullEntry += " " + title + ". Unpublished.";
+			break;
+	}
+	return [entry, fullEntry];
+}
+
+function extractEntry(title,entry) {
+	var parseText = store.getTiddlerText(title);
+	var pos = parseText.indexOf(entry);
+	if(pos==-1) return null;
+	var previousText=parseText.substring(0,pos);
+	var start = previousText.lastIndexOf("@",pos);
+	var end = parseText.indexOf("@",pos);
+	var entryText = ((end==-1) ? parseText.substring(start) : parseText.substring(start,end));
+	return entryText;
+}
+
+function extractAllEntries(title) {
+	var parseText = store.getTiddlerText(title);
+	var start, end;
+	var pos = 0;
+	var entries = new Array();
+	while(true) {
+		start = parseText.indexOf("@",pos);
+		if(start==-1) break;
+		end = parseText.indexOf("@",start+1)+1;
+		if(end==0) end=parseText.length;
+		pos=end;
+		entries.push(parseText.substring(start,end));
+	}
+	return entries;
+}
+
+function extractField(fieldDescr) {
+	var i = this.toLowerCase().indexOf(fieldDescr);
+	if (i != -1) {
+		i += fieldDescr.length;
+		i += 1 + (this.substring(i,this.length)).indexOf("=");
+		if (i != -1) {
+			var contExtr = true;
+			var fieldDelim = ""
+			var fieldText = "";
+			var nestedPar = 0;
+			while (i<this.length && contExtr) {
+				if (fieldDelim == "") {
+					if (this.charAt(i) == "\"" || this.charAt(i) == "\'" || this.charAt(i)=="\`") {
+						fieldDelim = this.charAt(i);
+					} else if (this.charAt(i) == "\{") {
+						fieldDelim = "\}";
+					} else if (this.charAt(i) != " " && this.charAt(i) != "\t" && this.charAt(i) != "\n") {
+						fieldDelim = ",";
+						i--;
+					}
+				} else {
+					if (this.charAt(i) == "\{" && fieldDelim == "\}") {
+						nestedPar++;
+						fieldText += this.charAt(i);
+					} else if (this.charAt(i) == fieldDelim) {
+						if (nestedPar == 0) {
+							contExtr = false;
+						} else {
+							nestedPar--;
+							fieldText += this.charAt(i);
+						}
+					} else {
+						fieldText += this.charAt(i);
+					}
+				}
+				i++;
+			}
+			return fieldText;
+		} else {
+			return "";
+		}
+	} else {
+		return "";
+	}
+}
+
+config.shadowTiddlers.BibTeXPluginDoc="The documentation is available [[here.|http://www.math.ist.utl.pt/~psoares/addons.html#BibTeXPluginDoc]]";
+//}}}</pre>
+</div>

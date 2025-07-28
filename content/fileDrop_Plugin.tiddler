@@ -1,0 +1,117 @@
+<div title="fileDrop Plugin" modifier="Wang Yanshu" created="202409130141" creator="Wang Yanshu">
+<pre>/***
+!fileDrop Plugin
+!!!Description
+This plugin modifies the EditToolbar to include a folder icon where files can be dropped or which can be clicked to pick a file. When a file is dropped or selected, it is stored in the directory configured below and a link to the file is placed in the tiddler's text field at the insertion points. Works with local files only.
+!!!Configuration
+Full path to directory where dropped files should be stored: <<option txtFileDropDirectory>>
+!!!Setup
+***/
+//{{{
+// set default file location to current directory
+var filePath = getLocalPath(document.location.href);
+config.options.txtFileDropDirectory = filePath.substring(0, filePath.lastIndexOf("\\"));
+
+// modify EditToolbar to have file drop target
+var toolbar = store.getTiddlerSlice("ToolbarCommands",["EditToolbar"]);
+if (toolbar) {
+  var found = false;
+  toolbarItems = toolbar.split(" ");
+  for ( var i=0; i<toolbarItems.length; i++ ) {
+    if ( toolbarItems[i] == "deleteTiddler" ) { var addBefore = i; }
+    if ( toolbarItems[i] == "dropFile" ) { found = true; break; }
+    }
+  if ( !found ) {
+    toolbarItems.splice(addBefore,0,"dropFile");
+    newToolbar = "|~EditToolbar|" + toolbarItems.join(" ") + "|";
+    var text = store.getTiddlerText("ToolbarCommands");
+    text = text.replace(/[|][~]EditToolbar[|].+?[|]/,newToolbar);
+    store.saveTiddler("ToolbarCommands","ToolbarCommands",text,"fileDrop plugin",new Date());
+    }
+  }
+
+// modify EditTemplate to include fileDropMacro
+var etext = store.getTiddlerText("EditTemplate");
+if ( etext.indexOf("fileDrop") == -1 ) {
+  etext = etext.replace("<!--}}}-->","<div macro='fileDropMacro'></div>\n<!--}}}-->");
+  store.saveTiddler("EditTemplate","EditTemplate",etext,"fileDrop plugin",new Date());
+  }
+//}}}
+/***
+!!!Toolbar item
+***/
+//{{{
+config.commands.dropFile = {
+  text: 'file',
+  hideReadOnly: true,
+  tooltip: 'Drop file here to insert link into text',
+  handler: function(event,src,title) {}
+  }
+//}}}
+/***
+!!!Drop target
+***/
+//{{{
+ config.macros.fileDropMacro = {}
+ config.macros.fileDropMacro.css = '.fileDropIcon svg { width: 16px; }';
+ config.macros.fileDropMacro.handler = function(place,macroName,params,wikifier,paramString,tiddler) {
+     setStylesheet(config.macros.fileDropMacro.css,"fileDropStyles");
+     var fileSVG = '<html><svg viewBox="0 0 91.929001 74.248001"><g transform="translate(-4.036,-12.876)"><path style="fill:#000000" d="m 88.305,87.124 -76.61,0 c -4.224,0 -7.659,-3.436 -7.659,-7.66 l 0,-58.931 c 0,-4.223 3.436,-7.657 7.659,-7.657 l 19.151,0 c 3.753,0 8.631,2.21 11.105,5.031 l 2.551,2.929 c 1.783,2.036 5.732,3.825 8.444,3.825 l 35.359,0 c 4.225,0 7.66,3.437 7.66,7.658 l 0,47.145 c 0,4.224 -3.436,7.66 -7.66,7.66 z M 11.694,16.405 c -2.277,0 -4.127,1.852 -4.127,4.127 l 0,58.932 c 0,2.274 1.85,4.127 4.127,4.127 l 76.61,0 c 2.277,0 4.129,-1.853 4.129,-4.127 l 0,-47.146 c 0,-2.274 -1.852,-4.127 -4.129,-4.127 l -35.358,0 c -3.751,0 -8.629,-2.211 -11.104,-5.033 L 39.291,20.23 c -1.785,-2.035 -5.733,-3.825 -8.446,-3.825 l -19.151,0 z" /></g></svg></html>';
+     var id = tiddler.title+"_files";
+     jQuery(".command_dropFile[tiddler='"+tiddler.title+"']").each( function () {
+       this.innerHTML = "";
+       var fileBtn = createTiddlyElement(this,"span",id,"fileDropIcon");
+       wikify(fileSVG,fileBtn);
+       });
+     var dropTarget = document.getElementById(id);
+     var tidId = story.tiddlerId(tiddler.title);
+     dropTarget.tidid = tidId;
+     dropTarget.addEventListener('dragover',handleDragOver,false);
+     dropTarget.addEventListener('drop',handleFileSelect,false);
+    }
+//}}}
+/***
+!!!Functions to handle file drop and create link at cursor position in tiddler text
+***/
+//{{{
+  function handleFileSelect(evt) {
+    evt.stopPropagation();
+    evt.preventDefault();
+    var files = evt.dataTransfer.files;     // FileList object.
+    var fileNames = [];
+    for ( var i=0, f; f=files[i]; i++) {
+      fileNames.push(f.name);
+      }
+    if ( fileNames.length > 1 ) { alert("Please drop a single file"); return false; }
+    var filePath = config.options.txtFileDropDirectory;
+    filePath = filePath.replace(/[/]/,"\\");
+    if ( filePath.slice(-1) != "\\" ) { filePath = filePath + "\\"; }
+    filePath += fileNames[0];
+    var reader = new FileReader();
+    reader.path = filePath;
+    reader.onload = function(e) {
+      saveFile(this.path,e.target.result);
+      }
+    reader.readAsText(files[0], "UTF-8");	
+    var textBox = jQuery("#" + this.tidid).find("textarea[edit='text']");
+    var text = textBox.val();
+    var start = textBox.prop("selectionStart");
+    var end = textBox.prop("selectionEnd");
+    if ( start == end ) { var link = "[[" + fileNames[0] + "|" + filePath + "]]"; }
+      else { var link = "[[" + text.substring(start,end) + "|" + filePath + "]]"; }
+    if ( start > 0 ) { newText = text.substr(0,start) + link; } else { newText = link; }
+    if ( end < text.length-1) { newText += text.substr(end); }
+    textBox.val(newText);
+    newPos = start + link.length;
+    textBox.get(0).setSelectionRange(newPos,newPos);
+    return false;
+    }
+
+  function handleDragOver(evt) {
+    evt.stopPropagation();
+    evt.preventDefault();
+    evt.dataTransfer.dropEffect = 'copy';
+    return false;
+    }
+//}}}</pre>
+</div>

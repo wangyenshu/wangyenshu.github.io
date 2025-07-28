@@ -1,0 +1,147 @@
+<div title="BreadcrumbsPluginInfo" modifier="acarvalho" created="201206231902" modified="201304211254" tags="System pluginInfo" _hash="6a8cdb1eb56ce9d0d0b10079fd82277a6495c692">
+<pre>/***
+|Name|BreadcrumbsPluginInfo|
+|Author|Eric Shulman|
+|Source|http://www.TiddlyTools.com/#BreadcrumbsPlugin|
+|Documentation|http://www.TiddlyTools.com/#BreadcrumbsPluginInfo|
+|Version|2.1.5|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|documentation|
+|Description|Documentation for BreadcrumbsPlugin|
+This plugin provides a list of links to all tiddlers opened during the session, creating a "trail of breadcrumbs" from one tiddler to the next, allowing you to quickly navigate to any previously viewed tiddler, or select 'home' to reset the display to the initial set of tiddlers that were open at the start of the session (i.e., when the document was loaded into the browser).
+!!!!!Usage
+<<<
+{{{
+<<breadcrumbs homeSeparator crumbSeparator>>
+}}}
+By default, the breadcrumbs are displayed as a continuous, //horizontal// word-wrapped line of text, using default character sequences for ''homeSeparator'' (" | ") and ''crumbSeparator'' (" > ").  The //optional// ''homeSeparator'' and ''crumbSeparator'' macro parameters allow you to specify alternative separators.  For example, to display the breadcrumbs //vertically// (in a stack, rather than a row), set the separator values to use {{{[[<br>]]}}}... and, to display a horizontal line as the home separator, use {{{[[<html><hr></html>]]}}}.
+{{{
+<<previousTiddler>>
+}}}
+This macro embeds a 'back' button in your content.  Clicking the button opens/scrolls to the most recent previously viewed tiddler.  You can also add the {{{previousTiddler}}} keyword to the ~ViewToolbar slice definition in ToolbarCommands.  This adds a 'back' button directly to the toolbar of each tiddler that is displayed.
+<<<
+!!!!!Examples:
+<<<
+{{{
+<<breadcrumbs>>
+}}}
+<<breadcrumbs>>
+{{{
+<<breadcrumbs [[<html><hr></html>]] [[<br>]]>>
+}}}
+<<breadcrumbs [[<html><hr></html>]] [[<br>]]>>
+<<<
+!!!!!Customization
+<<<
+Using CSS and a few of the plugin configuration options (see below), you can make the breadcrumbs display resemble browser tabs by adding the following to your [[StyleSheet]]:
+{{{
+.breadCrumbs { border-bottom:1px solid; }
+.breadCrumbs a {
+	border: 1px solid; padding: 0px 1em;
+	-moz-border-radius-topleft:.5em; -moz-border-radius-topright:.5em;
+	-webkit-border-top-left-radius:.5em; -webkit-border-top-right-radius:.5em;
+}
+}}}
+and this in [[ConfigTweaks]] (tagged with systemConfig, of course):
+{{{
+config.options.chkShowStartupBreadcrumbs=true;
+config.options.chkBreadcrumbsLimitOpenTiddlers=true;
+config.options.txtBreadcrumbsLimitOpenTiddlers=1;
+config.macros.breadcrumbs.homeSeparator=" ";
+config.macros.breadcrumbs.crumbSeparator=" ";
+}}}
+<<<
+!!!!!Configuration
+<<<
+__''display placement:''__
+<<option chkCreateDefaultBreadcrumbs>> automatically create breadcrumbs display (if needed)
+{{{<<option chkCreateDefaultBreadcrumbs>>}}}
+>By default, the plugin automatically creates the "breadCrumbs" display element at the top of the story column, just above the tiddlerDisplay area.  To manually control the display and placement of the breadcrumbs display, you can define a DIV with class="breadCrumbs" in a custom [[PageTemplate]] or embed the {{{<<breadcrumbs>>}}} macro in specific tiddler content.
+>
+>For example, to add the breadcrumbs below the mainMenu, change this:
+{{{
+<div id='mainMenu' refresh='content' tiddler='MainMenu'></div>
+}}}
+>to:
+{{{
+<div id='mainMenu'>
+	<div refresh='content' tiddler='MainMenu'></div>
+	<div id='breadCrumbs' class='breadCrumbs'></div>
+</div>
+}}}
+>You can also block automatic creation of the breadcrumbs display by setting
+{{{
+config.options.chkCreateDefaultBreadcrumbs=false;
+}}}
+>in a [[CookieJar]]/[[ConfigTweaks]] plugin tiddler.
+
+__''other settings:''__
+<<option chkShowBreadcrumbs>> show/hide breadcrumbs display
+{{{<<option chkShowBreadcrumbs>>}}}
+>This checkbox toggles the visibility of the breadcrumbs display.  However, the display is not updated until the next crumb is added (or a previous crumb is clicked on).  For immediate effect, you can use [[ToggleBreadcrumbs]] to synchronize the checkbox setting and the breadcrumbs display.
+<<option chkReorderBreadcrumbs>> re-order breadcrumbs when visiting a previously viewed tiddler
+{{{<<option chkReorderBreadcrumbs>>}}}
+>When visiting a previously viewed tiddler, the title of the most-recently displayed tiddler is simply moved to the end of the list and individual breadcrumbs are not removed from the list unless the underlying tiddler is deleted.  When ''re-ordering'' is disabled, the breadcrumbs list is ''trimmed'' so that all crumbs following that tiddler are removed from the list.
+<<option chkBreadcrumbsHideHomeLink>> omit 'Home' link from breadcrumbs display
+{{{<<option chkBreadcrumbsHideHomeLink>>}}}
+>Enabling this option suppresses the automatic display of the "Home" link (and home separator).  To manually add the home link elsewhere in your document, use the following HTML:
+{{{
+<html><a href="javascript:;" onclick="config.macros.breadcrumbs.home()">home</a></html>
+}}}
+<<option chkBreadcrumbsSave>> prompt to save breadcrumbs when 'Home' link is pressed
+{{{<<option chkBreadcrumbsSave>>}}}
+>Whenever you press the 'home' button, you can be prompted to save the current breadcrumbs in a tiddler as a space-separated list of tiddler links (default title="SavedBreadcrumbs").  
+<<option chkShowStartupBreadcrumbs>> show breadcrumbs for 'startup' tiddlers
+{{{<<option chkShowStartupBreadcrumbs>>}}}
+>Breadcrumbs are usually only added for tiddlers that are opened after the document has been loaded, and not for tiddlers displayed during initial startup (e.g., [[DefaultTiddlers]]).  Enabling this option displays breadcrumbs for all viewed tiddlers, regardless of when they are opened.
+<<option chkBreadcrumbsReverse>> show breadcrumbs in reverse order
+{{{<<option chkBreadcrumbsReverse>>}}}
+>As tiddlers are displayed, breadcrumbs are usually added to the //end// of the list.  Enabling this option displays breadcrumbs in reverse order, so that the most recently visited tiddlers are listed first.
+<<option chkBreadcrumbsLimit>> limit breadcrumbs display to {{twochar{<<option txtBreadcrumbsLimit>>}}} items
+{{{<<option chkBreadcrumbsLimit>>}}} and {{{<<option txtBreadcrumbsLimit>>}}}
+>By default, breadcrumbs are displayed for all tiddlers that have been visited (unless the list is being 'trimmed' by disabling the chkReorderBreadcrumbs option above).  Enabling this option limits the display of the list to a maximum specified number of breadcrumbs.
+<<option chkBreadcrumbsLimitOpenTiddlers>> limit open tiddlers to {{twochar{<<option txtBreadcrumbsLimitOpenTiddlers>>}}} items
+{{{<<option chkBreadcrumbsLimitOpenTiddlers>>}}} and {{{<<option txtBreadcrumbsLimitOpenTiddlers>>}}}
+>By default, tiddlers remain open (e.g., displayed in the story column) until you explicitly close them.  When this option is enabled, only the most recently opened tiddlers will remain open: ''any tiddlers in excess of the specified limit are automatically closed.''  //Note: for 'data safety', if a tiddler is being edited, you will be asked for permission to "save-and-close" that tiddler or leave it open (even if that would exceed the specified limit).//
+<<<
+!!!!!Revisions
+<<<
+2012.06.10 2.1.5 refactored default options to eliminate global variable and use init() handling
+2011.02.16 2.1.4 in refresh(), use 'inline' instead of 'block' style (avoids unwanted linebreak).  In previousTiddler(), allow handling even if not in a tiddler so that back button can be placed in ~MainMenu or ~SidebarOptions.
+2010.11.30 2.1.3 use story.getTiddler()
+2009.10.19 2.1.2 code reduction
+2009.03.22 2.1.0 added 'save breadcrumbs to tiddler' feature
+2008.05.01 2.0.0 added 'limit open tiddlers' feature (with safety check for tiddler in edit mode)
+2008.04.06 1.9.1 corrected 'limit' logic so that //last// N crumbs are shown instead of //first// N crumbs.  Also, added chkBreadcrumbsHideHomeLink
+2008.04.04 1.9.0 added chkBreadcrumbsReverse and chk/txtBreadcrumbsLimit
+2008.03.29 1.8.4 in displayTiddler(), get title from tiddler object (if needed).  Fixes errors caused when calling function passes a tiddler *object* instead of a tiddler *title*
+2008.03.24 1.8.3 include shadow tiddlers in breadcrumbs list.  Also changed settings so that "reordering" breadcrumbs is the default, instead of "trimming" the list
+2007.12.04 [*.*.*] update for TW2.3.0: replaced deprecated core functions, regexps, and macros
+2007.10.26 1.8.2 documentation cleanup
+2007.10.18 1.8.1 in GetAreas(), use try/catch to avoid "Bad NPObject as private data" fatal error caused when embedded QuickTime player element is accessed by hasClass() function.
+2007.10.02 1.8.0 major documentation and code cleanup.  Moved config.breadCrumbs.* to config.macros.breadcrumbs.* to consolidate objects.  Also, fixed homeSeparator and crumbSeparator default handling.
+2007.10.02 1.7.0 added config.options.chkShowStartupBreadcrumbs option
+2007.09.16 1.6.1 in getAreas(), removed errant use of 'place' (was causing fatal error when creating default breadcrumbs display element).  Also, added chkCreateDefaultBreadcrumbs configuration setting to enable/disable automatic creation of a default breadcrumbs display.
+2007.09.16 1.6.0 re-wrote refresh() to enable multiple display instances, by finding elements with "breadCrumbs" classname.  Fallback to fixed ID (="breadCrumbs") is still used for backward-compatibility.  move rendering code from refresh() to separate render() function, and added definition for {{{<<breadCrumbs>>}}} macro to support embedding breadcrumbs displays in tiddler content.
+2007.09.15 [1.5.9.1] updated documentation
+2007.09.15 1.5.9 defined homeSeparator (" | ") and crumbSeparator (" > ") as object properties so that they can be redefined as desired for different layouts (e.g., using 'newline' for the crumbSeparator will arrange crumbs in a column rather than a row.
+2007.06.21 [1.5.8.1] in home(), return false to prevent IE from attempting to navigate away...
+2007.05.26 1.5.8 added support for {{{<<option chkReorderBreadcrumbs>>}}} to toggle trim vs. re-order behavior when visiting previously viewed tiddlers
+2007.05.25 1.5.7 added support for {{{<<option chkShowBreadcrumbs>>}}} to toggle //display// of breadcrumbs
+2007.05.24 1.5.6 in refresh(), remove non-existing tiddler titles from crumb list.  Also, hijack removeTiddler() so crumbs can be updated after tiddler is deleted.
+2007.04.11 1.5.5 added optional params to previousTiddler macro handler() to allow alternative label and tooltip text (instead of default "back")
+2007.03.02 1.5.4 in refresh(), for TW2.2, look for "storyDisplay" instead of "tiddlerDisplay" but keep fallback to "tiddlerDisplay" for TW2.1 or earlier
+2007.02.24 1.5.3 changed from hijack of onClickTiddlerLink to hijack of displayTiddler() so that ALL displayed tiddlers are recorded in the crumbs, including programmatically displayed tiddlers opened by macros, scripts, etc., (such as [[GotoPlugin]], among many others) in addition to those opened by clicks on links.
+2007.02.24 [1.5.2.0] eliminated global space clutter by moving function and data declarations so they are contained inside config.breadCrumbs object.
+2007.02.06 1.5.1 added "previousTiddler" macro (for use in sidebar)
+2007.02.05 1.5.0 added "previousTiddler" toolbar command (aka, "back")
+2006.08.04 [1.4.0.1] change spaces to tabs
+2006.08.04 1.4.0 modified from 1.4.0 distro: in refresh(), set {{{display:none/block}}} instead of {{{visibility:hidden/visible}}}.  In home(), check for valid crumbArea before setting style.
+2006.08.02 1.4.0 Fixed bug, the redefined onClickTiddlerLink_orig_breadCrumbs works incorrectly on IE
+2006.07.20 1.3.0 Runs compatibly with TW 2.1.0 (rev #403+)
+2006.02.07 1.2.0 change global array breadCrumbs to config.breadCrumbs by Eric's suggestion
+2006.02.04 1.1.0 JSLint checked
+2006.02.01 1.0.0 initial release
+<<<</pre>
+</div>

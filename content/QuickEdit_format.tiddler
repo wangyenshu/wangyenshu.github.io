@@ -1,0 +1,91 @@
+<div title="QuickEdit_format" modifier="ELSDesignStudios" created="200801111625" modified="200906112024" tags="QuickEditPackage">
+<pre>/%
+|Name|QuickEdit_format|
+|Source|http://www.TiddlyTools.com/#QuickEdit_format|
+|Version|2.4.3|
+|Author|Eric Shulman|
+|License|see http://www.TiddlyTools.com/#QuickEditPlugin|
+|Type|html|
+|Requires|QuickEditPlugin|
+|Description|quickedit - basic text formats, headings, blockquotes, etc.|
+
+Usage: see  http://www.TiddlyTools.com/#QuickEditToolbar
+
+%/<html><hide linebreaks><a href="javascript:;" class="tiddlyLink" tabindex="-1" 
+title="plain text (remove ALL formatting)" accesskey="P" 
+onclick="var e=config.quickEdit.getField(this); if (e) e.focus(); var txt=config.quickEdit.getSelection(e);
+	config.quickEdit.setSelection(e,wikifyPlainText(txt)); return false;"
+>&nbsp;~&nbsp;</a></html>/%
+
+%/<html><hide linebreaks><a href="javascript:;" class="tiddlyLink" tabindex="-1" 
+title="''bold''" accesskey="B"
+onclick="config.quickEdit.wrapSelection(this,'\x27\x27','\x27\x27'); return false;"
+>&nbsp;B&nbsp;</a></html>/%
+
+%/<html><hide linebreaks><a href="javascript:;" class="tiddlyLink" tabindex="-1" 
+title="//italics//" accesskey="I" 
+onclick="config.quickEdit.wrapSelection(this,'//','//'); return false;"
+>&nbsp;I&nbsp;</a></html>/%
+
+%/<html><hide linebreaks><a href="javascript:;" class="tiddlyLink" tabindex="-1" 
+title="__underline__" accesskey="U" 
+onclick="config.quickEdit.wrapSelection(this,'__','__'); return false;"
+>&nbsp;U&nbsp;</a></html>/%
+
+%/<html><hide linebreaks><a href="javascript:;" class="tiddlyLink" tabindex="-1" 
+title="--strikethrough--" accesskey="S" 
+onclick="config.quickEdit.wrapSelection(this,'--','--'); return false;"
+>&nbsp;S&nbsp;</a></html>/%
+
+%/ &nbsp;/%  SPACER
+
+%/<html><hide linebreaks><a href="javascript:;" class="tiddlyLink" tabindex="-1" 
+title="format text"
+onclick="var p=Popup.create(this); if (!p) return false; p.className+=' sticky smallform';
+	var s=createTiddlyElement(p,'select'); s.button=this;
+	s.options[0]=new Option('select text format...','');
+	s.options[s.length]=new Option('CSS class wrapper','{{$1{,}}},Enter a CSS classname');
+	s.options[s.length-1].title='CSS class wrapper - {{classname classname etc{...}}}';
+	s.options[s.length]=new Option('inline CSS styles','@@$1,@@,Enter CSS (attribute:value;attribute:value;...;)');
+	s.options[s.length-1].title='inline CSS styles - @@attr:value;attr:value;...@@';
+	s.options[s.length]=new Option('heading 1','\n!,\n');
+	s.options[s.length-1].title='H1 heading - !';
+	s.options[s.length]=new Option('heading 2','\n!!,\n');
+	s.options[s.length-1].title='H2 heading - !!';
+	s.options[s.length]=new Option('heading 3','\n!!!,\n');
+	s.options[s.length-1].title='H3 heading - !!!';
+	s.options[s.length]=new Option('heading 4','\n!!!!,\n');
+	s.options[s.length-1].title='H4 heading - !!!!';
+	s.options[s.length]=new Option('heading 5','\n!!!!!,\n');
+	s.options[s.length-1].title='H5 heading - !!!!!';
+	s.options[s.length]=new Option('blockquote','\n\<\<\<\n,\n\<\<\<\n');
+	s.options[s.length-1].title='indented blockquote - \<\<\<';
+	s.options[s.length]=new Option('monospaced','{{{,}}}');
+	s.options[s.length-1].title='inline monospaced text - {{{...}}}';
+	s.options[s.length]=new Option('plain text','\n{{{\n,\n}}}\n');
+	s.options[s.length-1].title='multi-line monospaced text box - {{{...}}}';
+	s.options[s.length]=new Option('superscript','^^,^^');
+	s.options[s.length-1].title='^^superscript^^';
+	s.options[s.length]=new Option('subscript','~~,~~');
+	s.options[s.length-1].title='~~subscript~~';
+	s.options[s.length]=new Option('HTML','<html>,<\x2fhtml>');
+	s.options[s.length-1].title='HTML syntax - <html>...<\x2fhtml>';
+	s.options[s.length]=new Option('comment','/%,%/');
+	s.options[s.length-1].title='comment (hidden content) - /%...%/';
+	s.size=s.length;
+	s.onclick=function(){ if (!this.value.length) return;
+		var parts=this.value.split(',');
+		var prefix=parts[0]; var suffix=parts[1]; var ask=parts[2];
+		if (ask) {
+			var val=prompt(ask); if (!val) { Popup.remove(); return false; }
+			prefix=prefix.replace(/\$1/g,val); suffix=suffix.replace(/\$1/g,val);
+		}
+		config.quickEdit.wrapSelection(this.button,prefix,suffix);
+		Popup.remove(); return false;
+	};
+	s.onkeyup=config.quickEdit.keyup;
+	Popup.show();
+	s.focus();
+	return config.quickEdit.processed(event);"
+>format</a></html></pre>
+</div>

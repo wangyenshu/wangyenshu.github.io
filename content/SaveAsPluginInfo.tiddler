@@ -1,0 +1,111 @@
+<div title="SaveAsPluginInfo" modifier="ELSDesignStudios" created="200801090109" modified="200910132029" tags="pluginInfo ImportExportPackage">
+<pre>|Name|SaveAsPluginInfo|
+|Source|http://www.TiddlyTools.com/#SaveAsPlugin|
+|Documentation|http://www.TiddlyTools.com/#SaveAsPluginInfo|
+|Version|2.7.0|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|documentation|
+|Description|Documentation for SaveAsPlugin|
+>//Note: This plugin replaces ''[[NewDocumentPlugin]]'' (except for the HTML+CSS "snapshot" features, which are now provided by [[SnapshotPlugin]].//
+!!!!!Usage
+<<<
+This plugin automatically adds a 'save as' command to the TiddlyWiki 'backstage' menu so you can quickly create an exact copy of the current TiddlyWiki document.  The plugin also defines a macro that you can use to place a "save as..." command link into your sidebar/mainmenu/any tiddler (or wherever you like).  When the command link is clicked, a system-specific dialog box will be displayed so you can select/enter the desired target path and filename.
+{{{
+<<saveAs "label:..." "prompt:..." "filename:..." "type:..." "limit:..."
+	quiet replace merge open filter|ask|here|none>>
+}}}
+//(all parameters are optional)//
+*''label:...''<br>custom link text (instead of "save as...")
+*''prompt:...''<br>custom tooltip text
+*''filename:...''<br>default filename to be shown when asking for an output path/file
+*''type:...''<br>a keyword, indicating one of the following output file formats:
+**''~TiddlyWiki''<br>(or ''wiki'' or ''tw'') a TiddlyWiki HTML document 
+**''~PureStore''<br>(or ''store'' or ''ps'') a TiddlyWiki "PureStore" HTML export file (just tiddlers, no core code)
+**''~PlainText''<br>(or ''text'' or ''tx'') a plain text file listing of tiddler //source// content
+**''Comma''<br>(or ''csv'' or ''cs'') a Comma-Separated Value (CSV) database/spreadsheet file
+**''~NewsFeed''<br>(or ''xml'' or ''rss'' or ''nf'') an RSS ~NewsFeed XML file
+*''limit:...''<br>output is limited to the specified number of tiddlers
+*''quiet''<br>normally, when using filtering (see below), the number of matching tiddlers is reported and you are asked to confirm before saving those tiddlers to a new file.  Use the ''quiet'' keyword to suppress this confirmation step.
+*''replace''<br>overwrites existing output file, if any, without confirmation.
+*''merge''<br>merges with existing output file, if any, without confirmation.
+*''open''<br>opens the newly created document file in a separate browser tab/window.
+*''filter''<br>selects a subset of tiddlers to be written into the new document.  If omitted, all tiddlers in the document are written to the new file.  ''filter'' can either:
+**a tag value<br>selects only tiddlers that are tagged with that value.  To select tiddlers based on a combination of tags, you can install [[MatchTagsPlugin]] to construct complex 'tag expressions' using full 'boolean' logic with AND, OR, and NOT operators, as well as nested parentheses.
+**''ask''<br>prompts you to enter a tag (or tag expression) whenever you click on the 'save as...' command
+**''here''<br>selects the current tiddler (if any).  If the command is not embedded within a tiddler, you will be prompted to enter a tiddler title.
+**''none''<br>omits all tiddlers and creates a new //empty// document
+<<<
+!!!!!Examples
+<<<
+save all tiddlers:
+>{{{<<saveAs>>}}}<br>try it: <<saveAs>>
+save only tiddlers matching a single tag:
+>{{{<<saveAs "label:create Import/Export starter" "filename:TW+ImportExport.html" ImportExportPackage>>}}}
+>try it: <<saveAs "label:create Import/Export starter" "filename:TW+ImportExport.html" "ImportExportPackage>>
+save to a ~PureStore format:
+>{{{<<saveAs "label:create Import/Export archive" "filename:ImportExportPackage.html" type:PureStore open ImportExportPackage>>}}}
+>try it: <<saveAs "label:create Import/Export archive" "filename:ImportExportPackage.html" type:PureStore open ImportExportPackage>>
+save to a ~PlainText format:
+>{{{<<saveAs "label:create Import/Export source listing" type:PlainText open ImportExportPackage>>}}}
+>try it: <<saveAs "label:create Import/Export source listing" type:PlainText open ImportExportPackage>>
+save tiddlers matching a complex combination of tags (requires [[MatchTagsPlugin]]):
+>{{{<<saveAs (alpha or settings) and not systemConfig>>}}}
+>try it: <<saveAs (alpha or settings) and not systemConfig>>
+prompt for tag or tag expression each time:
+>{{{<<saveAs "label:custom save as..." ask>>}}}
+>try it: <<saveAs "label:custom save as..." ask>>
+save this tiddler:
+>{{{<<saveAs "label:save this tiddler..." {{"filename:"+tiddler.title}} quiet here>>}}}
+>try it: <<saveAs "label:save this tiddler..." {{"filename:"+tiddler.title}} quiet here>>
+<<<
+!!!!!Revisions
+<<<
+2009.10.13 2.7.0 added 'here' param (saves current tiddler)
+2009.08.16 2.6.2 fixed handling for backstage
+2009.08.04 2.6.1 fixed handling when limit is omitted.
+2009.08.03 2.6.0 added 'limit:nn' parameter.
+2009.08.02 2.5.3 in getData(), if type=RSS, sort by modified (most recent first).
+2009.07.03 2.5.2 TW252 fixup: don't call convertUTF8ToUnicode() for local loadFile() I/O
+2009.04.30 2.5.1 custom fields in CSV output.
+2009.04.19 2.5.0 added CSV format.
+2008.09.29 2.4.3 in getData(), convert UTF8 to Unicode before merging (fixes international characters).
+2008.09.28 2.4.2 in go(), fixed typo that prevented backstage SaveAs from working.
+2008.09.24 2.4.1 if rewriting *current* file and chkSaveBackups and/or chkGenerateAnRssFeed is enabled, then write a backup file or RSS feed, respectively
+2008.09.24 2.4.0 when 'open' param is used and file is saved to current location, reload() page instead of opening a new tab/window.  Added 'filename' param to specify default filename.  Added 'replace' and 'merge' keyword params to control file handling without asking user.  Improved use of 'quiet' flag to eliminate more unwanted messages
+2008.09.19 2.3.2 fixed backstage SaveAs command (was defaulting to empty document).  in formatItem(), removed unnecessary convertUnicodeToUTF8() (was causing double-conversion!)
+2008.09.16 2.3.1 fixed IE 'navigate away' error by returning false from button onclick handler
+2008.09.11 2.3.0 added support for alternative file formats: ~PlainText (TX), ~PureStore (PS), or ~NewsFeed (XML) in addition to existing ~TiddlyWiki (TW) document format
+2008.09.06 2.2.1 corrected handling of autoopen attribute so it only applies when "open" param is specified
+2008.08.01 2.2.0 added "open" param to auto-open newly saved document
+2008.07.20 2.1.3 added "quiet" param to bypass confirmation when using tag filter
+2008.04.22 2.1.2 corrected use of getTarget() to check for "user cancelled"
+2008.04.22 2.1.1 documentation fixes
+2008.04.22 2.1.0 added support for tag filtering to completely replace [[NewDocumentPlugin]] (now retired)
+2008.04.12 2.0.1 automatically add "saveAs" to backstage commands
+2008.04.12 2.0.0 initial release based on [[NewDocumentPlugin]]
+
+__Previous revisions from [[NewDocumentPlugin]]__
+2008.04.20 1.8.0 added support for 'noCSS' and 'viewer' params for alternative snapshot output
+2008.01.08 [*.*.*] plugin size reduction: documentation moved to ...Info tiddler
+2007.12.04 [*.*.*] update for ~TW2.3.0: replaced deprecated core functions, regexps, and macros
+2007.03.30 1.7.0 added support for "print" param as alternative for "snap".  When "print" is used, the filename is ignored and ouput is directed to another browser tab/window, where the print dialog is then automatically triggered
+2007.03.30 1.6.1 added support for "here" keyword for current tiddler elementID and "prompt:text" param for specifying tooltip text
+2007.02.12 1.6.0 in onClickNewDocument(), reset HTML source 'markup'
+2006.10.23 1.5.1 in onClickNewDocument(), get saved parameter value for snapID instead of using default "contentWrapper" (oops!)
+2006.10.18 1.5.0 new optional param for 'snap'... specify alternative DOM element ID (default is still "contentWrapper")
+2006.08.03 1.4.3 in promptForFilename(), for IE (~WinXP only), added handling for ~UserAccounts.~CommonDialog
+2006.07.29 1.4.2 in onClickNewDocument(), okmsg display is now linked to newly created file
+2006.07.24 1.4.1 in promptForFilename(), check for nsIFilePicker.returnCancel to allow nsIFilePicker.returnOK **OR** nsIFilePicker.returnReplace to be processed
+2006.05.23 1.4.0 due to very poor performance, support for tag *expressions* has been removed, in favor of a simpler "containsAny()" scan for tags
+2006.04.09 1.3.6 in onClickNewDocument, added call to convertUnicodeToUTF8() to better handle international characters
+2006.03.15 1.3.5 added nsIFilePicker() handler for selecting filename in moz-based browsers.  IE and other non-moz browsers still use simple prompt() dialog
+2006.03.15 1.3.0 added "label:text" param for custom link text.  added special "all" filter parameter for "save as..." handling (writes all tiddlers to output file)
+2006.03.09 1.2.0 added special "snap" filter parameter to generate and write "snapshot" files containing static HTML+CSS for currently rendered document
+2006.02.24 1.1.2 Fix incompatiblity with TW 2.0.5 by removing custom definition of getLocalPath() (which is now part of TW core)
+2006.02.03 1.1.1 concatentate 'extra' params so that tag expressions don't have to be quoted.   moved all text to 'formatted' string definitions for easier translation.
+2006.02.03 1.1.0 added support for tag EXPRESSIONS.  plus improved documentation and code cleanup
+2006.02.03 1.0.0 Created
+<<<</pre>
+</div>

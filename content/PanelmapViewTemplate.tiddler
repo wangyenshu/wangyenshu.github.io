@@ -1,0 +1,19 @@
+<div title="PanelmapViewTemplate" modifier="ELSDesignStudios" created="200811192231" modified="200801062031">
+<pre><!--{{{-->
+<div class='moveablePanel'>
+<div class='toolbar'>
+	<span macro='moveablePanel load:{{tiddler?tiddler.title:""}} label:"load this map"'></span>
+	<span macro='toolbar [[ToolbarCommands::ViewToolbar]]'></span>
+</div>
+<div class='title' macro='view title'></div>
+<div class='subtitle'><span macro='view modifier link'></span>, <span macro='view modified date'></span> (<span macro='message views.wikified.createdPrompt'></span> <span macro='view created date'></span>)</div>
+<div class='tagged' macro='tags'></div>
+<div class='tagging' macro='tagging'></div>
+<div class='viewer'>
+	<div class='content' macro='view text wikified'></div>
+</div>
+<div class='tagClear'></div>
+<div macro='moveablePanel name:{{story.findContainingTiddler(place).getAttribute("tiddler")}} undocked fold hover height:auto'></div>
+</div>
+<!--}}}--></pre>
+</div>

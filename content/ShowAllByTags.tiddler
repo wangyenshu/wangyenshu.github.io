@@ -1,0 +1,37 @@
+<div title="ShowAllByTags" modifier="ELSDesignStudios" created="200701151913" modified="200808050023" tags="DiscoveryPackage script">
+<pre>/%
+|Name|ShowAllByTags|
+|Source|http://www.TiddlyTools.com/#ShowAllByTags|
+|Version|1.1.0|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|script|
+|Requires|InlineJavascriptPlugin|
+|Description|for each tag, show a numbered list of all tiddlers with that tag|
+
+Usage:
+	<<tiddler ShowAllByTags with: "tag tag tag">>
+where
+	"tag tag tag" (optional)
+		quoted, space-separated, bracketed list of tags to **exclude** from the display
+
+!Revisions
+2008.08.04 [1.1.0] added optional parameter to exclude specified tags
+!end Revisions
+
+%/<script>
+	var ex=[];
+	if ("$1"!="$"+"1") ex="$1".readBracketedList();
+	var tags = store.getTags();
+	if(tags.length == 0) return "no tags in document";
+	var out="";
+	for(var t=0; t<tags.length; t++) {
+		if (ex.contains(tags[t][0])) continue;
+		out+="*[["+tags[t][0]+"]] ("+tags[t][1]+")"+"\n";
+		var tids=store.getTaggedTiddlers(tags[t][0]);
+		for (i=0; i<tids.length; i++) out+="##[["+tids[i].title+"]]\n";
+	}
+	return out;
+</script></pre>
+</div>

@@ -1,0 +1,37 @@
+<div title="QuickEdit_sort" modifier="ELSDesignStudios" created="200801111616" modified="200906112023" tags="QuickEditPackage">
+<pre>/%
+|Name|QuickEdit_sort|
+|Source|http://www.TiddlyTools.com/#QuickEdit_sort|
+|Version|2.4.3|
+|Author|Eric Shulman|
+|License|see http://www.TiddlyTools.com/#QuickEditPlugin|
+|Type|html|
+|Requires|QuickEditPlugin|
+|Description|quickedit - sort lines of text|
+
+Usage: see  http://www.TiddlyTools.com/#QuickEditToolbar
+
+%/<html><hide linebreaks><a href="javascript:;" class="tiddlyLink" tabindex="-1" 
+title="sort lines of text"
+onclick="var p=Popup.create(this); if (!p) return false; p.className+=' sticky smallform';
+	var s=createTiddlyElement(p,'select'); s.button=this;
+	s.options[0]=new Option('select sort order...','');
+	s.options[s.length]=new Option('ascending','A');
+	s.options[s.length-1].title='ascending';
+	s.options[s.length]=new Option('descending','D');
+	s.options[s.length-1].title='descending';
+	s.size=s.length;
+	s.onclick=function(){ if (!this.value.length) return;
+		var e=config.quickEdit.getField(this.button); if (!e) return false;
+		var lines=config.quickEdit.getSelection(e).split('\n').sort();
+		if (this.value=='D') lines=lines.reverse();
+		replaceSelection(e,lines.join('\n'));
+		e.focus();
+		Popup.remove(); return false;
+	};
+	s.onkeyup=config.quickEdit.keyup;
+	Popup.show();
+	s.focus();
+	return config.quickEdit.processed(event);"
+>sort</a></html></pre>
+</div>

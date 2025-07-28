@@ -1,0 +1,47 @@
+<div title="LetsGetTanked" modifier="ELSDesignStudios" created="200607160348" modified="200801230101" tags="CSS ThemePackage stylesheets systemTheme">
+<pre>/***
+|Name|Let's Get Tanked!|
+|Source|http://www.TiddlyTools.com/#Let's Get Tanked!|
+|Version||
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|CSS|
+|Description|theme: dark blue fishtank photo background|
+|StyleSheet|Let's Get Tanked!|
+|PageTemplateReadOnly|PageTemplateReadOnly|
+|EditTemplateReadOnly|EditTemplateReadOnly|
+***/
+
+[[StyleSheetAdjustments]]
+[[BrightText]]
+/* ==== Let's Get Tanked! ==== */
+/*{{{*/
+body
+	{ background-image: url('[[LetsGetTankedBackground]]'); background-attachment: fixed; background-color:#113; }
+.menubox
+	{ background: #003; border:1px solid; -moz-border-radius:1em;-webkit-border-radius:1em; padding:1em }
+.annotation
+	{ background-color: #003; }
+.viewer
+	{ background: #003; border:1px solid; -moz-border-radius:1em;-webkit-border-radius:1em; padding:1em; opacity:0.8; filter:'alpha(opacity:80)'; }
+#tiddlerWelcome .tabContents
+	{ opacity:0.9; filter:'alpha(opacity:90)'; }
+.header
+	{ background-image: none; background-color:transparent; color:#ccf; border:0; }
+.floatingPanel, .attachPanel, #importPanel, #exportPanel,
+	{ background: #eef; }
+.floatingPanel a, .attachPanel a, #importPanel a, #exportPanel a, #sidebarTabs .tabContents a,
+.floatingPanel .button, .attachPanel .button, #importPanel .button, #exportPanel .button, #sidebarTabs .tabContents .button,
+.floatingPanel .tiddlyLinkExisting, .attachPanel .tiddlyLinkExisting, #importPanel .tiddlyLinkExisting, #exportPanel .tiddlyLinkExisting, #sidebarTabs .tabContents .tiddlyLinkExisting
+	{ color:#009; }
+.siteMenu .floatingPanel, #messageArea 
+	{ background: #eef; }
+.tiddlyCard { background:#ffd; }
+.viewer h1,.viewer h2,.viewer h3,.viewer h4,.viewer h5 { background: #666; color:#fff; }
+.viewer .tabContents, #sidebarTabs .tabContents
+	{ background-color:#002; }
+.tabContents a, .tabContents .button, .tabContents .tiddlyLinkExisting
+	{ color:#99f; }
+/*}}}*/</pre>
+</div>

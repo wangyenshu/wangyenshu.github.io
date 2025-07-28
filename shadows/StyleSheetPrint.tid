@@ -1,0 +1,8 @@
+title: StyleSheetPrint
+
+/*{{{*/
+@media print {
+  #mainMenu, #sidebar, #messageArea, .toolbar, #backstageButton, #backstageArea { display: none !important; }
+  #displayArea { margin: 1em 1em 0em; }
+}
+/*}}}*/

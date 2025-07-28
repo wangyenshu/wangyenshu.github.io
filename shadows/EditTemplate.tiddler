@@ -1,0 +1,13 @@
+<div title="EditTemplate" modifier="Wang Yanshu" created="202401160113" modified="202412190119">
+<pre><!--{{{-->
+<div class='toolbar' macro='toolbar [[ToolbarCommands::EditToolbar]]'></div>
+<div class='title' macro='view title'></div>
+<div class='editor' macro='edit title'></div>
+<div macro='annotations'></div>
+<div macro='tiddler QuickEditToolbar with: show'></div>
+<div class='editor' macro='edit text' id='acehidetweditor'></div>
+<div id='aceViewer' contenteditable='true' spellcheck='true'></div>
+<div class='editor' macro='edit tags'></div><div class='editorFooter'><span macro='message views.editor.tagPrompt'></span><span macro='tagChooser excludeLists'></span></div>
+<!--}}}-->
+</pre>
+</div>

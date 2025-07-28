@@ -1,0 +1,32 @@
+<div title="QuickEditPackage" modifier="YourName" created="200801120200" modified="202401160119" tags="package story QuickEditPackage">
+<pre>This package provides a toolbar of interactive 'power tools' that you can use while editing a tiddler to quickly insert TiddlyWiki tiddler links, images, macros, etc. or common formatting sequences directly into tiddler content, as well as perform other functions (such as find/replace, sort, split, convert, etc.) that can be used to modify the current tiddler's source content in a variety of ways.
+
+<<tiddler QuickEditToolbar with: show>>
+!!!!!Installation:
+<<<
+Individual ~QuickEdit buttons are defined in separate tiddlers (e.g., [[QuickEdit_replace]]) that have also been //transcluded// into a single toolbar definition named [[QuickEditToolbar]].  You can edit this definition to add, remove, or rearrange the toolbar buttons to best suit your needs, and then embed the [[QuickEditToolbar]] tiddler into your document's [[EditTemplate]], like this:
+{{{
+<div macro='tiddler QuickEditToolbar'></div>
+}}}
+Next, in order to support some of the formatting 'shortcuts' provided by the toolbar, add a reference to the shortcuts CSS class definitions in your [[StyleSheet]]:
+{{{
+[[StyleSheetShortcuts]]
+}}}
+By default, the QuickEdit toolbar is hidden until you enable it by using the ''toggleQuickEdit'' command, which you can add to the ~EditToolbar definition in [[ToolbarCommands]]:
+{{{
+|EditToolbar|... toggleQuickEdit ...|
+}}}
+You can also toggle the ~QuickEdit toolbar display via a single checkbox option that can be added to [[SideBarOptions]] (or any other desired location):
+{{{
+<<option chkShowQuickEdit>> show QuickEdit toolbar
+}}}
+Note: You can 'hard-code' the ''chkShowQuickEdit'' setting, so that the toolbar will be //initially// displayed, by creating a tiddler (e.g., ConfigTweaks), tagged with <<tag systemConfig>>, containing:
+{{{
+config.options.chkShowQuickEdit=true;
+}}}
+Alternatively, if you want the toolbar to //always// be displayed, regardless of the option setting, you can add a special keyword, ''show'', to the [[EditTemplate]] syntax, like this:
+{{{
+<div macro='tiddler QuickEditToolbar with: show'></div>
+}}}
+<<<</pre>
+</div>

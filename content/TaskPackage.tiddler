@@ -1,0 +1,10 @@
+<div title="TaskPackage" modifier="ELSDesignStudios" created="200707021550" modified="200707162215" tags="package TaskPackage story">
+<pre>Tiddlers that are tagged with<<tag task>>can be used to ''describe specific tasks'' and ''assign'' them to individuals, ''track'' the status (e.g., "not started", "in progress", "done", etc.), and ''record elapsed time'' of specific activities connected to a given task.
+
+Task tiddlers are displayed using a custom [[TaskViewTemplate]], which automatically embeds extra task-related controls directly in the tiddler //view//, allowing you to quickly ''assign and track task progress, without needing to edit the tiddler content.''
+
+''To start a new task, simply create a tiddler, enter some text (e.g., notes about the task), add tag<<tag task>>, and then press 'done' to start viewing the tiddler.''  Alternatively, you can add the following """<<newTiddler>>""" macro in your SideBarOptions (or any other tiddler) to insert a<<newTiddler label:'new task' title:'NewTask' tag:'task' prompt:'create a task tiddler'>>command into your document:
+{{{
+<<newTiddler label:'new task' title:'NewTask' tag:'task' prompt:'create a task tiddler'>>
+}}}</pre>
+</div>

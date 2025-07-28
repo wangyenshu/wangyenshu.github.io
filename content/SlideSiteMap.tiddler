@@ -1,0 +1,6 @@
+<div title="SlideSiteMap" modifier="Wang Yanshu" created="202407251353" creator="Wang Yanshu">
+<pre>Demo of slider formatting in SiteMapMacro
+|!sliders|!openSliders|!popups|
+|{{{<<siteMap TagglyTagging . sliders>>}}}|{{{<<siteMap TagglyTagging . openSliders>>}}}|{{{<<siteMap TagglyTagging . popups>>}}}|
+|<<siteMap TagglyTagging . sliders>>|<<siteMap TagglyTagging . openSliders>>|<<siteMap TagglyTagging . popups>>|</pre>
+</div>

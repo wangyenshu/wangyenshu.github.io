@@ -1,0 +1,59 @@
+<div title="easyInsert" modifier="Wang Yanshu" created="202412190112" modified="202412190119">
+<pre>/***
+|!''Name:''|!easyInsert|
+|''Description:''|insert text template at caret position|
+|''Version:''|0.0.4|
+|''Date:''|10/02/2017|
+|''Source:''|[[easyInsert|http://acarvalho.tiddlyspot.com/#easyInsert]]|
+|''Author:''|André de Carvalho|
+|''License:''|[[BSD open source license]]|
+|''~CoreVersion:''|2.x|
+|''Browser:''|Firefox 1.0.4+; Firefox 1.5; InternetExplorer 6.0|
+|''Requires:''|@@color:red;''[[E.A.S.E]]''@@|
+
+!!History
+''0.0.4 10/02/2017 : Added insert file reference''
+''0.0.3 02/02/2017 : corrected image parameters''
+''0.0.2 19/05/2013''
+
+***/
+//{{{
+config.commands.insert = new TWkd.Ease('Insert','insert template text at caret position');
+config.commands.insert.addMode({
+ name:'Image',
+ tooltip:'image template',
+ operation:function(){
+config.commands.format.putInPlace(""+TWkd.context.selection.content+"<<Image \"FR\" \"320\" \"filename\" \".\" \"\\filepath\\\">>",TWkd.context.selection);
+ }
+});
+config.commands.insert.addMode({
+ name:'Image with caption',
+ tooltip:'image with caption template',
+ operation:function(){
+config.commands.format.putInPlace(""+TWkd.context.selection.content+"<<Image \"FR\" \"320\" \"filename\" \".\" \"\\filepath\\\" \"\" \"caption\">>",TWkd.context.selection);
+ }
+});
+config.commands.insert.addMode({
+ name:'Bib reference',
+ tooltip:'bibliographical reference template',
+ operation:function(){
+config.commands.format.putInPlace(""+TWkd.context.selection.content+"<<BibRef \"reference\">>",TWkd.context.selection);
+ }
+});
+config.commands.insert.addMode({
+ name:'Popnote',
+ tooltip:'selection to inline popnote',
+ operation:function(){
+config.commands.format.putInPlace("<<quote \'"+TWkd.context.selection.content+"\' \'targettiddler\'>>",TWkd.context.selection);
+ }
+});
+config.commands.insert.addMode({
+ name:'File reference',
+ tooltip:'Local relative file reference',
+ operation:function(){
+config.commands.format.putInPlace("[["+TWkd.context.selection.content+"|file:.\\]]",TWkd.context.selection);
+ }
+});
+
+//}}}</pre>
+</div>

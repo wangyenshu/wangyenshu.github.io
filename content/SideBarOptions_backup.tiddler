@@ -1,0 +1,222 @@
+<div title="SideBarOptions_backup" created="202405140325">
+<pre><html>
+<div id="mc_embed_signup" style="width:150px; background-color: transparent; ">
+    <form action="https://github.us22.list-manage.com/subscribe/post?u=86627690321a510f57710f560&amp;id=dedd244e72&amp;f_id=002ed3e1f0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" class="validate" target="_blank">
+        <div id="mc_embed_signup_scroll" style="width:190px; background-color: transparent;">
+            
+            <div class="mc-field-group" style="width:150px "><label for="mce-EMAIL"> </label><input type="email" name="EMAIL" class="required email" id="mce-EMAIL" required="" value="" style="width:150px "></div>
+
+            <div class="response" id="mce-error-response" style="display: none;"></div>
+            <div class="response" id="mce-success-response" style="display: none;"></div>
+        </div>
+    <div style="position: absolute; left: -5000px;" aria-hidden="true">
+        /* real people should not fill this in and expect good things - do not remove this or risk form bot signups */
+        <input type="text" name="b_86627690321a510f57710f560_dedd244e72" tabindex="-1" value="">
+    </div>
+        <div class="optionalParent" style="width:74px ">
+            <div class="clear foot" style="width:74px ">
+                <input type="submit" name="subscribe" id="mc-embedded-subscribe" class="button" value="Subscribe Newsletter">
+               
+            </div>
+        </div>
+    </div>
+</form>
+</div>
+</html>
+<html><nowiki><span class="button nowrap" style="cursor:pointer"
+	title="enable/disable editing of this document"
+	onclick="this.getElementsByTagName('input')[0].click();">
+<input type='checkbox' style="margin:0;padding:0;cursor:pointer" onclick="
+	window.readOnly=!this.checked;
+	config.macros.option.propagateOption('chkHttpReadOnly','checked',window.readOnly,'input');
+	config.macros.option.propagateOption('chkSinglePageMode','checked',window.readOnly,'input');
+	config.macros.option.propagateOption('chkSlideshow','checked',false,'input');
+	config.macros.storyViewer.started=false;
+	if (!config.extensions.tiddlyspace) { // DON'T HIDE BACKSTAGE FOR TIDDLYSPACE
+		window.showBackstage=!window.readOnly;
+		if(showBackstage && !backstage.area) backstage.init();
+		backstage.button.style.display=showBackstage?'block':'none';
+		backstage.hide();
+	}
+	story.switchTheme(config.options.txtTheme); store.notifyAll(); story.refreshAllTiddlers(true);
+	return false;
+">edit</span></html><<tiddler {{
+	var e=place.lastChild.getElementsByTagName('input')[0];
+	e.checked=!window.readOnly;
+'';}}>>
+----
+!+++[ReaderTools|ReaderTools]
+----
+[[Manual]]
+----
+Encryption
+<<EncryptDecryptBookmarklet>>
+----
+===
+----
+!+++[AuthorTools|AuthorTools]
+----
+Quick Link
+[[SideBarOptions]]
+[[Test Tiddler]]
+<<emptyTrash>>
+[[Home]]
+[[MainMenu]]
+[[AdministrationPage]]
+----
+Encryption:
+[[TiddlerEncryptionPlugin]]
+<<EncryptionDecryptAll>>
+<<EncryptionChangePassword>>
+----
+Syntax
+[[NestedSlidersPluginInfo]]
+[[TWC Reference|https://classic.tiddlywiki.com/#Reference]]
+[[MathJaxPlugin]]
+[[TwFormulaPlugin]]
+[[PluginMarkdown]]
+[[DisableWikiLinksList]]
+[[DisableWikiLinksPlugin]]
+[[DcTableOfContentsPlugin]]
+----
+Bookmarklets
+<html><nowiki><a href="javascript:;" title="Toggle Developer Console"
+onmouseover="
+    this.href='javascript:void(eval(decodeURIComponent(%22(function(){try{('
+    +encodeURIComponent(encodeURIComponent(this.onclick))
+    +')()}catch(e){alert(e.description?e.description:e.toString())}})()%22)))';"
+onclick="
+    (function() {
+        var script = document.createElement('script');
+        script.src = 'https://cdn.jsdelivr.net/gh/SnowLord7/devconsole@master/main.js';
+        script.onload = function() { alert('Loaded Developer Console!'); };
+        document.head.appendChild(script);
+    })();
+    return false;
+">🔧 - Toggle Developer Console</a></nowiki></html>
+<html><nowiki><a href="javascript:;" title="Multitools"
+onmouseover="
+    this.href='javascript:void(eval(decodeURIComponent(%22(function(){try{('
+    +encodeURIComponent(encodeURIComponent(this.onclick))
+    +')()}catch(e){alert(e.description?e.description:e.toString())}})()%22)))';"
+onclick="
+    (function() {
+        var v = document.createElement('script');
+        v.src = 'https://cdn.jsdelivr.net/gh/Browncha023/Vengeance@v1.2.0/script.min.js';
+        document.body.appendChild(v);
+    })();
+    return false;
+">🛠️ - Multitools</a></nowiki></html>
+<html><nowiki>
+<a href="javascript:;" title="Stats"
+onmouseover="
+    this.href='javascript:void(eval(decodeURIComponent(%22(function(d){%27use%20strict%27;var%20raf=%28typeof%20requestAnimationFrame%20===%20%27function%27%29?requestAnimationFrame:function%28f%29%7Breturn%20setTimeout%28f%2C15%29%3B%7D%2Cs%3Dd.createElement%28%27script%27%29%3Bs.onload=function%28%29%7Bvar%20s%3Dnew%20Stats%28%29%3Bfunction%20loop%28%29%7Bs.update%28%29%3Braf%28loop%29%7D%3Bs.domElement.style.cssText=%27position%3Afixed%3Bleft%3A0%3Btop%3A0%3Bz-index%3A10000%27%3B%28d.body%7Cd.getElementsByTagName%28%27body%27%29%5B0%5D%29.appendChild%28s.domElement%29%3Braf%28loop%29%3B%7D%3Bs.src=%27https%3A%2F%2Frawgit.com%2Fmrdoob%2Fstats.js%2Fmaster%2Fbuild%2Fstats.min.js%27%3B%28d.head%7Cd.getElementsByTagName%28%27head%27%29%5B0%5D%29.appendChild%28s%29%3B%7D%29%28document%29%3B%22)))'"
+onclick="
+    (function(d){
+        'use strict';
+        var raf = typeof requestAnimationFrame === 'function' ? requestAnimationFrame : function(f) { return setTimeout(f, 15); },
+        s = d.createElement('script');
+        s.onload = function() {
+            var s = new Stats();
+            function loop() {
+                s.update();
+                raf(loop);
+            }
+            s.domElement.style.cssText = 'position:fixed;left:0;top:0;z-index:10000';
+            (d.body || d.getElementsByTagName('body')[0]).appendChild(s.domElement);
+            raf(loop);
+        };
+        s.src = 'https://rawgit.com/mrdoob/stats.js/master/build/stats.min.js';
+        (d.head || d.getElementsByTagName('head')[0]).appendChild(s);
+    })(document);
+    return false;
+">📊 - Stats</a>
+</nowiki></html>
+<html><nowiki>
+<a href="javascript:;" title="Show User Agent"
+onmouseover="
+    this.href='javascript:void(eval(decodeURIComponent(%22(function(){alert(navigator.userAgent);})()%22))'"
+onclick="
+    (function() {
+        alert(navigator.userAgent);
+    })();
+    return false;
+">&#128187; - Show User Agent</a>
+</nowiki></html>
+<html><nowiki>
+<a href="javascript:;" title="View Cookies"
+onmouseover="
+    this.href='javascript:void(eval(decodeURIComponent(%22(function(){document.cookie=prompt(document.cookie,document.cookie);})()%22))'"
+onclick="
+    (function() {
+        document.cookie = prompt(document.cookie, document.cookie);
+    })();
+    return false;
+">
+    🍪 - View Cookies
+</a>
+</nowiki></html>
+<html><nowiki>
+<a href="javascript:;" title="WebFontPicker" 
+onmouseover="
+    this.href='javascript:void(eval(decodeURIComponent(\'(function(w,d){\'use strict\';var t=w.WFP=w.WFP||{},e=\'https:\'===w.location.protocol?\'https:\':\'http:\';t.bookmarklet=3,t.Picker&&t.Picker.show(),t.attached||t.Picker||((function(t){var e=d.createElement(\'link\');e.rel=\'stylesheet\',e.type=\'text/css\',e.href=t,(d.head||d.getElementsByTagName(\'head\')[0]).appendChild(e)})(e+\'//gavrilov.co.uk/wfp/WFP.css\'),(function(t){var e=d.createElement(\'script\');e.type=\'text/javascript\',e.src=t,(d.head||d.getElementsByTagName(\'head\')[0]).appendChild(e)})(e+\'//gavrilov.co.uk/wfp/WFP.full.min.js\'),t.attached=!0})(window,document)\'))'"
+onclick="
+    (function(w,d){
+        'use strict';
+        var t = w.WFP = w.WFP || {},
+            e = 'https:' === w.location.protocol ? 'https:' : 'http:';
+        t.bookmarklet = 3;
+        t.Picker && t.Picker.show();
+        t.attached || t.Picker || (
+            (function(t){
+                var e = d.createElement('link');
+                e.rel = 'stylesheet';
+                e.type = 'text/css';
+                e.href = t;
+                (d.head || d.getElementsByTagName('head')[0]).appendChild(e);
+            })(e + '//gavrilov.co.uk/wfp/WFP.css'),
+            (function(t){
+                var e = d.createElement('script');
+                e.type = 'text/javascript';
+                e.src = t;
+                (d.head || d.getElementsByTagName('head')[0]).appendChild(e);
+            })(e + '//gavrilov.co.uk/wfp/WFP.full.min.js'),
+            t.attached = !0
+        );
+    })(window,document);
+    return false;
+">🔤 - WebFontPicker</a>
+</nowiki></html>
+<html><nowiki>
+<a href="javascript:;" title="Three.js Inspector" 
+onmouseover="
+&nbsp;&nbsp;&nbsp; this.href='javascript:void(eval(decodeURIComponent(%22(function(){try{('
+&nbsp;&nbsp;&nbsp; +encodeURIComponent(encodeURIComponent(this.onclick))
+&nbsp;&nbsp;&nbsp; +')()}catch(e){alert(e.description?e.description:e.toString())}})()%22)))';"
+onclick="
+&nbsp;&nbsp;&nbsp; (function(){
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; var script=document.createElement('script');
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; script.type='text/javascript';
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; script.src='https://cdn.rawgit.com/zz85/zz85-bookmarklets/master/js/ThreeInspector.js';
+        script.onerror = function() { alert('Sorry, the Three.js Inspector could not be loaded. This might happen if rawgit.com is no longer serving files.'); };
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; document.body.appendChild(script);
+&nbsp;&nbsp;&nbsp; })();
+&nbsp;&nbsp;&nbsp; return false;
+">🧊 - Three.js Inspector</a></nowiki></html>
+----
+===
+----
+!<<calendar thismonth>>
+----
+!Math Quote of the Day
+<<QOTD collectedquotes >>
+----
+!Tagcloud
+<<tagCloud excludeLists excludeSearch systemConfig systemServer PluginInfo Plugin excludeMissing excludePublisher takenotepackage app DiscoveryPackage NavigationPackage IconPackage TidIDEPackage TaskPackage ScrollbarPackage MediaPackage pluginInfo @cdent @developers @ricardoperes Administration follow tips Content System systemConfigDisable AttachFilePackage IFramePackage QuickEditPackage Tag ThemePackage attachment package sample settings story tiddlyLife BasicsPackage BookmarkPackage CD CSS DiscussionPackage ImportExportPackage InputPackage JashPackage MoveablePanelPackage PasetUpPackage PasteUpPackage TiddlyTools animation blank bookmarklet catalog discussion excludeTheme framedLinks html media moveable panelmap patch script setup stylesheet stylesheets systemTheme template test translate transclusion locked silk [[Trash Plugins]] [[To Do]] scrollXeditor demo hide K2BlogTheme Plugins alpha lewcidExtension ace babel cb-production pushtiddler noClose>>
+----
+!Timeline
+<<timeline>>
+----
+Unsaved Changes:
+<<unsavedChanges list "<br>">></pre>
+</div>

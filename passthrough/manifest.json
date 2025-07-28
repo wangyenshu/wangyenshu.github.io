@@ -1,0 +1,29 @@
+{
+  "icons": [
+    {
+      "src": "/assets/icons/android-chrome-96x96.png",
+      "sizes": "96x96",
+      "type": "image/png"
+    },
+    {
+      "src": "/assets/icons/favicon-512x512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "name": "Yanshu Wang's Blog",
+  "short_name": "wysblog",
+  "id": "yanshu_wang_blog",
+  "description": "Welcome to Yanshu Wang's Blog.",
+  "start_url": "https://wangyenshu.github.io/",
+  "dir": "auto",
+  "lang": "en",
+  "orientation": "any",
+  "scope": "\"scope\": \"https://wangyenshu.github.io\"",
+  "categories": [
+    "lifestyle"
+  ]
+}

@@ -1,0 +1,111 @@
+<div title="MainMenu" modifier="Wang Yanshu" created="202312221102" modified="202507071547">
+<pre>[[Home]]
+[[Plugins]]
+[[Posts]]
+[[Gallary]]
+[[Hobbies]]
+[[Links]]
+[[Service]]
+[[Location]]
+<html>
+<a href="index.xml" class="tiddlyLink tiddlyLinkExisting"  >RSS</a>
+</html>
+[[About]]
+<html><nowiki><a href="javascript:;" title="Toggle Dark Mode" class="tiddlyLink tiddlyLinkExisting"
+onmouseover="
+    this.href='javascript:void(eval(decodeURIComponent(%22(function(){try{('
+    +encodeURIComponent(encodeURIComponent(this.onclick))
+    +')()}catch(e){alert(e.description?e.description:e.toString())}})()%22)))';"
+onclick="
+    (function() {
+        function invertColor(color, type) {
+            var parts = color.split('(');
+            if (parts.length < 2) return color;
+            var values = parts[1].split(')')[0].split(',');
+            values = values.map(function(val, index) {
+                return index < 3 ? (type === 'color' && 255 - parseInt(val) < 50 ? 120 : 255 - parseInt(val)) : val;
+            });
+            return parts[0] + '(' + values.join(',') + ')';
+        }
+
+        document.querySelectorAll('*:not([invTouch])').forEach(function(element) {
+            var styles = window.getComputedStyle(element);
+            element.style.backgroundColor = invertColor(styles.backgroundColor, 'back');
+            element.style.color = invertColor(styles.color, 'color');
+            element.setAttribute('invTouch', 'true');
+        });
+    })();
+    return false;
+">DarkMode</a></nowiki></html>
+<html>
+<a href="vr.html" class="tiddlyLink tiddlyLinkExisting"  >VR Mode</a>
+</html>
+<<toggleSideBar "SideBar">>
+/%
+<html><nowiki><a href="javascript:;" title="Toggle 3D Mode" class="tiddlyLink tiddlyLinkExisting"
+onmouseover="
+    this.href='javascript:void(eval(decodeURIComponent(%22(function(){try{('
+    +encodeURIComponent(encodeURIComponent(this.onclick))
+    +')()}catch(e){alert(e.description?e.description:e.toString())}})()%22)))';"
+onclick="
+    if (!window.ThreeDit) {
+        ThreeDit = (function(window, document) {
+            var config = { zDepth: 300, maxElems: 100, perspective: 500, initialized: false };
+            var elements = [], doc = document, body = doc.body, html = doc.documentElement;
+            var centerX = window.innerWidth / 2, centerY = window.innerHeight / 2;
+            var mouseX = centerX, mouseY = centerY;
+            var prefix = 'webkitTransform' in body.style ? 'webkit' : 'MozTransform' in body.style ? 'Moz' : '';
+            var transform = prefix + 'Transform', transformOrigin = prefix + 'TransformOrigin';
+
+            function updateMouse(event) {
+                mouseX = event.clientX + window.scrollX;
+                mouseY = event.clientY + window.scrollY;
+            }
+
+            function apply3D() {
+                var tiltX = ((mouseX - centerX) / centerX) * 5;
+                var tiltY = -((mouseY - centerY) / centerY) * 5;
+                for (var i = 0; i < elements.length; i++) {
+                    var el = elements[i].node;
+                    el.style[transformOrigin] = centerX + 'px ' + centerY + 'px';
+                    el.style[transform] = 'rotateY(' + tiltX + 'deg) rotateX(' + tiltY + 'deg) translate3d(0,0,' + (elements[i].z * config.zDepth) + 'px)';
+                }
+            }
+
+            function scanElements(root, depth) {
+                if (elements.length >= config.maxElems) return;
+                if (root.tagName === 'DIV' && root.children.length > 0) {
+                    elements.push({ node: root, z: depth });
+                }
+                for (var i = 0; i < root.children.length; i++) {
+                    scanElements(root.children[i], depth + 1);
+                }
+            }
+
+            function init3D() {
+                elements = [];
+                scanElements(body, 0);
+                elements.sort(function(a, b) { return a.z - b.z; });
+
+                if (!config.initialized) {
+                    window.addEventListener('mousemove', updateMouse);
+                    window.addEventListener('resize', function() {
+                        centerX = window.innerWidth / 2;
+                        centerY = window.innerHeight / 2;
+                    });
+                    setInterval(apply3D, 1000 / 60);
+                    config.initialized = true;
+                }
+            }
+
+            return { init: init3D, recollect: function() { elements = []; scanElements(body, 0); } };
+        })(window, document);
+        ThreeDit.init();
+    } else {
+        ThreeDit.recollect();
+    }
+    return false;
+">3DMode</a></nowiki></html>
+%/
+</pre>
+</div>

@@ -1,0 +1,24 @@
+<div title="QuickEdit_image" modifier="ELSDesignStudios" created="200801120913" modified="200906151958" tags="QuickEditPackage">
+<pre>/%
+|Name|QuickEdit_image|
+|Source|http://www.TiddlyTools.com/#QuickEdit_image|
+|Version|2.4.3|
+|Author|Eric Shulman|
+|License|see http://www.TiddlyTools.com/#QuickEditPlugin|
+|Type|html|
+|Requires|QuickEditPlugin|
+|Description|quickedit - embed an image|
+
+Usage: see  http://www.TiddlyTools.com/#QuickEditToolbar
+
+%/<html><hide linebreaks><a href="javascript:;" class="tiddlyLink" tabindex="-1" 
+	title="embed an image (jpg/gif/png) - [img[tooltip|URL]] or [img[tooltip|path/to/file.ext]]"
+	onclick="var fn=config.quickEdit.promptForFilename(
+		'Enter/select an image file',getLocalPath(document.location.href),'');
+	if (!fn) return false;  /* cancelled by user */
+	var h=document.location.href; var p=decodeURIComponent(h.substr(0,h.lastIndexOf('/')+1));
+	if (fn.startsWith(p)) fn=fn.substr(p.length); /* use RELATIVE path/filename.ext */
+	var tip=prompt('Enter a tooltip for this image',''); if (!tip) tip=''; else tip+='|';
+	return config.quickEdit.setSelection(this,'[img['+tip+fn+']]');"
+>image</a></html></pre>
+</div>

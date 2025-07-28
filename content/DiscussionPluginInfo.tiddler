@@ -1,0 +1,94 @@
+<div title="DiscussionPluginInfo" modifier="ELSDesignStudios" created="200804152330" modified="200901041846" tags="pluginInfo">
+<pre>/***
+|Name|DiscussionPluginInfo|
+|Source|http://www.TiddlyTools.com/#DiscussionPlugin|
+|Documentation|http://www.TiddlyTools.com/#DiscussionPluginInfo|
+|Version|1.5.7|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|Documentation|
+|Description|Documentation for DiscussionPlugin|
+!!!!!Usage
+<<<
+syntax:
+{{{
+<<discussion listformat reverse tags commentformat dateformat>>
+}}}
+where:
+*''listformat'' //(optional)//<br>specifies the display format for each item in the summary list. //Note: when specifying additional macro parameters, you can use a blank value (e.g., {{{""}}}) as a 'placeholder' to allow the default item format to be used.//
+*''reverse'' //(optional)//<br>by default, the comments in the discussion summary list are shown in date/time order, with the oldest item listed first.  The ''reverse'' keyword, when present, indicates the display order should be inverted so that the most recent item is listed first.
+*''tags'' //(optional)//<br>specifies one or more space-separated tags to add to the target tiddler whenever a comment is written.  Note that the list of tags should be enclosed in "..." so that it is processed as a single parameter.  If you do not want tags added to the individual comment tiddlers, use a blank value (e.g., {{{""}}}) as a 'placeholder'.  Regardless of the tags that are specified, a tag of "comment" is always added to each target tiddler.  This is required in order to locate the tiddler when generating the dicussion summary list.
+*''commentformat'' //(optional)//<br>specifies a custom output format to be used when inserting comments into the target tiddler, where: %when%=formatted date/timestamp, %who%=username, %subject%=comment subject text, and %message% is the body of the comment.  When present, this parameter overrides the default output format defined via {{{config.macros.comment.fmt}}}.  See the ''Configuration'' section below and in [[CommentPluginInfo]] for additional details.
+*''dateformat'' //(optional)//<br>specifies a custom date/timestamp output used within the comment format above.  When present, this parameter overrides the default date/timestamp format defined via {{{config.macros.comment.datefmt}}}.  See the ''Configuration'' section below and in [[CommentPluginInfo]] for additional details.
+<<<
+!!!!!Configuration
+<<<
+[[DiscussionPlugin]] can automatically modify the default shadow [[ViewTemplate]] so that all tiddlers will be rendered with two tabs: "Page", and "Discussion".  The "Page" tab displays the regular tiddler content, while the "Discussion" tab displays the summary list of comments as well as an input form to enter new comments.  You can enable/disable this action by setting/clearing the following checkbox:
+><<option chkDiscussionTemplate>> Automatically modify default shadow [[ViewTemplate]]
+>usage: {{{<<option chkDiscussionTemplate>>}}}
+>^^(or place {{{config.options.chkDiscussionTemplate=true;}}} in a tiddler tagged with "systemConfig")^^
+Note: //''You must reload your document for changes to this option to take effect.''//  In addition, this option is only applied to the shadow [[ViewTemplate]].  If you are using a custom [[ViewTemplate]], you will need to manually alter that template to add the Page and Discussion tab display (see below)
+<<<
+!!!!!Using tags to add discussion tabs to individual tiddlers
+<<<
+When your document is loaded, DiscussionPlugin automatically creates a shadow DiscussionViewTemplate that is copy of the current ViewTemplate, with the discussion tab syntax automatically installed.  If TiddlyTools' TaggedTemplateTweak is also installed in your document then, rather than using the checkbox option to add discussion tabs to //every// tiddler in your document, you can selectively tag individual tiddlers with "discussion" to add the discussion tabs to only those specific tiddlers.
+
+Conversely, if you enable the checkbox option to modify the default ViewTemplate, you can selectively tag individual tiddlers with "noDiscussion" to apply a shadow NoDiscussionViewTemplate that will use an unmodified version of the current ViewTemplate, thereby preventing the discussion tabs from appearing on those specific tiddlers.
+<<<
+!!!!!Using a customized [[ViewTemplate]]
+<<<
+To enable the discussion tab display when using a custom [[ViewTemplate]], you should edit that template and change this line:
+{{{
+<div class='viewer' macro='view text wikified'></div>
+}}}
+to:
+{{{
+<div class='viewer' macro='tabs txtDiscussionTab
+	Page Page CurrentTiddler Discussion Discussion DiscussionTiddler'></div>
+}}}
+>[[CurrentTiddler]] and [[DiscussionTiddler]] are special shadow tiddlers defined by the plugin.  [[CurrentTiddler]] enables the {{{<<tabs>>}}} macro used in the [[ViewTemplate]] to display the content for the current tiddler within a tab, while [[DiscussionTiddler]] simply invokes the default {{{<<discussion>>}}} macro without any extra parameters in order to render the corresponding discussion summary list and comment input form.  You can modify the these shadow definitions to add macro parameters or other custom content that will automatically appear in the discussion tab when each tiddler is rendered.
+Note: if you are using a custom [[ViewTemplate]], you should also manually create custom versions of DiscussionViewTemplate and NoDiscussionViewTemplate as well, so that you can use the tagging method described above to selectively display discussion tabs for tiddlers that also apply your custom-defined templates.
+<<<
+!!!!!Plugin customization settings
+<<<
+To configure the global defaults used by [[DiscussionPlugin]], you can place one or more of the following javascript statements in a tiddler tagged with <<tag systemConfig>>: //(note: the default values for each setting are shown)//
+{{{
+config.macros.discussion.listfmt="#<<slider [[]] [[%tiddler%]] [[%subject%]] [[posted by %who% on %when%]]>>\n";
+}}}
+>defines the output format for each item in the discussion summary list, where: %tiddler%=tiddler title of the individual comment tiddler, %subject%=subject text, %who%=username, and %when% is the formatted date/time of the comment.  These values are automatically stored in each comment tiddler by using a //hidden slice table//, so that this information can be easily retrieved when generating the summary list output.
+{{{
+config.macros.discussion.reverse=false;
+}}}
+>when set to {{{true}}}, the discussion summary list is displayed in a reverse chronological order.
+{{{
+config.macros.discussion.titlefmt="_%UTC%%random%";
+}}}
+>When comments are entered, they are written into separate target tiddlers whose titles are constructed by appending a generated suffix to the title of the tiddler containing the {{{<<discussion>>}}} macro.  By default, this suffix contains the current UTC timestamp (e.g., YYYYMMDD.HHMMSSMMM) plus a randomly generated number (e.g., .123456789) to ensure that all target tiddlers have unique titles while also associating each comment with the specific discussion summary.  The suffix is specified by using //substitution markers//, where: %UTC%=the UTC timestamp, %random%=a random decimal number, %who%=username, and %subject% is the subject text entered into the comment form.
+{{{
+config.macros.discussion.tags="comment excludeLists";
+}}}
+>Target tiddlers are automatically tagged with "comment" so that the {{{<<discussion>>}}} macro can locate them when generating the summary list.  To reduce 'information clutter', target tiddlers are also tagged with "excludeLists" so that they don't automatically appear in the list of tiddlers shown in the sidebar tabs.  You can use this setting to specify an optional space-separated list of tags to be added to the target tiddler whenever a comment is written.  You can use a blank value (e.g., {{{""}}} if you do not want to add any extra tags to the target tiddler.  However, as noted above, regardless of the specified tags, target tiddlers will still be tagged with "comment" in order to ensure that the {{{<<discussion>>}}} macro includes them in the summary list.
+{{{
+config.macros.discussion.commentfmt="^^posted by %who% on %when%^^\n<<<\n%message%\n<<<\n";
+}}}
+>defines the comment output format to be inserted into the target tiddler, where: %when%=date/timestamp, %who%=username, %subject%=subject, and %message% is the body of the comment.  //Note: if you omit %subject% from the output format, the subject input field on the comment form will be automatically suppressed.  Similarly, omitting %message% from the output format suppresses the message input field.  This can be useful when using the {{{<<comment>>}}} macro to create simple activity logs that only require a short, one-line subject rather than entering extended message content.//
+{{{
+config.macros.comment.datefmt="DDD, MMM DDth, YYYY at hh12:0mm:0ss am";
+}}}
+>defines the date/timestamp output used within the comment format above.
+<<<
+!!!!!Revisions
+<<<
+2009.01.04 1.5.7 in customized ViewTemplate, corrected 'tabs' macro to avoid error when viewing shadow tiddlers
+2008.10.31 1.5.6 added optional 'after' param to countComments() so 'new postings' count can be displayed (using customized DiscussionViewTemplate
+2008.10.30 1.5.5 added comment count to discussion tab.  See countComments() function.
+2008.05.15 1.5.0 added automatic creation of shadows for DiscussionViewTemplate and NoDiscussionViewTemplate
+2008.04.21 1.4.0 replaced use of %n markers with special 'named' markers: %tiddler%, %UTC%, %random%, %who%, %when%, %subject% and %message% to avoid conflict with TW core processing of tiddler content.
+2008.04.17 1.3.0 added ability to customize generated 'comment tiddler' titles by using substitution parameters.
+2008.04.17 1.2.0 added ability to customize generated 'comment tiddler' titles by using substitution parameters.
+2008.04.15 1.1.1 in currentTiddler.handler(), prevent infinite recursion by removing {{{<<currentTiddler>>}}} from content being wikified.
+2008.04.15 1.1.0 added parameters for reverse, listformat, tags, commentformat, dateformat
+2008.04.14 1.0.0 initial prototype
+<<<</pre>
+</div>

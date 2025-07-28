@@ -1,0 +1,75 @@
+<div title="QuickEdit_convert" modifier="ELSDesignStudios" created="200809080351" modified="200906112024" tags="QuickEditPackage">
+<pre>/%
+|Name|QuickEdit_convert|
+|Source|http://www.TiddlyTools.com/#QuickEdit_convert|
+|Version|2.4.3|
+|Author|Eric Shulman|
+|License|see http://www.TiddlyTools.com/#QuickEditPlugin|
+|Type|html|
+|Requires|QuickEditPlugin|
+|Description|quickedit - convert between comma/tab-separated and TW table format|
+
+Usage: see  http://www.TiddlyTools.com/#QuickEditToolbar
+
+%/<html><hide linebreaks><a href="javascript:;" class="tiddlyLink" tabindex="-1" 
+title="convert between comma/tab-separated and TW table format"
+onclick="var e=config.quickEdit.getField(this);
+	if (e) e.focus(); var txt=config.quickEdit.getSelection(e);
+	if (txt.indexOf(',')+txt.indexOf('\t')+txt.indexOf('|')==-3) {
+		alert('Please select text containing tabs, commas, or TiddlyWiki table syntax.');
+		return false;
+	}
+	var p=Popup.create(this); if (!p) return false; p.className+=' sticky smallform';
+	var s=createTiddlyElement(p,'select'); s.button=this;
+	s.options[0]=new Option('select a converter...','');
+	if (txt.indexOf(',')!=-1) {
+		s.options[s.length]=new Option('commas -> table','commasToTable');
+		s.options[s.length]=new Option('commas -> tabs','commasToTabs');
+	}
+	if (txt.indexOf('\t')!=-1) {
+		s.options[s.length]=new Option('tabs -> table','tabsToTable');
+		s.options[s.length]=new Option('tabs -> commas','tabsToCommas');
+	}
+	if (txt.indexOf('|')!=-1) {
+		s.options[s.length]=new Option('table -> tabs','tableToTabs');
+		s.options[s.length]=new Option('table -> commas','tableToCommas');
+	}
+	s.size=s.length;
+	s.onclick=function(){ if (!this.value.length) return;
+	        var e=config.quickEdit.getField(this.button); if (!e) return false;
+		e.focus(); var txt=config.quickEdit.getSelection(e);
+		switch(this.value) {
+			case 'tabsToTable':
+				txt=txt.replace(/\t/g,'|').replace(/^|$/g,'|');
+				txt=txt.replace(/\n/g,'|\n|').replace(/^\|$/g,'');
+				break;
+			case 'tableToTabs':
+				txt=txt.replace(/\t/g,' ').replace(/\|/g,'\t');
+				txt=txt.replace(/^\t/g,'').replace(/\t$/g,'');
+				txt=txt.replace(/\n\t/g,'\n').replace(/\t\n/g,'\n');
+				break;
+			case 'commasToTable':
+				txt=txt.replace(/,/g,'|').replace(/^|$/g,'|');
+				txt=txt.replace(/\n/g,'|\n|').replace(/^\|$/g,''); 
+				break;
+			case 'tableToCommas':
+				txt=txt.replace(/,/g,' ').replace(/\|/g,',');
+				txt=txt.replace(/^,/g,'').replace(/,$/g,''); 
+				txt=txt.replace(/\n,/g,'\n').replace(/,\n/g,'\n'); 
+				break;
+			case 'tabsToCommas':
+				txt=txt.replace(/\t/g,',');
+				break;
+			case 'commasToTabs':
+				txt=txt.replace(/,/g,'\t');
+				break;
+		}
+		replaceSelection(e,txt);
+		Popup.remove(); return false;
+	};
+	s.onkeyup=config.quickEdit.keyup;
+	Popup.show();
+	s.focus();
+	return config.quickEdit.processed(event);"
+>convert</a></html></pre>
+</div>

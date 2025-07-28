@@ -1,0 +1,10 @@
+<div title="ThemePackage" modifier="ELSDesignStudios" created="200807230212" modified="200807230236" tags="package ThemePackage">
+<pre>{{floatright center fine borderleft{
+&nbsp; current theme:
+&nbsp; <<switchTheme width:auto>>
+|borderless|k
+|&nbsp;&nbsp;&nbsp;<<option chkRandomTheme>>| select a random<br>theme at startup |
+}}}
+This package includes SwitchThemePlugin, which allows you to quickly switch between different system themes (templates and stylesheets).  It also includes several pre-defined themes, plus additional stylesheets and 'attachment' tiddlers (using AttachFilePluginFormatters) to support self-contained references for background textures and images.
+</pre>
+</div>

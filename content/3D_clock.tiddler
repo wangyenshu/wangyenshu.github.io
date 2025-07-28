@@ -1,0 +1,32 @@
+<div title="3D clock" modifier="Wang Yanshu" created="202406220442" modified="202406230557" creator="Wang Yanshu">
+<pre><html>
+<script src="https://cjrtnc.leaningtech.com/3.0/cj3loader.js"></script>
+<applet CODE="Clock3D.class" WIDTH="200" HEIGHT="200">
+  <param name="fps" value="18">
+  <param name="a1" value="12500">
+  <param name="pixd" value="29">
+  <param name="pixangle" value="5">
+  <param name="radius" value="26">
+  <param name="roty" value="-4">
+  <param name="rotx" value="0">
+  <param name="rotz" value="0.401">
+  <param name="irotx" value="0">
+  <param name="iroty" value="0">
+  <param name="irotz" value="00">
+  <param name="style" value="1">
+  <param name="color" value="#00FF66">
+  <param name="bgcolor" value="#000000">
+  <param name="12hour" value="0">
+</applet>
+    <script>
+      cheerpjInit();
+    </script>
+<p align="center"><font face="arial" size="-2">Free Java applets provided by</font><br>
+<font face="arial, helvetica" size="-2"><a href="http://javascriptkit.com">JavaScript
+Kit</a></font></p>
+</html>
+<script src="https://cjrtnc.leaningtech.com/3.0/cj3loader.js"></script>
+    <script>
+      cheerpjInit();
+    </script></pre>
+</div>

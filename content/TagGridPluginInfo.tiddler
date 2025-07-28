@@ -1,0 +1,82 @@
+<div title="TagGridPluginInfo" modifier="ELSDesignStudios" created="200801090439" modified="200804212029" tags="pluginInfo">
+<pre>/***
+|Name|TagGridPluginInfo|
+|Source|http://www.TiddlyTools.com/#TagGridPlugin|
+|Documentation|http://www.TiddlyTools.com/#TagGridPluginInfo|
+|Version|1.7.0|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|documentation|
+|Description|documentation for TagGridPlugin|
+!!!!!Usage
+<<<
+Specify which tags should be used for the columns and rows of the grid to ''see a particular cross-section'' of your document, or use //all// tags to ''get an instant 'birds-eye' overview of your entire document''.
+
+Each grid cell contains a label with the number of tiddlers in that grid cell.  Click the number to ''show a popup of cross-indexed tiddler titles''.  Grid cells with no matching tiddlers contain a "-" (dash) that can be clicked to ''create new tiddlers automatically pre-tagged with that cell's combination of tags.''
+
+To keep the grid display from getting very wide, the grid tags used as column headings are not initially displayed.  ''Click directly above the column to show/hide that heading'', or toggle all column headings at once by clicking the {{{>>>}}} symbol in the upper-left corner of the grid display.  Clicking a displayed row/column tag heading opens the tiddler whose title is that tag name.
+
+The macro syntax to include a tag grid in your tiddler content is:
+{{{
+<<tagGrid "columntags" "exclude:tags" "rowtags" "exclude:tags" "filter:tiddlerfilter" startcolor endcolor open inline colorall sortrows sortcolumns>>
+}}}
+where:
+
+''rowtags/columntags'' are each:
+* a ''quoted'' space-separated lists of tags: {{{"tag1 tag2 [[tag3 with spaces]] tag4 ..."}}}
+* //or,// a tiddler name preceded by "+": {{{+TiddlerName}}} where the specified tiddler contains a space-separated list of tags (same format as DefaultTiddlers)
+* //or,// a tiddler name preceded by "@": {{{@TiddlerName}}} to use the same tags as those that are tagging the specified tiddler (i.e., the tiddler is a representative example of the kind of tags you are interested in cross-indexing)
+* //or,// a tag name preceded by "=": {{{=tagName}}} to use the group of tags that are themselves, in turn, tagged with the indicated tagName (i.e., useful when you have defined a 'meta-tag'/classification system, a.k.a. "~TagglyTagging" techniques)
+* //or,// keyword: {{{all}}} (use all tags)
+* if only columntags are specified, rows display all tags by default
+* if no parameters are provided, both rows and columns display all tags
+''exclude:tag tag tag''
+* This //optional// parameter can be placed immediately following the columntags and/or rowtags parameter to selectively omit certain tags from the grid row or column headings.  You can exclude several tags at once by enclosing the entire parameter in quotes, e.g.: {{{"exclude:tag tag tag"}}}.  This parameter is generally only needed to adjust the set of row/column headings that will be applied when using the {{{@TiddlerName}}} syntax.   Otherwise, you can simply omit the undesired rows/column headings directly from the specified columntags and/or rowstags parameters.
+''"filter:tiddlerfilter"''
+* By default, all tiddlers in the document are scanned to determine the contents of the grid cells.  The //optional// filter parameter allows you to specify a subset of tiddler to be scanned.  The syntax for this parameter is: {{{"filter:[tag[tagname]]"}}}, which will select only tiddlers with the indicated tag.  For more advanced selection of tiddlers, you can install [[MatchTagsPlugin]], which extends the {{{[tag[...]]}}} filter syntax to permit use of full boolean expressions, e.g., {{{"filter:[tag[NOT tag1]]"}}} or {{{"filter:[tag[tag1 AND NOT tag2]]"}}} or {{{"filter:[tag[(tag1 AND tag2) OR (tag3 AND NOT tag4)]]"}}}, etc.
+''startcolor/endcolor''
+* describes a ''color gradient'' where the grid cell background color is calculated as a combination of  the starting and ending colors, in proportion to the cell value
+* colors are specified using 6-digit hex-coded RGB values (e.g., red="~FF0000", green="00FF00", blue="0000FF")
+* the cells with the lowest number use the starting background color
+* the cells with the highest number use the ending background color
+* if one or both color values are omitted, all cells have //transparent// backgrounds
+''open''
+* causes the grid column headings to be shown when the grid is initially displayed (you can hide all the column headings using the &lArr; link, or just toggle one heading by clicking //near// the tag text.  (Note: clicking //on// the tag text will open the tiddler with the same name as the tag.
+''inline''
+* by default, cells with cross-indexed tiddlers display the total number of tiddlers in the cell.  When this number is clicked, a popup is displayed, containing links to the individual tiddlers in that cell.  However, the popup display makes it difficult to compare the contents of two or more cells because only one popup can be displayed at any given time.  To address this, you can use the ''inline'' keyword parameter to ''display the grid contents directly in the cells'', without using any popups.  While this can make the grid display significantly larger (to fit the text of each cell), it also enables quick comparisons between cells.  Inline rendering of the cell contents also makes it possible to print the entire grid contents for easy off-line reporting and analysis.
+''colorall''
+* by default, cells with no cross-indexed tiddlers have a //transparent// background (e.g., the tiddler's background colors shows through).  However, this can create a 'patchwork' appearance to the grid.  Add the ''colorall'' keyword parameter to force these 'empty' cells to use the specified startcolor instead of a transparent background.
+''sortrows/sortcolumns''
+* rowtags and columntags are normally displayed in the order specified in the macro parameters, or in alphabetical order when ''all'' is used to generate the list of tags.  Adding the ''sortrows'' and/or ''sortcolumns'' keyword parameters will sort the tags in decending order so that the most frequently used tags are displayed first (i.e., towards the top-left corner).
+<<<
+!!!!!Examples
+<<<
+{{{<<tagGrid +FavoriteTags +FavoriteTags eeeeff 3333ff colorall sortrows sortcolumns>>}}}
+<<tagGrid +FavoriteTags +FavoriteTags eeeeff 3333ff colorall sortrows sortcolumns>>
+<<<
+!!!!!Revisions
+<<<
+2008.04.21 1.7.0 added support for "filter:..." param to exclude tiddlers from grid
+2008.01.08 [*.*.*] plugin size reduction: documentation moved to ...Info tiddler
+2007.12.04 [*.*.*] update for TW2.3.0: replaced deprecated core functions, regexps, and macros
+2007.07.24 1.6.5 corrected handling for @TiddlerName with excluded tags, so that excluded tags are not actually removed from the @TiddlerName source tiddler.
+2007.07.04 1.6.4 fix fatal "unterminated string" popup error caused by tiddlers containing double-quotes (now being encoded using "&quot;")
+2007.03.08 1.6.3 use global flag to replace ALL single-quotes in tiddler titles (fixes popups where more than one tiddler title had a ' in it)
+2007.03.06 1.6.2 removed debugging alert()s... D'oh!
+2007.03.06 1.6.1 fix handling for excluding tags (was only removing last tag in list)
+2007.03.05 1.6.0 added "exclude:tag tag tag..." parameter handling for both rows and columns
+2006.12.20 1.5.1 fixed bordercolor calculation and CSS so grid correctly uses midtone-color for table cell borders
+2006.12.09 1.5.0 added 'inline' keyword parameter to display tiddler titles directly in grid cells (in addition to popup)
+2006.11.03 1.4.0 changed {{{=TiddlerName}}} param usage to {{{@TiddlerName}}} and added {{{=tagName}}} usage for specifying TagglyTagging "meta-tagged" groups of tag (based on ideas by GregWolff)
+2006.11.03 1.3.3 performance optimization: calculate maximum cross-index value while building grid (eliminates extra calc during colormapping)
+2006.10.29 1.3.2 fixes for IE: in decToHex and hexToDec, use substr() instead array indexing.  Also, use {{{>>>}}} and {{{<<<}}} instead of {{{&rArr;}}} and {{{&lArr;}}} for 'toggle headings' link text
+2006.10.29 1.3.1 suppress border around table
+2006.10.21 1.3.0 added {{{=TiddlerName}}} and {{{open}}} parameter handling
+2006.10.17 1.2.1 fixed row/column sorting to properly sort undefined tags to the end of the list
+2006.10.16 1.2.0 added optional row/column sorting and improved parameter parsing
+2006.10.15 1.1.0 added features: background gradients, collapsible column headings, eliminated table borders around row/column headings
+2006.10.06 1.0.1 calls to displayTiddler() use 'this' instead of 'null'
+2006.10.05 1.0.0 initial release (converted from prototype inline script)
+<<<</pre>
+</div>

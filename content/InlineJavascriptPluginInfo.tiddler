@@ -1,0 +1,171 @@
+<div title="InlineJavascriptPluginInfo" modifier="acarvalho" created="201206141159" tags="pluginInfo" _hash="6c67b6c4086ba25b82d75e2d32ae3c8ffc8eedb6">
+<pre>/***
+|Name|InlineJavascriptPluginInfo|
+|Source|http://www.TiddlyTools.com/#InlineJavascriptPlugin|
+|Documentation|http://www.TiddlyTools.com/#InlineJavascriptPluginInfo|
+|Version|1.9.6|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|documentation|
+|Description|Documentation for InlineJavascriptPlugin|
+''Call directly into TW core utility routines, define new functions, calculate values, add dynamically-generated TiddlyWiki-formatted output'' into tiddler content, or perform any other programmatic actions each time the tiddler is rendered.
+!!!!!Usage
+<<<
+This plugin adds wiki syntax for surrounding tiddler content with {{{<script>}}} and {{{</script>}}} markers, so that it can be recognized as embedded javascript code.  When a tiddler is rendered, the plugin automatically invokes any embedded scripts, which can be used to construct and return dynamically-generated output that is inserted into the tiddler content.
+{{{
+<script type="..." src="..." label="..." title="..." key="..." show>
+	/* javascript code goes here... */
+</script>
+}}}
+All parameters are //optional//.    When the ''show'' keyword is used, the plugin will also include the script source code in the output that it displays in the tiddler.  This is helpful when creating examples for documentation purposes (such as used in this tiddler!)
+
+__''Deferred execution from an 'onClick' link''__
+<script label="click here" title="mouseover tooltip text" key="X" show>
+	/* javascript code goes here... */
+	alert('you clicked on the link!');
+</script>
+By including a {{{label="..."}}} parameter in the initial {{{<script>}}} marker, the plugin will create a link to an 'onclick' script that will only be executed when that specific link is clicked, rather than running the script each time the tiddler is rendered.  You may also include a {{{title="..."}}} parameter to specify the 'tooltip' text that will appear whenever the mouse is moved over the onClick link text, and a {{{key="X"}}} parameter to specify an //access key// (which must be a //single// letter or numeric digit only).
+
+__''Loading scripts from external source files''__
+<script src="URL" show>
+	/* optional javascript code goes here... */
+</script>You can also load javascript directly from an external source URL, by including a src="..." parameter in the initial {{{<script>}}} marker (e.g., {{{<script src="demo.js"></script>}}}).  This is particularly useful when incorporating third-party javascript libraries for use in custom extensions and plugins.  The 'foreign' javascript code remains isolated in a separate file that can be easily replaced whenever an updated library file becomes available.
+
+In addition to loading the javascript from the external file, you can also use this feature to invoke javascript code contained within the {{{<script>...</script>}}} markers.  This code is invoked //after// the external script file has been processed, and can make immediate use of the functions and/or global variables defined by the external script file.
+>Note: To ensure that your javascript functions are always available when needed, you should load the libraries from a tiddler that is rendered as soon as your TiddlyWiki document is opened, such as MainMenu.  For example: put your {{{<script src="..."></script>}}} syntax into a separate 'library' tiddler (e.g., LoadScripts), and then add {{{<<tiddler LoadScripts>>}}} to MainMenu so that the library is loaded before any other tiddlers that rely upon the functions it defines. 
+>
+>Normally, loading external javascript in this way does not produce any direct output, and should not have any impact on the appearance of your MainMenu.  However, if your LoadScripts tiddler contains notes or other visible content, you can suppress this output by using 'inline CSS' in the MainMenu, like this: {{{@@display:none;<<tiddler LoadScripts>>@@}}}
+<<<
+!!!!!Creating dynamic tiddler content and accessing the ~TiddlyWiki DOM
+<<<
+An important difference between TiddlyWiki inline scripting and conventional embedded javascript techniques for web pages is the method used to produce output that is dynamically inserted into the document: in a typical web document, you use the {{{document.write()}}} (or {{{document.writeln()}}}) function to output text sequences (often containing HTML tags) that are then rendered when the entire document is first loaded into the browser window.
+
+However, in a ~TiddlyWiki document, tiddlers (and other DOM elements) are created, deleted, and rendered "on-the-fly", so writing directly to the global 'document' object does not produce the results you want (i.e., replacing the embedded script within the tiddler content), and instead will //completely replace the entire ~TiddlyWiki document in your browser window (which is clearly not a good thing!)//.  In order to allow scripts to use {{{document.write()}}}, the plugin automatically converts and buffers all HTML output so it can be safely inserted into your tiddler content, immediately following the script.
+
+''Note that {{{document.write()}}} can only be used to output "pure HTML" syntax.  To produce //wiki-formatted// output, your script should instead return a text value containing the desired wiki-syntax content'', which will then be automatically rendered immediately following the script.  If returning a text value is not sufficient for your needs, the plugin also provides an automatically-defined variable, 'place', that gives the script code ''direct access to the //containing DOM element//'' into which the tiddler output is being rendered.  You can use this variable to ''perform direct DOM manipulations'' that can, for example:
+* generate wiki-formatted output using {{{wikify("...content...",place)}}}
+* vary the script's actions based upon the DOM element in which it is embedded
+* access 'tiddler-relative' DOM information using {{{story.findContainingTiddler(place)}}}
+Note:
+''When using an 'onclick' script, the 'place' element actually refers to the onclick //link text// itself, instead of the containing DOM element.''  This permits you to directly reference or modify the link text to reflect any 'stateful' conditions that might set by the script.  To refer to the containing DOM element from within an 'onclick' script, you can use "place.parentNode" instead.
+<<<
+!!!!!Instant "bookmarklets"
+<<<
+You can also use an 'onclick' link to define a "bookmarklet": a small piece of javascript that can be ''invoked directly from the browser without having to be defined within the current document.''  This allows you to create 'stand-alone' commands that can be applied to virtually ANY TiddlyWiki document... even remotely-hosted documents that have been written by others!!  To create a bookmarklet, simply define an 'onclick' script and then grab the resulting link text and drag-and-drop it onto your browser's toolbar (or right-click and use the 'bookmark this link' command to add it to the browser's menu).
+
+Notes:
+*When writing scripts intended for use as bookmarklets, due to the ~URI-encoding required by the browser, ''you cannot not use ANY double-quotes (") within the bookmarklet script code.''
+*All comments embedded in the bookmarklet script must ''use the fully-delimited {{{/* ... */}}} comment syntax,'' rather than the shorter {{{//}}} comment syntax.
+*Most importantly, because bookmarklets are invoked directly from the browser interface and are not embedded within the TiddlyWiki document, there is NO containing 'place' DOM element surrounding the script.  As a result, ''you cannot use a bookmarklet to generate dynamic output in your document,''  and using {{{document.write()}}} or returning wiki-syntax text or making reference to the 'place' DOM element will halt the script and report a "Reference Error" when that bookmarklet is invoked.  
+Please see [[InstantBookmarklets]] for many examples of 'onclick' scripts that can also be used as bookmarklets.
+<<<
+!!!!!Special reserved function name
+<<<
+The plugin 'wraps' all inline javascript code inside a function, {{{_out()}}}, so that any return value you provide can be correctly handled by the plugin and inserted into the tiddler.  To avoid unpredictable results (and possibly fatal execution errors), this function should never be redefined or called from ''within'' your script code.
+<<<
+!!!!!$(...) 'shorthand' function
+<<<
+As described by Dustin Diaz [[here|http://www.dustindiaz.com/top-ten-javascript/]], the plugin defines a 'shorthand' function that allows you to write:
+{{{
+$(id)
+}}}
+in place of the normal standard javascript syntax:
+{{{
+document.getElementById(id)
+}}}
+This function is provided merely as a convenience for javascript coders that may be familiar with this abbreviation, in order to allow them to save a few bytes when writing their own inline script code.
+<<<
+!!!!!Examples
+<<<
+simple dynamic output:
+><script show>
+	document.write("The current date/time is: "+(new Date())+"<br>");
+	return "link to current user: [["+config.options.txtUserName+"]]\n";
+</script>
+dynamic output using 'place' to get size information for current tiddler:
+><script show>
+	if (!window.story) window.story=window;
+	var title=story.findContainingTiddler(place).getAttribute("tiddler");
+	var size=store.getTiddlerText(title).length;
+	return title+" is using "+size+" bytes";
+</script>
+dynamic output from an 'onclick' script, using {{{document.write()}}} and/or {{{return "..."}}}
+><script label="click here" show>
+	document.write("<br>The current date/time is: "+(new Date())+"<br>");
+	return "link to current user: [["+config.options.txtUserName+"]]\n";
+</script>
+creating an 'onclick' button/link that accesses the link text AND the containing tiddler:
+><script label="click here" title="clicking this link will show an 'alert' box" key="H" show>
+	if (!window.story) window.story=window;
+	var txt=place.firstChild.data;
+	var tid=story.findContainingTiddler(place).getAttribute('tiddler');
+	alert('Hello World!\nlinktext='+txt+'\ntiddler='+tid);
+</script>
+dynamically setting onclick link text based on stateful information:
+>{{block{
+{{{
+<script label="click here">
+	/* toggle "txtSomething" value */
+	var on=(config.txtSomething=="ON");
+	place.innerHTML=on?"enable":"disable";
+	config.txtSomething=on?"OFF":"ON";
+	return "\nThe current value is: "+config.txtSomething;
+</script><script>
+	/* initialize onclick link text based on current "txtSomething" value */
+	var on=(config.txtSomething=="ON");
+	place.lastChild.previousSibling.innerHTML=on?"disable":"enable";
+</script>
+}}}
+<script label="click here">
+	/* toggle "txtSomething" value */
+	var on=(config.txtSomething=="ON");
+	place.innerHTML=on?"enable":"disable";
+	config.txtSomething=on?"OFF":"ON";
+	return "\nThe current value is: "+config.txtSomething;
+</script><script>
+	/* initialize onclick link text based on current "txtSomething" value */
+	var on=(config.txtSomething=="ON");
+	place.lastChild.innerHTML=on?"enable":"disable";
+</script>
+}}}
+loading a script from a source url:
+>http://www.TiddlyTools.com/demo.js contains:
+>>{{{function inlineJavascriptDemo() { alert('Hello from demo.js!!') } }}}
+>>{{{displayMessage('InlineJavascriptPlugin: demo.js has been loaded');}}}
+>note: When using this example on your local system, you will need to download the external script file from the above URL and install it into the same directory as your document.
+>
+><script src="demo.js" show>
+	return "inlineJavascriptDemo() function has been defined"
+</script>
+><script label="click to invoke inlineJavascriptDemo()" key="D" show>
+	inlineJavascriptDemo();
+</script>
+<<<
+!!!!!Revisions
+<<<
+2010.12.15 1.9.6 allow (but ignore) type="..." syntax
+2009.04.11 1.9.5 pass current tiddler object into wrapper code so it can be referenced from within 'onclick' scripts
+2009.02.26 1.9.4 in $(), handle leading '#' on ID for compatibility with JQuery syntax
+2008.06.11 1.9.3 added $(...) function as 'shorthand' for document.getElementById()
+2008.03.03 1.9.2 corrected fallback declaration of wikifyPlainText() (fixes Safari "parse error")
+2008.02.23 1.9.1 in onclick function, use string instead of array for 'bufferedHTML' (fixes IE errors)
+2008.02.21 1.9.0 output from 'onclick' scripts (return value or document.write() calls) are now buffered and rendered into into a span following the script.  Also, added default 'return false' handling if no return value provided (prevents HREF from being triggered -- return TRUE to allow HREF to be processed).  Thanks to Xavier Verges for suggestion and preliminary code.
+2008.02.14 1.8.1 added backward-compatibility for use of wikifyPlainText() in TW2.1.3 and earlier
+2008.01.08 [*.*.*] plugin size reduction: documentation moved to ...Info tiddler
+2007.12.28 1.8.0 added support for key="X" syntax to specify custom access key definitions
+2007.12.15 1.7.0 autogenerate URI encoded HREF on links for onclick scripts.  Drag links to browser toolbar to create bookmarklets.  IMPORTANT NOTE: place is NOT defined when scripts are used as bookmarklets.  In addition, double-quotes will cause syntax errors.  Thanks to PaulReiber for debugging and brainstorming.
+2007.11.26 1.6.2 when converting "document.write()" function calls in inline code, allow whitespace between "write" and "(" so that "document.write ( foobar )" is properly converted.
+2007.11.16 1.6.1 when rendering "onclick scripts", pass label text through wikifyPlainText() to parse any embedded wiki-syntax to enable use of HTML entities or even TW macros to generate dynamic label text.
+2007.02.19 1.6.0 added support for title="..." to specify mouseover tooltip when using an onclick (label="...") script
+2006.10.16 1.5.2 add newline before closing '}' in 'function out_' wrapper.  Fixes error caused when last line of script is a comment.
+2006.06.01 1.5.1 when calling wikify() on script return value, pass hightlightRegExp and tiddler params so macros that rely on these values can render properly
+2006.04.19 1.5.0 added 'show' parameter to force display of javascript source code in tiddler output
+2006.01.05 1.4.0 added support 'onclick' scripts.  When label="..." param is present, a button/link is created using the indicated label text, and the script is only executed when the button/link is clicked.  'place' value is set to match the clicked button/link element.
+2005.12.13 1.3.1 when catching eval error in IE, e.description contains the error text, instead of e.toString().  Fixed error reporting so IE shows the correct response text.  Based on a suggestion by UdoBorkowski
+2005.11.09 1.3.0 for 'inline' scripts (i.e., not scripts loaded with src="..."), automatically replace calls to 'document.write()' with 'place.innerHTML+=' so script output is directed into tiddler content.  Based on a suggestion by BradleyMeck
+2005.11.08 1.2.0 handle loading of javascript from an external URL via src="..." syntax
+2005.11.08 1.1.0 pass 'place' param into scripts to provide direct DOM access 
+2005.11.08 1.0.0 initial release
+<<<</pre>
+</div>

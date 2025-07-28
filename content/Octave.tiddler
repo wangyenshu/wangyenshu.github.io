@@ -1,0 +1,109 @@
+<div title="Octave" modifier="Wang Yanshu" created="202507082027" modified="202507082031">
+<pre><html>
+<iframe src="data:text/html;base64,PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9ImVuIj4KPGhlYWQ+CiAgICA8bWV0YSBjaGFyc2V0PSJVVEYtOCI+CiAgICA8dGl0bGU+T2N0YXZlIE9ubGluZTwvdGl0bGU+CjwvaGVhZD4KPGJvZHk+CjxzY3JpcHQgc3JjPSJwcm9taXNlLXdvcmtlci5qcyI+PC9zY3JpcHQ+CjxoMT5PY3RhdmUgT25saW5lPC9oMT4KPGxhYmVsIGZvcj0iaWRlbnRJbnB1dCI+SWRlbnQ6PC9sYWJlbD4KPGlucHV0IHR5cGU9InRleHQiIGlkPSJpZGVudElucHV0IiB2YWx1ZT0iZmV2YWwiPjxicj48YnI+Cgo8bGFiZWwgZm9yPSJhcmdzSW5wdXQiPkFyZ3VtZW50cyAoY29tbWEtc2VwYXJhdGVkIG9yIEpTT04gYXJyYXkgaWYgY29tcGxleCk6PC9sYWJlbD4KPGlucHV0IHR5cGU9InRleHQiIGlkPSJhcmdzSW5wdXQiIHZhbHVlPSdbInN0cmNhdCIsIFsiZm9vIiwgImJhciJdLCAxXSc+PGJyPjxicj4KCjxidXR0b24gaWQ9InN1Ym1pdEJ0biI+RXhlY3V0ZSBXb3JrZXIgTWVzc2FnZTwvYnV0dG9uPjxicj48YnI+Cgo8bGFiZWwgZm9yPSJvdXRwdXQiPk91dHB1dDo8L2xhYmVsPjxicj4KPHRleHRhcmVhIGlkPSJvdXRwdXQiIHJvd3M9IjEwIiBjb2xzPSI1MCIgcmVhZG9ubHk+PC90ZXh0YXJlYT4KCjxzY3JpcHQ+CiAgICB2YXIgd29ya2VyID0gbmV3IFdvcmtlcignd29ya2VyLmpzJyk7CiAgICB2YXIgcHJvbWlzZVdvcmtlciA9IG5ldyBQcm9taXNlV29ya2VyKHdvcmtlcik7CgogICAgY29uc3QgaWRlbnRJbnB1dCA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdpZGVudElucHV0Jyk7CiAgICBjb25zdCBhcmdzSW5wdXQgPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnYXJnc0lucHV0Jyk7CiAgICBjb25zdCBzdWJtaXRCdXR0b24gPSBkb2N1bWVudC5nZXRFbGVtZW50QnlJZCgnc3VibWl0QnRuJyk7CiAgICBjb25zdCBvdXRwdXRUZXh0QXJlYSA9IGRvY3VtZW50LmdldEVsZW1lbnRCeUlkKCdvdXRwdXQnKTsKCiAgICAvLyBGdW5jdGlvbiB0byBhcHBlbmQgbWVzc2FnZXMgdG8gdGhlIG91dHB1dCB0ZXh0IGFyZWEKICAgIGZ1bmN0aW9uIGFwcGVuZE91dHB1dChtZXNzYWdlKSB7CiAgICAgICAgb3V0cHV0VGV4dEFyZWEudmFsdWUgKz0gbWVzc2FnZSArICJcbiI7CiAgICAgICAgb3V0cHV0VGV4dEFyZWEuc2Nyb2xsVG9wID0gb3V0cHV0VGV4dEFyZWEuc2Nyb2xsSGVpZ2h0OyAvLyBBdXRvLXNjcm9sbCB0byBib3R0b20KICAgIH0KCiAgICAvLyBJbml0aWFsIHNldHVwIGZvciB0aGUgd29ya2VyIChvcHRpb25hbCwgYnV0IGdvb2QgZm9yIE9jdGF2ZSB3b3JrZXJzKQogICAgcHJvbWlzZVdvcmtlci5wb3N0TWVzc2FnZSgiaW5pdCIpLnRoZW4oZnVuY3Rpb24gKHJlc3BvbnNlKSB7CiAgICAgICAgaWYgKHJlc3BvbnNlKSB7CiAgICAgICAgICAgIGFwcGVuZE91dHB1dCgiSW5pdCByZXNwb25zZTogIiArIHJlc3BvbnNlKTsKICAgICAgICB9CgogICAgICAgIGxldCBtZXNzYWdlMCA9IHsKICAgICAgICAgICAgaWRlbnQ6ICJleGVjdXRlX2ludGVycCIsIC8vIE9mdGVuIG5lZWRlZCBmb3IgT2N0YXZlIFdlYkFzc2VtYmx5IHN0YXJ0dXAKICAgICAgICAgICAgYXJnczogW10KICAgICAgICB9OwogICAgICAgIHByb21pc2VXb3JrZXIucG9zdE1lc3NhZ2UobWVzc2FnZTApLnRoZW4oZnVuY3Rpb24gKHJlc3BvbnNlKSB7CiAgICAgICAgICAgIGlmIChyZXNwb25zZSkgewogICAgICAgICAgICAgICAgYXBwZW5kT3V0cHV0KCJFeGVjdXRlX2ludGVycCByZXNwb25zZTogIiArIHJlc3BvbnNlKTsKICAgICAgICAgICAgfQogICAgICAgIH0pLmNhdGNoKGZ1bmN0aW9uIChlcnJvcikgewogICAgICAgICAgICBhcHBlbmRPdXRwdXQoIkV4ZWN1dGVfaW50ZXJwIGVycm9yOiAiICsgZXJyb3IpOwogICAgICAgIH0pOwoKICAgIH0pLmNhdGNoKGZ1bmN0aW9uIChlcnJvcikgewogICAgICAgIGFwcGVuZE91dHB1dCgiSW5pdCBlcnJvcjogIiArIGVycm9yKTsKICAgIH0pOwoKICAgIHN1Ym1pdEJ1dHRvbi5hZGRFdmVudExpc3RlbmVyKCdjbGljaycsICgpID0+IHsKICAgICAgICBjb25zdCBpZGVudCA9IGlkZW50SW5wdXQudmFsdWU7CiAgICAgICAgY29uc3QgcmF3QXJncyA9IGFyZ3NJbnB1dC52YWx1ZTsKICAgICAgICBsZXQgYXJnc0FycmF5OwoKICAgICAgICAvLyBUcnkgdG8gcGFyc2UgYXMgSlNPTiBmaXJzdCwgb3RoZXJ3aXNlIHRyZWF0IGFzIGNvbW1hLXNlcGFyYXRlZCBzdHJpbmcKICAgICAgICB0cnkgewogICAgICAgICAgICBhcmdzQXJyYXkgPSBKU09OLnBhcnNlKHJhd0FyZ3MpOwogICAgICAgICAgICBpZiAoIUFycmF5LmlzQXJyYXkoYXJnc0FycmF5KSkgewogICAgICAgICAgICAgICAgLy8gSWYgaXQncyB2YWxpZCBKU09OIGJ1dCBub3QgYW4gYXJyYXksIHRyZWF0IGl0IGFzIGEgc2luZ2xlIGFyZ3VtZW50CiAgICAgICAgICAgICAgICBhcmdzQXJyYXkgPSBbYXJnc0FycmF5XTsKICAgICAgICAgICAgfQogICAgICAgIH0gY2F0Y2ggKGUpIHsKICAgICAgICAgICAgLy8gSWYgSlNPTiBwYXJzaW5nIGZhaWxzLCBzcGxpdCBieSBjb21tYQogICAgICAgICAgICBhcmdzQXJyYXkgPSByYXdBcmdzLnNwbGl0KCcsJykubWFwKGFyZyA9PiBhcmcudHJpbSgpKTsKICAgICAgICAgICAgLy8gQXR0ZW1wdCB0byBjb252ZXJ0IG51bWJlcnMgb3IgYm9vbGVhbiBzdHJpbmdzCiAgICAgICAgICAgIGFyZ3NBcnJheSA9IGFyZ3NBcnJheS5tYXAoYXJnID0+IHsKICAgICAgICAgICAgICAgIGlmIChhcmcgPT09ICd0cnVlJykgcmV0dXJuIHRydWU7CiAgICAgICAgICAgICAgICBpZiAoYXJnID09PSAnZmFsc2UnKSByZXR1cm4gZmFsc2U7CiAgICAgICAgICAgICAgICBpZiAoIWlzTmFOKGFyZykgJiYgIWlzTmFOKHBhcnNlRmxvYXQoYXJnKSkpIHJldHVybiBwYXJzZUZsb2F0KGFyZyk7CiAgICAgICAgICAgICAgICByZXR1cm4gYXJnOwogICAgICAgICAgICB9KTsKICAgICAgICB9CgogICAgICAgIGxldCBtZXNzYWdlID0gewogICAgICAgICAgICBpZGVudDogaWRlbnQsCiAgICAgICAgICAgIGFyZ3M6IGFyZ3NBcnJheQogICAgICAgIH07CgogICAgICAgIGFwcGVuZE91dHB1dChgU2VuZGluZyBtZXNzYWdlIHdpdGggaWRlbnQ6ICIke2lkZW50fSIgYW5kIGFyZ3M6ICR7SlNPTi5zdHJpbmdpZnkoYXJnc0FycmF5KX0uLi5gKTsKCiAgICAgICAgcHJvbWlzZVdvcmtlci5wb3N0TWVzc2FnZShtZXNzYWdlKS50aGVuKGZ1bmN0aW9uIChyZXNwb25zZSkgewogICAgICAgICAgICBhcHBlbmRPdXRwdXQoIldvcmtlciByZXNwb25zZTogIiArIEpTT04uc3RyaW5naWZ5KHJlc3BvbnNlKSk7CiAgICAgICAgfSkuY2F0Y2goZnVuY3Rpb24gKGVycm9yKSB7CiAgICAgICAgICAgIGFwcGVuZE91dHB1dCgiV29ya2VyIGVycm9yOiAiICsgZXJyb3IpOwogICAgICAgIH0pOwogICAgfSk7Cjwvc2NyaXB0PgogPGZvb3Rlcj4KICA8cD5DcmVkaXQ6IDxhIGhyZWY9Imh0dHBzOi8vZ2l0aHViLmNvbS9yd2wvb2N0YXZlLXdhc20iPmh0dHBzOi8vZ2l0aHViLmNvbS9yd2wvb2N0YXZlLXdhc208L2E+PC9wPgo8L2Zvb3Rlcj4gCjwvYm9keT4KPC9odG1sPg=="
+              height="500px" width="500px">
+</html>
+Credit and License: https://github.com/rwl/octave-wasm
+{{{
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Octave Online</title>
+</head>
+<body>
+<script src="promise-worker.js"></script>
+<h1>Octave Online</h1>
+<label for="identInput">Ident:</label>
+<input type="text" id="identInput" value="feval"><br><br>
+
+<label for="argsInput">Arguments (comma-separated or JSON array if complex):</label>
+<input type="text" id="argsInput" value='["strcat", ["foo", "bar"], 1]'><br><br>
+
+<button id="submitBtn">Execute Worker Message</button><br><br>
+
+<label for="output">Output:</label><br>
+<textarea id="output" rows="10" cols="50" readonly></textarea>
+
+<script>
+    var worker = new Worker('worker.js');
+    var promiseWorker = new PromiseWorker(worker);
+
+    const identInput = document.getElementById('identInput');
+    const argsInput = document.getElementById('argsInput');
+    const submitButton = document.getElementById('submitBtn');
+    const outputTextArea = document.getElementById('output');
+
+    // Function to append messages to the output text area
+    function appendOutput(message) {
+        outputTextArea.value += message + "\n";
+        outputTextArea.scrollTop = outputTextArea.scrollHeight; // Auto-scroll to bottom
+    }
+
+    // Initial setup for the worker (optional, but good for Octave workers)
+    promiseWorker.postMessage("init").then(function (response) {
+        if (response) {
+            appendOutput("Init response: " + response);
+        }
+
+        let message0 = {
+            ident: "execute_interp", // Often needed for Octave WebAssembly startup
+            args: []
+        };
+        promiseWorker.postMessage(message0).then(function (response) {
+            if (response) {
+                appendOutput("Execute_interp response: " + response);
+            }
+        }).catch(function (error) {
+            appendOutput("Execute_interp error: " + error);
+        });
+
+    }).catch(function (error) {
+        appendOutput("Init error: " + error);
+    });
+
+    submitButton.addEventListener('click', () => {
+        const ident = identInput.value;
+        const rawArgs = argsInput.value;
+        let argsArray;
+
+        // Try to parse as JSON first, otherwise treat as comma-separated string
+        try {
+            argsArray = JSON.parse(rawArgs);
+            if (!Array.isArray(argsArray)) {
+                // If it's valid JSON but not an array, treat it as a single argument
+                argsArray = [argsArray];
+            }
+        } catch (e) {
+            // If JSON parsing fails, split by comma
+            argsArray = rawArgs.split(',').map(arg => arg.trim());
+            // Attempt to convert numbers or boolean strings
+            argsArray = argsArray.map(arg => {
+                if (arg === 'true') return true;
+                if (arg === 'false') return false;
+                if (!isNaN(arg) && !isNaN(parseFloat(arg))) return parseFloat(arg);
+                return arg;
+            });
+        }
+
+        let message = {
+            ident: ident,
+            args: argsArray
+        };
+
+        appendOutput(`Sending message with ident: "${ident}" and args: ${JSON.stringify(argsArray)}...`);
+
+        promiseWorker.postMessage(message).then(function (response) {
+            appendOutput("Worker response: " + JSON.stringify(response));
+        }).catch(function (error) {
+            appendOutput("Worker error: " + error);
+        });
+    });
+</script>
+ <footer>
+  <p>Credit: <a href="https://github.com/rwl/octave-wasm">https://github.com/rwl/octave-wasm</a></p>
+</footer> 
+</body>
+</html>
+}}}</pre>
+</div>

@@ -1,0 +1,108 @@
+<div title="MediaViewTemplate" modifier="ELSDesignStudios" created="200706210043" modified="200709030447" tags="MediaPackage template">
+<pre><!--{{{-->
+<!--
+|Name|MediaViewTemplate|
+|Source|http://www.TiddlyTools.com/#MediaViewTemplate|
+|Version|1.0.0|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|template|
+|Requires|ToolbarCommands, StoryViewerPlugin, WikifyPlugin, PlayerPlugin|
+|Description|custom version of view template used when tiddler is tagged with "media"|
+-->
+<span class='toolbar' macro='toolbar [[ToolbarCommands::ViewToolbar]]'></span>
+<span class='title'>
+	<span class='floatleft' macro='tiddlerIcons' style='cursor:auto !important;'></span>
+	<span macro='view title'></span>
+</span>
+<span class='subtitle'>
+	<span style='white-space:nowrap' macro='view modified date [[DDD, MMM DDth YYYY]]'></span>
+</span>
+<div class='tagClear'></div>
+<div class='viewer'>
+<div class='floatright smallform' macro='storyViewer media list allbuttons'></div>
+<div class='big' macro='view mediatitle wikified'></div>
+<hr>
+<table class='borderless' style='width:100%'><tr valign='top'>
+<td style='width:50%' rowspan='2'>
+	<div macro='wikify "{{stretch{<<player [[id=%0]] [[%1]] [[%2]] [[%3]] [[%4]] [[%5]] [[%6]]>>}}}"
+		title mediatype mediaurl width height autoplay showcontrols'></div>
+	<div style='text-align:center'>
+		<span class='smallform' macro='checkbox autoplay@'></span>
+		<span class='small'>autoplay</span>
+		<span class='smallform' macro='checkbox showcontrols@ checked'></span>
+		<span class='small'>show controls</span>
+	</div>
+</td>
+<td style='width:50%' valign=top>
+	<div class='fine floatright'>group:<span macro='wikify %0 groupid'></span></div>
+	<div class='fine'>notes:</div>
+	<div class='small groupbox' macro='view text wikified'></div>
+</td></tr><tr><td valign=bottom>
+	<form target="responseframe" method="post" enctype="multipart/form-data" action="">
+		<div class='fine bold italic'>If you would like to ask a question or make a comment:</div>
+		<div class='small groupbox'>
+			<div style='display:block';>
+				<textarea name="answer" style='width:100%;height:6em' rows="6"></textarea>
+				<div class='center'>
+					<span class='fine bold italic'>Enter your message, then press </span>
+					<!-- hidden values set by onclick handler below -->
+					<input type="hidden" name="username" value="txtUserName">
+					<input type="hidden" name=itemid value="code#"> 
+					<input type="hidden" name=okPage value="URL">
+					<input type="hidden" name=retryPage value="URL">
+					<input type="submit" value="send"
+						onclick="var tid=story.findContainingTiddler(this).getAttribute('tiddler');
+							var action=store.getValue(tid,'act');
+							var ok=store.getValue(tid,'ok');
+							var retry=store.getValue(tid,'retry');
+							var defaults=store.getTiddlerText('DefaultResponder','').split('\n');
+							this.form.action=action?action:defaults[0];
+							this.form.okPage.value=ok?ok:defaults[1];
+							this.form.retryPage.value=retry?retry:defaults[2];
+							this.form.itemid.value=store.getValue(tid,'itemid');
+							if (config.macros.setUserName.handler) config.macros.setUserName.handler();
+							this.form.username.value=config.options.txtUserName;
+							this.parentNode.parentNode.style.display='none';
+							this.parentNode.parentNode.nextSibling.style.display='block';
+							if (!this.form.action.length) { 
+								var f=this.parentNode.parentNode.nextSibling.firstChild;
+								var d=f.document;
+								if (f.contentDocument) d=f.contentDocument; // For NS6
+								else if (f.contentWindow) d=f.contentWindow.document; // For IE5.5 and IE6
+							 	d.open();
+								d.writeln('<font size=-1><i>A responder URL has not been defined.<br>');
+								d.writeln('Your response was not sent.</i></font>');
+								d.close();
+								return false;
+							}
+					">
+				</div>
+			</div><div style='display:none'><iframe
+					src="" name="responseframe" id="responseframe"
+					style="height:7em;width:100%;">
+				</iframe>
+				<div class='center medium'>
+					<input type='button' value='try again...'
+						title='edit and resend your response'
+						onclick='var here=this.parentNode.parentNode;
+							here.style.display="none"; here.previousSibling.style.display="block";'>
+					&nbsp;&nbsp;&nbsp;&nbsp;
+					<input type='button' value='next item...'
+						onmouseover='var tid=story.findContainingTiddler(this).getAttribute("tiddler");
+							this.title="proceed to "+store.getValue(tid,"next");'
+						onclick='var tid=story.findContainingTiddler(this).getAttribute("tiddler");
+							var next=store.getValue(tid,"next");
+							if (next&&next.length) story.displayTiddler(null,next);
+							else displayMessage("There is no next item...");'>
+				</div>
+			</div>
+		</div>
+	</form>
+</td>
+</tr></table>
+<div class='tagClear'></div>
+</div>
+<!--}}}--></pre>
+</div>

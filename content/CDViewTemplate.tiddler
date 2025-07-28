@@ -1,0 +1,43 @@
+<div title="CDViewTemplate" modifier="ELSDesignStudios" created="200706152353" modified="200706230926" tags="MediaPackage template">
+<pre><!--{{{-->
+<!--
+|Name|CDViewTemplate|
+|Source|http://www.TiddlyTools.com/#CDViewTemplate|
+|Version||
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|template|
+|Requires|ToolbarCommands|
+|Description|custom version of view template used when tiddler is tagged with "CD"|
+-->
+<span class='toolbar' macro='toolbar [[ToolbarCommands::ViewToolbar]]'></span>
+<span class='title'>
+	<span class='floatleft' macro='tiddlerIcons' style='cursor:auto !important;'></span>
+	<span macro='view title'></span>
+</span>
+<span class='subtitle'>
+	<span style='white-space:nowrap' macro='view modified date [[DDD, MMM DDth YYYY]]'></span>
+</span>
+<div class='tagClear'></div>
+<div class='viewer'>
+	<div class='menubox' style='float:left;margin:1em' macro='wikify [img[%0]] cover@here'></div> 
+	<div class='menubox'>
+		<div class='big' macro='view albumtitle wikified'></div> 
+		<div><span macro='view artist wikified'></span> - &copy; <span macro='view year wikified'></span></div>
+	</div>
+	<div>
+		<span class='small'><i>genre:</i></span>
+		<span macro='view genre wikified'></span>
+	</div>
+	<div>
+		<span class='small'><i>media type:</i></span>
+		<span macro='view mediatype wikified'></span>
+	</div>
+	<div><span class='small'><i>sample:</i> </span><span macro='view sample wikified'></span></div>
+	<div><span class='small'><i>website:</i> </span><span macro='view website wikified'></span></div>
+	<div class='small' macro='view text wikified'></div>
+</div>
+<div class='tagClear'></div>
+<!--}}}--></pre>
+</div>

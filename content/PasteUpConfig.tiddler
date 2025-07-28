@@ -1,0 +1,111 @@
+<div title="PasteUpConfig" modifier="ELSDesignStudios" created="201102101954" modified="201109102015" tags="PasteUpPackage" _hash="162e0413e28ce75ed41a346b0adcf8d810eefb71">
+<pre>|Name|[[PasteUpConfig]]|
+|Source|http://www.TiddlyTools.com/#PasteUpConfig|
+|Version|1.1.3|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.5|
+|Requires|PasteUpPlugin PasteUpHelperPlugin EditSectionPlugin|
+|Type|data|
+|Description|configuration options and data for PasteUpPlugin and PasteUpHelperPlugin|
+!!!Usage
+<<<
+This tiddler contains sections with configuration data for use by PasteUpPlugin and PasteUpHelperPlugin.  Although you may directly edit the content of this tiddler to add/remove/modify the data, this is ''not recommended'', as you must be very careful to ''avoid changing any of the //required// syntax'' that surrounds the actual data values.  To ensure that only the desired tiddler data content is changed, you can use the following menu of commands to easily view/modify the separate configuration sections without needing to edit the tiddler as a whole:
+| ''<<tiddler PasteUpConfig##setupmenu>>'' |
+where:
+* ''CSS'' - custom-defined CSS class definitions used to format pasteup part content
+* ''fonts, styles, images'' - ~PasteUpHelper droplist definitions, one item per line:
+** Each item is a name/value pair, separated by "=" (e.g, name=value)
+** The name is displayed in the droplist, and the value is assigned when the item is selected.
+** If the "=value" portion of an item is omitted, the item text is display and also used as the assigned value.
+** An item with a trailing "=", //with no value specified//, clears the droplist selection.
+** The values for font/style droplist items are CSS classnames.  The values for image droplist items are the path and filename of the respective image files.
+** If a value currently assigned to a pasteup element does not match any values in the corresponding droplist, an "other: ...." item is automatically added to the list.
+** Blank lines within a list definition are ignored.
+* ''pagesize'' - the width and height of pasteup layout pages (use CSS units)
+* ''partsize'',''imagesize'' - the default position/size for adding new parts/images (use CSS units)
+* ''title, subtitle, menu'' - document title, subtitle, and main (home) menu
+* ''startup'' - a space-separated list of tiddlers to display at startup (i.e., DefaultTiddlers)
+* ''default page, default part'' - content for creating new pasteup pages and parts
+* ''advanced'' - systemConfig-based advanced settings and tweaks to plugin internal values
+Note: you can embed this menu in another tiddler by writing:
+{{{
+<<tiddler PasteUpConfig##setupmenu>>
+}}}
+<<<
+{{hidden{
+!!!setupmenu
+{{small{
+	  [[title|SiteTitle]]/%
+%/ &nbsp; [[subtitle|SiteSubtitle]]/%
+%/ &nbsp; [[menu|MainMenu]]/%
+%/ &nbsp; [[startup|DefaultTiddlers]]/%
+%/ &nbsp; [[default page|DefaultPage]]/%
+%/ &nbsp; [[default part|DefaultPart]]/%
+%/ &nbsp; [[advanced|StartupSettings]]
+<<editSection PasteUpStyleSheet		 CSS		"custom CSS style definitions">>/%
+%/<<editSection PasteUpFontList	 	 fonts		"font sizes">>/%
+%/<<editSection PasteUpStyleList 	 styles		"text formatting styles">>/%
+%/<<editSection PasteUpImageList 	 images		"embeddable images">>/%
+%/<<editSection PasteUpConfig##pagesize	 pagesize	"pasteup layout height/width">>/%
+%/<<editSection PasteUpConfig##partsize	 partsize	"default position/size for adding new parts">>/%
+%/<<editSection PasteUpConfig##imagesize imagesize	"default position/size for adding new images">>/%
+%/<<editSection PasteUpConfig##slideshow slideshow	"slideshow list source and timer duration">>/%
+%/}}}
+!end
+}}}
+!!!pagesize
+<<<
+Total page size, top margin size, pasteup layout size:
+----
+~PageWidth: 8.5in
+~PageHeight: 11in
+~MarginTop: .5in
+Width: 8in
+Height: 10in
+----
+notes:
+* ~PageWidth/~PageHeight //includes// the space used for margins.
+* Width/Height is the size of the //printed// area of each actual page of content, //excluding// the margins.
+<<<
+!!!partsize
+<<<
+Initial position/size for //creating new parts// with the ''add part'' toolbar command:
+----
+~PartLeft: 100px
+~PartTop: 100px
+~PartWidth: 200px
+~PartHeight: 100px
+----
+notes:
+*new parts should be placed near the top-left corner of the current pasteup page and given a default size so they are easy to locate and adjust after being added.
+<<<
+!!!imagesize
+<<<
+Initial position/size/adjustability for //adding an image within a part//:
+----
+~ImageLeft: 0px
+~ImageTop: 0px
+~ImageWidth: 100%
+~ImageHeight: auto
+~ImageAdjust: false
+----
+notes:
+* position is specified as an x-offset and y-offset, relative to the upper-left corner of the containing part.
+* width/height can be fixed values (e.g., px, in) and/or percentages, relative to the width/height of the containing part.  If both values are "100%", images are stretched to fit the containing part dimensions.  If either the width or height is set to "auto", images are scaled ''proportionally'' in that dimension.  When both values are set to "auto", images are rendered full-sized, without scaling.
+* if set to 'false', the relative position/size of a newly added image is 'frozen' within the containing part.  To allow changes to the position/size for a specific image, you can select the 'adjust' checkbox in the PasteUpHelper image editor popup.  Setting ~ImageAdjust to "true" automatically enables 'adjustabilty' for all new images by default.
+<<<
+!!!slideshow
+<<<
+Source list and timer setting for automatic slideshows:
+----
+~SlideshowList: pasteup
+~SlideshowTimer: 20
+~SlideshowPrompt: pasteup pages...
+----
+notes:
+* ~SlideshowList can be either a tag value to match (e.g. "pasteup") or the name of a tiddler containing links to the desired slides (e.g, "MainMenu", "DefaultTiddlers", etc.).
+* ~SlideshowTimer specifies the number of seconds to display each slide before advancing to the next.
+* ~SlideshowPrompt is the text label that appears as the first item in the slideshow droplist.
+<<<</pre>
+</div>

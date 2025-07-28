@@ -1,0 +1,187 @@
+<div title="ToolbarCommands" modifier="Wang Yanshu" created="202404100513" modified="202506270429" acecolumn="55" acerow="1" foldedrows="[]">
+<pre>|~ViewToolbar|closeTiddler closeOthers ~ToolbarCommands##revertTiddler ~ToolbarCommands##editTiddler easyEdit aceEdit  ~ToolbarCommands##runTiddler ~ToolbarCommands##undoTiddler ~ToolbarCommands##refreshTiddler ! > < * fields  permalink references   ~ToolbarCommands##tidide ~ToolbarCommands##related ~ToolbarCommands##copyTiddler ~ToolbarCommands##snapshotSave ~ToolbarCommands##snapshotPrint ~ToolbarCommands##saveTiddlerToFile ~ToolbarCommands##sendTiddler collapseOthers |
+|~EditToolbar|~ToolbarCommands##spacer -deleteTiddler ! cancelTiddler +saveTiddler aceSave    ~ToolbarCommands##fields ! > < * ~ToolbarCommands##options ~ToolbarCommands##autosizeCheckbox ~ToolbarCommands##previewCheckbox ~ToolbarCommands##quickeditCheckbox ~ToolbarCommands##minorchangesCheckbox|
+|~EditToolbarReadOnly|~ToolbarCommands##spacer ~ToolbarCommands##cancelTiddler ! ~ToolbarCommands##fields ! ~ToolbarCommands##autosizeCheckbox ~ToolbarCommands##previewCheckbox |
+|~CollapsedToolbar|~ToolbarCommands##spacer +expandTiddler collapseOthers closeTiddler closeOthers ! ~ToolbarCommands##goto ~ToolbarCommands##search ~ToolbarCommands##editTiddler ~ToolbarCommands##refreshTiddler ! > < * ~ToolbarCommands##tidide ~ToolbarCommands##related ~ToolbarCommands##permalink ~ToolbarCommands##copyTiddler ~ToolbarCommands##snapshotSave ~ToolbarCommands##snapshotPrint ~ToolbarCommands##saveTiddlerToFile ~ToolbarCommands##sendTiddler ~ToolbarCommands##runTiddler|
+<<<
+!!!!!wiki-syntax toolbar commands
+<<<
+!!!!!spacer
+{{{
+/% force whitespace separation and baseline alignment of toolbar with tiddler title %/@@font-size:12pt;&nbsp;@@
+}}}
+!!!!!goto
+{{{
+@@position:static;+++^25em^*[goto|view another tiddler]...
+	<<moveablePanel>>{{fine{
+	{{floatright{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}}}/%
+	%/<<tiddler SiteMenuGoto>>}}}===<<setIcon page_go.png>>@@
+}}}
+!!!!!search
+{{{
+@@position:static;+++^22em^*[search|find tiddlers that match search text]...
+	<<moveablePanel>>{{small{
+	{{floatright{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}}}/%
+	%/<<tiddler SiteMenuSearch>>}}}===<<setIcon page_find.png>>@@
+}}}
+!!!!!editTiddler
+{{{
+<script>
+	if (readOnly) return "<<toolbar +editTiddler>><<setIcon page.png>>"; // view
+	else return "<<toolbar +editTiddler>><<setIcon page_edit.png>>"; // edit
+</script>
+}}}
+!!!!!undoTiddler
+{{{
+<<undo>><<setIcon arrow_undo.png>>
+}}}
+!!!!!refreshTiddler
+{{{
+<script label="refresh" title="redisplay the contents of this tiddler">
+	story.refreshTiddler(story.findContainingTiddler(place).getAttribute("tiddler"),null,true);
+</script><script>
+	place.lastChild.style.fontWeight="normal";
+</script><<setIcon page_refresh.png>>
+}}}
+!!!!!tidide
+{{{
+@@position:static;+++^[TidIDE|Edit this tiddler using the TiddlyWiki Integrated Development Environment]...
+	{{fine smallform nowrap{
+	<<moveablePanel>><<tidIDE SystemInfo TiddlerTweaker CompareTiddlers +edit:here>>/%
+	%/<<resizeEditor>>}}}===<<setIcon application_form_edit.png>>@@
+}}}
+!!!!!related
+{{{
+@@position:static;+++^65em^[related|show list/tree view of tiddlers related to the current tiddler]...
+	<<moveablePanel>>{{smallform{
+	{{floatright{&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;}}}/%
+	%/<<relatedTiddlers here hideform>>}}}===<<setIcon sitemap.png>>@@
+}}}
+!!!!!permalink
+{{{
+<<toolbar permalink>><<setIcon page_link.png>>
+}}}
+!!!!!copyTiddler
+{{{
+<script> if (!readOnly) return "<<toolbar copyTiddler>><<setIcon page_copy.png>>"; </script>
+}}}
+!!!!!snapshotSave
+{{{
+<<toolbar snapshotSave>><<setIcon camera.png>>
+}}}
+!!!!!snapshotPrint
+{{{
+<<toolbar snapshotPrint>><<setIcon printer.png>>
+}}}
+!!!!!saveTiddlerToFile
+{{{
+<<toolbar saveTiddlerToFile>><<setIcon disk.png>>
+}}}
+!!!!!sendTiddler
+{{{
+<<toolbar sendTiddler>><<setIcon server_go.png>>
+}}}
+!!!!!runTiddler
+{{{
+<<toolbar runTiddler>><<setIcon cog.png>>
+}}}
+!!!!!revertTiddler
+{{{
+<html><hide linebreaks><a href="javascript:;"
+	title="reload the last SAVED version of this tiddler"
+	onclick="
+		var here=story.findContainingTiddler(this); if (!here) return;
+		var tid=here.getAttribute('tiddler');
+		var t='\<\<loadTiddlers [[tiddler:'+tid+']] '+document.location.href+' confirm force noreport\>\>';
+		var e=document.getElementById('executeRevertTiddler');
+		if (e) e.parentNode.removeChild(e);
+		e=document.createElement('span'); e.id='executeRevertTiddler';
+		wikify(t,e);
+	">revert</a>
+</html><<setIcon arrow_undo.png>>
+}}}
+!!!!!saveTiddler
+{{{
+<<toolbar +saveTiddler>><<setIcon tick.png>>
+}}}
+!!!!!cancelTiddler
+{{{
+<script> return "<<toolbar -cancelTiddler>><<setIcon "+(readOnly?"tick.png":"cross.png")+">>"; </script>
+}}}
+!!!!!deleteTiddler
+{{{
+<<toolbar deleteTiddler>><<setIcon delete.png>>
+}}}
+!!!!!fields
+{{{
+<<toolbar fields>><<setIcon table.png>>
+}}}
+!!!!!options
+{{{
+&nbsp;{{fine{//options://}}}&nbsp;
+}}}
+!!!!!autosizeCheckbox
+{{{
+<script label="autosize" title="automatically resize editor to fit contents">
+	var txt="<input type='checkbox' style='padding:0;margin:0;' %0>autosize";
+	var chk=place.innerHTML.toLowerCase().indexOf("checked")==-1?"checked":"";
+	config.commands.autosizeEditor.handler(null,place,null);
+	place.innerHTML=txt.format([chk]);
+</script><script>
+	place.lastChild.innerHTML="<input type='checkbox' style='padding:0;margin:0;'>autosize";
+	place.lastChild.style.fontWeight="normal";
+	place.lastChild.style.fontSize="90%";
+</script>
+}}}
+!!!!!previewCheckbox
+{{{
+<script label="preview" title="show key-by-key preview">
+	var txt="<input type='checkbox' style='padding:0;margin:0;' %0>preview";
+	var chk=place.innerHTML.toLowerCase().indexOf("checked")==-1?"checked":"";
+	config.commands.previewTiddler.handler(null,place,null);
+	place.innerHTML=txt.format([chk]);
+</script><script>
+	place.lastChild.innerHTML="<input type='checkbox' style='padding:0;margin:0;'>preview";
+	place.lastChild.style.fontWeight="normal";
+	place.lastChild.style.fontSize="90%";
+</script>
+}}}
+!!!!!quickeditCheckbox
+{{{
+<script label="quickedit" title="show QuickEdit toolbar buttons">
+	var opt="chkShowQuickEdit";
+	config.commands.toggleQuickEdit.handler(null,place,null);
+	var chk=config.options[opt]?"CHECKED":"";
+	var txt="<input type='checkbox' style='padding:0;margin:0;' option='%0' %1>quickedit";
+	place.innerHTML=txt.format([opt,chk]);
+</script><script>
+	var opt="chkShowQuickEdit";
+	var chk=config.options[opt]?"CHECKED":"";
+	var txt="<input type='checkbox' style='padding:0;margin:0;' option='%0' %1>quickedit";
+	place.lastChild.innerHTML=txt.format([opt,chk]);
+	place.lastChild.style.fontWeight="normal";
+	place.lastChild.style.fontSize="90%";
+</script>
+}}}
+!!!!!minorchangesCheckbox
+{{{
+<script label="minor changes">
+	var opt="chkForceMinorUpdate";
+	config.options[opt]=!config.options[opt];
+	config.macros.option.propagateOption(opt,"checked", config.options[opt],"input");
+	var chk=config.options[opt]?"CHECKED":"";
+	var txt="<input type='checkbox' style='padding:0;margin:0;' option='%0' %1>minor changes";
+	place.innerHTML=txt.format([opt,chk]);
+</script><script>
+	var opt="chkForceMinorUpdate";
+	var chk=config.options[opt]?"CHECKED":"";
+	var txt="<input type='checkbox' style='padding:0;margin:0;' option='%0' %1>minor changes";
+	place.lastChild.innerHTML=txt.format([opt,chk]);
+	place.lastChild.style.fontWeight="normal";
+	place.lastChild.style.fontSize="90%";
+	place.lastChild.title=config.optionsDesc[opt];
+</script>
+}}}
+!!!!!end of extra commands
+<<<</pre>
+</div>

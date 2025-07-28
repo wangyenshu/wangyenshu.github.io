@@ -1,0 +1,65 @@
+<div title="Nankai GPA Calculator Bookmarklet" modifier="Wang Yanshu" created="202503231804">
+<pre><html><nowiki>
+<a href="javascript:;" title="Upload CSV and calculate GPA"
+onmouseover="
+    this.href='javascript:void(eval(decodeURIComponent(%22(function(){try{('
+    +encodeURIComponent(encodeURIComponent(this.onclick))
+    +')()}catch(e){alert(e.description?e.description:e.toString())}})()%22)))';"
+onclick="
+    const gradeScale = [
+        {min:94,max:100,point:4.0},{min:90,max:93,point:3.7},{min:87,max:89,point:3.3},
+        {min:83,max:86,point:3.0},{min:80,max:82,point:2.7},{min:77,max:79,point:2.3},
+        {min:73,max:76,point:2.0},{min:70,max:72,point:1.7},{min:67,max:69,point:1.3},
+        {min:60,max:66,point:1.0},{min:0,max:59,point:0.0}
+    ];
+    function getGradePoint(grade){
+        for(let scale of gradeScale){
+            if(grade>=scale.min&&grade<=scale.max){return scale.point}
+        }
+        return 0.0;
+    }
+    function handleFileUpload(event){
+        const file = event.target.files[0];
+        if(!file){alert('No file selected.');return}
+        const reader = new FileReader();
+        reader.onload = function(e){
+            const content = e.target.result;
+            const rows = content.split('\n');
+            let totalPoints = 0, totalCredits = 0;
+            rows.forEach(function(row){
+                const columns = row.split(',');
+                if(columns.length>=8){
+                    const grade = columns[6].trim();
+                    const credits = parseFloat(columns[5].trim());
+                    if(grade!=='%E9%80%9A%E8%BF%87' && !isNaN(credits)){
+                        const gradePoint = getGradePoint(parseFloat(grade));
+                        totalPoints += gradePoint * credits;
+                        totalCredits += credits;
+                    }
+                }
+            });
+            if(totalCredits>0){
+                const gpa = totalPoints / totalCredits;
+                alert(`Total Credits: ${totalCredits}\nTotal Grade Points: ${totalPoints}\nGPA: ${gpa.toFixed(2)}`);
+            } else {
+                alert('No valid data found in the CSV.');
+            }
+        };
+        reader.readAsText(file);
+    }
+    const input = document.createElement('input');
+    input.type = 'file';
+    input.accept = '.csv';
+    input.style.position = 'fixed';
+    input.style.top = '10px';
+    input.style.right = '10px';
+    input.style.zIndex = '1000';
+    input.addEventListener('change', handleFileUpload);
+    document.body.appendChild(input);
+    return false;
+">
+&#x1F4C2; - Upload CSV to calculate GPA
+</a>
+</nowiki></html>
+</pre>
+</div>

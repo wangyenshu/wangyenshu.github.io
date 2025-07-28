@@ -1,0 +1,50 @@
+<div title="StyleSheetTiddlersBar" modifier="acarvalho" created="201304241626" tags="System excludeLists" _hash="78f8b3354065f502c51134feaa580e3b1de88529">
+<pre>/*{{{*/
+
+/* This was the original border around the tab section at top   */
+/* 
+#tiddlersBar {
+	margin: 0.5em;
+        border: 1px [[ColorPalette::TertiaryLight]] solid;
+        background-color:[[ColorPalette::Background]];
+}
+*/
+
+/* Undo the xxx to have an underline / border underneath TopMenu or the tab section
+#tiddlersBar {
+	margin: 0.5em;
+           border-bottom: 1px [[ColorPalette::TertiaryLight]] solid;
+           border-top:    1px [[ColorPalette::TertiaryLight]] solid;
+        background-color:[[ColorPalette::Background]];
+}
+*/
+
+
+
+
+
+/* line-height controls the second row of tabs at top. Not noticeable until after 21px;   */
+#tiddlersBar .tab { 
+     white-space: nowrap;  
+     padding: .2em; 
+     border: 1px [[ColorPalette::PrimaryDark]] solid;  
+     line-height: 30px;
+}
+
+
+#tiddlersBar {padding : .5em}
+.tabUnselected .tabButton, .tabSelected .tabButton {padding : 0 2px 0 2px; margin: 0 0 0 0px;}
+.tiddler, .tabContents {border:0px [[ColorPalette::TertiaryLight]] solid;}
+.tabUnselected { background-color:[[ColorPalette::TertiaryLight]];}
+.tabSelected   { background-color:[[ColorPalette::PrimaryLight]];}
+
+ #tiddlersBar .button 
+{
+    border:0; 
+    padding-right: 5px;
+    padding-left: 5px;
+ 
+}
+
+/*}}}*/</pre>
+</div>

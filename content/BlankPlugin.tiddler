@@ -1,0 +1,28 @@
+<div title="BlankPlugin" modifier="ELSDesignStudios" created="200701241856" modified="200702010821" tags="blank">
+<pre>/***
+|Name|BlankPlugin|
+|Source|http://www.TiddlyTools.com/#BlankPlugin|
+|Documentation|http://www.TiddlyTools.com/#BlankPluginInfo|
+|Version|0.0.0|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|plugin|
+|Description||
+Summary description of purpose
+!!!!!Documentation
+>see [[BlankPluginInfo]]
+!!!!!Configuration
+<<<
+checkboxes and input fields for plugin-specific options
+<<<
+!!!!!Revisions
+<<<
+2007.01.01 [1.0.0] initial release
+<<<
+!!!!!Code
+***/
+//{{{
+version.extensions.PLUGINNAME= {major: 0, minor: 0, revision: 0, date: new Date(2008,1,1)};
+//}}}</pre>
+</div>

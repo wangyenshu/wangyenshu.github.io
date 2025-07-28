@@ -1,0 +1,53 @@
+<div title="ShowPopupPluginInfo" modifier="ELSDesignStudios" created="200609091431" modified="201103131344" tags="pluginInfo">
+<pre>/***
+|Name|ShowPopupPluginInfo|
+|Source|http://www.TiddlyTools.com/#ShowPopupPlugin|
+|Documentation|http://www.TiddlyTools.com/#ShowPopupPluginInfo|
+|Version|2.1.1|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|documentation|
+|Description|documentation for ShowPopupPlugin|
+!!!!!Usage
+<<<
+{{{
+<<showPopup tiddler:[[TiddlerName]] label:"..." tip:"..." buttonClass:"..." width:"..." popupClass:"..." above>>
+}}}
+*''~TiddlerName''<br>title of the tiddler to be displayed
+*''label''<br>text for the command link //(default=~TiddlerName)//
+*''tooltip''<br>mouseover help text for the link //(default="display ~TiddlerName in a popup")//
+*''buttonClass''<br>CSS classname applied to the command text //(default=button)//
+*''width''<br>width of the popup (using CSS measurements) //(default=auto)//
+*''popupClass''<br>CSS classname applied to the popup panel. //(default=none)//<br>Use 'sticky' for persistent popups (see StickyPopupPlugin)
+*''above''<br>when this keyword is used, the bottom of the popup will be aligned with the top of the command link text label (i.e., the popup appears //above// the label).
+*''mouseover''<br>when this keyword is used, the popup is shown whenever the mouse is moved over the label, without requiring a click (i.e., a "hot spot")
+For backward-compatibility with existing document content, you can also use the {{{<<tiddler>>}}} macro to transclude the [[ShowPopup]] //shadow tiddler//, like this:
+{{{
+<<tiddler ShowPopup with: [[TiddlerName]] label tooltip buttonClass width popupClass 'above'>>
+}}}
+Note: transclusion uses //unnamed// parameters that must occur in the order shown above.  You can use "" as placeholders to apply default parameter values.
+<<<
+!!!!!Examples
+<<<
+Popup below label (defaults):
+>{{{<<showPopup tiddler:GettingStarted>>}}}
+><<showPopup tiddler:GettingStarted>>
+Popup above label:
+>{{{<<showPopup tiddler:GettingStarted above>>}}}
+><<showPopup tiddler:GettingStarted above>>
+Popup mouseover above label:
+>{{{<<showPopup above mouseover tiddler:GettingStarted>>}}}
+><<showPopup above mouseover tiddler:GettingStarted>>
+<<<
+!!!!!Revisions:
+<<<
+2011.03.13 2.1.1 in click(), removed check for popup already shown (prevents nested popups!)
+2011.03.12 2.1.0 added 'mouseover' param
+2011.03.05 2.0.1 in click(), fixed popup alignment when NOT using 'above'
+2011.03.03 2.0.0 converted to plugin and added optional 'above' keyword param
+2009.09.10 1.2.0 documentation/code cleanup
+2007.03.02 1.1.0 added class, width, popupClass params
+2006.09.09 1.0.0 initial release (transclusion)
+<<<</pre>
+</div>

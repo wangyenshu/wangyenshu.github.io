@@ -1,0 +1,19 @@
+<div title="BlankScript" modifier="ELSDesignStudios" created="200702010936" modified="200702012306" tags="blank">
+<pre>/%
+|Name|BlankScript|
+|Source|http://www.TiddlyTools.com/#BlankScript|
+|Version|0.0.0|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|script|
+|Requires|InlineJavascriptPlugin|
+|Description||
+%/<script>
+	var here=story.findContainingTiddler(place); if (!here) return;
+	var tid=store.getTiddler(here.getAttribute('tiddler'));
+	var out="";
+	// add code here >>>
+	return out;
+</script></pre>
+</div>

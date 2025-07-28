@@ -1,0 +1,126 @@
+<div title="MatchTagsPluginInfo" modifier="ELSDesignStudios" created="200802290757" modified="201110280153" tags="pluginInfo">
+<pre>/***
+|Name|MatchTagsPluginInfo|
+|Source|http://www.TiddlyTools.com/#MatchTagsPlugin|
+|Documentation|http://www.TiddlyTools.com/#MatchTagsPluginInfo|
+|Version|2.0.6|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|documentation|
+|Description|documentation for MatchTagsPlugin|
+!!!!!Usage
+<<<
+This plugin extends the {{{[tag[tagname]]}}} macro parameter syntax used by the TiddlyWiki core {{{<<list>>}}} macro so that, instead of a simple tagname value, you can specify a complex combination of tagname values using a //boolean expression// containing AND, OR, and NOT operators, enclosed in nested parentheses if needed.
+{{{
+<<list filter "[tag[expression]]">>
+}}}
+In addition, the plugin defines a new macro, {{{<<matchTags ...>>}}} that can be used instead of the core {{{<<list>>}}} macro to output a list of matching tiddlers //using a custom 'item format' and 'separator'//.  You can also use this macro to create a command link that displays the matching tiddlers within a popup list, similar to the standard {{{<<tag tagName>>}}} macro, but matching a combination of tag values rather than a single tag value.
+{{{
+<<matchTags inline "format" "separator" sort:fieldname tag expression>>
+<<matchTags popup "label:..." "prompt:..." sort:fieldname tag expression>>
+<<matchTags report TiddlerName "format" "separator" sort:fieldname tag expression>>
+<<matchTags panel  Tiddlername "format" "separator" sort:fieldname tag expression>>
+}}}
+where:
+* ''inline'', ''report'', ''panel'', and ''popup''<br>are keywords that indicate the type of output that the macro should produce:
+** ''inline'' //(default)// - displays a list of matching tiddlers embedded directly in tiddler content
+** ''popup'' - embeds a command button that, when clicked, lists matching tiddlers in a ~TiddlyWiki popup display
+** ''report'' - generates a list of matching tiddler in a separate [[MatchingTiddlers]] report tiddler
+** ''panel'' - displays an interactive form for generating a [[MatchingTiddlers]] report
+* ''format''<br>defines the wiki-syntax for rendering list items.  The following //substitution markers// can be used to insert tiddler-specific information for each matched tiddler:
+** {{{%0}}} - title
+** {{{%1}}} - modifier (author)
+** {{{%2}}} - modified (date of last change)
+** {{{%3}}} - text (all tiddler content)
+** {{{%4}}} - firstline (tiddler content up to the first newline)
+** {{{%5}}} - description (tiddler slice or section content named "description" or "Description")
+** {{{%6}}} - tags (space-separated, bracketed list)
+* ''separator''<br>defines the wiki-syntax to use //between// each matching title (e.g., ", " creates a comma-separated list, while "\n" displays one tiddler per line).
+* ''sort:fieldname'' (optional)<br>specifies the sort order for the resulting list of tiddlers.  You can specify any tiddler field name (standard or custom-defined).  Standard tiddler fieldnames include: //title, created, modified, modifier//.  If not specified, tiddlers are sorted by title.  You can prefix the fieldname with "+" or "-" to indicate ascending or descending order, respectively.
+* ''tag expression''<br>the remaining parameter(s) are joined together to define the boolean expression to be matched.
+When using the ''popup'' option, there are two additional (and optional) parameters you can specify:
+* ''"label:..."''(optional)<br> indicates the text for the popup command link.  The default is to display the specified tag expression itself.
+* ''"prompt:..."'' (optional)<br>indicates the mouseover 'tooltip' for the popup command link.
+* note: you can apply custom CSS styles (e.g., font size) to the popup by adding a rule for ".matchTags .popup" to your [[StyleSheet]].
+When using the ''report'' or ''panel'' option, an additional parameter may be provided:
+* ''~TiddlerName''<br>specifies the target tiddler into which the output will be generated (default: [[MatchingTiddlers]])
+Notes:
+*A tag expression can use any combination of text operators: ''AND'', ''OR'', ''NOT'' (or their equivalent javascript operators: ''&&'', ''||'', ''!''), contained in nested parentheses as needed.
+*Operators should be delimited by spaces or parentheses.
+*Before matching, leading/trailing spaces are automatically trimmed and multiple spaces are reduced to single spaces.
+*Tag values containing embedded spaces do //not// have to be enclosed in {{{[[...]]}}}.
+*Tag values that contain boolean operators as ''literal text'' (e.g., {{{"foo and bar"}}} or {{{"foo && bar"}}} cannot be used within a compound boolean expression, but //can// be matched if specified by themselves, without any other tag values or operators.
+*To match tiddlers that are untagged, use "-" as a special tag value within the expression.
+*You can match "wildcard" tags  by using //regular expression// (i.e., "text pattern") syntax within a tag value, e.g. {{{[Tt]agvalue.*}}}
+<<<
+!!!!!Examples:
+<<<
+display a popup list:
+{{{
+<<matchTags popup sample OR (settings AND systemConfig)>>
+}}}
+><<matchTags popup sample OR (settings AND systemConfig)>>
+display a popup list with custom label:
+{{{
+<<matchTags popup "label:samples and settings" sample OR (settings AND systemConfig)>>
+}}}
+><<matchTags popup "label:samples and settings" sample OR (settings AND systemConfig)>>
+display a popup list of untagged tiddlers:
+{{{
+<<matchTags popup ->>
+}}}
+><<matchTags popup ->>
+generate a report using interactive form control panel
+{{{
+<<matchTags panel "MatchingTiddlers" "[[%0]]" "\n" sample OR (settings AND systemConfig)>>
+}}}
+>{{smallform{<<matchTags panel "MatchingTiddlers" "[[%0]]" "\n" sample OR (settings AND systemConfig)>>}}}
+comma-separated list:
+{{{
+<<matchTags "[[%0]]" ", " sample OR (settings AND systemConfig)>>
+}}}
+><<matchTags "[[%0]]" ", " sample OR (settings AND systemConfig)>>
+numbered list (sorted by modification date, most recent first):
+{{{
+<<matchTags "#[[%0]] (%2)<br>^^%5^^" "\n" sort:-modified sample OR (settings AND systemConfig)>>
+}}}
+><<matchTags "#[[%0]] (%2)<br>^^%5^^" "\n" sort:-modified sample OR (settings AND systemConfig)>>
+bullet-item list (using the TiddlyWiki core {{{<<list filter ...>>}}} macro):
+//(Note: when using the core {{{<<list>>}}} macro, you should always enclose the entire tag filter parameter within quotes)//
+{{{
+<<list filter "[tag[sample OR (settings AND systemConfig)]]">>
+}}}
+><<list filter "[tag[sample OR (settings AND systemConfig)]]">>
+<<<
+!!!!!Revisions
+<<<
+2011.10.28 2.0.6 added .matchTags CSS class to popups to enable custom styling via StyleSheet
+2011.01.22 2.0.5 fix core tweak for TW262+: adjust code in config.filters['tag'] instead of filterTiddlers()
+2010.08.11 2.0.4 in getMatchingTiddlers(), fixed sorting for descending order (e.g, "-created")
+2010.03.02 2.0.3 added %6 format (tags)
+2010.03.01 2.0.2 in formatList(), don't automatically put '[[' and ']]' around title (%0) in formatted output
+2009.08.29 2.0.1 added support for {{{config.macros.matchTags.defTags}}} to auto-tag [[MatchingTiddlers]] output
+2008.09.04 2.0.0 added "report" and "panel" options to generate formatted results and store in a tiddler.  Also, added config.macros.matchTags.formatList(place,fmt,sep) API to return formatted output for use with other plugins/scripts
+2008.09.01 1.9.2 fixed return value from popup button handler so IE doesn't attempt to leave the page
+2008.08.31 1.9.1 improved expression conversion handling to permit use of regular expressions for "wildcard" matching within tag values
+2008.06.12 1.9.0 added support for formatted output of: title, who, when, text, firstline, description (slice or section)
+2008.06.05 1.8.0 in getMatchingTiddlers(), added optional sortfield and tiddlers params to support use of alternative set of tiddlers instead of using current store content (provides filtering support for ImportTiddlersPlugin)
+2008.06.04 1.7.1 in getMatchingTiddlers(), reworked conversion of expression for more robust parsing of whitespace, parentheses and javascript operators and allow use of "-" (untagged) //within// expressions
+2008.05.19 1.7.0 in getMatchingTiddlers(), use reverseLookup() instead of forEachTiddler() to permit access to tiddlers included via [[IncludePlugin|http://tiddlywiki.abego-software.de/#IncludePlugin]]
+2008.05.17 1.6.0 in getMatchingTiddlers(), rewrote expression conversion to handle tags with spaces tag values that are substrings of other tag values.
+2008.05.16 1.5.0 added special case using "-" to find UNTAGGED tiddlers
+2008.05.15 1.4.0 added "popup" output option
+2008.05.14 1.3.4 instead of hijacking getTaggedTiddlers(), added tweak of filterTiddlers() prototype to replace getTaggedTiddlers() with getMatchingTiddler() so that core use of getTaggedTiddlers() does not perform boolean processing of tiddler titles such as [[To Be or not To Be]].  Also, improved "filter error" messages in getMatchingTiddlers() to report tag expression in addition to actual eval error.
+2008.04.25 1.3.3 in getTaggedTiddlers(), fixed handling for "not" embedded within a tag
+2008.04.21 1.3.2 in getTaggedTiddlers(), fixed handling for initial "NOT" and "NOT(expr)" syntax
+2008.04.20 1.3.1 in getTaggedTiddlers(), corrected check for boolean expression to avoid excess processing of tags containing spaces.  Also, improved handling for non-existing tags that contain text of existing tags
+2008.04.19 1.3.0 in filterTiddlers(), use getTaggedTiddlers() instead of matchTags(), and then hijack getTaggedTiddlers() to add matchTags() handling
+2008.04.19 [*.*.*] plugin size reduction: moved documentation to [[MatchTagsPluginInfo]]
+2008.03.25 1.2.0 added optional "sort:fieldname" parameter
+2008.03.20 1.1.2 in handler(), replace 'encodeTiddlyLink' with explicit [[...]] brackets to ensure that one-word tiddler titles are properly rendered as TiddlyLinks
+2008.02.29 1.1.1 in matchTags(), added handling to skip remaining tiddlers if expression has an error
+2008.02.29 1.1.0 refactored to define store.matchTags() and extend store.filterTiddlers()
+2008.02.28 1.0.0 initial release
+<<<</pre>
+</div>

@@ -1,0 +1,19 @@
+<div title="MoveableViewTemplate" modifier="ELSDesignStudios" created="200806210035" modified="200812011519" tags="template moveable MoveablePanelPackage">
+<pre><!--{{{-->
+<!--
+|Name|MoveableViewTemplate|
+|Source|http://www.TiddlyTools.com/#MoveableViewTemplate|
+|Version||
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|template|
+|Requires|MoveablePanelPlugin, ViewTemplate, TaggedTemplateTweak|
+|Description|add moveablePanel macro to tiddlers tagged with 'moveable'|
+-->
+<div class='moveablePanel'>
+	[[ViewTemplate]]
+	<div macro='moveablePanel name:{{tiddler?tiddler.title:""}} height:auto'></div>
+</div>
+<!--}}}--></pre>
+</div>

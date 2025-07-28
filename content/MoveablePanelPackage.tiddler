@@ -1,0 +1,18 @@
+<div title="MoveablePanelPackage" modifier="ELSDesignStudios" created="200811192223" modified="200901042052" tags="package MoveablePanelPackage">
+<pre><html><style>
+#tiddlerMoveablePanelPackage .tagged { display:none; }
+#tiddlerMoveablePanelPackage .viewer .content { max-height:999999em; height:auto; overflow:visible; }
+</style></html>@@font-size:150%;''"free-range" tiddlers with room to roam...''@@
+<<<
+@@font-size:90%;line-height:120%;text-align:justify;display:block;<<tiddler QuickStart##badge with: moveable.html>>[[MoveablePanelPlugin]] turns tiddlers and other document content into  '''moveable panels' that can be dragged with the mouse to  //undock// them from their default //anchor points// and reposition them to almost any location on the page -- even far off screen!''  Using moveable panels, your document content can now be spread out over a wide (actually, //infinite//) area, both horizontally and vertically, allowing you to ''quickly create a complete 'web desktop' with different groupings of moveable tiddlers and menus''... all within a single TiddlyWiki document!
+
+No matter where you place the panels, the document extents will ''automatically grow (or shrink) as needed to contain all moveable panels''.  Unfortunately, ''you can only scroll in one direction at a time when using the browser window's separate horizontal and vertical scrollbars'', making navigation between far-flung panels extremely tedious and awkward.  To address this, [[DragScrollPlugin]] allows you to ''scroll the browser window in both the horizontal and vertical directions at the same time, simply by holding down the SHIFT key while dragging the mouse across the page'' until the desired content is scrolled into view.
+
+Of course, once you can move things around, you will want them to //stay there//.  By itself, [[MoveablePanelPlugin]] has no memory and all panels are rendered at their original, docked anchor points each time the document is loaded into the browser.  [[PanelManagerPlugin]] adds the ability to automatically ''track and record each panel's current position and size in a //panel map//, using simple wiki-formatted tables stored in tiddlers''.  The current panel map is also automatically stored as a browser-cookie, so that ''wherever you place a panel, it stays there until you move it again'', even in between document sessions.
+
+[[PanelManagerPlugin]] also adds a popup menu with lots of functions for managing individual moveable panels (e.g., 'bring to front', 'jump to panel', 'dock/undock', etc.) plus a ''powerful, graphical panel map viewer and interactive page navigator'' that allows you to load, save, edit and view //named// panel maps stored in your document.  You can also scroll directly to any panel or other selected page location, anywhere on the page, by using the 'jump to panel' command or ''//compass navigation tool//'' from the Panel Manager popup menu.
+
+You can access the Panel Manager popup map viewer at any time from the <<moveablePanel menu label:[[Panel Manager button (&#x2261;)]]>> that is added to the upper right corner of each undocked panel.  You can also ''open the popup menu from //anywhere// on the page simply by using ALT+CLICK on the //background// of the page'' (i.e., not on a link or other //active// element that could respond to the click!).  This permits access to the Panel Manager commands, even when there are no moveable panels visible on the screen.
+@@
+<<<</pre>
+</div>

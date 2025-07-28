@@ -1,0 +1,61 @@
+<div title="EdgeOfNight" modifier="ELSDesignStudios" created="200607151942" modified="200801230101" tags="CSS ThemePackage stylesheets systemTheme">
+<pre>/***
+|Name|Edge of Night|
+|Source|http://www.TiddlyTools.com/#Edge of Night|
+|Version||
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|CSS|
+|Description|theme: dark blue sunset photo background|
+|StyleSheet|Edge of Night|
+|PageTemplateReadOnly|PageTemplateReadOnly|
+|EditTemplateReadOnly|EditTemplateReadOnly|
+***/
+
+[[StyleSheetAdjustments]]
+[[BrightText]]
+/* ==== Edge of Night ==== */
+/*{{{*/
+body
+	{ background-image: url('[[EdgeOfNightBackground]]'); background-color:#113; }
+.groupbox
+	{ background-image: url('[[TexturesParchmentGray]]');}
+.menubox
+	{ background-color: #002; border:1px solid; }
+.annotation
+	{ background-color: #002; }
+.viewer
+	{ background-image: url('[[TexturesMarbleBlack]]'); background-color:#111; border: 1px solid #999; -moz-border-radius:1em;-webkit-border-radius:1em; padding:1em; }
+.header
+	{ background-image: none; background-color:transparent; color:#ccf; border-bottom:0px solid #036; }
+.siteSubtitle
+	{ color:#0c0; }
+.floatingPanel, .attachPanel, #importPanel, #exportPanel
+	{ background: #eee; background-image: url('[[TexturesParchmentGray]]');}
+.floatingPanel a, .attachPanel a, #importPanel a, #exportPanel a, 
+.floatingPanel .button, .attachPanel .button, #importPanel .button, #exportPanel .button,
+.floatingPanel .tiddlyLinkExisting, .attachPanel .tiddlyLinkExisting, #importPanel .tiddlyLinkExisting, #exportPanel .tiddlyLinkExisting,
+	{ color:#009; }
+#messageArea 
+	{ background: #ddf; }
+.siteMenu .floatingPanel
+	{ background-image: url('[[TexturesParchmentGray]]'); }
+.viewer h1,.viewer h2,.viewer h3,.viewer h4,.viewer h5 { background: #666; color:#fff; }
+
+.tabContents
+	{ background-color:#ddf; color:#000; background-image: url('[[TexturesParchmentGray]]'); }
+.viewer .tabContents, #sidebarTabs .tabContents
+	{ background-image:none; background-color:#002; color:#fff; }
+
+.tabContents a, .tabContents .button, .tabContents .tiddlyLinkExisting
+	{ color:#99f; }
+/*********
+#tiddlerWelcome .viewer .tabContents
+	{ background-image: url('[[TexturesMarbleBlack]]'); }
+#mainMenu .menubox
+	{ background-image: url('[[TexturesMarbleBlack]]'); }
+**********/
+/*}}}*/
+</pre>
+</div>

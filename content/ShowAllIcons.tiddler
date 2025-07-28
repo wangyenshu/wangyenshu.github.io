@@ -1,0 +1,30 @@
+<div title="ShowAllIcons" modifier="ELSDesignStudios" created="200706011508" modified="200708020233" tags="IconPackage">
+<pre>/%
+
+NOTE: To be properly displayed, this tiddler needs HTMLFormattingPlugin installed
+
+%/<html><hide linebreaks><table class="borderless"><tr><td style="text-align:center">
+	[[Tiddler Icons|ShowAllIcons]] (from the [[Silk|http://www.famfamfam.com/lab/icons/silk/]] collection): &nbsp;<br>
+	{{fine{//(move mouse over icons to view descriptions) &nbsp; //}}}
+</td><td>
+	<a href="javascript:;" style="background:transparent; display:block; padding-top:.5em"
+		onclick="story.displayTiddler(story.findContainingTiddler(this),'ShowAllIcons');return false;">
+	<<tiddlerIcons recent>>
+	<<tiddlerIcons changed>>
+	<<tiddlerIcons unsaved>>
+	<<tiddlerIcons Trash>>
+	<<tiddlerIcons core>>
+	<<tiddlerIcons systemConfig>>
+	<<tiddlerIcons tag>>
+	<<tiddlerIcons CSS>>
+	<<tiddlerIcons html>>
+	<<tiddlerIcons template>>
+	<<tiddlerIcons script>>
+	<<tiddlerIcons attachment>>
+	<<tiddlerIcons settings>>
+	<<tiddlerIcons pluginInfo>>
+	<<tiddlerIcons faq>>
+	<<tiddlerIcons task>>
+	</a>
+</td></tr></table></html></pre>
+</div>

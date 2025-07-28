@@ -1,0 +1,88 @@
+<div title="CreateTiddlersFromCSV" modifier="ELSDesignStudios" created="200903161615" modified="200911240513" tags="html">
+<pre>/%
+|Name|CreateTiddlersFromCSV|
+|Source|http://www.TiddlyTools.com/#CreateTiddlersFromCSV|
+|Version|1.3.1|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|html|
+|Description|create tiddlers from CSV data|
+
+!FORMAT
+<<<
+~Comma-Separated Value (CSV) format:
+{{{
+title,created,modified,modifier,tags,text,customfield1,customfield2,...
+MyTiddler,04/25/2009,04/25/2009,YourName,tag1 [[tag 2]] tag3,"This is ""quoted"" content, with a comma",value,value,...
+}}}
+{{wrap{
+''The first line contains lower-case field names and must include a //"title"// field''.  Subsequent lines define //~CSV-encoded// data: any values that contain quotes or commas are surrounded by double-quotes, and quotes occuring //within// the values are doubled-up.  The ''tags'' field is entered as a //space-separated bracketed list//. Additional fieldnames ("fieldN") are added as custom tiddler fields.}}}
+<<<
+!end
+
+REVISIONS:
+[1.3.1] remove debugging message
+[1.3.0] correct handling for embedded quotes and strip \r from input
+[1.2.0] convert created/modified values from strings to date objects
+[1.1.0] handle CSV-encoded embedded commas and quotes
+
+%/<<tiddler HideTiddlerTags>>{{small smallform{
+Enter/paste<<slider {{config.options['']=false;'';}}
+	[[CreateTiddlersFromCSV##FORMAT]] 'CSV-formatted data...' 'view CSV format description'
+>> or, read data from a tiddler: <html><nowiki>
+	<form style='display:inline;margin:0;padding:0;white-space:normal;'>
+	<select class='editor' name='tid' title='select a tiddler title'>
+	<option>select a tiddler title...</option>
+	</select>
+	<input type='button' value='get data'
+		onclick="this.form.src.value=store.getTiddlerText(this.form.tid.value,'')">
+	<input type='button' value='create tiddlers' onclick="
+		var CSV=this.form.src.value;
+		// GET NAMES
+		var lines=CSV.replace(/\r/g,'').split('\n');
+		var names=lines.shift().replace(/\x22/g,'').split(',');
+		CSV=lines.join('\n');
+		// ENCODE commas and newlines within quoted values
+		var comma='!~comma~!'; var commaRE=new RegExp(comma,'g');
+		var newline='!~newline~!'; var newlineRE=new RegExp(newline,'g');
+		CSV=CSV.replace(/\x22([^\x22]*?)\x22/g, function(x){ return x.replace(/\,/g,comma).replace(/\n/g,newline); });
+		var lines=CSV.split('\n'); var count=0;
+		for (var i=0; i<lines.length; i++) { if (!lines[i].length) continue;
+			var values=lines[i].split(',');
+			// DECODE commas, newlines, and doubled-quotes, and remove enclosing quotes (if any)
+			for (var j=0; j<values.length; j++)
+				values[j]=values[j].replace(commaRE,',').replace(newlineRE,'\n')
+					.replace(/^\x22|\x22$/g,'').replace(/\x22\x22/g,'\x22');
+			// EXTRACT tiddler values
+			var title=''; var text=''; var tags=[]; var fields={};
+			var created=null; var when=new Date(); var who=config.options.txtUserName;
+			for (var v=0; v<values.length; v++) { var val=values[v];
+				if (names[v]) switch(names[v].toLowerCase()) {
+					case 'title':	title=val.replace(/\[\]\|/g,'_'); break;
+					case 'created': created=new Date(val); break;
+					case 'modified':when=new Date(val); break;
+					case 'modifier':who=val; break;
+					case 'text':	text=val; break;
+					case 'tags':	tags=val.readBracketedList(); break;
+					default:	fields[names[v].toLowerCase()]=val; break;
+				}
+			}
+			if (title.length) {
+				store.saveTiddler(title,title,text,who,when,tags,fields,true,created||when);
+				displayMessage('Created '+title);
+				count++;
+			}
+			else if (!confirm('invalid data on line '+i+': missing/blank TiddlerName\n\n'
+				+values.join('\n')+'\n\n\OK=skip, CANCEL=stop')) break;
+		}
+		displayMessage('Created '+count+' tiddlers');
+	"><br><textarea class='editor' name='src' style='display:inline;width:100%;height:10em;'></textarea>
+	</form>
+</html><<tiddler {{
+	var list=place.lastChild.getElementsByTagName('form')[0].tid;
+	store.forEachTiddler(function(title,tiddler){
+		list.options[list.length]=new Option(title,title);
+	});
+'';}}>>}}}</pre>
+</div>

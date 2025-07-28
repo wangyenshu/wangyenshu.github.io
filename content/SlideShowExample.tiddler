@@ -1,0 +1,63 @@
+<div title="SlideShowExample" modifier="Wang Yanshu" created="202411221531">
+<pre><<slideShow noClicks forceRefresh>> - A simple slide show that keeps the TW style 
+<<slideShow style:'MySSStyleSheet' clock:'+'>> - A themed slide show with a clock showing the presentation elapsed time
+<<slideShow repeat clock:'-20'>> - A looping slide show with a 20 minutes countdown clock
+<<slideShow slidePause:1000>> - A timed slideshow that runs once
+<<slideShow slidePause:1000 repeat>> - A timed looping slideshow
+-s-
+!The [[SlideShowPlugin]]
+Press F11 to go fullscreen and adjust the font sizes with Ctrl++ Ctrl+- (or Ctrl+mousewheel).
+
+This plugin was developed by Paulo Soares and Clint Checketts.
+{{Comment{This block is not shown in the slide show.
+@@Don't show me!!!@@}}}
+-s-
+!How slides are separated
+In a tiddler, you start each slide with the markup {{{-s-}}}
+-s-
+Slides don't have to have titles like this poor one
+-s-
+!A slide with subsections and a long title
+Check to TOC below to see how this slide title is abbreviated.
+!!Section 1
+This is a section
+!!!Subsection 1.1
+This is a subsection
+!!!Subsection 1.2
+This is another subsection
+!!!!Subsubsection 1.2.1
+This is a subsubsection
+-s-
+!Using the keyboard
+The following keys are defined:
+*Left arrow - previous overlay
+*Down arrow - previous slide
+*Right arrow - next overlay
+*Up arrow - next slide
+*Home - first slide
+*End - last slide
+*Escape - exit slide show
+*Spacebar - pause/resume slide show in auto advance mode
+-s-
+!Slide show parameters
+*The slide show can be themed by providing a ~StyleSheet ({{{<<slideShow style:'MyStyleSheet'>>}}})
+*By default, there is a clock at bottom of the browser window that displays the current time. This clock can also show the presentation elapsed time with {{{<<slideShow clock:'+'>>}}} or a countdown clock with {{{<<slideShow clock:'-20'>>}}} (for 20 minutes). In these two cases, if you click on the clock display it will be restarted
+*The slide show can be set to loop ({{{<<slideShow repeat>>}}})
+*You can set it so each slide changes after X milliseconds ({{{<<slideShow slidePause:X>>}}}) (auto advance mode)
+*Use auto start mode to begin the slideshow the moment the tiddler is opened ({{{<<slideShow autostart>>>}}})
+*You can disable overlays with {{{<<slideShow noOverlays>>}}}
+*These parameters can be mixed and matched in any order: {{{<<slideShow slidePause:1000 repeat>>}}} is the same as {{{<<slideShow repeat slidePause:1000>>}}}
+-s-
+!Overlays
+To see how incremental display works use the left and right mouse buttons.
+{{Overlay1{You can}}} {{Overlay2{present things}}} {{Overlay1{in an arbitrary order!!!}}}
+{{Overlay3{Its a bit harder with lists but it works:}}}
+<html>
+<ol>
+<li class="Overlay4">First item</li>
+<li class="Overlay5">Second item</li>
+<li class="Overlay4">Last item</li>
+</ol>
+</html>
+{{Comment{You can hide comments on a slide that won't display in the slide show}}}</pre>
+</div>

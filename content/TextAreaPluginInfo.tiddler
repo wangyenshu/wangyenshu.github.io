@@ -1,0 +1,93 @@
+<div title="TextAreaPluginInfo" modifier="ELSDesignStudios" created="200801082003" modified="201110280136" tags="pluginInfo">
+<pre>/***
+|Name|TextAreaPluginInfo|
+|Source|http://www.TiddlyTools.com/#TextAreaPlugin|
+|Documentation|http://www.TiddlyTools.com/#TextAreaPluginInfo|
+|Version|2.3.0|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|documentation|
+|Description|Documentation for TextAreaPlugin|
+!!!!!Usage
+<<<
+When installed, this plugin automatically adds Find/Again keyboard search and autosize ('fit to content') handling to the tiddler editor's text area input.  It also provides macros that can add 'stretch bars' that allow you to interactively resize to the text area as well as other rendered elements, including: tiddlers, iframes, listboxes, sliders, tabs, and general 'CSS wrapper' containing elements.
+
+When in the tiddler editor's text area you can use ''Control-F'' and ''control-G'' to ''"Find text"'' and ''"find text aGain"'', respectively.  This permits you to to use a combination of keyboard controls to "search-and-replace" (e.g., ctrl-F to find/select the desired text, ctrl-C to paste in the replacement, and then ctrl-G to find/select the next matching text).
+
+The ''autosize'' toolbar command is automatically added to the default shadow EditTemplate, and toggles the tiddler editor textarea height between default fixed-height and "fit the current contents".  When autosized, the text area height will change automatically to match the current number of lines contained in the tiddler source definition.
+
+If desired, you can manually ''add the 'autosizeEditor' toolbar command to the editor toolbar:''
+{{{
+// add command keyword to end of {{{EditToolbar}}} slice definition in [[ToolbarCommands]]:
+|EditToolbar| ... autosizeEditor|
+}}}
+Alternatively, you can ''enable autosize by default:'' by invoking the 'autosizeEditor' macro, directly from the EditTemplate:
+{{{
+// add to the end of the EditTemplate:
+<span macro='autosizeEditor'></span>
+}}}
+
+To ''add a stretch bar below the editor text area:'', invoke the 'resizeEditor' macro, directly from the EditTemplate:
+{{{
+// add to the end of the EditTemplate 
+<span macro='resizeEditor'></span>
+}}}
+
+To ''add a stretch bar to another element type'', embed the appropriate {{{<<resize...>>}}} macro in your tiddler content, immediately following the desired element (or at the end of the tiddler):
+{{{
+<<resizeTiddler>> - add a stretch bar to the containing tiddler
+<<resizeFrame>> - add a stretch bar to all IFRAMEs in the current tiddler
+<<resizeListbox>> - add a stretch bar to all listboxes in the current tiddler
+<<resizeHere>> - add a stretch bar to the current containing element (i.e., a slider or tab panel)
+}}}
+>{{smaller{Note: you can also invoke these macros directly from the ViewTemplate or EditTemplate:
+{{{
+<span macro='resizeTiddler'></span> or
+<span macro='resizeFrame'></span> or
+<span macro='resizeListbox'></span> or
+}}}
+}}}
+<<<
+!!!!!Configuration
+<<<
+<<option chkTextAreaExtensions>> add control-f (find), control-g (find again) to editor text areas
+<<option chkDisableAutoSelect>> place cursor at start of textarea instead of pre-selecting content
+<<option chkResizeEditor>> auto-modify shadow EditTemplate to add resizeable text area (and autosize command)
+<<<
+!!!!!Revisions
+<<<
+2011.10.28 2.3.0 added resizeHere macro to add stretch bar to current container (e.g., sidebar panels)
+2009.04.08 2.2.1 added autosizeEditor macro to enable automatic autosizing without using toolbar command
+2009.04.06 2.2.0 added resizeListbox macro definition and adjusted dragbar width calculation.
+2008.01.08 2.1.9 fixed default setting of uninitialized option values so that "false" is not treated as "undefined"
+2008.01.07 2.1.8 added 'initialized' flag so keyDownHandlers() will only be added once to each control (prevents recursion errors)
+2007.12.21 2.1.7 in dragMove(), subtract 4-pixel 'fudge factor' when adjusting drag bar width to match textarea width.  Apparently textarea 'offsetWidth' includes the 2-pixel surrounding edge, but CSS 100% calculation does NOT, resulting is an increase in the textarea width when displayed in a variable-width moveable panel.
+2007.11.19 2.1.6 fix fatal IE errors by NOT setting 'onkeypress' handler (which IE reports as "not implemented").  Also, only add autosize grab bar to textareas that are actually used to edit tiddler fields (i.e., they have an "edit=fieldname" attribute).  This prevents undesirable autosizing of textareas used for HTML/DOM display by [[PreviewPlugin]].
+2007.11.18 2.1.5 in config.commands.autosizeEditor, changed alt command text to use character-based "psuedo-checkbox" instead of embedded html fragment
+2007.09.04 2.1.4 in window.TextAreaResizer.prototype.create(), set initial grab handle width to auto instead of matching textarea.offsetWidth (which can be initially==0)
+2007.04.29 2.1.3 in addKeyDownHandlers(), used 'findText' instead of 'find', hopefully to avoid strict ECMAScript1.5 error on certain browsers.
+2007.03.01 2.1.2 use apply() to invoke hijacked core function
+2006.11.16 2.1.0 restored chkDisableAutoSelect (place cursor at start of textarea instead of pre-selecting content)
+2006.11.16 2.0.0 removed chkDisableEscapeKey (obsolete... use custom EditTemplate to change toolbar definition).  Rewrote focusTiddler as a HIJACK instead of just overwriting core function (permits other plugins to also hijack function).  Removed TAB character processing (now built-in as of TW2.1).  Merged code from ResizeEditorPlugin:
+> 2006.11.16 [1.3.x] merged with TextAreaPlugin
+> 2006.11.02 1.3.1 in DragMove() and DragStop(), check for undefined properties so IE doesn't report "Not Implemented" error when property is referenced without having been previously initialized.
+> 2006.11.01 1.3.0 added 'resizeEditor' MACRO for 'grab handle' stretch resizing (based on code from Jon Scully and Jason Johnston (jj@lojjic.net).  
+> 2006.11.01 1.2.6 removed increaseEditor, decreaseEditor, and resizeEditor toolbar COMMAND definitions (resize by setting 'rows' property of textarea field conflicts with resize via style.height CSS attribute as set by autosize/drag).
+> 2006.11.01 1.2.5 fixed 'savedkeypress' handling (was writing to savedkeyup by mistake)
+> 2006.10.28 1.2.4 added '+' to 'saveTiddler' toolbar command (enables ctrl-enter keyhandling)
+> 2006.10.18 1.2.3 added decreaseEditor and increaseEditor commands
+> 2006.10.18 1.2.2 onkeypress handling to redirect PGUP/PGDN to window.scrollByPages() (works in FF, but not yet in IE)
+> 2006.10.18 1.2.1 fixed references to default string constants (oops!)
+> 2006.10.18 1.2.0 renamed 'resizeEditor' to 'autosizeEditor' and added new 'resizeEditor' toolbar command to prompt for # of rows to display
+> 2006.10.02 1.1.1 show checkbox in button label (when automatic resizing is enabled)
+> 2006.10.01 1.1.0 added 'onkeyup' automatic fit-to-contents handling
+> 2006.09.30 1.0.0 initial release
+2006.08.01 1.1.2 improved processed() utility function to handle IE5 and IE6, as well as calling preventDefault() for moz browsers.  Thanks to Bradley Meck for research and code examples.
+2006.07.09 1.1.1 removed chkDisableAutoSelect
+2006.02.14 1.1.0 added option for chkDisableEscapeKey (default is standard action)
+2006.01.22 1.0.1 only add extra key processing for TEXTAREA elements (not other edit fields).
+added option to enable/disable textarea keydown extensions (default is "standard keys" only)
+2006.01.22 1.0.0 Moved from temporary "System Tweaks" tiddler into 'real' TextAreaPlugin tiddler.
+<<<</pre>
+</div>

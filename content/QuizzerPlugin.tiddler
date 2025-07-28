@@ -1,0 +1,162 @@
+<div title="QuizzerPlugin" modifier="Wang Yanshu" created="202411230655" creator="Wang Yanshu">
+<pre>/***
+|''Name:''|QuizzerPlugin|
+|''Description:''|Makes quizzes with optional grades|
+|''Version:''|1.0.1|
+|''Date:''|Oct 07, 2007|
+|''Source:''|http://www.math.ist.utl.pt/~psoares/addons.html|
+|''Documentation:''|[[QuizzerPlugin Documentation|QuizzerPluginDoc]]|
+|''Author:''|Paulo Soares|
+|''License:''|[[Creative Commons Attribution-Share Alike 3.0 License|http://creativecommons.org/licenses/by-sa/3.0/]]|
+|''~CoreVersion:''|2.1.0|
+***/
+//{{{
+config.macros.quiz = {
+	wrongAnswer: "Incorrect answer. Please think again.",
+	rightAnswer: "That's right!",
+	trueValue: "True",
+	falseValue: "False",
+	handler: function(place,macroName,params,wikifier,paramString){
+		var par = paramString.parseParams("list",null,true);
+		var type = getParam(par,"type","M");
+		var panelType = (type.length>1) ? type.charAt(1) : "";
+		type = type.charAt(0);
+		var id = getParam(par,"id","");
+		if(id=="" && type!="M") return; // not sure about this
+		var value = getParam(par,"value",false);
+		var tiddler = getParam(par,"tiddler","");
+		var score = parseFloat(getParam(par,"score",0));
+		var toolTip = "";
+		if(type=="T"){
+			toolTip = this.trueValue;
+			if(value==false){
+				var tempTiddler=tiddler;
+				tiddler="";
+				var tempScore=score;
+				score=0;
+			}
+		}
+		this.createAnswer(place, type, toolTip, true, panelType, tiddler, value, score, id);
+		if(type=="T"){
+			tiddler=(value==false)?tempTiddler:"";
+			score=(value==false)?tempScore:0;
+			toolTip = this.falseValue;
+			this.createAnswer(place, type, toolTip, false, panelType, tiddler, !value, score, id);
+		}
+	},
+	createAnswer: function(place, type, toolTip, correction, panelType, tiddler, value, score, id){
+		var checked=false;
+		if(correction){
+			var correct = createTiddlyElement(place,"span","","correction","");
+			correct.style.display='none';
+			correct.style.fontWeight='bold';
+			checked=true;
+		}
+		if(type=="M"){
+			var btn = createTiddlyCheckbox(place,"",false,this.onClickAnswer);
+		} else {
+			var btn = createTiddlyRadiobox(place,"",checked,this.onClickAnswer,id);
+		}
+		btn.className = "answerItem";
+		btn.value=score;
+		if(toolTip!="") btn.title=toolTip;
+		var panelClass = (panelType=="=") ? "sliderPanel" : "floatingPanel"; //default to floating
+		var text = (tiddler!="") ? store.getTiddlerText(tiddler) : ""; 
+		if(text==""){text = (value) ? this.rightAnswer : this.wrongAnswer;}
+		var panel = createTiddlyElement(null,"div","",panelClass);
+		panel.style.display = "none"; //default to closed
+		panel.onclick=function(){this.style.display="none";};
+		place.appendChild(panel);
+		wikify(text,panel,null);
+	},
+	onClickAnswer: function(e){
+		if(!e) var e = window.event;
+		var panel = this.nextSibling;
+		if(this.checked){
+			var validated = 1;
+			var visiblePanel=document.getElementById('visiblePanel');
+			var scoreCard=document.getElementById('scoreCard');
+			if(visiblePanel){
+				visiblePanel.style.display="none";
+				visiblePanel.id="";
+			}
+			if(scoreCard){validated = scoreCard.value;}
+			if(validated==1){
+				panel.style.display = "block";
+				panel.id="visiblePanel";
+				var left= e.clientX +10;
+				panel.style.left = left + "px";
+			}
+		} else {
+			panel.style.display = "none";
+			panel.id="";
+		}
+	}
+};
+
+config.macros.score= {
+	trueSymbol: "✔",
+	falseSymbol: "✘",
+	label: "Score »",
+	handler: function(place,macroName,params,wikifier,paramString){
+		var btn = createTiddlyButton(place,this.label,"",this.checkOut);
+		btn.id="scoreCard";
+		btn.value=0;
+	},
+	checkOut: function(e){
+		if(this.value==1) return;
+		var total=score=points=0;
+		var answers=getElementsByClass("answerItem",document.getElementById('viewer'));
+		var answersLen=answers.length;
+		for(var i=0; i<answersLen; i++) {
+			points=parseFloat(answers[i].value);
+			score+=answers[i].checked*points;
+			if(points>0)total+=points;
+			var correct=answers[i].previousSibling;
+			if(correct.className=="correction"){
+				if(answers[i].checked == (points>0)){
+					correct.firstChild.data=config.macros.score.trueSymbol;
+					correct.style.color = '#0f0';
+				} else {
+					correct.firstChild.data=config.macros.score.falseSymbol;
+					correct.style.color = '#f00';
+				}
+				correct.style.display='inline';
+			}
+		}
+		var text = " " + score+"/"+total;
+		createTiddlyElement(document.getElementById('scoreCard'),"span","","",text);
+		this.value=1;
+	}
+};
+
+function getElementsByClass(searchClass,node,tag) {
+	var classElements = new Array();
+	if ( node == null ) node = document;
+	if ( tag == null ) tag = '*';
+	var els = node.getElementsByTagName(tag);
+	var elsLen = els.length;
+	var pattern = new RegExp("(^|\\s)"+searchClass+"(\\s|$)");
+	for (var i = 0; i < elsLen; i++) {
+		if ( pattern.test(els[i].className) ) {classElements.push(els[i]);}
+	}
+	return classElements;
+}
+
+function createTiddlyRadiobox(theParent,caption,checked,onChange,id){
+	var cb = document.createElement("input");
+	cb.type = "radio";
+	cb.name = id;
+	cb.onclick = onChange;
+	theParent.appendChild(cb);
+	cb.checked = checked;
+	cb.className = "chkOptionInput";
+	if(caption) wikify(caption,theParent);
+	return cb;
+}
+
+setStylesheet("/*{{{*/\n.floatingPanel {\n color: black;\n;position: absolute;\nz-index: 10;\npadding: 0.5em;\nbackground-color: #eee;\nborder: 1px solid #333;\ncursor: crosshair}\n\n.sliderPanel {padding: 0.5em;\nborder: 1px dotted #333;\nwidth: auto;\ncursor: crosshair}\n\n/*}}}*/","AnswerPanelStyles");
+
+config.shadowTiddlers.QuizzerPluginDoc="The documentation is missing. It is available [[here|http://www.math.ist.utl.pt/~psoares/addons.html#QuizzerPluginDoc]].";
+//}}}</pre>
+</div>

@@ -1,0 +1,334 @@
+<div title="ResponsiveThemePlugin" modifier="Wang Yanshu" created="202412201334">
+<pre>/***
+|Name        |ResponsiveThemePlugin|
+|Description |A plugin + theme to make TW responsive (desktop/mobile)|
+|Version     |0.6.3|
+|Author      |Yakov Litvin|
+|Source      |https://responsive.tiddlyhost.com#ResponsiveThemePlugin (won't work for checking/updating via EEP, will be changed)|
+|License     |[[MIT|https://github.com/YakovL/TiddlyWiki_YL_ExtensionsCollection/blob/master/Common%20License%20(MIT)]]|
+|PageTemplate|ResponsiveThemePlugin##Page Template|
+|StyleSheet  |ResponsiveStyleSheet|
+|Other config|[[TopLineMenuMiddle]] TopLineMenu|
+!Installation & configuration
+Install this as a usual plugin: copy, tag with {{{systemConfig}}}, save, reload. The only difference is that after the first reload, MarkupPreHead will be adjusted automatically, and to apply it, you have to save and reload again.
+
+These parts can be edited to customize the theme:
+* ResponsiveStyleSheet, StyleSheet are both applied, customizing the latter is preferrable
+* TopLineMenu, TopLineMenuMiddle define the content in the top menu, customizing the latter (empty by default) is preferrable
+As this is both a plugin and a theme, it's currently not possible to combine this with another theme.
+!Page Template
+<!--{{{-->
+<header class='header' role='banner'>
+  <div class='headerForeground'>
+    <span class='siteTitle' refresh='content' tiddler='SiteTitle'></span>&nbsp;
+    <span class='siteSubtitle' refresh='content' tiddler='SiteSubtitle'></span>
+  </div>
+</header>
+<div id='topLineMenu' refresh='content' tiddler='TopLineMenu'></div>
+<div class="body">
+  <nav id='mainMenu' class='body__nav' role='navigation' refresh='content' tiddler='MainMenu'></nav>
+  <main id='displayArea' class='body__main' role='main'>
+    <div id='messageArea' class="messageArea"></div>
+    <div id='tiddlerDisplay'></div>
+  </main>
+  <aside id='sidebar' class='body__sidebar'>
+    <div id='sidebarOptions' role='navigation' refresh='content' tiddler='SideBarOptions'></div>
+    <div id='sidebarTabs' role='complementary' refresh='content' force='true' tiddler='SideBarTabs'></div>
+  </aside>
+</div>
+<!--}}}-->
+
+!Code
+***/
+//{{{
+config.options.txtTheme = 'ResponsiveThemePlugin'
+
+// a fix: when name is set to TiddlerTitle##SectionName, should still find it
+// TODO: move this to the core, add version check here
+TiddlyWiki.prototype.notify = function(title, doBlanket)
+{
+	if(!this.notificationLevel) {
+		for(var i = 0; i < this.namedNotifications.length; i++) {
+			var n = this.namedNotifications[i];
+
+			var nTitle = n.name
+			if(nTitle) {
+				var separatorIndex = nTitle.indexOf(config.textPrimitives.sectionSeparator)
+				if(separatorIndex > -1) nTitle = nTitle.substring(0, separatorIndex)
+			}
+
+			if((n.name == null && doBlanket) || (nTitle == title))
+				n.notify(n.name || title);
+		}
+	}
+};
+
+var isInstalled = !!document.getElementById('fullContentWrapper')
+
+if(!isInstalled) {
+	// Wrap backstage elements into a single element #backstageWrapper,
+	// wrap #backstageWrapper and #contentWrapper into #fullContentWrapper
+	// (as contentWrapper's innerHTML is defined in refreshPageTemplate, we can't just move backstageWrapper inside contentWrapper, so we create a common wrapper instead)
+	const commonWrapper = createTiddlyElement(null, 'div', 'fullContentWrapper')
+	const backstageWrapper = createTiddlyElement(commonWrapper, 'div', 'backstageWrapper')
+	const contentWrapper = document.getElementById('contentWrapper')
+
+	contentWrapper.parentNode.insertBefore(commonWrapper, contentWrapper)
+	commonWrapper.appendChild(contentWrapper)
+
+	for(let id of ['backstageButton', 'backstageArea', 'backstage', 'backstageCloak']) {
+		// move inside wrapper
+		backstageWrapper.appendChild(document.getElementById(id))
+	}
+
+
+	// make sure editing StyleSheet for custom styles causes updating css at once
+	store.addNotification("StyleSheet", function(title, doc) {
+		refreshStyles("ResponsiveStyleSheet", doc)
+	})
+}
+
+const viewportHtml = '<meta name="viewport" content="width=device-width, initial-scale=1" />'
+const preHeadMarkup = store.getTiddlerText('MarkupPreHead')
+if(preHeadMarkup.indexOf(viewportHtml) == -1) {
+	const preHeadTiddler = store.fetchTiddler('MarkupPreHead') || new Tiddler('MarkupPreHead')
+	const closeMarkerPosition = preHeadMarkup.indexOf('<!--}}}-->')
+	// TODO: test
+	preHeadTiddler.text = closeMarkerPosition == -1 ? preHeadMarkup + '\n' + viewportHtml
+		: preHeadMarkup.substring(0, closeMarkerPosition) + viewportHtml + '\n'
+		+ preHeadMarkup.substring(closeMarkerPosition)
+	store.saveTiddler(preHeadTiddler)
+}
+
+// close menus on click elsewhere
+jQuery('body').on('click', function(event) {
+	// except on mobile
+	if(!window.matchMedia || !window.matchMedia("(max-width: 768px)").matches) return
+
+	const $mainMenu = jQuery('#mainMenu')
+	const $sidebar = jQuery('#sidebar')
+	if(!isDescendant(event.target, $mainMenu[0])) $mainMenu.hide()
+	if(!isDescendant(event.target, $sidebar[0])) $sidebar.hide()
+})
+//}}}
+
+// /%
+/***
+!ResponsiveStyleSheet
+***/
+///*{{{*/
+//body {
+//	/* prevent scroll on backstage clock, right? ..better set width by JS instead
+//	overflow-x: hidden; */
+//	/* increased compared to core; should be increased further */
+//	font-size: .8em;
+//}
+//
+//#fullContentWrapper {
+//	box-shadow: 0px 1px 4px [[ColorPalette::TertiaryMid]];
+//	position: relative;
+//	/* to position #messageArea, see https://stackoverflow.com/a/67776640/3995261
+//	contain: content; */
+//
+//	max-width: 80em;
+//	margin-inline-start: auto;
+//	margin-inline-end: auto;
+//}
+//
+//#backstageWrapper {
+//	position: absolute;
+//	top: 0;
+//	left: 0;
+//	right: 0;
+//}
+//#contentWrapper {
+//	min-height: 100vh;
+//	background: [[ColorPalette::Background]];
+//}
+//#backstageCloak {
+//	/* from https://css-tricks.com/full-bleed/ */
+//	width: 100vw;
+//	left: 50%;
+//	right: 50%;
+//	margin-left: -50vw;
+//	margin-right: -50vw;
+//	top: 0;
+//}
+//
+//#backstagePanel {
+//	width: unset;
+//	/* 0 auto  doesn't work here */
+//	margin: 0;
+//}
+//
+//.header {
+//	background: -moz-linear-gradient(to bottom, [[ColorPalette::PrimaryLight]], [[ColorPalette::PrimaryMid]]);
+//	background: linear-gradient(to bottom, [[ColorPalette::PrimaryLight]], [[ColorPalette::PrimaryMid]]);
+//}
+//.headerForeground {
+//	padding: 3em 1em 1em;
+//	position: relative;
+//	text-shadow: -1px -1px [[ColorPalette::Foreground]];
+//}
+//.siteTitle {
+//	/* decreased compared to the core; may be decreased more */
+//	font-size: 2.5em;
+//}
+//@media (max-width: 768px) {
+//	.siteTitle { font-size: 1.8em; }
+//}
+//
+//#topLineMenu {
+//	position: sticky;
+//	top: 0;
+//	z-index: 1;
+//	box-shadow: 0px 1px 4px [[ColorPalette::TertiaryMid]];
+//	background: [[ColorPalette::Background]];
+//	padding: .5em;
+///*padding-block-start: .5em;
+//padding-inline-start: .5em;
+//inline-size: max-content;*/
+//}
+//.topLineMenu__wrapper {
+//	display: flex;
+//	align-items: center;
+//}
+//.topLineMenu__center {
+//	flex: 1;
+//	text-align: center;
+//	padding: 0 1em;
+//}
+//#topLineMenu a.button {
+//	padding: 0.3em 0.5em;
+//}
+//
+///* remake columns using flex */
+//.body {
+//	display: flex;
+//	/* to allow MainMenu hover */
+//	position: relative;
+//}
+///* undoing styles for body__nav, body__sidebar; body__main */
+//#mainMenu, #sidebar {
+//	position: relative;
+//}
+//#mainMenu {
+//	padding: 1em;
+//}
+//#sidebar {
+//	margin-inline-start: 1em;
+//	padding-block-start: 1em;
+//	font-size: 1em;
+//}
+//#sidebarOptions {
+//	/* overwriting defaults */
+//	padding-top: 0;
+//}
+//#displayArea {
+//	/* prevent stretching the body horizontally (by code blocks etc), idea from:
+//	   https://chaiyihein.medium.com/fixing-flexbox-child-element-overflows-the-power-of-min-width-1c7af87314da */
+//	min-width: 0;
+//	margin: 0;
+//}
+//.body__main {
+//	flex: 1;
+//}
+//
+//@media (max-width: 768px) {
+//	#mainMenu, #sidebar {
+//		display: none;
+//		position: absolute;
+//		top: 0;
+//		bottom: 0;
+//		background: [[ColorPalette::Background]];
+//		box-shadow: 1px 2px 5px [[ColorPalette::TertiaryMid]];
+//		/* height: ?? (full?) stick to the top? */
+//	}
+//	#mainMenu {
+//		left: 0;
+//	}
+//	#sidebar {
+//		right: 0;
+//	}
+//}
+//
+//.button_button {
+//	background: [[ColorPalette::Background]];
+//	border: 1px solid [[ColorPalette::SecondaryMid]];
+//	padding: 0;
+//	line-height: 1;
+//	border-radius: 5px;
+//}
+//.button_button svg {
+//	vertical-align: middle;
+//	/* accessability */
+//	min-width: 24px;
+//	min-height: 24px;
+//}
+//.button__shape {
+//	fill: none;
+//	stroke: [[ColorPalette::Foreground]];
+//	stroke-width: 3;
+//}
+//
+//[[StyleSheet]]
+///*}}}*/
+/***
+!end of ResponsiveStyleSheet
+***/
+// %/ //
+//{{{
+;(function() {
+var cssName = "ResponsiveStyleSheet",
+    css = store.getTiddlerText("ResponsiveThemePlugin" + "##" + cssName).replace(/^\/\//gm, "");
+css = css.substring(5, css.length - 5); // cut leading \n***/ and trailing /***\n of the section
+config.shadowTiddlers[cssName] = css;
+})();
+//}}}
+// /%
+/***
+!TopLineMenu
+***/
+//{{topLineMenu__wrapper{
+//<html>
+//    <button class="button button_button" title="toggle main menu" onclick='
+//	const $nav = jQuery(".body__nav")
+//	$nav.is(":hidden") ? $nav.show() : $nav.hide()
+//	if(event && event.stopPropagation) event.stopPropagation()
+//    '>
+//      <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 100 100">
+//	<rect x="20" width="60" y="20" height="10" rx="5" ry="5" class="button__shape" />
+//	<rect x="20" width="60" y="45" height="10" rx="5" ry="5" class="button__shape" />
+//	<rect x="20" width="60" y="70" height="10" rx="5" ry="5" class="button__shape" />
+//      </svg>
+//    </button>
+//</html>
+//{{topLineMenu__center{
+//<<tiddler [[TopLineMenuMiddle]]>>}}}
+//<html>
+//    <button class="button button_button" title="toggle sidebar" onclick='
+//	const $nav = jQuery(".body__sidebar")
+//	$nav.is(":hidden") ? $nav.show() : $nav.hide()
+//	if(event && event.stopPropagation) event.stopPropagation()
+//    '>
+//      <svg xmlns="http://www.w3.org/2000/svg" width="1.2em" height="1.2em" viewBox="0 0 100 100">
+//	<circle cx="50" cy="25" r="7" class="button__shape" />
+//	<circle cx="50" cy="50" r="7" class="button__shape" />
+//	<circle cx="50" cy="75" r="7" class="button__shape" />
+//      </svg>
+//    </button>
+//</html>
+//}}}
+/***
+!end of TopLineMenu
+***/
+// %/ //
+//{{{
+;(function() {
+var cssName = "TopLineMenu",
+    css = store.getTiddlerText("ResponsiveThemePlugin" + "##" + cssName).replace(/^\/\//gm, "");
+css = css.substring(5, css.length - 5); // cut leading \n***/ and trailing /***\n of the section
+config.shadowTiddlers[cssName] = css;
+})();
+//}}}</pre>
+</div>

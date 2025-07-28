@@ -1,0 +1,41 @@
+<div title="QuickEdit_align" modifier="ELSDesignStudios" created="200803310414" modified="200906112024" tags="QuickEditPackage">
+<pre>/%
+|Name|QuickEdit_align|
+|Source|http://www.TiddlyTools.com/#QuickEdit_align|
+|Version|2.4.3|
+|Author|Eric Shulman|
+|License|see http://www.TiddlyTools.com/#QuickEditPlugin|
+|Type|html|
+|Requires|QuickEditPlugin|
+|Description|quickedit - text alignment|
+
+Usage: see  http://www.TiddlyTools.com/#QuickEditToolbar
+
+%/<html><hide linebreaks><a href="javascript:;" class="tiddlyLink" tabindex="-1" 
+title="align text"
+onclick="var p=Popup.create(this); if (!p) return false; p.className+=' sticky smallform';
+	var s=createTiddlyElement(p,'select'); s.button=this;
+	s.options[0]=new Option('select text alignment...','');
+	s.options[s.length]=new Option('left','left');
+	s.options[s.length-1].title='{{left{...}}}';
+	s.options[s.length]=new Option('center','center');
+	s.options[s.length-1].title='{{center{...}}}';
+	s.options[s.length]=new Option('right','right');
+	s.options[s.length-1].title='{{right{...}}}';
+	s.options[s.length]=new Option('justify','justify');
+	s.options[s.length-1].title='{{justify{...}}}';
+	s.options[s.length]=new Option('float left','floatleft');
+	s.options[s.length-1].title='{{floatleft{...}}}';
+	s.options[s.length]=new Option('float right','floatright');
+	s.options[s.length-1].title='{{floatright{...}}}';
+	s.size=s.length;
+	s.onclick=function(){ if (!this.value.length) return;
+		config.quickEdit.wrapSelection(this.button,'{{'+this.value+'{','}}}');
+		Popup.remove(); return false;
+	};
+	s.onkeyup=config.quickEdit.keyup;
+	Popup.show();
+	s.focus();
+	return config.quickEdit.processed(event);"
+>align</a></html></pre>
+</div>

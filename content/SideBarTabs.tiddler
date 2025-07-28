@@ -1,0 +1,13 @@
+<div title="SideBarTabs" modifier="Wang Yanshu" created="202405281522" modified="202412180834" creator="YourName">
+<pre>/%
+<<tabs txtMainTab tags "list of tags" SideBarTabs##tag recent "list tiddlers by date" SideBarTabs##recent "All" "All tiddlers" TabAll "More" "More lists" TabMore>>
+/%
+!recent
+{{recent{<<timeline "modified" "20" "YYYY-0MM-0DD">>
+
+@@padding-left:10px;[[::complete timeline::|timeline]]@@}}} 
+!tag
+{{tag{<<tagCloud excludeLists excludeSearch systemConfig systemServer PluginInfo Plugin excludeMissing excludePublisher takenotepackage app DiscoveryPackage NavigationPackage IconPackage TidIDEPackage TaskPackage ScrollbarPackage MediaPackage pluginInfo @cdent @developers @ricardoperes Administration follow tips Content System systemConfigDisable AttachFilePackage IFramePackage QuickEditPackage Tag ThemePackage attachment package sample settings story tiddlyLife BasicsPackage BookmarkPackage CD CSS DiscussionPackage ImportExportPackage InputPackage JashPackage MoveablePanelPackage PasetUpPackage PasteUpPackage TiddlyTools [[To Do]] alpha animation blank bookmarklet catalog demo discussion excludeTheme framedLinks html media moveable panelmap patch script setup stylesheet stylesheets systemTheme template test translate  transclusion locked silk Decrypt(Ramanujan) Trash Plugins>>
+
+!end%/</pre>
+</div>

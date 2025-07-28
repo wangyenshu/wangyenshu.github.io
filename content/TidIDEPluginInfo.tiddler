@@ -1,0 +1,116 @@
+<div title="TidIDEPluginInfo" modifier="ELSDesignStudios" created="200801090432" modified="200908270744" tags="pluginInfo">
+<pre>|Name|TidIDEPluginInfo|
+|Source|http://www.TiddlyTools.com/#TidIDEPlugin|
+|Documentation|http://www.TiddlyTools.com/#TidIDEPluginInfo|
+|Version|1.8.4|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|documentation|
+|Description|documentation for TidIDEPlugin|
+~TidIDE (//prounounced "Tie Dyed"//) - ''Tid''dlyWiki ''I''ntegrated ''D''evelopment ''E''nvironment - lets you define a set of checkboxes to toggle a stack of 'tool panels' containing tools for TiddlyWiki authors to use when creating and debugging their TiddlyWiki documents.  Each tool is defined by a separate tiddler, allowing you to define any convenient set of tools simply by adding/removing tiddler references from the {{{<<tidIDE...>>}}} macro call.
+
+In addition to presenting checkboxes/tool panels that are defined in separate tiddlers, the {{{<<tidIDE>>}}} macro can invoke an optional built-in "editor panel" that presents an alternative tiddler editor to create, modify, and manage the tiddlers in your document... and, if you have also installed [[PreviewPlugin]], the editor can automatically display a ''//formatted preview//'' of the current tiddler content that is updated ''live, key-by-key'' while you edit the tiddler source.
+!!!!!Usage
+<<<
+Syntax:
+{{{
+<<tidIDE id:xyz TiddlerName ...>>
+<<tidIDE id:xyz [[checkbox text|TiddlerName]] ...>>
+<<tidIDE id:xyz edit ... >>
+<<tidIDE id:xyz edit:here ... >>
+<<tidIDE id:xyz edit:TidderName ...>>
+}}}
+where:
+* ''id'' - assign a unique ID to this instance of TidIDE.  (default id=current tiddler title or "" if not in a tiddler)
+* ''{{{TidderName}}}'' or ''{{{[[checkbox text|TiddlerName]]}}}'' will include the custom tool panel content defined in TiddlerName (and a corresponding labelled checkbox to toggle its display)
+* ''edit'' includes tiddler editor/previewer.
+**''edit:here'' automatically sets the editor to show the current tiddler contents (if in a tiddler)
+**''edit:tiddlertitle'' automatically sets the editor to show the specified tiddler contents
+* all parameters are optional.  The default panel is "edit:here".
+* panel parameters preceded by a "+" are displayed by default.  If only one panel specified in the parameters, it is automatically displayed, even if the "+" is omitted.
+<<<
+!!!!!Example
+<<<
+{{{<<tidIDE id:example SystemInfo TiddlerTweaker +edit:GettingStarted>>}}}
+{{smallform{<<tidIDE id:example SystemInfo TiddlerTweaker +edit:GettingStarted>>}}}
+<<<
+!!!!!Using the built-in TidIDE editor
+<<<
+The editor includes a droplist of all tiddlers in the document, sorted alpha-numerically by tiddler title.  Shadow tiddlers that have not been customized are added to the end of this list and marked with "(shadow)".  Next to the droplist are several buttons:
+* ''new'' prompts for a new tiddler title and begins a new editing session
+* ''remove'' deletes an existing tiddler (note: shadow tiddlers cannot be removed)
+* ''save'' saves changes to the tiddler currently being edited
+* ''save as'' saves changes using a new tiddler title
+* ''open'' opens the tiddler in the normal ~TiddlyWiki display area
+* ''run'' invokes the tiddler as if it was a plugin (i.e., containing javascript code)
+* ''preview'' toggles display of the live, key-by-key preview (when [[PreviewPlugin]] is installed)
+If a tiddlername was not specified in the macro, select a tiddler from the droplist (or press ''add'') to begin editing.  Once a tiddler has been loaded into the editor, you can change it's content, enter or select tags.
+!!!!!minor edits
+Normally, when you save changes to a tiddler, the created/modified dates and tiddler author are automatically updated.  However, it is sometimes useful to make small changes to a tiddler without automatically updating the date/author information.  Select the ''minor edits'' checkbox to prevent those values from being //automatically// changed.  In addition, this enables the date/author edit fields which allows you to //manually// 'back date' a tiddler or change the author to another name.  When the tiddler is saved, the date/author values shown in the edit fields will be used.
+!!!!!using the previewer
+When [[PreviewPlugin]] is installed, you can use the TidIDE editor's ''preview'' button to toggle the preview display area that shows you what your tiddler changes will look like, //before// committing to those changes.  Please refer to the documentation in [[PreviewPlugin]] for more information.
+<<<
+!!!!!Revisions
+<<<
+2009.08.27 1.8.4 added 'tidIDEPanel' classname to container element (for custom CSS)
+2008.04.24 1.8.3 fixed 'run' button onclick handler
+2007.12.21 1.8.1 added txtTidIDEMaxEditRows option as custom override for standard core txtMaxEditRows setting
+2007.09.27 1.8.0 split preview functionality into separate stand-alone plugin (see [[PreviewPlugin]]).  Moved {{{<<DOMViewer>>}}} macro definition to separate plugin (see [[DOMViewerPlugin]]).  Replicated ''run'' button functionality in stand-along plugin (see [[RunTiddlerPlugin]]). Major re-write of documentation
+2007.09.13 1.7.1 removed errant trailing comma from config.macros.tidIDE object definition (fixes IE error)
+2007.09.09 1.7.0 split systemInfo into separate plugin (see [[SystemInfoPlugin]])
+2007.09.06 1.6.3 in handler(), when using tiddler title as default instance ID, replace spaces with underscores to ensure generated form control ID's don't have embedded spaces.
+2007.09.03 1.6.2 in loadPanel(), use store.getTiddlerText() to permit use of shadow tiddlers as custom panels
+2006.12.09 1.6.1 in handler(), allow non-existing tiddler title when processing "edit:title" param
+so that new tiddler (or journal) can be created directly from newTiddler, newJournal, or tidIDE macro (without pressing "new" button).  Also, set 'edit=text' attribute on text area field so that default content can be initialized from "text:xxx" parameter specified in newTiddler/newJournal macro.
+2006.11.28 1.6.0 added font and size params to set CSS for form controls in editor and system info panels
+2006.09.28 1.5.8 use separate form ID and definition for each panel (as well as checkbox 'selector' form), so that forms in custom panels don't conflict with each other.
+2006.08.27 1.5.7 in handler(), corrected initial display setting for custom 'toolspanel' when '+' prefix has been used for 'defOpen'
+2006.08.15 1.5.6 in handler(), supress header/selectors if only one panel to display.  Also, init system_panel as needed.
+2006.08.04 1.5.5 in handler(), fix construction of tiddler list to permit use of apostrophes (') in tiddler names.
+2006.05.22 1.5.4 in setsys(), remove "(cookie)" prefix from selected item text when setting cookie name (was preventing saving of cookie values)
+2006.05.17 1.5.3 in setsys(), call saveOptionsCookie().  Also, set tiddler editor textarea height (%maxrows%) using config.options.txtMaxEditRows
+2006.04.30 1.5.2 documentation update
+2006.04.30 1.5.1 in save(), when performing "save as" behavior, set current tiddler title (f.current) to new title
+2006.04.24 1.5.0 added macro parameters to dynamically configure and assemble HTML for IDE panels.  Supports multiple custom panels loaded from tiddlers and {{{[[label|tiddlername]]}}}
+2006.04.24 1.4.6 layout adjustments: move system panel above editor panel and move config setting controls to top of system panel
+2006.04.23 1.4.5 fix HTML so that click on "readonly" checkbox won't change "minor edits" option value.
+2006.04.23 1.4.4 in render(), strip carriage returns (\r) that are added by IE's textarea control.  Fixes errors in wikify() of 'block-mode' syntax.  Also, defer rendering HTML and DOM preview displays until those options are checked and still more code cleanup
+2006.04.23 1.4.3 init "minor edits" checkbox state from config.options.chkForceMinorEdits value
+2006.04.23 1.4.2 added "TidIDE v#.#.#: " title in front of subsystem checkboxes.
+2006.04.23 1.4.1 added 'readonly' checkbox and handling to editor.
+2006.04.23 1.4.0 implemented 'minor edits' logic, including use of TW AdvancedOptions setting.  Replaced separate MDY date input fields with date/time text input fields (using formatted date input).
+2006.04.22 1.3.2 Layout changes:  Added editor/system/tools "subsystem" checkboxes at top of panel.  Added automatic read-only notice.  Moved tools_panel to bottom.  Added 'minor edits' checkbox (handler not yet implemented).
+2006.04.22 1.3.1 assorted code cleanup and optimizations
+2006.04.22 1.3.0 added "tools" section via custom-defined TidIDETools tiddler content
+2006.04.22 1.2.2 corrected 'wrap' and 'white-space' CSS for system viewer textarea control so that IE preserves newlines.
+2006.04.22 1.2.1 added checkbox indicators in options droplist.  Allows easy preview of boolean state value for chk* options.
+2006.04.22 1.2.0 added options droplist to "system" display and supporting setsys() function to update internal config.options.* values
+layout adjustments: consolidate some buttons, general tweaks for spacing, sizes, etc.
+2006.04.21 1.1.1 migrated remaining functionality from ToolkitPlugin (now obsolete).
+2006.04.21 1.1.0 added "system" display and supporting functions
+2006.04.21 1.0.1 added formatHTML() for better HTML display in preview
+2006.04.20 1.0.0 4:20:00pm official release... renamed from ~TiddlerEditorPlugin to TidIDEPlugin.  (pronounced "Tie Dyed"... dude!)
+2006.04.20 0.9.9 added "run" button to dynamically load systemConfig plugins (with warning/confirmation)
+2006.04.20 0.9.8 layout adjustments for narrow displays
+2006.04.20 0.9.7 added HTML viewer to preview display
+2006.04.20 0.9.6 added DOM viewer to preview display
+2006.04.19 0.9.5 improved save() handler so saving 'unnamed' edit does fallback to 'save as' prompt for tiddler name
+2006.04.19 0.9.4 added 'preview status' display field and refresh button.  Currently shows preview rendering time and autofreeze notice, if any.
+2006.04.19 0.9.3 correct IE object error by explicitly using "window." scope when referencing addKeyDownHandlers() function definition
+2006.04.18 0.9.2 if TextAreaPlugin is installed, call addKeyDownHandlers() for extended ctrl-F/G and TAB keystrokes in textarea
+2006.04.18 0.9.1 "save as" now presents an "overwriteWarning" message box instead of always rejecting existing tiddler titles
+2006.04.18 0.9.0 added "save as".  Use TW standard text for new tiddler title and default text
+2006.04.18 0.8.5 added "display:inline" to input elements to prevent unwanted line breaks between controls when macro is used in EditTemplate definitions
+2006.04.18 0.8.4 added cookie for 'auto-freeze' time limit.  Also, added more documentation.
+2006.04.17 0.8.3 added timing wrapper around preview wikify().  Automatically freeze preview display if tiddler rendering exceeds time limit
+2006.04.17 0.8.2 more code cleanup for better 'dirty' flag handling
+2006.04.17 0.8.1 show/hide freeze checkbox when toggling preview display.  Also, code cleanup for better 'multiple instance' definition
+2006.04.17 0.8.0 added "freeze" checkbox to toggle 'live update' of preview display.  Also, layout/CSS adjustments for better appearance in IE
+2006.04.16 0.7.1 correct month number offset (was 0-11 instead of 1-12)
+2006.04.16 0.7.0 added support for 'dirty' flag, read-only mode and improved alert/confirm/prompt handling
+2006.04.16 0.6.0 created "add/remove" functions.  Added handling to trigger autoSave() if option is set.
+2006.04.15 0.5.1 move 'save' logic to separate function, and added handling to create a 'real' tiddler when saving a shadow
+2006.04.15 0.5.0 Initial ALPHA release. Converted from inline script.
+<<<</pre>
+</div>

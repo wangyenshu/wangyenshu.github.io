@@ -1,0 +1,15 @@
+<div title="ForEachTiddlerExamples" modifier="Wang Yanshu" created="202411230706">
+<pre>Here are some examples that show the usage of the write action in the ForEachTiddlerMacro.
+
+//''Select and Sort Examples''//
+* InClauseExamples
+* WhereClauseExamples
+* SortClauseExamples
+* ScriptClauseExamples
+//''Action Examples''//
+* AddToListActionExamples
+* WriteActionExamples
+
+
+Of cause you may also combine the examples, e.g. taking the whereClause of one example, the sortClause of a second and the action of a third.</pre>
+</div>

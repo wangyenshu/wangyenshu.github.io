@@ -1,0 +1,7 @@
+<div title="SampleMap" modifier="ELSDesignStudios" created="200811192224" modified="200812050936" tags="panelmap moveable sample MoveablePanelPackage">
+<pre>|    !panelname|   !x |   !y |   !w |   !h |   !z | !fold | !hover |h
+|     SampleMap|   350|   200|   550|  auto|      |       |        |
+|      mainmenu|     0|    30|    80|   115|     2|       |        |
+|   accessories|    15|   160|    80|   125|     3|       |        |
+|    powertools|    50|   352|    80|   125|     4|       |    √   |</pre>
+</div>

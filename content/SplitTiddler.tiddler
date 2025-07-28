@@ -1,0 +1,150 @@
+<div title="SplitTiddler" modifier="ELSDesignStudios" created="200802180331" modified="201006110909" tags="html">
+<pre>/%
+|Name|SplitTiddler|
+|Source|http://www.TiddlyTools.com/#SplitTiddler|
+|Version|1.9.5|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|html|
+|Description|split tiddler contents into separate tiddlers|
+
+%/<html><nowiki><style>
+#tiddlerSplitTiddler .tagged { display:none; }
+#tiddlerSplitTiddler .label { font-size:90%;font-style:italic;white-space:nowrap; }
+#tiddlerSplitTiddler table, #tiddlerSplitTiddler tr, #tiddlerSplitTiddler td
+	{ border:0; margin:0; padding:0; }
+</style><table><tr><td><form>
+<table style='width:100%'><tr><td style='width:20%'>
+	<div class='label'>source tiddler:</div>
+	<select name='src' value='' style='width:99%;padding:2px;margin:0'
+		title='select a tiddler containing source material'>
+	<option value=''>select a tiddler...</option>
+	</select>
+</td><td style='width:20%'>
+	<div class='label'>target title format:</div>
+	<input name='titleformat' value='%0 - %1' style='width:99%'
+		title='format for target tiddler titles'>
+</td><td style='width:20%'>
+	<div class='label'>output format:</div>
+	<input name='format' value='%4' style='width:99%'
+		title='format for target tiddler content'>
+</td><td style='width:20%'>
+	<div class='label'>target field:</div>
+	<input name='fieldname' value='text' style='width:99%'
+		title='field to hold content in target tiddler'>
+</td><td style='width:20%'>
+	<div class='label'>add tags:</div>
+	<input name='tags' value='' style='width:99%'
+		title='tags for target tiddlers'>
+</td></tr></table>
+<div style='font-size:80%;font-style:italic;text-align:center;color:gray'>
+%0=source title, %1=first line of item, %2=first word of item, %3=item number, %4=item content
+</div>
+<div style='float:left;margin-right:1em'>
+<div class='label'>split source content by:</div>
+<div style='line-height:2.1em'>
+<input type='radio' name='splitby' value='charcount'>every
+<input name='charcount' value='1000' onfocus='this.select()' style='width:3em'
+	title='split content every N characters'> characters<br>
+<input type='radio' name='splitby' value='linecount'>every
+<input name='linecount' value='20' onfocus='this.select()' style='width:3em'
+	title='split content every N lines'> lines<br>
+<input type='radio' name='splitby' value='match' CHECKED>match
+<input name='sep' value='\n----\n' onfocus='this.select()' style='width:8em'
+	title='match character sequence to split content'><br>
+&nbsp; <input type='checkbox' name='regexp' title='match using regular expressions (text patterns)'>use RegExp text pattern<br>
+</div></div>
+<div style='float:left;margin-right:1em'>
+<div class='label'>options:</div>
+<input type='checkbox' name='warn' checked>confirm overwrites<br>
+<input type='checkbox' name='show'>show tiddlers when done<br>
+<input type='checkbox' name='limit'>create only
+<input name='maxtids' value='8' style='width:2em'> tiddlers<br>
+<input type='checkbox' name='index' checked>create an index tiddler<br>
+&nbsp;&nbsp; index item format:
+<input name='indexformat' value='<<tiddler [[%0 - %1]]>>' style='width:10em'
+	title='%0=target tiddler title'>
+</div>
+<input type='button' style='float:right;height:5em;margin-top:2.5em' value='split tiddler' onclick="
+	var f=this.form;
+	if (!f.src.value.length)
+		{ alert('select a tiddler title'); f.src.focus(); return false; }
+	if (!f.titleformat.value.length)
+		{ alert('enter a target title format'); f.titleformat.focus(); return false; }
+	if (!f.src.value.length)
+		{ alert('enter an output item format'); f.format.focus(); return false; }
+	var start=new Date().getTime();
+	var src=store.getTiddlerText(f.src.value);
+	if (!src) { displayMessage('\x27'+f.src.value+'\x27 not found'); return false; }
+	var tags=f.tags.value;
+	var parts=[];
+	if (f.splitby[0].checked) { /* chars */
+		for (var i=0; i<src.length; i+=f.charcount.value)
+			parts.push(src.substr(i,f.charcount.value));
+	} else if (f.splitby[1].checked) { /* lines */
+		var lines=src.split('\n');
+		var t=''; var c=f.linecount.value;
+		while (lines.length) {
+			t+=lines.shift()+'\n'; c--;
+			if (!c) { parts.push(t); var c=f.linecount.value; t=''; }
+		}
+	} else { /* match text/regexp */
+		var sep=!f.regexp.checked?f.sep.value.unescapeLineBreaks():new RegExp(f.sep.value);
+		var pieces=src.split(sep);
+		for (var i=0; i<pieces.length; i++) if (pieces[i].length) parts.push(pieces[i]);
+	}
+	var msg='Found '+parts.length+' items in \x27'+f.src.value+'\x27. OK to proceed?';
+	if (!confirm(msg)) return false;
+	if (parts.length) store.suspendNotifications();
+	var pad=parts.length.toString().length;
+	var tids=[]; var out=[];
+	var srctitle=f.src.value;
+	var fmt=f.format.value.unescapeLineBreaks();
+	var titlefmt=f.titleformat.value.unescapeLineBreaks();
+	var fieldname=f.fieldname.value.toLowerCase();
+	var indexfmt=f.indexformat.value.unescapeLineBreaks();
+	var max=f.limit.checked?f.maxtids.value:parts.length;
+	var warn=f.warn.checked;
+	for (var p=0; p<max; p++) {
+		var lines=parts[p].split('\n');
+		var firstline=lines[0];
+		var firstword=firstline.split(' ')[0];
+		var itemnum=String.zeroPad(p+1,pad);
+		if (titlefmt.indexOf('%2')!=-1) /* remove firstword if used in title */
+			{ var words=lines[0].split(' '); words.shift(); lines[0]=words.join(' '); var discard=!words.length; }
+		if (titlefmt.indexOf('%1')!=-1 || discard) /* remove firstline if used in title */
+			lines.shift();
+		var content=lines.join('\n');
+		var args=[srctitle,firstline,firstword,itemnum,content];
+		var tid=titlefmt.format(args).replace(/[\[\]\|]/g,'_');
+		var txt=fmt.format(args);
+		var fields={}; if (fieldname!='text')
+			{ fields[fieldname]=txt; txt='<<view '+fieldname+' wikified>>'; }
+		var tags=tags.format(args);
+		if (warn && store.tiddlerExists(tid) && !confirm(config.messages.overwriteWarning.format([tid])))
+			continue;
+		store.saveTiddler(tid,tid,txt,config.options.txtUserName,new Date(),tags,fields);
+		if (f.index.checked) out.push(indexfmt.format(args));
+		tids.pushUnique(tid);
+	}
+	var elapsed=(new Date().getTime()-start)/1000;
+	if (parts.length) store.resumeNotifications();
+	if (tids.length) {
+		if (f.index.checked) {
+			var tid=f.src.value+'Index';
+			if (!warn||!store.tiddlerExists(tid)||confirm(config.messages.overwriteWarning.format([tid])))
+				store.saveTiddler(tid,tid,out.join('\n'),config.options.txtUserName,new Date(),[],{});
+		}
+		store.notifyAll();
+		if (f.show.checked) story.displayTiddlers(story.findContainingTiddler(this),tids);
+		displayMessage('created '+tids.length+' target tiddlers in '+elapsed+' seconds');
+	}
+"><div style='clear:both'></div>
+</form></td></tr></table></html><<tiddler {{
+	var list=place.lastChild.getElementsByTagName('form')[0].src;
+	store.forEachTiddler(function(title,tiddler){
+		list.options[list.length]=new Option(title,title);
+	});
+'';}}>></pre>
+</div>

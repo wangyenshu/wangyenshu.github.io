@@ -1,0 +1,26 @@
+<div title="QuizzerPluginDoc" modifier="Wang Yanshu" created="202411230655">
+<pre>!!!!Syntax
+The QuizzerPlugin has five parameters; most are optional:
+//{{{
+<<quiz [type:type[=]] [id:id] [tiddler:tiddler] [value:value] [score:score]>>
+//}}}
+Parameters:
+*type (string)
+**"M" (multiple answer checkbox) (default)
+**"S" (single-answer radio button group)
+**"T" (true/false question)
+***append "=" for sliding panel (e.g., T=, S=, M=) 
+*id (string)
+**required for types S  and T only
+***for type S value must be unique across a group of questions
+***for type T value must be unique for each question 
+*tiddler (string, //optional//)
+**display text from tiddler in the panel
+**default is config.macros.answer.wrongAnswer or config.macros.answer.rightAnswer according to the value of the next parameter
+*value (boolean)
+**sets the logical value of an answer (right/wrong or true/false)
+**default is //false//
+*score (number)
+**sets the score for an answer
+** default is 0</pre>
+</div>

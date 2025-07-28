@@ -1,0 +1,17 @@
+<div title="LockedEditTemplate" modifier="ELSDesignStudios" created="200709131714" modified="200709131739" tags="template locked">
+<pre><!--{{{-->
+<!--
+|Name|LockedEditTemplate|
+|Source|http://www.TiddlyTools.com/#LockedEditTemplate|
+|Version||
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|template|
+|Requires|TiddlerPasswordPlugin,TiddlerPasswordPluginConfig,TaggedTemplateTweak|
+|Description|prompt for admin password to allow editing of tiddlers tagged with "locked"|
+-->
+<span macro='getTiddlerPassword - "A password is required to edit this tiddler:"'></span>
+[[EditTemplate]]
+<!--}}}--></pre>
+</div>

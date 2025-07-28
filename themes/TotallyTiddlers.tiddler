@@ -1,0 +1,45 @@
+<div title="TotallyTiddlers" modifier="ELSDesignStudios" created="200607160223" modified="200909290328" tags="systemTheme CSS ThemePackage excludeTheme">
+<pre>/***
+|Name|TotallyTiddlers|
+|Source|http://www.TiddlyTools.com/#TotallyTiddlers|
+|Version||
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|CSS|
+|Description|theme: hide everything but tiddler content|
+|StyleSheet|TotallyTiddlers|
+|PageTemplateReadOnly|PageTemplateReadOnly|
+|EditTemplateReadOnly|EditTemplateReadOnly|
+|Check|TotallyTiddlers##check|
+|Init|TotallyTiddlers##init|
+|Reset|TotallyTiddlers##reset|
+!!!!!check
+//{{{
+return !confirm("Are you sure you want to use this theme?");
+//}}}
+!!!!!init
+//{{{
+displayMessage("TotallyTiddlers (kiosk mode) is ON");
+//}}}
+!!!!!reset
+//{{{
+displayMessage("TotallyTiddlers (kiosk mode) is OFF");
+//}}}
+!!!!!styles
+***/
+
+[[StyleSheetAdjustments]]
+/*{{{*/
+/* ==== TotallyTiddlers ==== */
+body { background-color:transparent !important; }
+#mainMenu, #sidebar, .toolbar, .tagged, .tagging, .subtitle, .header
+	{display: none !important;}
+#breadCrumbs, #siteMenu, #storyMenu
+	{ display:none !important; }
+#displayArea
+	{ margin: 1em !important; }
+noscript /* Fixes a feature in Firefox 1.5.0.2 where print preview displays the noscript content */
+	{ display:none; }
+/*}}}*/</pre>
+</div>

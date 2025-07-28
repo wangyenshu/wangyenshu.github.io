@@ -1,0 +1,56 @@
+<div title="ShowReferencesPluginInfo" modifier="ELSDesignStudios" created="200609050622" modified="201103020725" tags="pluginInfo">
+<pre>/***
+|Name|ShowReferencesPluginInfo|
+|Source|http://www.TiddlyTools.com/#ShowReferencesPlugin|
+|Documentation|http://www.TiddlyTools.com/#ShowReferencesPluginInfo|
+|Version|2.0.0|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|documentation|
+|Description|documentation for ShowReferencesPlugin|
+!!!!!Usage
+<<<
+{{{
+<<showReferences "format" [[TiddlerName]] "message">>
+}}}
+*''format'' (optional, default={{{"[[%0]]\n"}}})<br>lists references as links, one per line, using %0 as a 'substitution marker' to insert the reference tiddler's title.
+*''TiddlerName'' (optional, default=current tiddler)<br>specifies the tiddler whose references are to be displayed.
+*''message'' (optional, default={{{"no references"}}})<br>specifies a message to display when there are no references.
+You can also use the [[ShowReferences]] //shadow tiddler// to transclude the macro output or embed it within a slider or tabset:
+{{{
+<<tiddler ShowReferences with: "format" [[TiddlerName]] "message">>
+<<slider ... [[ShowReferences]] label tooltip >>
+<<tabs ... label tooltip [[ShowReferences]] ...>>
+}}}
+Note: {{{<<slider>>}}} and {{{<<tabs>>}}} macros do //not// support use of extra parameters to specify a custom format, ~TiddlerName, or message.  The default format, current tiddler, and message will be used.
+<<<
+!!!!!Configuration
+<<<
+You can edit [[ShowReferences]] to specify //non-default// custom parameters values for use with transclusion, slider or tabs macros, or add additional content to display before/after the macro output.  You can also customize the //default// message text (i.e., "no references") by adding the following line to a tiddler tagged with 'systemConfig':
+{{{
+config.macros.fallbackMsg="your text here";
+}}}
+or
+{{{
+config.macros.fallbackMsg=""; // omits fallback message
+}}}
+<<<
+!!!!!Examples
+<<<
+one per line: {{{<<showReferences "[[%0]]\n" [[GettingStarted]]>>}}}
+{{indent{<<showReferences "[[%0]]\n" [[GettingStarted]]>>}}}
+comma-separated: {{{<<showReferences "[[%0]], " [[GettingStarted]]>>}}}
+{{indent{<<showReferences "[[%0]] " [[GettingStarted]]>>}}}
+bullet items: {{{<<showReferences "* [[%0]]\n" [[GettingStarted]]>>}}}
+<<showReferences "* [[%0]]\n" [[GettingStarted]]>>
+numbered items: {{{<<showReferences "# [[%0]]\n" [[GettingStarted]]>>}}}
+<<showReferences "# [[%0]]\n" [[GettingStarted]]>>
+<<<
+!!!!!Revisions
+<<<
+2011.03.01 2.0.0 converted to plugin and added optional TiddlerName and message params
+2006.09.13 1.1.0 added format param
+2006.09.04 1.0.0 original release (transclusion)
+<<<</pre>
+</div>

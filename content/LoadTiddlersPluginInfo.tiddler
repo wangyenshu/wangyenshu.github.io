@@ -1,0 +1,88 @@
+<div title="LoadTiddlersPluginInfo" modifier="ELSDesignStudios" created="200801090050" modified="201008122341" tags="pluginInfo ImportExportPackage">
+<pre>/***
+|Name|LoadTiddlersPluginInfo|
+|Source|http://www.TiddlyTools.com/#LoadTiddlersPlugin|
+|Documentation|http://www.TiddlyTools.com/#LoadTiddlersPluginInfo|
+|Version|3.9.0|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|documentation|
+|Description|documentation for LoadTiddlersPlugin|
+!!!!!Usage
+<<<
+{{{
+<<loadTiddlers label:... prompt:... filter source
+	quiet confirm force init nodirty norefresh noreport autosave
+	tag tag tag...>>
+}}}
+*''label:...'' and ''prompt:...''<br>link and tooltip text to trigger the load tiddler processing.  If a label is NOT provided, then no link is created and the loadTiddlers function is performed whenever the containing tiddler is rendered.
+*''filter'' (optional keyword)<br>determines which tiddlers will be automatically selected for importing.  Use one of the following:
+**''all''<br>ALL tiddlers from the import source document, even if they have not been changed.
+**''new''<br>only tiddlers that are found in the import source document, but do not yet exist in the destination document
+**''changes''<br>only tiddlers that exist in both documents for which the import source tiddler is newer than the existing tiddler
+**''updates''<br>both ''new'' and ''changes'' (this is the default action when none is specified)
+**''tiddler:TiddlerName''<br>only the specified tiddler is retrieved
+**''tag:value''<br>only the tiddlers tagged with the indicated value.
+*''source'' (required)<br>is the location of the imported document.  It can be either a local document path/filename in whatever format your system requires, or a remote web location (starting with "http://" or "https://").  Use the special keyword, ''ask'', to prompt for a source location whenever the macro is invoked
+*''quiet'' (optional)<br>supresses all status message during the import processing.  Note: if any tiddlers are actually imported, a final message will still be displayed, even when 'quiet' is specified.  This ensures that changes to your document cannot occur without any visible indication at all.
+*''confirm'' (optional)<br>adds interactive confirmation for each inbound tiddler, so that you can manually bypass any tiddlers that you do not want to import.  Note: this flag also adds confirmation when using the ''autosave'' option (see below).
+*''init'' (optional)<br>invokes tiddlers tagged with <<tag systemConfig>> as plugins as soon as they are imported, without requiring a save-and-reload action first.  For safety, you will be asked to confirm each imported plugin, so that you can manually bypass any that you do not want to invoke.  Note, however, that those tiddlers are still //imported// and saved with your document and will still take effect the next time you save-and-reload the document.
+*''force'' (optional)<br>imports all matching tiddlers, even if unchanged
+*''noreport'' (optional)<br>suppress generation of [[ImportedTiddlers]] report
+*''nodirty'' (optional)<br>loads tiddlers without marking the document as 'dirty' (i.e., needing to be saved)
+*''norefresh'' (optional)<br>prevents automatic re-rendering of the page after tiddlers are loaded
+*''autosave'' (optional)<br>automatically saves the document if tiddlers have been loaded
+*''tag tag tag...'' (optional)<br>any remaining parameters are used as tag values to be added to each imported tiddler (i.e., "tag-on-import")
+Note: if a tiddler in the current document is tagged with<<tag noReload>> then it ''will not be overwritten, even if the inbound tiddler has been selected'' by the filtering process.  This allows you to make local changes to imported tiddlers while ensuring that those changes won't be lost due to automatic tiddler updates retrieved from the import source document.
+<<<
+!!!!!Examples
+<<<
+{{{<<loadTiddlers "label:load tiddlers from %0" example.html confirm temporary>>}}}
+<<loadTiddlers "label:load tiddlers from %0" example.html confirm temporary>>
+{{{<<loadTiddlers "label:load tiddlers from %0 plus AUTOSAVE" example.html confirm norefresh autosave>>}}}
+<<loadTiddlers "label:load tiddlers from %0" example.html confirm norefresh autosave>>
+<<<
+!!!!!Configuration
+<<<
+<<option chkLoadTiddlersShowReport>>after loading tiddlers, automatically display [[ImportedTiddlers]] (if created)
+__password-protected server settings //(optional, if needed)//:__
+>username: <<option txtRemoteUsername>> password: <<option txtRemotePassword>>
+>{{{usage: <<option txtRemoteUsername>> <<option txtRemotePassword>>}}}
+>''note: these settings are also used by [[ExternalTiddlersPlugin]] and [[ImportTiddlersPlugin]]''
+<<<
+!!!!!Revisions
+<<<
+2010.08.11 3.9.0 added 'autosave' optional param
+2009.10.08 3.8.1 removed switchTheme() from doImport()... causes an INFINITE cycle of imports!
+2009.10.06 3.8.0 added createTiddlerFromFile (import text files)
+2009.10.04 3.7.8 in doImport(), call switchTheme() after loading tiddlers
+2009.09.27 3.7.7 in readTiddlersFromCSV(), strip \r from input and fixed handling for quoted values
+2009.09.01 3.7.6 added config.options.chkLoadTiddlersShowReport (default=true)
+2009.09.01 3.7.6 added config.options.chkLoadTiddlersShowReport (default=true)
+2009.08.30 3.7.5 in doImport(), check status and report error, if any
+2009.08.29 3.7.4 in handler(), added 'return false' in button function (fixes IE page transition)
+2009.08.19 3.7.3 in doImport(), fixed 'init' handling
+2009.08.16 3.7.2 in doImport(), corrected check for tiddlers returned by readTiddlersFromHTML();
+2009.07.03 3.7.1 fixups for TW252: doHttp() doesn't return XHR and convertUTF8ToUnicode() not needed for local I/O
+2009.05.04 3.7.0 read CSV file format
+2008.11.14 3.6.4 in loadFile(), force use of XMLHttpRequest if not viewing a local document (supports use of relative file references when online)
+2008.10.27 3.6.3 in doImport(), fixed Safari bug by replacing static Array.concat(...) with new Array().concat(...)
+2008.08.05 3.6.2 rewrote loadFile() to eliminate use of platform-specific fileExists() test
+2008.08.03 3.6.1 in handler(), changed variable 'prompt' to 'tip' to avoid conflict with prompt() function
+2008.01.07 3.6.0 added 'init' option to automatically invoke plugin tiddlers as soon as they are loaded (without needing save/reload)
+2008.01.03 3.5.0 in loadFile(), use lower-level doHttp() instead of loadRemoteFile() in order to support username/password access to remote server
+2007.12.04 *.*.* update for TW2.3.0: replaced deprecated core functions, regexps, and macros
+2007.06.27 3.4.8 added missing 'fields' params to saveTiddler() call. Fixes problem where importing tiddlers would lose the custom fields.
+2007.06.25 3.4.7 add calls to store.suspendNotifications() and store.resumeNotifications() to eliminate redisplay overhead DURING import activities.
+2007.05.27 3.4.6 in handler(), loadRemoteFile() and doImport(), added 'noreport' flag to suppress generation of ImportedTiddlers
+2007.05.27 3.4.5 in handler(), initialize 'newTags' to [] (empty array) instead of null... fixes fatal error when loading tiddler without autotagging.
+2007.04.22 3.4.4 in readTiddlersFromHTML(), for TW2.2 and above, use importTiddlyWiki() (new core functionality) to get tiddlers from remote file content.  Also, copied updated TW21Loader.prototype.internalizeTiddler() definition from TW2.2b5 so plugin can read tiddlers from TW2.2+ even when running under TW2.1.x
+2007.04.05 3.4.3 in doImport(), changed this.readTiddlersFromHTML(html) to config.macros.loadTiddlers.readTiddlersFromHTML(html).
+2007.03.26 3.4.2 renamed import() to doImport() to fix IE load-time error ("identifier expected").  "import" is a reserved word in some browsers...
+2007.03.22 3.4.1 code cleanup: moved all functions inside object def'n, re-wrote report function
+2007.03.21 3.4.0 split ImportTiddlersPlugin and LoadTiddlersPlugin into separate plugins
+|please see [[ImportTiddlersPluginInfo]] for additional revision details|
+2005.07.20 1.0.0 Initial Release
+<<<</pre>
+</div>

@@ -1,0 +1,81 @@
+<div title="TableOfContentsPluginInfo" modifier="ELSDesignStudios" created="200801090405" modified="200804100515" tags="pluginInfo">
+<pre>|Name|TableOfContentsPluginInfo|
+|Source|http://www.TiddlyTools.com/#TableOfContentsPlugin|
+|Documentation|http://www.TiddlyTools.com/#TableOfContentsPluginInfo|
+|Version|2.4.3|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|documentation|
+|Description|documentation for TableOfContentsPlugin|
+When there are many tiddlers in a document, the standard 'tabbed list of tiddlers' in the right-hand sidebar can become very long, occupying a lot of page space and requiring a lot scrolling in order to locate and select a tiddler.  This plugin replaces the standard tabs with a listbox/droplist control that uses a very small amount of page space, regardless of the number of tiddlers in the document.
+!!!!!Usage
+<<<
+{{{
+<<tableOfContents label:... sort:... date:... size:...
+	width:... padding:... margin:... prompt:... inline hidelist
+	-title -date -author -creator -tags -missing -orphans -shadows
+}}}
+*''label:text'' (default="contents")<br>the text that appears above the listbox.
+*''sort:fieldtype''<br>sets the initial display order for items in the listbox.  'fieldtype' is one of: ''title, modified, modifier, creator, tags, missing, orphans,'' or ''shadows''.
+*''date:format''<br>format for dates in listbox display, using TiddlyWiki date formatting (e.g. "DDD, MMM DD YYY")
+*''size:nnn'' (default=1)<br>the initial number of lines to display in the listbox.  If size=1, a droplist is created, otherwise a fixed-size listbox is created.  You can use "size:0" or "size:auto" to display a varible-height listbox that automatically adjusts to fit the current list contents without scrolling.
+*''width:...'' (default=100%)<br>the width of the listbox/droplist, using CSS units cm, px, em, or %.  You can also use a ".TOCList" custom CSS class definition to override the built-in CSS declarations for the listbox.
+*''padding:...''<br>sets listbox CSS padding style
+*''margin:...''<br>sets listbox CSS margin style
+*''prompt:...''<br>sets non-selectable prompt text that is displayed as the first line of the listbox //(note: this feature is not supported by the listbox control on all browsers)//.  Let's you include a short text message (such as "select a tiddler"), even when displaying a compact single-line droplist.
+*''inline''<br>By default, the listbox is rendered inside a {{{<div>}}} element.  This keyword causes the plugin to use a {{{<span>}}} instead, allowing for more flexible 'inline' placement when embedded within other content.
+*''hidelist''<br>when present, only the listbox label and size controls will be appear when first displayed.  Clicking the label toggles the listbox display.
+*''-title, -date, -author, -creator, -tags, -missing, -orphans, -shadows''<br>Omits the indicated list command item and corresponding listbox content.  
+Select (or double-click) a title from the listbox to open a tiddler, or select a 'command' items to set the order and type of tiddlers that are shown in the list:
+*''[by title]''<br>displays all tiddlers in the document in alphanumeric order
+*''[by date/author/creator/tags]''<br>displays indented sections, sorted accordingly, with headings (indicated by a '+') that can be expanded, one at a time, to view the list of tiddlers in that section. You can also ''shift-click'' on a section heading expand/collapse all sections at once.
+*''[missing]''<br>displays tiddlers that have been referenced within the document but do not yet exist.
+*''[orphans]''<br>displays tiddlers that do exist in the document but have not been referenced by a link from anywhere else within the document.
+*''[shadows]''<br>displays special default/fallback tiddlers that are used by TiddlyWiki to configure built-in features and add-on macros/extensions.
+The ''size of the listbox can be adjusted'' so you can view more (or less) tiddler titles at one time.  Select ''[-]'' to reduce the size by one line, ''[+]'' to increase the size by one line, or ''[=]'' to autosize the list to fit the current contents (toggles on/off). //Note: If the listbox is reduced to a single line, it displayed as a droplist instead of a fixed-sized listbox.//  You can ''show/hide the entire listbox'' by selecting the "contents" label that appears above the listbox.
+<<<
+!!!!!Configuration
+<<option chkTOCShow>> display table of contents listbox
+<<option chkTOCIncludeHidden>> include tiddlers tagged with <<tag excludeLists>> in listbox
+listbox shows <<option txtTOCListSize>> lines, sorted by <<option txtTOCSortBy>>
+!!!!!Parameters
+<<<
+<<<
+!!!!!Examples
+<<<
+{{{<<tableOfContents "label:all tiddlers" sort:title width:40% size:1>>}}}
+<<tableOfContents "label:all tiddlers" sort:title width:40% size:1>>
+{{{<<tableOfContents "label:by date" sort:modified size:1 width:40%>>}}}
+<<tableOfContents "label:by date" sort:modified size:1 width:40%>>
+{{{<<tableOfContents "label:tagged tiddlers" sort:tags size:1 width:40%>>}}}
+<<tableOfContents "label:tagged tiddlers" sort:tags size:1 width:40%>>
+{{{<<tableOfContents "label:shadow tiddlers" sort:shadows size:1 width:40%>>}}}
+<<tableOfContents "label:shadow tiddlers" sort:shadows size:1 width:40%>>
+<<<
+!!!!!Revisions
+<<<
+2008.04.09 2.4.3 restored config.options.chkTOCShow and onClickTOCMenu() handler
+2008.04.07 2.4.2 added "Configuration" section and removed config.options.chkTOCShow and onClickTOCMenu() handler
+2008.01.08 [*.*.*] plugin size reduction: documentation moved to ...Info tiddler
+2007.12.25 2.4.1 code cleanup and performance improvements
+2007.12.25 2.4.0 renamed 'system' section to 'shadows' (and no longer list plugins, etc. in that section).  Also, added 'by creator' sort order (with fallback to 'modifier' if 'creator' custom field is undefined). Thanks to RA for suggestion and code tweaks.
+2007.12.04 [*.*.*] update for TW2.3.0: replaced deprecated core functions, regexps, and macros
+2007.03.22 2.3.2 in refreshTOCLists(), when sorting by date, use convertToLocalYYYYMMDDHHMM() instead of formatString() to compare dates for 'section headings' and only use formatString() when actually generating the section heading date display.  Improves performance significantly for date sorted listbox, especially in documents with hundreds of tiddlers.  Suggestion by AndreasHoefler.
+2007.03.21 2.3.1 in refreshTOCLists(), only get list of 'select' elements, instead of scanning through all elements (saves significant time during refresh events.  Suggestion by AndreasHoefler.
+2006.11.27 2.3.0 added ability to omit sections from listbox via macro params (e.g., "-date -tags", etc.).  Based on request from DavidWinfield.
+2006.05.21 2.2.7 added onkeyup handling for enter key (=view selected tiddler, equivalent to double-click)
+2006.02.14 2.2.6 FF1501 fix: add 'var r' and 'var k' to unintended global variable declarations in refreshTOCList() and getTOCListFromButton().  Thanks for report from AndreasHoefler.
+2006.02.04 2.2.5 add 'var' to unintended global variable declarations to avoid FireFox 1.5.0.1 crash bug when assigning to globals
+2005.12.21 2.2.2 in onClickTOCList() and onDblClickTOCList(), prevent mouse events from 'bubbling' up to other handlers
+2005.10.30 2.2.1 in refreshTOCList(), fixed calculation of "showHidden" to check for 'readOnly' (i.e., "via HTTP") flag.  Based on a report from LyallPearce
+2005.10.30 2.2.0 hide tiddlers tagged with 'excludeLists' (with option to override, i.e., "include hidden tiddlers")
+2005.10.09 2.1.0 combined documentation and code in a single tiddler
+added click toggle for expand-all vs. show-one-branch
+2005.08.07 2.0.0 major re-write to not use static ID values for listbox controls, so that multiple macro instances can exist without corrupting each other or the DOM.  Moved HTML and CSS definitions into plugin code instead of using separate tiddlers.  Added macro parameters for label, sort, date, size, width, hidelist and showtabs
+2005.08.03 1.0.3 added "showtabs" optional parameter
+2005.07.27 1.0.2 core update 1.2.29: custom overlayStyleSheet() replaced with new core setStylesheet().  Added show/hide toggle (click on 'contents' link)
+2005.07.23 1.0.1 added parameter checks and corrected addNotification() usage
+2005.07.20 1.0.0 Initial Release
+<<<</pre>
+</div>

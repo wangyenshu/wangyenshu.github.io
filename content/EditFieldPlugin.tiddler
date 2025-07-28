@@ -1,0 +1,115 @@
+<div title="EditFieldPlugin" modifier="Wang Yanshu" created="200708220842" modified="202412181250" tags="InputPackage" foobar="test">
+<pre>/***
+|Name|[[EditFieldPlugin]]|
+|Source|http://www.TiddlyTools.com/#EditFieldPlugin|
+|Version|1.6.2|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|plugin|
+|Description|extend core edit macro for use in ViewTemplates or direct embedding in tiddler content|
+|Requires|InsertImagePlugin|
+!!!!!Documentation
+>see [[EditFieldPluginInfo]]
+!!!!!Revisions
+<<<
+2011.04.10 1.6.2 fixed 'null' fieldname handling in Chrome
+| Please see [[EditFieldPluginInfo]] for previous revision details |
+2007.08.22 1.0.0 initial release
+<<<
+!!!!!Code
+***/
+//{{{
+version.extensions.EditFieldPlugin= {major: 1, minor: 6, revision: 2, date: new Date(2011,4,10)};
+
+config.macros.edit.editFieldPlugin_savedHandler=config.macros.edit.handler;
+config.macros.edit.cancelMsg = "Abandon changes to %0@%1?";
+config.macros.edit.saveMsg = "Save changes to %0@%1?";
+config.macros.edit.handler = function(place,macroName,params,wikifier,paramString,tiddler) {
+
+	// let core render input/textarea, then get resulting element
+	config.macros.edit.editFieldPlugin_savedHandler.apply(this,arguments);
+	var fieldType=params[0]=="text"||params[1]?'textarea':'input';
+	var elems=place.getElementsByTagName(fieldType); var e=elems[elems.length-1];
+
+	// extended fieldname@tiddlername handling
+	var parts=e.getAttribute("edit").split('@');
+	var field=parts[0];
+	var title=parts[1]||tiddler.title;
+	if (title=='here') title=tiddler.title;
+	// stop field from being saved with 'done' button
+	if (parts[1]) { e.removeAttribute("edit"); e.setAttribute("field",field); }
+
+	// save starting value and target tiddler
+	e.value=store.getValue(title,field)||e.value; // get field value
+	e.setAttribute("currval",e.value); // save starting value
+	e.setAttribute("tiddler",title);
+
+	// force height for textarea field
+	if (fieldType=="textarea" && params[1]) e.style.height=params[1]+"em";
+
+	// if viewing tiddler, add autosave handlers
+	var here=story.findContainingTiddler(place);
+	var isViewed=here&&here.getAttribute("template").indexOf("ViewTemplate")!=-1;
+	if (parts[1]||isViewed) { // remote reference or view mode editing...
+		story.setDirty(tiddler.title,false); // clear tiddler ("dirty") flag (set by core)
+		e.onkeydown=function(ev) { // ENTER key=save (for single-line input)
+			var event=ev?ev:window.event;
+			this.setAttribute("keyCode",event.keyCode); // save last keyCode (for blur)
+			if (event.keyCode==13 && this.nodeName.toUpperCase()!="TEXTAREA")
+				this.saveField(); // save input to tiddler field
+		}
+		e.onblur=function(ev) { // confirm input when focus moves away
+			var event=ev?ev:window.event;
+			var tid=this.getAttribute("tiddler"); if (!tid || !tid.length) return;
+			var field=this.getAttribute("edit")||this.getAttribute("field");
+			if (this.value==this.getAttribute("currval")) return; // no change
+			if (this.getAttribute("keyCode")=="27") { // if user pressed ESC
+				var msg=config.macros.edit.cancelMsg.format([field,tid]);
+				if (!msg.length || confirm(msg))
+					this.value=this.getAttribute("currval"); // reset value
+				this.id=new Date().getTime(); // unique ID for re-focus after blur
+				setTimeout("document.getElementById('"+this.id+"').focus()",1);
+			} else { // other focus change events
+				var msg=config.macros.edit.saveMsg.format([field,tid]);
+				if (!msg.length || confirm(msg)) this.saveField(); // save value
+				else this.value=this.getAttribute("currval");
+			}
+		};
+		e.saveField=function() { // unpack/validate attribs and then save the field
+			var tid=this.getAttribute("tiddler"); if (!tid || !tid.length) return;
+			var field=this.getAttribute("edit")||this.getAttribute("field");
+			var title=(field=="title")?this.value:tid;
+			if (!title.length) { // error: blank tiddler title
+				this.value=this.getAttribute("currval"); // reset value
+				this.id=new Date().getTime(); // unique ID for delayed messages/refocus
+				setTimeout("displayMessage('Please enter a non-blank value')",1);
+				setTimeout("document.getElementById('"+this.id+"').focus()",2);
+				return;
+			}
+			config.macros.edit.saveField(tid,title,field,this.value);
+			this.setAttribute("currval",this.value); // remember new starting value
+		};
+	}
+}
+//}}}
+//{{{
+// save input value to tiddler field (create/touch/rename tiddler as needed)
+config.macros.edit.saveField = function(tid,title,field,val) {
+	var t=store.getTiddler(tid);
+	store.suspendNotifications();
+	var anim=config.options.chkAnimate; config.options.chkAnimate=false; // suspend animation
+	var who=t&&config.options.chkForceMinorUpdate?t.modifier:config.options.txtUserName;
+	var when=t&&config.options.chkForceMinorUpdate?t.modified:new Date();
+	store.saveTiddler(t?tid:title,title,t?t.text:"",who,when,t?t.tags:[],t?t.fields:null);
+	store.setValue(title,field,val); // save field
+	if (tid!=title) // new title... show renamed tiddler in place of current one
+		{ story.displayTiddler(story.getTiddler(tid),title); story.closeTiddler(tid); }
+	if (field=="text") // content changed, refresh tiddler display
+		{ story.refreshTiddler(title,null,true); }
+	config.options.chkAnimate=anim; // resume animation
+	store.resumeNotifications();
+	store.notify(title,true);
+}
+//}}}</pre>
+</div>

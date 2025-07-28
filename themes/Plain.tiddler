@@ -1,0 +1,23 @@
+<div title="Plain" modifier="ELSDesignStudios" created="200607160223" modified="200801230101" tags="stylesheets CSS ThemePackage systemTheme">
+<pre>/***
+|Name|Plain|
+|Source|http://www.TiddlyTools.com/#Plain|
+|Version||
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|CSS|
+|Description|theme: white backgrounds with minimal adjustments|
+|StyleSheet|Plain|
+|PageTemplateReadOnly|PageTemplateReadOnly|
+|EditTemplateReadOnly|EditTemplateReadOnly|
+***/
+
+[[StyleSheetAdjustments]]
+/*{{{*/
+/* ==== Plain ==== */
+body { background-color:#ffe !important; }
+.menubox { background-color:#fff; }
+.viewer	{ border: 1px solid #999; background:#fff; -moz-border-radius:1em;-webkit-border-radius:1em; padding:1em; }
+/*}}}*/</pre>
+</div>

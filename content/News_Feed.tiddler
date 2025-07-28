@@ -1,0 +1,34 @@
+<div title="News Feed" modifier="Wang Yanshu" created="202503301832" modified="202503301841" creator="Wang Yanshu">
+<pre><<rssReader "https://feeds.simplecast.com/54nAGcIl">>
+<<rssReader "https://rsshub.app/zaobao/realtime/china">>
+<<rssReader "https://www.theatlantic.com/feed/all/">>
+<<rssReader "http://www.people.com.cn/rss/military.xml">>
+<<rssReader "https://www.engadget.com/rss.xml">>
+<<rssReader "https://rsshub.app/economist/latest">>
+<<rssReader "http://www.people.com.cn/rss/politics.xml">>
+<<rssReader "https://news.google.com/rss/topics/CAAqIQgKIhtDQkFTRGdvSUwyMHZNR3QwTlRFU0FtVnVLQUFQAQ?hl=en-US&gl=US&ceid=US:en">>
+<<rssReader "https://moxie.foxnews.com/google-publisher/latest.xml">>
+<<rssReader "https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRFp0Y1RjU0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en">>
+<<rssReader "https://www.pbs.org/wgbh/nova/rss/nova.xml">>
+<<rssReader "https://feeds.megaphone.fm/reutersworldnews">>
+<<rssReader "https://feeds.bloomberg.com/markets/news.rss">>
+<<rssReader "https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGRqTVhZU0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en">>
+<<rssReader "https://www.aljazeera.com/xml/rss/all.xml">>
+<<rssReader "https://cdn.technologyreview.com/topnews.rss">>
+<<rssReader "http://www.people.com.cn/rss/ywkx.xml">>
+<<rssReader "https://podcast.posttv.com/itunes/post-reports.xml">>
+<<rssReader "https://feeds.simplecast.com/TRuO_SRo">>
+<<rssReader "https://news.google.com/rss/topics/CAAqJggKIiBDQkFTRWdvSUwyMHZNRGx1YlY4U0FtVnVHZ0pWVXlnQVAB?hl=en-US&gl=US&ceid=US:en">>
+<<rssReader "https://rsshub.app/apnews/topics/apf-topnews">>
+<<rssReader "https://www.dailymail.co.uk/home/index.rss">>
+<<rssReader "https://rss.nytimes.com/services/xml/rss/nyt/HomePage.xml">>
+<<rssReader "https://news.google.com/rss/topics/CAAqIQgKIhtDQkFTRGdvSUwyMHZNRFZ4ZERBU0FtVnVLQUFQAQ?hl=en-US&gl=US&ceid=US:en">>
+<<rssReader "http://feeds.bbci.co.uk/news/rss.xml">>
+<<rssReader "https://www.nature.com/nature.rss">>
+<<rssReader "https://www.newyorker.com/feed/everything">>
+<<rssReader "https://www.abc.net.au/feeds/9443166/podcast.xml">>
+<<rssReader "https://news.ycombinator.com/rss">>
+<<rssReader "https://rsshub.app/wsj/zh-cn/opinion">>
+<<rssReader "https://video-api.wsj.com/podcast/rss/wsj/whats-news">>
+</pre>
+</div>

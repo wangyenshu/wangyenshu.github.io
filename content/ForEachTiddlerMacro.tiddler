@@ -1,0 +1,59 @@
+<div title="ForEachTiddlerMacro" modifier="Wang Yanshu" created="202411230706" modified="202502161634">
+<pre>//~~(Part of the [[ForEachTiddlerPlugin]])~~//
+
+Create customizable lists, tables etc. for your selections of tiddlers. Specify the tiddlers to include and their order through a powerful language.
+
+''Syntax:''
+|>|{{{<<}}}''forEachTiddler'' [''in'' //tiddlyWikiPath//] [''where'' //whereCondition//] [''sortBy'' //sortExpression// [''ascending'' //or// ''descending'']] [''script'' //scriptText//] [//action// [//actionParameters//]]{{{>>}}}|
+|//tiddlyWikiPath//|The filepath to the TiddlyWiki the macro should work on. When missing the current TiddlyWiki is used.|
+|//whereCondition//|(quoted) JavaScript boolean expression. May refer to the build-in variables {{{tiddler}}} and {{{context}}}.|
+|//sortExpression//|(quoted) JavaScript expression returning "comparable" objects (using '{{{<}}}','{{{>}}}','{{{==}}}'. May refer to the build-in variables {{{tiddler}}} and {{{context}}}.|
+|//scriptText//|(quoted) JavaScript text. Typically defines JavaScript functions that are called by the various JavaScript expressions (whereClause, sortClause, action arguments,...)|
+|//action//|The action that should be performed on every selected tiddler, in the given order. By default the actions [[addToList|AddToListAction]] and [[write|WriteAction]] are supported. When no action is specified [[addToList|AddToListAction]] is used.|
+|//actionParameters//|(action specific) parameters the action may refer while processing the tiddlers (see action descriptions for details). <<tiddler [[JavaScript in actionParameters]]>>|
+|>|~~Syntax formatting: Keywords in ''bold'', optional parts in [...]. 'or' means that exactly one of the two alternatives must exist.~~|
+
+
+''Using JavaScript''
+
+To give you a lot of flexibility the [[ForEachTiddlerMacro]] uses JavaScript in its arguments. Even if you are not that familiar with JavaScript you may find forEachTiddler useful. Just have a look at the various ready-to-use [[ForEachTiddlerExamples]] and adapt them to your needs.
+
+''The Elements of the Macro''
+
+The arguments of the ForEachTiddlerMacro consist of multiple parts, each of them being optional.
+
+<<slider chkFETInClause [[inClause]] "inClause" "inClause">>
+<<slider chkFETWhereClause [[whereClause]] "whereClause" "whereClause">>
+<<slider chkFETSortClause [[sortClause]] "sortClause" "sortClause">>
+<<slider chkFETScriptClause [[scriptClause]] "scriptClause" "scriptClause">>
+<<slider chkFETActions [[Action Specification]] "Action Specification" "Action Specification">>
+
+''Using Macros and ">" inside the forEachTiddler Macro''
+
+You may use other macro calls into the expression, especially in the actionParameters. To avoid that the {{{>>}}} of such a macro call is misinterpreted as the end of the {{{<<forEachTiddler...>>}}} macro you must escape the {{{>>}}} of the inner macro with {{{$))}}} E.g. if you want to use {{{<<tiddler ...>>}}} inside the {{{forEachTiddler}}} macro you have to write {{{<<tiddler ...$))}}}.
+
+In addition it is necessary to escape single {{{>}}} with the text {{{$)}}}.
+
+''Using {{{<<tiddler ... with: ...>>}}} to re-use ForEachTiddler definitions''
+
+Sometimes you may want to use a certain ForEachTiddler definition in slight variations. E.g. you may want to list either the tiddlers tagged with "ToDo" and in the other case with "Done". To do so you may use "Tiddler parameters". Here an example:
+
+Replace the variable part of the ForEachTiddler definition with $1 ($2,... $9 are supported). E.g. you may create the tiddler "ListTaggedTiddlers" like this
+{{{
+<<forEachTiddler
+ where
+ 'tiddler.tags.contains("$1")'
+>>
+}}}
+
+Now you can use the ListTaggedTiddlers for various specific tags, using the {{{<<tiddler ...>>}}} macro:
+{{{
+<<tiddler ListTaggedTiddlers with: "systemConfig">>
+}}}
+{{{
+<<tiddler ListTaggedTiddlers with: "Plugin">>
+}}}
+
+
+See also [[ForEachTiddlerExamples]].</pre>
+</div>

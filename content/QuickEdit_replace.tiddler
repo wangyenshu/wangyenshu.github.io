@@ -1,0 +1,97 @@
+<div title="QuickEdit_replace" modifier="ELSDesignStudios" created="200801111630" modified="201012270540" tags="QuickEditPackage">
+<pre>/%
+|Name|QuickEdit_replace|
+|Source|http://www.TiddlyTools.com/#QuickEdit_replace|
+|Version|2.4.5|
+|Author|Eric Shulman|
+|License|see http://www.TiddlyTools.com/#QuickEditPlugin|
+|Type|html|
+|Requires|QuickEditPlugin|
+|Description|quickedit - find/replace selected text with replacement text|
+
+Usage: see  http://www.TiddlyTools.com/#QuickEditToolbar
+!!!Revisions
+<<<
+2010.12.26 2.4.5 fix use getField(this) to support hijacks by editSectionPlugin
+<<<
+%/<html><hide linebreaks><a href="javascript:;" class="tiddlyLink" tabindex="-1" 
+title="find/replace selected text with replacement text"
+onclick="var p=Popup.create(this,null,'popup sticky smallform'); if (!p) return false;
+	var e=config.quickEdit.getField(this);
+	var s=config.quickEdit.getSelection(e); 
+	var t=createTiddlyElement(p,'input'); t.onfocus=function(){this.select()};
+	t.value=s.length?s:'enter target text';
+	var r=createTiddlyElement(p,'input'); r.onfocus=function(){this.select()};
+	r.value='enter replacement text';
+	var b=createTiddlyElement(p,'button',null,null,'?');
+	b.style.width='2em';
+	b.title='FIND/FIND NEXT target text';
+	b.root=this;
+	b.onclick=function(ev) { /* FIND */
+		var e=config.quickEdit.getField(this.root);
+		var t=this.previousSibling.previousSibling;
+		var tv=t.value.replace(/\\t/mg,'\t').unescapeLineBreaks();
+		e.focus();
+		if (e.setSelectionRange) { /* MOZ */
+			var newstart=e.value.indexOf(tv,e.selectionStart+1);
+			if (newstart==-1) newstart=e.value.indexOf(tv); /* wrap around */
+			if (newstart==-1) { alert('\u0022'+t.value+'\u0022 not found'); t.focus(); return; }
+			e.setSelectionRange(newstart,newstart+tv.length);
+			var linecount=e.value.split('\n').length;
+			var thisline=e.value.substr(0,e.selectionStart).split('\n').length;
+			e.scrollTop=Math.floor((thisline-1-e.rows/2)*e.scrollHeight/linecount);
+		} else if (document.selection) { /* IE */
+			var range=document.selection.createRange();
+			if(range.parentElement()==e) {
+				range.collapse(false);
+				var found=false; try{found=range.findText(v,e.value.length,4)}catch(e){}
+				if (found) range.select();
+				else { alert('\u0022'+t.value+'\u0022 not found'); t.focus(); }
+			}
+		}
+	};
+	b=createTiddlyElement(p,'button',null,null,'=');
+	b.style.width='2em';
+	b.title='REPLACE selected text';
+	b.root=this;
+	b.onclick=function(ev) { /* REPLACE */
+		var e=config.quickEdit.getField(this.root);
+		var t=this.previousSibling.previousSibling.previousSibling;
+		var r=this.previousSibling.previousSibling;
+		var rv=r.value.replace(/\\t/mg,'\t').unescapeLineBreaks();
+		if (   (e.selectionStart!==undefined && e.selectionEnd==e.selectionStart)
+		    || (document.selection && document.selection.createRange().text==''))
+			this.previousSibling.click(); /* no selection... do FIND first */
+		if (   (e.selectionStart!==undefined && e.selectionEnd==e.selectionStart)
+		    || (document.selection && document.selection.createRange().text==''))
+			{ t.focus(); return; } /* still no selection... goto target input */
+		e.focus(); replaceSelection(e,rv);
+	};
+	b=createTiddlyElement(p,'button',null,null,'+');
+	b.style.width='2em';
+	b.title='REPLACE selected text AND FIND NEXT target text';
+	b.onclick=function(ev) { /* REPLACE and FIND NEXT */
+		this.previousSibling.click();
+		this.previousSibling.previousSibling.click();
+	};
+	b=createTiddlyElement(p,'button',null,null,'!');
+	b.style.width='2em';
+	b.title='REPLACE ALL occurrences of target text';
+	b.root=this;
+	b.onclick=function(ev) { /* REPLACE ALL */
+		var e=config.quickEdit.getField(this.root);
+		var t=this.previousSibling.previousSibling.previousSibling.previousSibling.previousSibling;
+		var r=this.previousSibling.previousSibling.previousSibling.previousSibling;
+		var tv=t.value.replace(/\\t/mg,'\t').unescapeLineBreaks();
+		var rv=r.value.replace(/\\t/mg,'\t').unescapeLineBreaks();
+		if (!tv.length) { alert('Please enter the target text'); t.focus(); return; }
+		var m='This will replace all occurrences of:\n\n'+tv+'\n\nwith:\n\n'+rv+'\n\nAre you sure?';
+		if (!confirm(m)) { r.focus(); r.select(); return; }
+		e.value=e.value.replace(new RegExp(tv.escapeRegExp(),'gm'),rv);
+		e.focus(); e.select(); Popup.remove();
+	};
+	Popup.show();
+	if (!s.length) {t.focus();t.select()} else {r.focus();r.select()}
+	event.cancelBubble=true;if(event.stopPropagation)event.stopPropagation();return false;"
+>replace</a></html></pre>
+</div>

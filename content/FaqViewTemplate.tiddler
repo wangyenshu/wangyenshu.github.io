@@ -1,0 +1,25 @@
+<div title="FaqViewTemplate" modifier="ELSDesignStudios" created="200809301948" tags="template DiscoveryPackage">
+<pre><!--{{{-->
+<!--
+|Name|FaqViewTemplate|
+|Source|http://www.TiddlyTools.com/#FaqViewTemplate|
+|Version|1.0.0|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|template|
+|Requires|ToolbarCommands, FAQViewerPlugin|
+|Description|custom version of view template used to display tiddlers tagged with 'faq'|
+-->
+<span class='toolbar' macro='toolbar [[ToolbarCommands::ViewToolbar]]'></span>
+<span class='title' macro='view title'></span>
+<span class='subtitle'>
+	<span style='white-space:nowrap' macro='view modified date [[DDD, MMM DDth YYYY]]'></span>
+</span>
+<div class='viewer smallform' macro='faqViewer {{"startwith:"+tiddler.title}}' title=' '></div>
+<div class='toolbar' style='line-height:100%;margin-top:.5em;'><a href="javascript:;"
+	onclick="window.scrollTo(0,ensureVisible(story.findContainingTiddler(this)));return false;"
+	onmouseover="this.title='scroll to top of '+story.findContainingTiddler(this).getAttribute('tiddler')">&#x25b2;</a>
+</div>
+<!--}}}--></pre>
+</div>

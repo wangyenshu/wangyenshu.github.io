@@ -1,0 +1,56 @@
+<div title="CookTiddlerPluginInfo" modifier="Wang Yanshu" created="202503140502">
+<pre>CookTiddlerPluginInfo
+!!!Installation
+is done as usual: copy/import this tiddler, keep the {{{systemConfig}}} tag, save, reload.
+!!!Usage
+TODO: detailed description of RecipeList, when the cooking is done
+
+Definition of a recipe is done via the {{{defineRecipe}}} macro. In v0.1.6, it has the following params:
+{{{
+<<defineRecipe [tiddler:]name parts:partsLine [recipe:recipeScript]
+  [tags:"tag 1" tag2 "tag 3" ...] [plugin[:true]] [autoupdate[:true]] [reinstall[:true]]
+>>
+}}}
+Example of using {{{parts}}}:
+{{{
+  parts:"MyPluginMeta" "MyPluginCode" "Examples##MyPlugin"
+}}}
+note that those can be named separately ({{{parts:"MyPluginMeta" parts:"MyPluginCode"}}} etc) but when they go one by one, there's no need to add param name each time.
+
+Example of the {{{recipe}}} param:
+{{{
+recipe:"
+	parts['MyPluginMeta'][0] = '/***\n!!Code\n'+parts['MyPluginMeta'][0]+'\n***/';
+
+	tid.tags.push('systemConfig');
+"
+}}}
+
+Tags can be added via the {{{tags}}} param, so the last line in the {{{recipe}}} example above may be substituted with {{{tags:systemConfig}}} param or with just the {{{plugin[:true]}}} param.
+
+When {{{autoupdate[:true]}}} param is used, the tiddler is cooked each time any of the tiddlers from {{{parts}}} is edited.
+
+The {{{[reinstall[:true]]}}} param is meant to be used with plugins: when enabled, the cooked plugin is evaluated afterwards (use this carefully: any hijacking without "only once" assured will turn into an infinite loop; pushing new stuff into arrays will duplicate them and some other issues may rise if the plugin is not written in an manner not appropriate for re{{{eval}}}ualtion each time).
+
+The {{{reinstallOnly[:true]}}} param can be used for reinstalling plugins that are not actually cooked from other tiddlers: just {{{<<defineRecipe tiddler:ReinstallablePlugin autoupdate:true reinstallOnly>>}}} is enough for that (keep in mind warnings for the {{{reinstall}}} param though).
+
+!!!Adding CSS into a plugin
+To easily add CSS into a cooked plugin, CTP introduces the {{{wrapAsCssAdder}}} helper. It doesn't just apply the CSS: instead, it
+* creates a shadow tiddler from which CSS is applied, so that a user can overwrite it;
+* makes sure that on ColorPalette change, the CSS is updated, too (especially important for the [[dark mode|https://yakovl.github.io/TiddlyWiki_DarkModePlugin/]]).
+Use it like this:
+# create a tiddler like MyPluginStyleSheet, put CSS there (optionally wrap it into <html><code>/*{{{*/.../*}}}*/</code></html> to format it as code);
+# in RecipeList, add it to {{{parts}}} and inside {{{recipe}}} add {{{parts['MyPluginStyleSheet'][0] = wrapAsCssAdder(parts['MyPluginStyleSheet'][0], tid.title, 'MyPluginStyleSheet')}}}.
+Notes:
+* in your dev TW, MyPluginStyleSheet tiddler will be both the source of CSS inside the plugin and the shadow //and// "overwrite" the shadow so that the styles are updated instantly during development, even without the {{{reinstall}}} option enabled.
+* If you are developing a theme which is a plugin as well, you may want not to apply the CSS until the theme is used. For this case, you can reference the shadow in the StyleSheet slice and use the 4th argument like this: {{{wrapAsCssAdder(.., .., .., { dontApply: true })}}}.
+
+!!!The {{{<<cook>>}}} macro
+This macro creates a button which cooks the tiddler "on demand". It has the following syntax:
+{{{
+<<cook [tiddler] [label:"button label text"] [tooltip:"button tooltip text"]>>
+}}}
+If the {{{tiddler}}} param is omitted, the tiddler in which the button is wikified is cooked. If there's no recipe for that tiddler yet, the button will notify about it:
+{{{<<cook SomeRandomTiddler label:"cook SomeRandomTiddler" tooltip:burnTooltips>>}}}
+<<cook SomeRandomTiddler label:"cook SomeRandomTiddler" tooltip:burnTooltips>></pre>
+</div>

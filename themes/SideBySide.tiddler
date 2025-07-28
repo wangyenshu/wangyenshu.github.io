@@ -1,0 +1,62 @@
+<div title="SideBySide" modifier="ELSDesignStudios" created="200802201930" modified="200802201932" tags="stylesheets CSS ThemePackage systemTheme excludeTheme">
+<pre>/***
+|Name|SideBySide|
+|Source|http://www.TiddlyTools.com/#Plain|
+|Version||
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|CSS|
+|Requires|ToolbarCommands|
+|Description|default theme with side-by-side editor/preview display|
+|StyleSheet|StyleSheet|
+|EditTemplate|##EditTemplate|
+|PageTemplateReadOnly|PageTemplateReadOnly|
+|EditTemplateReadOnly|##EditTemplateReadOnly|
+***/
+
+!!!EditTemplate
+<!--{{{-->
+<span class='toolbar' macro='toolbar [[ToolbarCommands::EditToolbar]]'></span>
+<div class='title' macro='view title'></div>
+<div style='clear:both'></div>
+<div class='editor' macro='edit title'></div>
+<div macro='tiddler QuickEditToolbar'></div>
+<div class='editor'>
+        <table style='width:100%'><tr style='vertical-align:top'>
+                <td style='width:50%'><span macro='edit text'></span></td>
+                <td style='width:50%'><span macro='preview text'></span></td>
+        </tr></table>
+</div>
+<span macro='resizeEditor'></span><span macro='setUserName'></span>
+<div class='editor' macro='edit tags'></div>
+<div class='toolbar editorFooter' style='text-align:left !important;float:left !important'>
+	<span macro='message views.editor.tagPrompt'></span>
+	<span macro='tagChooser'></span>
+</div>
+<div style='clear:both'></div>
+<!--}}}-->
+!!!!!end EditTemplate
+
+!!!EditTemplateReadOnly
+<!--{{{-->
+<span class='toolbar' macro='toolbar [[ToolbarCommands::EditToolbarReadOnly]]'></span>
+<div class='title' macro='view title'></div>
+<div style='clear:both'></div>
+<div class='editor' macro='edit title'></div>
+<div class='editor'>
+        <table style='width:100%'><tr style='vertical-align:top'>
+                <td style='width:50%'><span macro='edit text'></span></td>
+                <td style='width:50%'><span macro='preview text'></span></td>
+        </tr></table>
+</div>
+<span macro='resizeEditor'></span>
+<div class='editor' macro='edit tags'></div>
+<div class='toolbar editorFooter' style='text-align:left !important;float:left !important'>
+	<span macro='message views.editor.tagPrompt'></span>
+	<span macro='tagChooser'></span>
+</div>
+<div style='clear:both'></div>
+<!--}}}-->
+!!!!!end EditTemplateReadOnly</pre>
+</div>

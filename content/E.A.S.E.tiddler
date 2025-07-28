@@ -1,0 +1,158 @@
+<div title="E.A.S.E" modifier="Wang Yanshu" created="202412190111" modified="202412190119">
+<pre>/***
+|!''Name:''|!''E''asily ''A''daptable ''S''ource ''E''ditor|
+|''Description:''|this framework allows you to easily create commands that work on the current tiddler text selection in edit mode|
+|''Version:''|0.1.0|
+|''Date:''|13/01/2007|
+|''Source:''|http://yann.perrin.googlepages.com/twkd.html#E.A.S.E|
+|''Author:''|[[Yann Perrin|YannPerrin]]|
+|''License:''|[[BSD open source license]]|
+|''~CoreVersion:''|2.x|
+|''Browser:''|Firefox 1.0.4+; Firefox 1.5; InternetExplorer 6.0|
+
+See [[easyFormat]] and [[easyInsert]] for menu building examples. You must add the menu to [[EditTemplate]] as
+{{{<div macro='toolbar format insert'></div>}}}
+
+***/
+////Messages Definition
+//{{{
+config.messages.Ease = {
+noselection:"nothing selected",
+asktitle:"enter the new tiddler title",
+exists:" already exists, please enter another title",
+askForTagsLabel:"enter the new tiddler tags",
+tiddlercreated:" tiddler created"
+}
+//}}}
+////
+//{{{
+if (!window.TWkd) window.TWkd={context:{}};
+if (!TWkd.Ease)
+ TWkd.Ease = function (text,tooltip){
+ this.text = text;
+ this.tooltip = tooltip;
+ this.modes = [];
+ this.addMode = function(modeDefinition) {this.modes.push(modeDefinition);};
+ this.handler = function(event,src,title) {
+ TWkd.context.command = this;
+ TWkd.context.selection=this.getSelection(title);
+ if (this.modes.length==1) {
+ this.modes[0].operation();
+ }
+ else {
+ var popup = Popup.create(src);
+ if(popup) {
+ for (var i=0; i<this.modes.length; i++) {
+ createTiddlyButton(createTiddlyElement(popup,"li"), this.modes[i].name, this.modes[i].tooltip, this.OperateFromButton, null, 'id'+i, null);
+ }
+ Popup.show(popup,false);
+ event.cancelBubble = true;
+ if (event.stopPropagation) event.stopPropagation();
+ return false;
+ }
+ }
+ };
+ };
+
+TWkd.Ease.prototype.OperateFromButton = function(e){
+ var commandMode=this.getAttribute('Id').replace('id','');
+ TWkd.context.command.modes[commandMode].operation();
+};
+
+TWkd.Ease.prototype.getTiddlerEditField = function(title,field){
+ var tiddler = document.getElementById(story.idPrefix + title);
+ if(tiddler != null){
+ var children = tiddler.getElementsByTagName("*")
+ var e = null;
+ for (var t=0; t<children.length; t++){
+ var c = children[t];
+ if(c.tagName.toLowerCase() == "input" || c.tagName.toLowerCase() == "textarea"){
+ if(!e) {e = c;}
+ if(c.getAttribute("edit") == field){e = c;}
+ }
+ }
+ if(e){return e;}
+ }
+} // closes getTiddlerEditField function definition
+ 
+TWkd.Ease.prototype.getSelection = function(title,quiet) {
+ var tiddlerTextArea = this.getTiddlerEditField(title,"text");
+ var result = {};
+ if (document.selection != null && tiddlerTextArea.selectionStart == null) {
+ tiddlerTextArea.focus();
+ var range = document.selection.createRange();
+ var bookmark = range.getBookmark();
+ var contents = tiddlerTextArea.value;
+ var originalContents = contents;
+ var marker = "##SELECTION_MARKER_" + Math.random() + "##";
+ while(contents.indexOf(marker) != -1) {
+ marker = "##SELECTION_MARKER_" + Math.random() + "##";
+ }
+ var selection = range.text;
+ range.text = marker + range.text + marker;
+ contents = tiddlerTextArea.value;
+ result.start = contents.indexOf(marker);
+ contents = contents.replace(marker, "");
+ result.end = contents.indexOf(marker);
+ tiddlerTextArea.value = originalContents;
+ range.moveToBookmark(bookmark);
+ range.select();
+ }
+ else {
+ result.start=tiddlerTextArea.selectionStart;
+ result.end=tiddlerTextArea.selectionEnd;
+ }
+ result.content=tiddlerTextArea.value.substring(result.start,result.end);
+ result.source=title;
+ if (!result.content&&!quiet) displayMessage(config.messages.Ease.noselection);
+ return(result);
+}//closes getSelection function definition
+
+// replace selection or insert new content
+TWkd.Ease.prototype.putInPlace=function(content,workplace) {
+ var tiddlerText = this.getTiddlerEditField(workplace.source,"text");
+ tiddlerText.value = tiddlerText.value.substring(0,workplace.start)+content+tiddlerText.value.substring(workplace.end);
+}
+
+// asking for title
+TWkd.Ease.prototype.askForTitle = function(suggestion) {
+ if (!suggestion)
+ suggestion = "";
+ var newtitle;
+ while (!newtitle||store.tiddlerExists(newtitle))
+ {
+ if (store.tiddlerExists(newtitle))
+ displayMessage(newtitle+config.messages.Ease.exists);
+ newtitle = prompt(config.messages.Ease.asktitle,suggestion);
+ if (newtitle==null)
+ {
+ displayMessage(config.messages.Ease.titlecancel);
+ return(false);
+ }
+ }
+ return(newtitle);
+}//closes askForTitle function definition
+
+// creation of a new tiddler
+TWkd.Ease.prototype.newTWkdLibTiddler = function(title,content,from,askForTags){
+ var tiddler = new Tiddler();
+ tiddler.title = title;
+ tiddler.modifier = config.options.txtUserName;
+ tiddler.text = content;
+ (from) ? tiddler.tags = [from] : tiddler.tags=[];
+ if (askForTags)
+ tiddler.tags = prompt(config.messages.Ease.askForTagsLabel,'[['+from+']]').readBracketedList();
+ store.addTiddler(tiddler);
+ //store.notifyAll();
+ displayMessage(title+config.messages.Ease.tiddlercreated);
+}
+
+if (!TWkd.Mode)
+ TWkd.Mode = function (name,tooltip,ask,operation) {
+ this.name = name;
+ this.tooltip = tooltip;
+ this.ask = ask;
+ this.operation = operation;
+ };
+//}}}</pre>
+</div>

@@ -1,0 +1,39 @@
+<div title="AdministrationPage" modifier="Wang Yanshu" created="201206131959" modified="202412180947" tags="System excludeLists" _hash="e1ebb210726c3b146ffdcd2bb68ef6449c55f179">
+<pre>|SiteIcon SiteTitle SiteSubtitle||||StyleSheet|
+|MainMenu|SiteUrl||PageTemplate|StyleSheetColors|
+|~|DefaultTiddlers||EditTemplate|StyleSheetLayout|
+|~|~||ViewTemplate|StyleSheetPrint|
+|~|~|OptionsPanel|MarkupPreHead|ColorPalette|
+|~|~|AdvancedOptions|MarkupPreBody||
+|~|~|SideBarTabs|MarkupPostHead||
+|~|~|SideBarOptions|MarkupPostBody||
+|HtmlJavascript|||||
+|SystemSettings|||TiddlyHost||
+|~|~|~|ThostUploadPlugin||
+
+* Tiddler Encryption [[TiddlerEncryptionPlugin]]
+
+
+<<paletteView [[ColorPalette]]>>
+
+----
+!!Tag Policy
+Tiddler tagged with blog will appear in AutoOpenTiddlersPlugin
+
+!!~TiddlyWiki tools
+* [[TiddlyWiki Classic|https://classic.tiddlywiki.com/]]
+* [[tiddlypocketbook|http://tiddlypocketbook.tiddlyspace.com/#]] - A guide to ~TiddlyWiki syntax
+* [[TiddlyVault|http://tiddlyvault.tiddlyspot.com/]] - An index of ~TiddlyWiki extensions
+* [[Tiddly Tools|http://www.tiddlytools.com]] 
+* [[abegoExtensions|http://tiddlywiki.abego-software.de]] - UdoBorkowski's Extensions for TiddlyWiki
+* [[Martin's wiki|http://www.martinswiki.com/]] - Martin Budden's plugins and extensions for TiddlyWiki 
+* [[André de Carvalho's HomePage|https://acarvalho.tiddlyhost.com/]]
+----
+@@color:#c4d6ed; ^^
+Description: Administration functionality for this wiki. 
+^^@@
+
+
+
+</pre>
+</div>

@@ -1,0 +1,5 @@
+<div title="JashPackage" modifier="ELSDesignStudios" created="200807231315" tags="package JashPackage">
+<pre>~JaSH is a Javascript Shell written by Billy Reisinger, and provides a cross-browser compatible interactive javascript development and debugging tool.
+
+This package includes a whitespace-compressed version of the Jash source code ([[Jash.js]]), accompanied by the appropriate stylesheet definitions necessary to render the Jash interface ([[Jash.css]]).  Additionally, [[JashCommand]] provides a simple ~HTML-based command link that toggles the display of the Jash interface with a single click.</pre>
+</div>

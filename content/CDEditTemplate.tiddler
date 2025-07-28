@@ -1,0 +1,58 @@
+<div title="CDEditTemplate" modifier="ELSDesignStudios" created="200706152345" modified="200706230933" tags="MediaPackage template">
+<pre><!--{{{-->
+<!--
+|Name|CDEditTemplate|
+|Source|http://www.TiddlyTools.com/#CDEditTemplate|
+|Version||
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|template|
+|Requires|ToolbarCommands|
+|Description|custom version of edit template used when tiddler is tagged with "CD"|
+-->
+<span class='toolbar' macro='toolbar +saveTiddler -cancelTiddler ! copyTiddler deleteTiddler ! fields '></span>
+<div class='title' macro='view title'></div>
+<div style='clear:both'></div>
+<div class='viewer'>
+
+<div class='editor' macro='edit title'></div>
+<div class='borderless'><span class='small'>album title:</span></div>
+<div class='editor' macro='edit albumtitle'></div>
+<table class='borderless'><tr>
+<td style='width:50%' style='width:100%'>
+	<div class='small'>artist:</div>
+	<div class='editor' macro='edit artist'></div>
+</td><td style='width:10%'>
+	<div class='small'>year:</div>
+	<div class='editor' macro='edit year'></div>
+</td><td style='width:20%'>
+	<div class='small'>genre:</div>
+	<div class='editor' macro='select genre rows:1 width:100% allowBlank allowOther +CDGenreList allowEdit'></div>
+</td><td style='width:20%'>
+	<div class='small'>media type:</div>
+	<div class='editor' macro='select mediatype rows:1 width:100% allowBlank allowOther cd dvd mp3 cassette lp'></div>
+</td></tr></table>
+<table class='borderless' style='width:100%'><tr>
+<td style='width:33%'>
+	<div class='small'>cover image URL (jpg/gif):</div>
+	<div class='editor' macro='edit cover'></div>
+</td><td style='width:33%'>
+	<div class='small'>sample URL (mp3):</div>
+	<div class='editor' macro='edit sample'></div>
+</td><td style='width:33%'>
+	<div class='small'>website URL (html):</div>
+	<div class='editor' macro='edit website'></div>
+</td></tr></table>
+<div class='small borderless'><span class='small'>notes (text):</span></div>
+<div class='editor' macro='edit text 10'></div>
+<div class='editor' macro='edit tags'></div>
+<div class='toolbar editorFooter' style='text-align:left !important;float:left !important'>
+	<span macro='message views.editor.tagPrompt'></span>
+	<span macro='tagChooser'></span>
+</div>
+<div style='clear:both'></div>
+
+</div><!-- viewer -->
+<!--}}}--></pre>
+</div>

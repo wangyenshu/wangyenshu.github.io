@@ -1,0 +1,92 @@
+<div title="SlideShowPluginDoc" modifier="Wang Yanshu" created="202411221531">
+<pre>!Description
+This plugin turns a TiddlyWiki tiddler into a simple slide show type display. Most features that are usually found in presentation software are available. It should work in a way that does not interfere with TiddlyWiki. When you close the slide show you get back to your good old TW. 
+
+This plugin has been tested in Firefox and Internet Explorer. Let me know if something seems broken.
+!Usage
+To use this plugin you //must// be using TiddlyWiki 2.0. Some optional features (as the incremental display) require version 2.0.8 or higher. To install the plugin copy the tiddlers SlideShowPlugin, SlideShowPageTemplate and SlideShowViewTemplate to your TW, label the first one with the //systemConfig// tag, save the TW and refresh the browser.
+
+To make a slide show simply drop {{{<<slideShow>>}}} at the beginning of a tiddler and use {{{--s--}}} to start each slide. 
+
+If you move your mouse over the bottom of the browser window you will see a few navigation buttons, a clock and a table of contents that shows up when you click the slide number.
+
+Any block of text marked as {{{{{Comment{For my eyes only!}}}}}} will not be displayed in the slide show.
+
+See these and other features in this [[SlideShowExample]].
+!Incremental display
+A succession of overlays (or layers) can be defined in each slide by marking blocks of text with {{{{{Overlay1{...some text...}}}}}}, {{{{{Overlay2{...some text...}}}}}}, {{{{{Overlay3{...some text...}}}}}}, ...
+
+To costumize the way overlays are shown you can redefine the following CSS classes
+*contentWrapper.slideShowMode .previousOverlay 
+*contentWrapper.slideShowMode .currentOverlay 
+*contentWrapper.slideShowMode .nextOverlay 
+in a ~StyleSheet. The default style simply hides the next overlays and shows the current and the previous ones as normal text.
+!Slide show parameters
+*The slide show can be themed by providing a ~StyleSheet ({{{<<slideShow style:'MyStyleSheet'>>}}})
+*By default, there is a clock at bottom of the browser window that displays the current time. This clock can also show the presentation elapsed time with {{{<<slideShow clock:'+'>>}}} or a countdown clock with {{{<<slideShow clock:'-20'>>}}} (for 20 minutes). In these two cases, if you click on the clock display it will be restarted
+*The slide show can be set to loop ({{{<<slideShow repeat>>}}})
+*You can set it so each slide changes after X milliseconds ({{{<<slideShow slidePause:X>>}}}) (auto advance mode)
+*To not use the mouse to navigate through the presentation use  {{{<<slideShow noCLicks>>>}}}. This is useful when there are clickable elements in the presentation
+*{{{<<slideShow forceRefresh>>>}}} forces a refresh of the presentation tiddler (useful when a presentation is built from separate tiddlers using the {{{<<tiddler>>}}} macro)
+*You can disable overlays with {{{<<slideShow noOverlays>>}}}
+*These parameters can be mixed and matched in any order: {{{<<slideShow slidePause:1000 repeat>>}}} is the same as {{{<<slideShow repeat slidePause:1000>>}}}
+!Slide show navigation
+You can navigate through a slide show using the keyboard or the mouse. To quickly move to titled sections you can use the table of contents. 
+!!Mouse navigation
+Left (right) clicking on a slide jumps to the next (previous) overlay. To move to the beginning of the next or previous slide you must use the navigation bar at the bottom of the browser's window. If there are no overlays defined both operations are equivalent.
+!!Keyboard navigation
+The following keys are defined:
+*Left arrow - previous overlay
+*Down arrow - previous slide
+*Right arrow - next overlay
+*Up arrow - next slide
+*Home - first slide
+*End - last slide
+*Escape - exit slide show
+*Spacebar - pause/resume slide show in auto advance mode
+!Revision history
+*1.5.3
+**fix for ~TW2.2
+**forceRefresh and noClicks
+**removed autoStart feature
+**templates are now in shadow tiddlers
+*1.5.2 13/02/2007
+**fixed a conflict with TW pageFooter
+*1.5.1 10/11/2006
+**added SlideShowPageTemplate and SlideShowViewTemplate. This way, the plugin no longer requires a standard TW layout. Thanks to Andrew Lister for the idea.
+*1.5.0 18/09/2006
+**fixed restoring stylesheet on exit
+**changed (again!) the way how slides are separated (slide shows prepared for previous versions must be fixed)
+*1.4.0 20/04/2006
+**changed the way how slides are separated (slide shows prepared for previous versions must be fixed)
+**now works with content included with the {{{<<tiddler>>}}} macro
+**added incremental display (overlays)
+**improved documentation
+**assorted small fixes
+*1.3.1 10/03/2006
+**removed empty slide titles
+**fixed wrong numberSlides when slides have div's
+**fixed wrong time in Windows
+*1.3.0 26/02/2006
+**restore open tiddlers on exit
+**fixed problem with markup in headers (should work with NestedSlidersPlugin)
+**added slide comments (blocks of text in the tiddler that don't show up in the presentation)
+*1.2.1 28/01/2006
+**pause timed slideshow with spacebar
+**added clock with 3 different modes
+**fixed bugs with style and abbreviation options
+**general cleanup
+*1.2.0 07/01/2006
+**added a resume feature
+**added themes support
+*1.1.5 14/12/2005
+**added mouse support
+**cleaned up navbar generation
+*1.1.0 12/12/2005
+**added support for IE
+**added key listeners
+*1.0.0 11/12/2005
+**initial release
+!Todo
+*Time code is still very hackerish and unreliable.</pre>
+</div>

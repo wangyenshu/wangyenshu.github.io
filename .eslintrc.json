@@ -1,0 +1,39 @@
+{
+    "env": {
+        "browser": true
+    },
+    "rules": {
+        "indent": ["error", "tab", {
+            "SwitchCase": 1
+        }],
+        "space-infix-ops": "error",
+        "semi-spacing": "error",
+        "block-spacing": "error",
+        "comma-spacing": "error",
+        "object-curly-spacing": ["error", "always"],
+        "key-spacing": ["error", {
+            "mode": "minimum",
+            "afterColon": true
+        }],
+        "no-trailing-spaces": "error",
+        "space-before-blocks": "error",
+
+        "semi": ["error", "always", {
+            "omitLastInOneLineBlock": true
+        }]
+    },
+    "overrides": [
+        {
+            "files": ["js/Version.js"],
+            "rules": {
+                "object-curly-spacing": ["error", "never"]
+            }
+        },
+        {
+            "files": ["build/*.js", "test/*.js"],
+            "env": {
+                "es2016": true
+            }
+        }
+    ]
+}

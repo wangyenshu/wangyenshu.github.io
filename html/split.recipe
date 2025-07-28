@@ -1,0 +1,6 @@
+template: tiddlywiki.template.html
+copyright: copyright.txt
+style: style.txt
+noscript: noscript.txt
+jsext: tiddlysaver.txt
+

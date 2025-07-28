@@ -1,0 +1,85 @@
+<div title="SaveFromWebPluginInfo" modifier="ELSDesignStudios" created="200801090423" modified="200809291528" tags="pluginInfo ImportExportPackage">
+<pre>|Name|SaveFromWebPluginInfo|
+|Source|http://www.TiddlyTools.com/#SaveFromWebPlugin|
+|Documentation|http://www.TiddlyTools.com/#SaveFromWebPluginInfo|
+|Version|1.3.1|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|documentation|
+|Description|documentation for SaveFromWebPlugin|
+Normally, when you are viewing a TiddlyWiki document over the web (i.e., not via {{{file://}}}) and you select the "save changes" (or "save to disk") command, an error message is displayed: //__"You need to save this TiddlyWiki to a file before you can save changes."__//  This plugin extends the use of {{{<<saveChanges>>}}} so that when you are viewing and/or editing a remote TiddlyWiki document, instead of receiving this somewhat confusing and unhelpful message, you can still click the "save changes" (or "save to disk") command to ''store a copy of the remote document directly onto your local filesystem'', //including any unsaved tiddler changes/additions you have made while working on-line.//
+!!!!!Usage
+<<<
+When you select <<saveChanges>> while viewing a remote document (i.e., a URL starting with http: rather than file:), the plugin first ''retrieves the TiddlyWiki core source code from the original document'' file stored on the remote server.  Then, it ''combines that core source with the tiddlers'' contained in the currently loaded document, ''including any changes you have made.''
+
+While the next step //should// be to simply write the merged core+tiddler data directly to your hard drive, certain JavaScript features, such as reading/writing directly to the local filesystem, require expanded "cross-domain" privileges that are normally restricted for use only with ''signed'' scripts.  Although some browsers will let you grant filesystem permissions to a remotely-loaded script, this usually involves either a series of popup confirmation messages or manually re-configuring (and/or disabling) your browser's built-in security protections, which often include settings and options that most users find difficult to understand and inconvenient to access.
+
+To avoid these security complications, the "save from web" processing requires just a few additional steps to prepare the modified document and deliver it to your browser: rather than writing the document data directly to the local filesystem, the plugin ''sends the merged core+tiddler data to a small companion script installed on the remote server'' (see savefromweb.php, below).  This simple "reflector" script then immediately ''downloads the new document data back to the browser'', which prompts you to either open the downloaded document for viewing or save it to your local hard drive.  Once the document has been stored on your filesystem, you can open that copy in your browser and work offline with full access to all TiddlyWiki features.
+
+Important note for users of Internet Explorer's Popup Blocker feature...
+>{{block{
+//The default security settings of IE's "Popup Blocker" feature will warn you whenever an attempt is made to download a file in response to a scripted action such as the internal javascript processing performed by SaveFromWebPlugin.  However, if you then click IE's yellow warning message and select the 'download this file...' menu command, this will also cause IE to attempt a 'page transition' away from the currently loaded TiddlyWiki document... but, because there are unsaved changes in the document, you will first receive a confirmation message, allowing you to cancel the page transition.  Regrettably, this also prevents the download from succeeding.  Unfortunately, if you permit the page transition to occur, then your TiddlyWiki document is immediately reloaded and all the unsaved tiddler changes are discarded... and the download still fails to complete!//
+
+''__To permit SaveFromWebPlugin to function properly with Internet Explorer, you will need to adjust the "download" security setting...__''
+#From the ''Tools > Internet Options > Security'' tab,
+#Select the "Internet" security zone (or what ever zone you are using to view the remote document)
+#Press the "Custom level..." button
+#In the "Settings" listbox, scroll to the "Downloads" section
+#''ENABLE "automatic prompting for downloads"''(the first setting in the section)
+#Press OK to accept the new settings.
+}}}
+<<<
+!!!!!Configuration
+> see [[SaveFromWebConfig]]
+!!!!! Server script installation
+<<<
+On your web server, in the same directory as your published document, create a file called ''{{{savefromweb.php}}}'', containing the following PHP server-side script.
+//{{{
+<?php
+// savefromweb.php
+// Author: Eric L. Shulman / ELS Design Studios
+// Source: http://www.TiddlyTools.com/savefromweb.php
+// License: http://www.TiddlyTools.com/#LegalStatements
+// Usage: install the php script on the server in the same directory as your TiddlyWiki document(s)
+
+// This script 'reflects' any contents sent to it (via form POST) so they are
+// sent back to the browser as a binary file.  This invokes the browser's built-in
+// download-and-save handling, which does not require security permissions to access
+// the local filesystem.
+
+$args=$_POST;
+header('Pragma: private');
+header('Cache-control: private, must-revalidate');
+header('Content-type: application/binary; charset="UTF-8"');
+header('Content-disposition: attachment; filename="'.$args['filename'].'"');
+$c=$args['contents'];
+$c=str_replace("\\'","'",$c); // decode single-quotes
+$c=str_replace("\\\"","\"",$c); // decode double-quotes
+$c=str_replace("\\\\","\\",$c); // decode backslashes
+$c=str_replace("\r\n","\n",$c); // change CRLF to LF
+print $c;
+?>
+//}}}
+<<<
+!!!!!Direct filesystem access (browser security permissions)
+<<<
+Although sending the merged document data from browser to server and back again allows it to be saved to your filesystem without requiring you to extensively re-configure your browser's built-in security protections, it also increases the overall processing time because the document's data is actually being transmitted //three// times: it is first retrieved from the remote server to get the TiddlyWiki core source; then, after merging with the updated tiddler data, it is sent back to the server, which immediately 'reflects' it back to the browser for final handling by the built-in "file download" interface.
+
+However, ''if you are accessing a "trusted site"'' (perhaps on a server within a secure private network), depending upon the specific options provided by your browser, ''you may be able to eliminate the round-trip processing by authorizing the appropriate filesystem security permissions in your browser''.  When filesystem access has been permitted, instead of making the round trip with the merged core+tiddler data, the plugin will directly prompt you for a destination path/file, using your computer's "native" path/file selection interface, and then write new the TiddlyWiki document data directly to the indicated location on your local file system.
+
+FireFox users: please see [[FAQ_BrowserSecurity]] for information on configuring your browser to permit remote filesystem access from trusted sites
+<<<
+!!!!!Revisions
+<<<
+2008.09.29 1.3.1 in saveFromWeb(), do NOT convert UTF8 to Unicode when merging retrieved source for submission to server-side reflector script.  Fixes mangling of international characters and symbols.
+2008.01.08 [*.*.*] plugin size reduction: documentation moved to SaveFromWebPluginInfo
+2007.08.08 1.3.0 added caching of the downloaded TW core source code so it only has to be retrieved once.
+2007.08.08 1.2.5 Added option to 'pre-fetch' the TW core so background download-and-cache is performed each time the document is loaded.  added option to try using direct filesystem access (with permissions) to bypass the round-trip through the server-side reflector script if the connection to the network is dropped after the document was loaded into the browser.  If permissions are not granted, fallback to use the server-side reflector script.
+2007.08.07 1.2.0 removed 'download only' optimization.  The round-trip takes longer, but permits the reflector script to be located ANYWHERE on the net, at ANY valid URL, instead of having to use the same server location as the remote document.
+2007.07.27 1.1.1 new documentation and code cleanup
+2007.07.26 1.1.0 re-wrote to support savefromweb.php remote "reflector" script.  Allows use of browser's native download dialog to receive file as a fallback alternative to using local filesystem I/O (which would require additional security permissions)
+2007.06.27 1.0.1 in saveFromWeb(), pass content from server through convertUnicodeToUTF8() before writing to file.
+2007.06.26 1.0.0 initial release
+<<<</pre>
+</div>

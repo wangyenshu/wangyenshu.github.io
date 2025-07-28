@@ -1,0 +1,251 @@
+<div title="StyleSheetAdjustments" modifier="ELSDesignStudios" created="200607081757" modified="200810141319" tags="CSS ThemePackage BasicsPackage stylesheet">
+<pre>/***
+|Name|StyleSheetAdjustments|
+|Source|http://www.TiddlyTools.com/#StyleSheetAdjustments|
+|Version||
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|CSS|
+|Description|adjust TiddlyWiki default shadow stylesheets definitions|
+***/
+
+[[StyleSheetPlugins]] /* include adjustments to plugin-supplied definitions */
+[[StyleSheetShortcuts]] /* include formatting "shortcut" definitions */
+[[Jash.css]] /* Javascript Shell (jash) Styles */
+
+/***
+These 'style tweaks' can be easily included in other stylesheet tiddler so they can share a baseline look-and-feel that can then be customized to create a wide variety of 'flavors'.
+/***
+!body /%==================================================%/
+IE needs explicit "position:static" declaration (fixes 'partial background display bug')
+***/
+/*{{{*/
+body { font-family: Verdana,Arial,Helvetica; position:static; }
+/*}}}*/
+
+/***
+!backstage /%==================================================%/
+fix for bug #347/#349, wherein backstageCloak covers backstagePanel whenever fixed elements are present
+***/
+/*{{{*/
+#backstageCloak { z-index:49; }
+#backstagePanel { margin:0em 0.5em 0em 0.5em; } 
+#backstageButton a:hover
+	{background-color:transparent !important;}
+
+/*}}}*/
+
+/***
+!common colors /%==================================================%/
+***/
+/*{{{*/
+/* these seem to have been omitted from the core defaults for link styles */
+a { color:#014; }
+a:hover	{ color:#def; }
+/*}}}*/
+
+/***
+!HTML forms /%==================================================%/
+***/
+/*{{{*/
+/* eliminate whitespace before/after form controls */
+form { margin:0;padding:0; }
+/*}}}*/
+
+/***
+!basic styling /%==================================================%/
+***/
+/*{{{*/
+/* reduce whitespace before/after horizontal rule */
+hr { margin:2px 0 1px 0;padding:0; }
+/*}}}*/
+
+/***
+!header and titles /%==================================================%/
+IE needs explicit "position:static" declaration (fixes 'background display hides text bug')
+***/
+/*{{{*/
+.header
+	{ background:transparent; padding:.2em 1em; position:static; margin-bottom:.5em; }
+.headerShadow, .headerForeground
+	{ padding:.5em; }
+.header a, .header .button, .header .tiddlyLinkExisting, .header .tiddlyLinkNonExisting
+	{ font-weight: normal; }
+.header .externalLink,
+.siteSubtitle a, .siteSubtitle .button, .siteSubtitle .tiddlyLinkExisting, .siteSubtitle .tiddlyLinkNonExisting
+	{ text-decoration:none; }
+.header table
+	{ border-collapse: collapse !important; }
+
+/*}}}*/
+
+/***
+!displayArea /%==================================================%/
+***/
+/*{{{*/
+#displayArea
+	{ margin:0em 17em 0em 11em; }
+/*}}}*/
+
+
+/***
+!popups /%==================================================%/
+white-space:nowrap prevents items from wrapping if popup is near right edge of window
+z-index:1000 makes sure popup is above EVERYTHING else
+***/
+/*{{{*/
+.popup
+	{ white-space: nowrap; z-index:1000; color: #000; background: #ffe; border: 1px solid #000;
+		-moz-border-radius-topright: 5px; -moz-border-radius-bottomleft: 5px; -moz-border-radius-bottomright: 5px;
+		-webkit-border-top-right-radius: 5px; -webkit-border-bottom-left-radius: 5px; -webkit-border-bottom-right-radius: 5px; }
+.popup a, .popup .button, .popup .tiddlyLinkExisting, .popup .tiddlyLinkNonExisting
+	{ font-weight: normal; font-style: normal; }
+.popup hr
+	{ color: #000; background: #ddd; border: 0; }
+.popup li.disabled
+	{ color: #999; }
+.popup li a, .popup li a:visited
+	{ color: #300; padding:1px; }
+.popup li a:hover
+	{ background: #006; color: #fff !important;}
+/*}}}*/
+
+/***
+!messageArea /%==================================================%/
+***/
+/*{{{*/
+#messageArea
+	{ font-size:90%; -moz-border-radius:1em;-webkit-border-radius:1em; background:#eee; }
+/*}}}*/
+
+/***
+!main menu (left sidebar) /%==================================================%/
+***/
+/*{{{*/
+#mainMenu
+	{ z-index:1; width:9em; text-align:left; margin:0; margin-left:1.5em; padding:0; clear:both; }
+*[id="mainMenu"] /* moz browsers only */
+	{ width:auto !important; } 
+/*}}}*/
+
+/***
+!sidebar (right sidebar) /%==================================================%/
+***/
+/*{{{*/
+#sidebar
+	{ width:18em; margin-right:1em; clear:both; }
+#sidebarTabs .tab
+	{ font-size:90%; -moz-border-radius-topleft:.5em; -moz-border-radius-topright:.5em;
+		-webkit-border-top-left-radius:.5em; -webkit-border-top-right-radius:.5em; }
+#sidebarTabs .tabContents
+	{ background:transparent; border:1px solid #999; padding:.5em; height:auto; overflow:auto; width:92.5%; }
+#sidebarTabs .tabContents .tabContents
+	{ background:transparent; border:1px solid #999; padding:.5em; height:auto; }
+#sidebarOptions input[type="text"]
+	{ font-size:8pt; }
+}
+*/
+/*}}}*/
+
+/***
+!tabs /%==================================================%/
+***/
+/*{{{*/
+.tabset
+	{ padding: 0.2em 0 0 0; }
+.tab
+	{ padding:0 1px 0 1px; }
+.viewer .tab
+	{ padding:0 .5em 0 .5em; }
+.tabSelected
+	{ border: 1px solid; border-bottom: 0px !important; margin-bottom:-2px !important;
+		 -moz-border-radius-topleft:.5em; -moz-border-radius-topright:.5em;
+		 -webkit-border-top-left-radius:.5em; -webkit-border-top-right-radius:.5em;}
+.tabUnselected
+	{ border: 1px solid #999; border-bottom:0px;
+		-moz-border-radius-topleft:.5em; -moz-border-radius-topright:.5em;
+		-webkit-border-top-left-radius:.5em; -webkit-border-top-right-radius:.5em;}
+.tabContents
+	{ border: 1px solid; -moz-border-radius:1em;-webkit-border-radius:1em; padding: 1em; }
+/*}}}*/
+
+/***
+!tiddler display elements /%==================================================%/
+***/
+/*{{{*/
+.tiddler { padding: 0 1em 1em 1em; }
+.annotation {
+	border: 1px solid;
+	-moz-border-radius:.5em;
+	-webkit-border-radius:.5em;
+	margin: .5em 0;
+	padding: .2em .5em;
+	font-size:90%;
+}
+.button, .button:hover, .button:active,
+.viewer .button, .viewer .button:hover, .viewer .button:active
+	{ background:transparent; border:0; }
+.toolbar
+	{ float:right; display:inline; padding-bottom:0; visibility:hidden; }
+.selected .toolbar
+	{ visibility:visible; }
+.toolbar .floatingPanel
+	{ visibility:visible !important; } /* make sure floating panels from toolbars don't disappear on mouseout */
+.toolbar .button, .toolbar a
+	{ border:1px solid transparent; background:transparent; margin:0px 1px; padding:0px .2em; -moz-border-radius:.5em;-webkit-border-radius:.5em; }
+.toolbar
+	{color:[[ColorPalette::TertiaryLight]];}
+.toolbar a
+	{color:[[ColorPalette::TertiaryLight]];}
+.selected .toolbar
+	{color:[[ColorPalette::Foreground]];}
+.selected .toolbar, .selected .toolbar .button, .selected .toolbar a
+	{ color:#006; }
+.toolbar .button:hover, .toolbar a:hover
+	{ border:1px solid #69c !important; background:#006 !important; color:#fff !important; }
+.shadow .tagging, .shadow .tagged
+	{ display:none; }
+.tagging, .tagged
+	{ background-color: #ccc; border: 1px solid; }
+.selected .tagging, .selected .tagged
+	{ background-color:#eee; border: 1px solid #999; }
+.tagging, .tagged
+	{ -moz-border-radius:1em;-webkit-border-radius:1em; }
+.subtitle
+	{ font-size:90%; }
+.shadow input, .shadow textarea, .shadow button, .shadow checkbox, .shadow radio, .shadow select
+	{ font-size:90%; }
+.shadow input, .shadow textarea, .shadow button, .shadow checkbox, .shadow radio, .shadow select
+	{ font-size:90%; }
+.editor input
+	{ font-size: 8pt;}
+.editor textarea
+	{ font-size: 8pt; font-family:monospace; }
+.editor select
+	{ font-size: 8pt; border:1px solid; }
+.title
+	{ font-size: 12pt; line-height:120%; }
+.viewer
+	{ font-size: 9pt; padding: 0.7em; text-align:justify; }
+.viewer pre, .viewer code, .viewer blockquote
+	{ font-size:8pt; text-align:left; }
+.viewer pre 
+	{ background:#ffe; border:1px solid; }
+.viewer table, .viewer table tr, .viewer table td
+	{ border:1px solid; }
+.viewer hr {
+	margin: 1px; padding:1px;
+	border:0;
+	border-top: solid 1px #666;
+	color: #666;
+}
+.viewer blockquote {
+	line-height: 1.5em;
+	padding-left: 1em;
+	margin-left: 1em;
+	border-left: 1px dotted;
+}
+/*}}}*/
+</pre>
+</div>

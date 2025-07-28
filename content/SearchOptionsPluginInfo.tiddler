@@ -1,0 +1,155 @@
+<div title="SearchOptionsPluginInfo" modifier="ELSDesignStudios" created="200801090140" modified="201104081738" tags="pluginInfo">
+<pre>/***
+|Name|SearchOptionsPluginInfo|
+|Source|http://www.TiddlyTools.com/#SearchOptionsPlugin|
+|Documentation|http://www.TiddlyTools.com/#SearchOptionsPluginInfo|
+|Version|3.0.10|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|documentation|
+|Description|Documentation for SearchOptionsPlugin|
+Extend core search function with additional user-configurable options including selecting which data items to search, enabling/disabling incremental key-by-key searches, and generating a ''list of matching tiddler'' instead of immediately displaying all matches.  This plugin also adds syntax for rendering 'search links' within tiddler content to embed one-click searches using pre-defined 'hard-coded' search terms.
+!!!!!Search link Syntax
+<<<
+To insert a 'search link' into tiddler content, you can write:
+{{{
+[search[text to find]]
+}}}
+or
+{{{
+[search[text to display|text to find]]
+}}}
+Clicking on the resulting search link will trigger the search functionality, just as if the specified 'text to find' had been entered into the standard search input field usually displayed in the document sidebar.
+<<<
+!!!!!Inline output: search macro syntax
+<<<
+Alternatively, to embed search results lists directly into your tiddler content, you can use:
+{{{
+<<search "text" report>> (report is a literal keyword)
+<<search "text" "heading" "separator">> (simple inline generator)
+}}}
+<<<
+!!!!!Inline output examples:
+<<<
+*+++*[&lt;&lt;search "wood"&gt;&gt;]>...
+<<search "wood">>
+===
+
+*+++*[&lt;&lt;search "wood" "/%%/"&gt;&gt;]>...
+<<search "wood" "/%%/">>
+===
+
+*+++*[&lt;&lt;search "wood" "See also: "&gt;&gt;]>...
+<<search "wood" "See also: ">>
+===
+
+*+++*[&lt;&lt;search "wood" "See also:\n*" "\n*"&gt;&gt;]>...
+<<search "wood" "See also:\n*" "\n*">>
+===
+
+*+++*[&lt;&lt;search "wood" report=list "See also:"&gt;&gt;]>...
+<<search "wood" report=list "See Also:" >>
+===
+
+*+++*[&lt;&lt;search "wood" report&gt;&gt;]>...
+<<search "wood" report>>
+===
+
+*+++*[&lt;&lt;search "wood" report=&gt;&gt;]>...
+<<search "wood" report=>>
+===
+
+*+++*[&lt;&lt;search "wood" report=all&gt;&gt;]>...
+<<search "wood" report=all>>
+===
+
+*+++*[&lt;&lt;search "wood" report=summary+buttons+again+list&gt;&gt;]>...
+<<search "wood" report=summary+buttons+again+list>>
+===
+
+*+++*[&lt;&lt;search "wood" report=summary+again&gt;&gt;]>...
+<<search "wood" report=summary+again>>
+===
+
+*+++*[&lt;&lt;search "wood" report=summary&gt;&gt;]>...
+<<search "wood" report=summary>>
+===
+
+<<<
+!!!!!Configuration
+<<<
+<<tiddler SearchOptions>><<option chkSearchResultsOptions>> Include {{{options...}}} slider in "search again" form
+>//Note: You can customize the search options display by editing the [[SearchOptions]] shadow tiddler.  You can also embed these options in your content by using any of the following standard TiddlyWiki macros://
+{{{
+<<tiddler SearchOptions>>
+<<slider chkSearchOptions [[SearchOptions]] options "show search options">>
+<<tabs chkSomeCookieName ... "options" "show search options" [[SearchOptions]] ... >>
+}}}
+<<<
+!!!!!Revisions
+<<<
+2011.04.08 3.0.10 fixed typo in CSS in formatSearchResults_buttons().  Restore missing options in Configuration section.
+2011.03.18 3.0.9 moved configuration controls to [[SearchOptions]] shadow tiddler
+2010.05.03 3.0.8 added chkSearchResultsOptions to allow/omit the "options..." slider from the "search again" form
+2010.02.25 3.0.7 in formatSearchResults_list, added declaration of local 'co' variable
+2009.09.22 3.0.6 in TiddlyWiki.prototype.search, added 'match' param for core compatibility
+2009.01.16 3.0.5 added chkSearchOpenTiddlers option to limit searches to displayed tiddlers only
+2009.01.15 3.0.4 in formatSearchResults_list(), corrected link generation to properly handle single-quotes and double-quotes in tiddler titles
+2009.01.09 3.0.3 added chkSearchHighlight to optionally disable highlighting of matched text
+2009.01.05 3.0.2 in formatSearchResults_list(), set/clear 'highlightHack' via HTML links so that search term will be highlighted when displaying tiddlers.
+2008.10.14 3.0.1 changed panel class from "tiddler" to "searchPanel" and added style definition for "searchPanel".  Fixes ticket #771 (in IE, links from search results were reporting errors due to "fake" tiddler class wrapper)
+2008.10.02 3.0.0 added optional list of tags to use for excluding tiddler from searches (default="excludeLists").
+2008.09.24 2.9.9 performance improvment to reportSearchResults(): when rendering a real SearchResults tiddler, store.notify() isn't needed since the results tiddler is always explicitly closed and redrawn each time.
+2008.09.20 2.9.8 corrected createPanel() and renderPanel() so toolbar will be correctly shown/hidden on mouseover/mouseout.
+2008.09.19 2.9.7 fixes to panel handling for IE, Safari, and others.  Changed panel id to #searchPanel and added .searchResults CSS class wrapper around panel content.  Fixed fold/unfold handling.
+2008.09.18 2.9.6 refactored panel handling code, added 'fold/unfold' panel toolbar command, added dynamic 'title' (shows search term), added txtIncrementalSearchMin option
+2008.09.17 2.9.5 added focus and cursor handling for 'search again' field in #searchResults DIV report so that an incremental key-by-key search doesn't interfere with continuous typing into the field.
+2008.09.17 2.9.4 fix 'flicker' when updating #searchResults DIV by wikify()ing to an 'offscreen' DIV and then using replaceChild() instead of using removeChildren() followed by wikify()
+2008.09.16 2.9.3 changed report layout, added "search again" and collapsible 'options' section with incremental search checkbox and "txtIncrementalSearchDelay" timer tweak to onKeyPress()
+2008.08.25 2.9.2 added animation to search results DIV.  Also, the #searchResults DOM element is only auto-created if it does not exist ... and when closed, the DIV is simply hidden rather than removed.  This allows custom placement of search results report in the PageTemplate definition.
+2008.08.23 2.9.1 story column search results uses {{{<<moveablePanel>>}}}
+2008.08.22 2.9.0 default is now to show search results at top of story column, similar to FND's SimpleSearchPlugin display, with an option to generate SearchResults tiddler as before.  Also changed 'chkSearchIncremental' to 'chkIncrementalSearch' to match core option variable
+2008.08.12 2.8.2 change default for chkSearchByDate back to FALSE, and adjusted "list" and "again" output formats (minor tweaks requested by PhilWhitehouse for use on TiddlyWiki.com)
+2008.08.11 2.8.1 changed defaults for chkSearchTitlesFirst, chkSearchList and chkSearchShadows to TRUE to enable enhanced search results output as soon as plugin is installed.
+2008.06.21 2.8.0 added extended syntax for {{{<<search "text" report heading>> and <<search "text" "heading" "seperator">>}}}
+2008.05.03 2.7.1 in searchLink formatter handler(), use separate setAttribute() call instead of passing attribs to createTiddlyButton().  Avoids conflict with errant code in TiddlerNotesPlugin (v2.1 26/10/07)
+2008.04.29 2.7.0 added searchLink formatter (syntax: {{{[search[text]]}}} or {{{[search[display|text]]}}})
+2008.04.08 2.6.2 don't automatically add options to AdvancedOptions shadow tiddler
+2007.02.17 2.6.1 added redefinition of config.macros.search.onKeyPress() to restore check to bypass key-by-key searching (i.e., when chkSearchIncremental==false), which had been unintentionally removed with v2.6.0
+2007.02.13 2.6.0 remove redefinition of config.macros.search.handler since core now includes handling for ENTER key.
+2007.02.08 2.5.1 include 'temporary' tag when creating SearchResults (for use with TemporaryTiddlersPlugin)
+2007.01.29 2.5.0 added support for "sort results by date".  Default is to sort alphabetically (standard).  When sorted by dates, most recent changes are shown first
+2006.10.10 2.4.0 added support for "search in tiddler data" (tiddler.fields)  Default is to search extended data.
+2006.04.06 2.3.0 added support for "search in shadow tiddlers".  Default is *not* to search in the shadows (i.e. standard TW behavior).  Note: if a shadow tiddler has a 'real' counterpart, only the real tiddler is searched, since the shadow is inaccessible for viewing/editing.
+2006.02.03 2.2.1 rewrite timeout clearing code and blank search text handling to match 2.0.4 core release changes.  note that core no longer permits "blank=all" searches, so neither does this plugin.  To search for all, use "." with text patterns enabled.
+2006.02.02 2.2.0 in search.handler(), KeyHandler() function clears 'left over' timeout when search input is < 3 chars.  Prevents searching on shorter text when shortened by rapid backspaces (<500msec)
+2006.02.01 2.1.9 in Story.prototype.search(), correct inverted logic for using/not using regular expressions when searching
+also, blank search text now presents "No search text.  Continue anyway?" confirm() message box, so search on blank can still be processed if desired by user.
+2006.02.01 2.1.8 in doSearch(), added alert/return if search text is blank
+2006.01.20 2.1.7 fixed setting of config.macros.search.reportTitle so that Tweaks can override it.
+2006.01.19 2.1.6 improved SearchResults formatting, added a "search again" form to the report (based on a suggestion from MorrisGray)
+define results report title using config.macros.search.reportTitle instead of hard-coding the tiddler title
+2006.01.18 2.1.5 Created separate functions for reportSearchResults(text,matches) and discardSearchResults(), so that other developers can create alternative report generators.
+2006.01.17 2.1.4 Use regExp.search() instead of regExp.test() to scan for matches.  Correctd the problem where only half the matching tiddlers (the odd-numbered ones) were being reported.
+2006.01.15 2.1.3 Added information (date/time, username, search options used) to SearchResults output
+2006.01.10 2.1.2 use displayTiddlers() to render matched tiddlers.  This lets you display multiple matching tiddlers, even if SinglePageModePlugin is enabled.
+2006.01.08 2.1.1 corrected invalid variable reference, "txt.value" to "text" in story.search()
+2006.01.08 2.1.0 re-write to match new store.search(), store.search.handler() and story.search() functions.
+2005.12.30 2.0.0 Upgraded to TW2.0.  When rendering SearchResults tiddler, closeTiddler() first to ensure display is refreshed.
+2005.12.26 1.4.0 added option to search for matching text in tiddler tags
+2005.12.21 1.3.7 use \\ to 'escape' single quotes in tiddler titles when generating "Open all matching tiddlers" link.  Also, added access key: "O", to trigger "open all" link.  Based on a suggestion by UdoBorkowski.
+2005.12.18 1.3.6 call displayMessage() AFTER showing matching tiddlers so message is not cleared too soon
+2005.12.17 1.3.5 if no matches found, just display message and delete any existing SearchResults tiddler.
+2005.12.17 1.3.4 use {/%%/{/%%/{  and }/%%/}/%%/} to 'escape' display text in SearchResults tiddler to ensure that formatting contained in search string is not rendered.  Based on a suggestion by UdoBorkowski.
+2005.12.14 1.3.3 tag SearchResults tiddler with 'excludeSearch' so it won't list itself in subsequent searches. Based on a suggestion by UdoBorkowski.
+2005.12.14 1.3.2 added "open all matching tiddlers..." link to search results output. Based on a suggestion by UdoBorkowski.
+2005.12.10 1.3.1 added "discard search results" link to end of search list tiddler output for quick self-removal of 'SearchResults' tiddler.
+2005.12.01 1.3.0 added chkSearchIncremental to enable/disable 'incremental' searching (i.e., search after each keystroke) (default is ENABLED).
+added handling for Enter key so it can be used to start a search. Based on a suggestion by LyallPearce
+2005.11.25 1.2.1 renamed from SearchTitleOrTextPlugin to SearchOptionsPlugin
+2005.11.25 1.2.0 added chkSearchList option.  Based on a suggestion by RodneyGomes
+2005.10.19 1.1.0 added chkSearchTitlesFirst option.  Based on a suggestion by ChristianHauck
+2005.10.18 1.0.0 Initial Release.  Based on a suggestion by LyallPearce.
+<<<</pre>
+</div>

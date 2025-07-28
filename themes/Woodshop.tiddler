@@ -1,0 +1,71 @@
+<div title="Woodshop" modifier="ELSDesignStudios" created="200607140030" modified="200801230101" tags="CSS ThemePackage stylesheets systemTheme">
+<pre>/***
+|Name|Woodshop|
+|Source|http://www.TiddlyTools.com/#Woodshop|
+|Version||
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|CSS|
+|Description|theme: rustic look - dark/med/light wood backgrounds|
+|StyleSheet|Woodshop|
+|PageTemplateReadOnly|PageTemplateReadOnly|
+|EditTemplateReadOnly|EditTemplateReadOnly|
+***/
+
+[[StyleSheetAdjustments]]
+/* ==== Woodshop ==== */
+/*{{{*/
+body
+	{ background-image: url('[[WoodshopBackgroundMedium]]'); background-color:#db7; }
+.menubox
+	{ background-image: url('[[TexturesCrumpled]]'); background-color:#edb; }
+.tagging, .tagged
+	{ background-color: transparent; border: 1px solid #ccc; }
+.selected .tagging, .selected .tagged
+	{ background-image: url('[[TexturesParchment]]'); background-color:#edb; border: 1px solid #999; }
+.groupbox
+	{ background-image: url('[[TexturesParchmentGray]]'); background-color:#edb; }
+.viewer
+	{ background-image: url('[[WoodshopBackgroundLight]]'); background-color:#edb;
+	border: 1px solid #999; -moz-border-radius:1em;-webkit-border-radius:1em; padding:1em; }
+.header
+	{ background-image: url('[[WoodshopBackgroundDark]]'); background-color:#611; color:#edb; border-bottom:0px; }
+.header a
+	{ color: #ec7; }
+.floatingPanel, #messageArea, .attachPanel, #importPanel, #exportPanel
+	{ background-image: url('[[TexturesParchment]]'); background-color: #edb; border:1px solid; -moz-border-radius:1em;-webkit-border-radius:1em; }
+
+/* rollover highlighting */
+.mouseover 
+	{color:[[ColorPalette::TertiaryMid]] !important;}
+.mouseover a
+	{color:[[ColorPalette::TertiaryMid]] !important;}
+.header .mouseover, #backstageButton .mouseover
+ 	{color:[[ColorPalette::Foreground]] !important;}
+.header .mouseover a, #backstageButton .mouseover a
+	{color:[[ColorPalette::Foreground]] !important;}
+.header .selected .mouseover, #backstageButton .selected .mouseover 
+	{color:[[ColorPalette::Background]] !important;}
+.header .selected .mouseover .button, .header .selected .mouseover a,
+#backstageButton .selected .mouseover .button, #backstageButton .selected .mouseover a
+	{color:[[ColorPalette::TertiaryLight]] !important;}
+
+#messageArea
+	{ background-image: url('[[TexturesCrumpled]]'); background-color:#edb; }
+.tabContents
+	{ background-image: url('[[TexturesCrumpled]]'); background-color:#edb; }
+#sidebarTabs .tabContents
+	{ background-image: url('[[WoodshopBackgroundLight]]') !important; background-color:#edb; }
+h1,h2,h3,h4,h5
+	{ background-image: url('[[WoodshopBackgroundDark]]'); background-color:#611; color:#fff;}
+h1 a, h2 a, h3 a, h4 a, h5 a
+	{ color: #ec7; }
+.toolbar, .toolbar a, .toolbar button,
+.mouseover, .mouseover a
+	{ color: #ba8; } /* override default #999 */
+.undocked .searchResults
+	{ border:1px solid #611; background:#db7; }
+/*}}}*/
+</pre>
+</div>

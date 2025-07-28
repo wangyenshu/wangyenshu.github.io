@@ -1,0 +1,108 @@
+<div title="SwitchThemePluginInfo" modifier="ELSDesignStudios" created="200801230020" modified="200910012032" tags="pluginInfo">
+<pre>/***
+|Name|SwitchThemePluginInfo|
+|Source|http://www.TiddlyTools.com/#SwitchThemePlugin|
+|Documentation|http://www.TiddlyTools.com/#SwitchThemePluginInfo|
+|Version|5.4.1|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.3|
+|Type|documentation|
+|Description|documentation for SwitchThemePlugin|
+This plugin replaces the features previously provided by SelectStylesheetPlugin, and uses the ''TiddlyWiki core "theme" mechanism'' to select alternative templates and styles.  ''//This plugin requires TiddlyWiki version 2.3.0 or later//''
+!!!!!Usage
+<<<
+{{medium{__Defining a theme:__}}}
+First, create/import a tiddler containing CSS definitions and tag it with<<tag systemTheme>>.  At the top of the tiddler, embed a //slice table// with at least one slice, "~StyleSheet", whose value is the name of the tiddler itself, e.g., in a tiddler called [[MyTheme]], write:
+{{{
+/***
+|StyleSheet|MyTheme|
+***/
+}}}
+>Note use of {{{/***}}} and {{{***/}}} around the slice table.   This syntax allows the browser to skip over the slice table definition when processing the ~CSS-syntax embedded within the tiddler.
+A theme tiddler can also define one or more additional slices that associate customized versions of [[PageTemplate]], [[ViewTemplate]], and/or [[EditTemplate]], for use with that theme:
+{{{
+/***
+|PageTemplate|MyPageTemplate|
+|ViewTemplate|MyViewTemplate|
+|EditTemplate|MyEditTemplate|
+***/
+}}}
+where the slice //name// is the standard template name, and the slice //value// is the title of the alternative custom template to use.  You can also associate a secondary set of ''"read only" templates that will be automatically applied whenever a document is being viewed online'' (i.e., via http: protocol)
+{{{
+|PageTemplateReadOnly|MyWebPageTemplate|
+|ViewTemplateReadOnly|MyWebViewTemplate|
+|EditTemplateReadOnly|MyWebEditTemplate|
+}}}
+These alternative templates can be used to present a reduced-feature "reader" interface when viewed on-line by others, while still offering a full-featured "author" interface when working locally.
+
+In addition to the TW core slices described above, the plugin allows you to define extra slices that refer to tiddlers (or tiddler sections) containing ''custom javascript code that can be invoked whenever theme switching occurs''.  A theme can include any of the following special plugin-enhanced slices:
+{{{
+|Check|MyThemeCheck|
+|Init|MyThemeInit|
+|Reset|MyThemeReset|
+}}}
+*{{block{
+The code referenced by the ''Check'' slice (if any) is invoked ''before switching'' to a selected theme.  ''If this code returns a non-zero (or true) result, then the new theme will not be applied.  A zero (or false) value allows the theme switch to continue as usual.''  For example, the following code asks for confirmation, allowing the user to cancel the theme switch:
+{{{
+return !confirm('Are you sure you want to use this theme?');
+}}}
+}}}
+*After a theme has been applied, the code referenced by the ''Init'' slice (if any) is invoked.  This can be used to perform theme-related ''side-effects'', such as modifying various {{{config.options['...']}}} settings or displaying instructions/messages.
+*When switching to another theme, any code referenced by a ''Reset'' slice //in the current theme// is invoked before the new theme is applied.  ''If this code returns a non-zero result, then the new theme will not be applied.''  As with the ''Check'' code, this can be used to ask the user to confirm before switching themes.  However, the primary intent of the ''Reset'' code is to permit restoration any modified settings that were altered by ''Init'' code that was previously invoked for the current theme.
+
+{{medium{__Selecting a theme from a droplist:__}}}
+To display a droplist of available themes, use this syntax:
+{{{
+<<switchTheme width:nnn>>
+}}}
+*''width:nnn[cm|px|em|%]'' (optional)<br>specifies the width of the droplist (using CSS measurements)(default=100%)
+All tiddlers tagged with<<tag systemTheme>> will be included in the droplist of available themes for you to select (except those also tagged with <<tag excludeLists>>.  The current selection is stored in a TiddlyWiki option cookie ("txtTheme") that is applied automatically each time you reload your document.  If the selected theme does not exist in the document (e.g., it was deleted/renamed after being selected), the [default] CSS tiddler, [[StyleSheet]], will be used as a fallback.  If [random] is seleced, the plugin automatically selects a random theme.  You can exclude a theme from being randomly selected by tagging it with <<tag excludeTheme>>.
+
+Example:
+{{{<<switchTheme width:30%>>}}}
+<<switchTheme width:30%>>
+
+{{medium{__Selecting a theme from a command link:__}}}
+The {{{<<switchTheme>>}}} macro can also be used to embed a command link that, when clicked, will apply a specific, pre-selected theme, using the following syntax:
+{{{
+<<switchTheme "label:link text" "prompt:tooltip text" TiddlerName>>
+}}}
+* ''label:text'' and ''prompt:text'' (optional)<br>define the link text the 'tooltip' text that appears near the mouse pointer when placed over the link, respectively.
+*''~TiddlerName''<br>specifies the name of the theme tiddler to be applied (e.g., {{{<<switchTheme [[Woodshop]]>>}}}
+Examples:
+{{{
+<<switchTheme Plain>>
+<<switchTheme Blackout>> 
+<<switchTheme Woodshop>>
+<<switchTheme Textures>>
+<<switchTheme [[Edge of Night]]>>
+<<switchTheme label:[default] StyleSheet>>
+<<switchTheme label:randomize *>>
+}}}
+<<switchTheme Plain>> <<switchTheme Blackout>> <<switchTheme Woodshop>> <<switchTheme Textures>> <<switchTheme [[Edge of Night]]>> <<switchTheme label:[default] StyleSheet>> <<switchTheme label:randomize *>>
+
+NOTE:
+>You can also create a command link that specifies "*" for the theme name.  This will select a theme //at random// from the list of available themes.  To prevent a given theme from being selected, tag it with <<tag excludeTheme>>.
+<<<
+!!!!!Configuration
+<<<
+<<option chkRandomTheme>> select a random theme at startup
+//Note: to prevent a given theme from being chosen at random, tag it with <<tag excludeTheme>>//
+<<<
+!!!!!Revisions
+<<<
+2009.10.01 5.4.1 changed 'noRandom' tag to 'excludeTheme' and recognize 'excludeLists' tag
+2009.09.28 5.4.0 added Check/Init/Reset slices for invoking code during theme switching
+2008.04.23 5.3.0 added option for chkRandomTheme (select random theme at startup)
+2008.04.13 5.2.0 moved TW2.3.x fixup for core's switchTheme() function to [[SwitchThemePluginPatch]] and simplified random theme handling.  Also, changed "Web*" prefix to "*ReadOnly" suffix for compatibility with TW240 core convention.
+2008.02.01 5.1.3 in response to a change for core ticket #435 (see http://trac.tiddlywiki.org/changeset/3450) -- in switchTheme, use config.refresherData.* values (if defined), instead of config.refreshers.*  This change allows the plugin to work with both the current release (~TW230) AND the upcoming ~TW240 release.
+2008.02.01 5.1.2 in switchTheme, replace hard-coded "~StyleSheet" with config.refreshers.stylesheet (used as name of loaded styles)
+2008.01.30 5.1.1 changed tag-detection to use "systemTheme" instead of "theme" for compatibility with core theme switching mechanism.
+2008.01.26 5.1.0 added support for txtTheme="*" (applies random theme at startup) and {{{<<randomTheme>>}}} macro (selects/applies a random theme when a command link is clicked)
+2008.01.25 5.0.1 in refresh() and set(), removed use of ">" to indicate current theme 
+2008.01.22 5.0.0 Completely re-written and renamed from [[SelectStylesheetPlugin]] (now retired)
+>//previous history for [[SelectStylesheetPlugin]] omitted//
+2005.07.20 1.0.0 Initial Release
+<<<</pre>
+</div>

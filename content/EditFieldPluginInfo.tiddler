@@ -1,0 +1,48 @@
+<div title="EditFieldPluginInfo" modifier="ELSDesignStudios" created="200708220842" modified="201104101021" tags="pluginInfo">
+<pre>/***
+|Name|EditFieldPluginInfo|
+|Source|http://www.TiddlyTools.com/#EditFieldPlugin|
+|Documentation|http://www.TiddlyTools.com/#EditFieldPluginInfo|
+|Version|1.6.2|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|documentation|
+|Description|documentation for EditFieldPlugin|
+!!!!!Usage
+<<<
+When a tiddler is edited, input fields -- defined in the [[EditTemplate]] -- are displayed.  The ''TiddlyWiki //template// syntax'' for the {{{<<edit>>}}} macro is:
+{{{
+<span class="editor" macro="edit fieldname numberOfLines defaultValue"></span>
+}}}
+*''fieldname''<br>refers to a tiddler field, either standard or custom, within the current tiddler.
+*''numberOfLines'' //(optional, default=1)//<br>if omitted (or equal to 1), a standard one-line text input field is created.  If >1, a multi-line //textarea// field is created.  Note: the standard tiddler 'text' field has special core handling applied so that it is always rendered using a textarea field, whose size is based on the length of the tiddler content, limted by the {{{<<option txtMaxEditRows>>}}} setting.
+*''defaultValue'' //(optional, default=blank)//<br>a fallback value to display if the field is not yet defined in the tiddler.
+The TiddlyWiki core only supports use of the edit macro within an [[EditTemplate]] definition.  Changes to values displayed in the tiddler editor are only saved (or discarded) if you press the "done" (or "cancel") command in the tiddler editor's toolbar.  However, these commands are not available when //viewing// a tiddler, so there is no way to trigger the saving of any changes you have entered.
+
+EditFieldPlugin adds handling that allows you to embed the edit macro in the [[ViewTemplate]] (using the standard ''TiddlyWiki //template// syntax'') or directly in tiddler content using ''TiddlyWiki //wiki// syntax'' (e.g, {{{<<edit fieldname@TiddlerName numberOfLines defaultValue>>}}}).
+
+When you make changes to a tiddler input field displayed in //viewed// content, your changes are saved (or discarded) as soon as you press ENTER (or ESC).  If you move away from that input field ('onBlur' handling), a message is displayed asking you to confirm saving/discarding any field changes.  To suppress either (or both) of these confirmation messages, you can add the following configuration settings to [[EditFieldPluginConfig]] (tagged with <<tag systemConfig>>):
+{{{
+config.macros.edit.cancelMsg = "";
+config.macros.edit.saveMsg = "";
+}}}
+The plugin also enhances the fieldname syntax to allow reference to fields in other tiddlers using: "{{{fieldname@TiddlerName}}}", so you can 'remotely' display and edit fields stored those tiddlers.  This allows you to create, for example, a summary tiddler for reviewing/editing field values from several tiddlers at the same time.
+<<<
+!!!!!Examples
+<<<
+*"""<<edit foobar>>"""<br><<edit foobar>>
+*"""<<edit foobar@SomeTiddler>>"""<br><<edit foobar@SomeTiddler>>
+*"""<<edit tags>>"""<br><<edit tags>>
+*"""<<edit text 15>>"""<br>{{editor{<<edit text 15>>}}}
+<<<
+!!!!!Revisions
+<<<
+2011.04.10 1.6.2 fixed 'null' fieldname handling in Chrome
+2010.11.15 1.6.1 fixed display of field values for 'non-stored' tiddler content (e.g., shadows, tags, default new tiddler)
+2010.10.31 1.6.0 fixed display of remote field values.  In onblur(), refactored save/cancel message text for easier customization and bypass confirmation if text is blank.  
+2009.09.16 1.5.1 fixed 'onblur' handling for local fields (fieldname@here).  Added support for  '@here' syntax
+2009.09.05 1.5.0 code refactored.  added handling for fieldname@tiddlername
+2007.08.22 1.0.0 initial release
+<<<</pre>
+</div>

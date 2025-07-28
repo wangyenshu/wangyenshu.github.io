@@ -1,0 +1,61 @@
+<div title="MissingTiddlersPluginInfo" modifier="ELSDesignStudios" created="200901210241" modified="200910120742" tags="pluginInfo">
+<pre>|Name|MissingTiddlersPluginInfo|
+|Source|http://www.TiddlyTools.com/#MissingTiddlersPlugin|
+|Documentation|http://www.TiddlyTools.com/#MissingTiddlersPluginInfo|
+|Version|1.2.0|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|documentation|
+|Description|documentation for MissingTiddlersPlugin|
+By default, TiddlyWiki defines "catch-all" fallback content that is displayed if a tiddler doesn't exist:
+>{{{The tiddler '$1' doesn't yet exist. Double-click to create it}}}
+Rather than simply displaying a standard fallback message, the MissingTiddlersPlugin first attempts to match the missing tiddler title using a custom-defined list of title patterns and fallback content.  If a match is found, the corresponding alternative fallback content is rendered.  If no match is found, the plugin then displays the standard catch-all content as usual.  The plugin also creates a shadow tiddler, [[MissingTiddler]], so that you can easily customize the catch-all content to suit your needs.
+!!!Usage
+<<<
+The TW core value for {{{config.views.wikified.defaultText}}} is automatically modified, like this:
+{{{
+<<missingTiddler [[%0]] ListName CatchAllName>>
+}}}
+*''"""[[%0]]"""''<br>inserts the title of the missing tiddler (this must be entered exactly as it appears, including the brackets)
+*{{block{
+''~ListName'' (default=[[MissingTiddlersList]])<br>specifies the tiddler containing the list of regexp-based title patterns and associated fallback content, where ''each section heading is a title pattern'', and ''the body of the section is the fallback content''
+}}}
+*''~CatchAllName'' (default=[[MissingTiddler]])<br>contains fallback content for any missing titles that are ''not matched'' in [[MissingTiddlersList]] (or if [[MissingTiddlersList]] does not exist at all).
+For most purposes, you will not need to adjust this macro, and can simply edit [[MissingTiddlersList]] and/or [[MissingTiddler]] to define your desired alternative fallback content.  For example:
+
+[[MissingTiddlersList]]:
+{{{
+!SomeRenamedTitle
+$1 has been replaced by SomeOtherTitle
+!SomeRedirectedTitle
+<<tiddler SomeNewTitle>>
+!SomeDeletedTitle
+$1 has been removed and is no longer available.
+!FAQ_.*
+All FAQ articles have been moved to [[the FAQ archive|faq.html]]
+}}}
+[[MissingTiddler]]
+{{{
+Missing or Unknown tiddler: $1
+Double-click to create it, or:
+<<search>>
+}}}
+*You can embed the requested tiddler title into any fallback content by using {{{$1}}} as a //substitution marker//.  When rendered, the title of the missing tiddler is automatically inserted in place of the marker.
+*{{block{
+Fallback content can include embedded macros that provide additional interaction (e.g., {{{<<search>>}}}) or perform side-effect processing for specific missing tiddlers.  For example, you can use {{{<<loadTiddlers>>}}} (see [[LoadTiddlersPlugin]]) to automatically attempt to retrieve a missing tiddler "on-demand" from another 'archival' TiddlyWiki document, like this:
+{{{
+<<loadTiddlers [[tiddler:$1]] [[archive.html]] quiet nodirty noreport temporary>>
+}}}
+}}}
+*To prevent side-effect macros from being processed when directly viewing the [[MissingTiddlerList]], you can enclose the fallback content within """{{{...}}}""".  When that fallback content is actually used, the plugin will automatically remove this surrounding syntax so that the content, including any side-effect macros, will be rendered normally at that time.
+*The plugin uses the //first successful match// in the list.  Be sure to define more specific patterns (e.g., exact tiddler titles) before any patterns that contain matching wildcard sequences (e.g., ".*"), so that the more general pattern will not be applied instead of the exact match.
+*The fallback content is only used when attempting to //display// a missing tiddler and will //not// be applied when transcluding a missing tiddler (e.g., {{{<<tiddler SomeMissingTitle>>}}}), nor will it change the use of TiddlyWiki core functions: {{{ store.tiddlerExists(), store.getTiddler(),}}} or {{{store.getTiddlerText().}}}
+<<<
+!!!Revisions
+<<<
+2009.10.11 1.2.0 strip leading/trailing 'pre' formatting from fallback content
+2009.10.11 1.1.0 use section formatting in MissingTiddlersList
+2009.01.20 1.0.0 initial release
+<<<</pre>
+</div>

@@ -1,0 +1,61 @@
+<div title="QuickEdit_custom" modifier="ELSDesignStudios" created="200902191602" modified="200906112024" tags="QuickEditPackage">
+<pre>/%
+|Name|QuickEdit_custom|
+|Source|http://www.TiddlyTools.com/#QuickEdit_custom|
+|Version|2.4.3|
+|Author|Eric Shulman|
+|License|see http://www.TiddlyTools.com/#QuickEditPlugin|
+|Type|html|
+|Requires|QuickEditPlugin|
+|Description|quickedit - custom defined formats|
+
+Usage: see  http://www.TiddlyTools.com/#QuickEditToolbar
+
+!help
+Reminders:
+
+Custom formats are stored as an "HR-separated list" in [[QuickEdit_customList]], where the first line of each list item is the text 'label' to show in the droplist, followed by one or more lines of wiki content to be inserted into the tiddler source.
+
+Substitution markers can be used to dynamically insert values into the formatted output: $1 inserts the tiddler editor's current selected text. $[[message|default value]] interactively prompts for a value to be inserted. $[[message|$1]] uses the selected text as the default value. $[[message|{{javascript}}]] calculates the default value using javascript code.
+!end help
+
+%/<html><hide linebreaks><a href="javascript:;" class="tiddlyLink" tabindex="-1" title="custom defined formats"
+onclick="var p=Popup.create(this); if (!p) return false; p.className+=' sticky smallform';
+	var s=createTiddlyElement(p,'select'); s.button=this;
+	s.options[0]=new Option('select a custom format...','');
+	var items=store.getTiddlerText('QuickEdit_customList','').split('\n----\n');
+	for (var i=0; i<items.length; i++) {
+		if (!items[i].length) continue; var lines=items[i].split('\n');
+		var label=lines.shift(); var val=lines.join('\n');
+		s.options[s.length]=new Option(label,val); s.options[s.length-1].title=val;
+	}
+	s.options[s.length]=new Option('[Edit custom formats...]','_edit');
+	s.options[s.length-1].title='add/change custom format definitions...';
+	s.size=Math.min(s.length,15);
+	s.onclick=function(){ if (!this.value.length) return;
+		if (this.value=='_edit') {
+			alert(store.getTiddlerText('QuickEdit_custom##help'));
+			story.displayTiddler(story.findContainingTiddler(this.button),
+				'QuickEdit_customList',DEFAULT_EDIT_TEMPLATE);
+		} else {
+		        var e=config.quickEdit.getField(this.button); if (!e) return false;
+			e.focus(); var txt=config.quickEdit.getSelection(e);
+			replaceSelection(e, this.value.replace(/\$\x31/g,txt)
+				.replace(/\$\[\[[^\]]+\]\]/g, function(t){
+					x=t.substr(3,t.length-5).split('|');
+					var msg=x[0]; var def=x[1]||'';
+					if (def.startsWith('{{')) {
+						try{def=eval(def.substr(2,def.length-4))} catch(ex){showException(ex)}
+					}
+					return prompt(msg,def)||'';
+				})
+			);
+		}
+		Popup.remove(); return false;
+	};
+	s.onkeyup=config.quickEdit.keyup;
+	Popup.show();
+	s.focus();
+	return config.quickEdit.processed(event);"
+>custom</a></html></pre>
+</div>

@@ -1,0 +1,55 @@
+<div title="Textures" modifier="ELSDesignStudios" created="200512261359" modified="200801230101" tags="CSS ThemePackage stylesheets systemTheme">
+<pre>/***
+|Name|Textures|
+|Source|http://www.TiddlyTools.com/#Textures|
+|Version||
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|CSS|
+|Description|theme: stone/parchment backgrounds|
+|StyleSheet|Textures|
+|PageTemplateReadOnly|PageTemplateReadOnly|
+|EditTemplateReadOnly|EditTemplateReadOnly|
+***/
+
+[[StyleSheetAdjustments]]
+/*{{{*/
+/* ==== Textures ==== */
+body
+	{ background-image: url('[[TexturesStucco]]'); background-color:#eee; }
+.tagging, .tagged
+	{ background-color: transparent; border: 1px solid #ccc; }
+.selected .tagging, .selected .tagged
+	{ background-image: url('[[TexturesParchment]]'); background-color:#edb; border: 1px solid #999; }
+.menubox
+	{ background-image: url('[[TexturesParchmentGray]]'); background-color:#fff; }
+.viewer
+	{ background-image: url('[[TexturesParchmentGray]]'); background-color:#fff; border: 1px solid #999; -moz-border-radius:1em;-webkit-border-radius:1em; padding:1em; }
+.groupbox
+	{ background-image: url('[[TexturesParchment]]'); background-color:#ffe; }
+.header	{ background-image: url('[[TexturesMarbleBlack]]'); background-color:#113; border:0; border-bottom:5px solid #090; color:#ccf !important; }
+.header a { color:#ccf; }
+.header a:hover	{ color:#fff; }
+
+/* invert rollover highlighting in header */
+.header .mouseover, .header .mouseover .button, .header .mouseover a,
+#backstageButton .mouseover, #backstageButton .mouseover .button, #backstageButton .mouseover a
+	{color:[[ColorPalette::PrimaryDark]] !important;}
+.header .selected .mouseover, #backstageButton .selected .mouseover
+	{color:[[ColorPalette::PrimaryLight]] !important;}
+.header .selected .mouseover .button, .header .selected .mouseover a,
+#backstageButton .selected .mouseover .button, #backstageButton .selected .mouseover a
+	{color:[[ColorPalette::TertiaryLight]] !important;}
+
+.siteSubtitle { color:#0c0; }
+.floatingPanel, #messageArea, .attachPanel, #importPanel, #exportPanel, #sidebarTabs .tabContents 
+	{ background: #eee; background-image: url('[[TexturesParchmentGray]]');}
+#messageArea { border:1px solid #000; -moz-border-radius:0;-webkit-border-radius:0; }
+
+.viewer h1,.viewer h2,.viewer h3,.viewer h4,.viewer h5 { background: #666; color:#fff; }
+.tabContents /* .viewer .tabContents, #sidebarTabs .tabContents */
+	{ background-image: url('[[TexturesParchmentGray]]'); background-color:#fff; }
+
+/*}}}*/</pre>
+</div>

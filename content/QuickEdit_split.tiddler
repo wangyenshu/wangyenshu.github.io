@@ -1,0 +1,63 @@
+<div title="QuickEdit_split" modifier="ELSDesignStudios" created="200803080738" modified="200906112023" tags="QuickEditPackage">
+<pre>/%
+|Name|QuickEdit_split|
+|Source|http://www.TiddlyTools.com/#QuickEdit_split|
+|Version|2.4.3|
+|Author|Eric Shulman|
+|License|see http://www.TiddlyTools.com/#QuickEditPlugin|
+|Type|html|
+|Requires|QuickEditPlugin|
+|Description|quickedit - move selection to new tiddler and insert link, embedded tiddler, or slider|
+
+Usage: see  http://www.TiddlyTools.com/#QuickEditToolbar
+
+Based on ideas originally developed by YannPerrin
+(http://yann.perrin.googlepages.com/twkd.html#easySlicer)
+
+%/<html><hide linebreaks><a href="javascript:;" class="tiddlyLink" tabindex="-1" 
+title="move selection to new tiddler and insert link, embedded tiddler, or slider"
+onclick="var p=Popup.create(this); if (!p) return false; p.className+=' sticky smallform';
+	p.style.whiteSpace='nowrap';
+	var i=createTiddlyElement(p,'input');
+	i.defaultValue='Enter a new tiddler title';
+	i.onfocus=function(){this.select()};
+	var s=createTiddlyElement(p,'select'); s.button=this;
+	s.options[0]=new Option('select type...','');
+	s.options[0].title='select split type';
+	s.options[1]=new Option('link','link');
+	s.options[1].title='replace with [[TiddlerName]]';
+	s.options[2]=new Option('embed','embed');
+	s.options[2].title='replace with \<\<tiddler TiddlerName\>\>';
+	s.options[3]=new Option('slider','slider');
+	s.options[3].title='replace with \<\<slider \u0022\u0022 [[TiddlerName]] [[label]] [[tooltip]]\>\>';
+	s.onchange=function(){
+		if (s.previousSibling.value==s.previousSibling.defaultValue)
+			{ alert('A tiddler title is required'); s.selectedIndex=0; s.previousSibling.focus(); return false; }
+		var tid=s.previousSibling.value;
+		if (store.tiddlerExists(tid) && !confirm(config.messages.overwriteWarning.format([tid])))
+			{ s.previousSibling.focus(); return false; }
+		switch(s.value) {
+			case 'link':
+				var newtxt='[['+tid+']]';
+				break;
+			case 'embed':
+				var newtxt='\<\<tiddler [['+tid+']]\>\>';
+				break;
+			case 'slider':
+				var label=prompt('Enter a slider label',tid);
+				if (!label) { Popup.remove(); return false; }
+				var tip=prompt('Enter a slider tooltip',label);
+				if (!tip) { Popup.remove(); return false; }
+				var newtxt='\<\<slider \u0022\u0022 [['+tid+']] [['+label+']] [['+tip+']]\>\>';
+				break;
+		}
+		var txt=config.quickEdit.getSelection(config.quickEdit.getField(this.button));
+		store.saveTiddler(tid,tid,txt,config.options.txtUserName,new Date(),[],{});
+		story.displayTiddler(story.findContainingTiddler(this.button),tid);
+		config.quickEdit.setSelection(this.button,newtxt);
+		Popup.remove(); return false;
+	};
+	Popup.show();
+	event.cancelBubble=true;if(event.stopPropagation)event.stopPropagation();return false;"
+>split</a></html></pre>
+</div>

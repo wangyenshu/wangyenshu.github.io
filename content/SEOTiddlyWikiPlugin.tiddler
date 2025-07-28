@@ -1,0 +1,56 @@
+<div title="SEOTiddlyWikiPlugin" modifier="Wang Yanshu" created="202411221229">
+<pre>function generateSEOFiles()
+{
+	// last update: 2007-02-14 by Fabrice Proudhon
+	// http://www.superphysique.net#%5B%5BSEO%20TiddlyWiki%20Plugin%5D%5D
+	var originalPath = document.location.toString();
+	if(originalPath.substr(0,5) != "file:") 
+	{
+		alert(config.messages.notFileUrlError);
+		if(store.tiddlerExists(config.messages.saveInstructions))
+			story.displayTiddler(null,config.messages.saveInstructions);
+		return;
+	}
+	var y = [];
+	var g = [];
+	var localPath = getLocalPath(originalPath);
+	var c = store.getTiddlerText("SEOTiddlyWikiConfig");
+	var su = store.getTiddlerText("SiteUrl");
+	var st = wikifyPlain("SiteTitle");
+	var sbt = wikifyPlain("SiteSubtitle");
+	var htmlPath = localPath.substr(0,localPath.lastIndexOf("\\"));
+	var tiddlers = store.getTiddlers("modified","excludeSearch");
+	g.push('<url><loc>' + su.htmlEncode() + '</loc></url>');
+	y.push(su.htmlEncode());
+	for (var t=0; t<tiddlers.length; t++) {
+		var content = c;
+		var filename = tiddlers[t].title.htmlEncode();
+		filename = filename.toLowerCase();
+		filename = filename.replace(/ |\/|@/gi, '-');
+		filename = filename.replace(/(-)\1+/gi, '$1');
+        	content = content.replace(/SITE_TITLE/gi, st.htmlEncode());
+        	content = content.replace(/SITE_SUBTITLE/gi, sbt.htmlEncode());
+        	content = content.replace(/TIDDLER_TITLE/gi, tiddlers[t].title.htmlEncode());
+		content = content.replace(/TIDDLER_URL/gi, su.htmlEncode() + '#' + String.encodeTiddlyLink(tiddlers[t].title));
+        	content = content.replace(/TIDDLER_KEYWORDS/gi, tiddlers[t].tags.join(',').htmlEncode());
+        	content = content.replace(/TIDDLER_CONTENT/gi, wikifyStatic(tiddlers[t].text,null,tiddlers[t]).htmlEncode());
+        	content = content.replace(/&lt;/gi, '<');
+        	content = content.replace(/&gt;/gi, '>');
+        	content = content.replace(/&quot;/gi, '"');
+		var d = tiddlers[t].modified.getFullYear() + '-';
+		if (tiddlers[t].modified.getMonth() + 1 < 10) d = d + '0';
+		d = d + (tiddlers[t].modified.getMonth() + 1) + '-';
+		if (tiddlers[t].modified.getDate() < 10) d = d + '0';
+		d = d + tiddlers[t].modified.getDate();
+		for (var ta=0; ta<tiddlers[t].tags.length; ta++) {
+			var tag = tiddlers[t].tags[ta].toLowerCase();
+			g.push('<url><loc>' + su.htmlEncode() + escape(tag) + '/' + escape(filename) + '.htm' + '</loc><lastmod>' + d + '</lastmod></url>');
+			y.push(su.htmlEncode() + escape(tag) + '/' + escape(filename) + '.htm');
+			saveFile(htmlPath + '\\' + tag + '\\' + filename + '.htm', convertUnicodeToUTF8(content));
+		}
+	}
+	saveFile(htmlPath + '\\urllist.txt', convertUnicodeToUTF8(y.join('\n')));
+	saveFile(htmlPath + '\\sitemap.xml', '<?xml version="1.0" encoding="utf-8"?><urlset xmlns="http://www.google.com/schemas/sitemap/0.84">\n' + convertUnicodeToUTF8(g.join('\n')) + '</urlset>');
+	displayMessage('SEO files created', '');
+}</pre>
+</div>

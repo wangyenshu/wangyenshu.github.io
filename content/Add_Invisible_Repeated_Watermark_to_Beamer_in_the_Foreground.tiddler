@@ -1,0 +1,18 @@
+<div title="Add Invisible Repeated Watermark to Beamer in the Foreground" modifier="Wang Yanshu" created="202503222120" modified="202503222121" tags="latex watermark beamer">
+<pre>{{{
+\usepackage{tikz}
+\usetikzlibrary{calc}
+
+ \AddToHook{shipout/foreground}{%
+   \begin{tikzpicture}[remember picture, overlay, rotate=30]
+     % Adjust loop ranges and multipliers (here 5cm) to fill your poster
+     \foreach \i in {-40,...,40} {
+       \foreach \j in {-40,...,40} {
+         \node[red, scale=0.5, opacity=0.01] 
+           at ($(current page.center)+(\i*1.25cm,\j*1.25cm)$) {© Yanshu Wang};
+       }
+     }
+   \end{tikzpicture}%
+ }
+}}}</pre>
+</div>

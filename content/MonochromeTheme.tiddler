@@ -1,0 +1,258 @@
+<div title="MonochromeTheme" modifier="Wang Yanshu" created="202412180849">
+<pre>/***
+|Description  |Monochrome Theme for ~TiddlyWiki|
+|Author       |Design and CSS by Saq Imtiaz; packing into a theme, updates by Yakov Litvin|
+|Version      |1.1|
+|Source       |https://yakovl.github.io/TiddlyThemes/themes/monochrome.html#MonochromeTheme|
+|~PageTemplate|##PageTemplate|
+|~StyleSheet|##StyleSheet|
+***/
+!PageTemplate
+<!--{{{-->
+<div id='header' class='header' macro='gradient vert #555555 #3b3b3b'>
+	<div class='siteTitle' refresh='content' tiddler='SiteTitle'></div>
+	<span id='topMenu' refresh='content' tiddler='MainMenu'></span>
+</div>
+<div id='sidebar'>
+	<div id='sidebarOptions' refresh='content' tiddler='SideBarOptions'></div>
+	<div id='sidebarTabs' refresh='content' force='true' tiddler='SideBarTabs'></div>
+</div>
+<div id='displayArea'>
+	<div id='messageArea'></div>
+	<div id='tiddlerDisplay'></div>
+</div>
+<!--}}}-->
+	
+!StyleSheet
+/*{{{*/
+body {
+	font-family: Verdana, Helvetica, sans-serif;
+	font-size: 12px;
+}
+/* .title: same as body, denser than elements below */
+#header, h1, h2, h3, h4, h5, h6 {
+	font-family: Arial, Helvetica, sans-serif;
+}
+
+
+body { background:#3B3B3B; color:#C3C3C3;}
+
+#header {padding: 0em 0em 0em 0em; background:transparent;	font-size:12px;}
+
+.siteTitle {
+padding-top:5px;
+float:left;
+font-weight: bold;
+font-size: 32px;
+color: #ccc; margin-right:2em;margin-left:0.5em;
+}
+
+#topMenu br {display:none;}
+#topMenu a, #topMenu .tiddlyLink, #topMenu .button {margin:0em; color:#666; padding:15px 15px 10px 15px;padding-top:1.6em;border:none; border-right: 1px solid #666;float:left;}
+#topMenu {border-left: 1px solid #666;  float:left;margin:0;}
+#topMenu a:hover {color:#ccc; background:#3b3b3b;}
+
+#displayArea {margin-left:1.35em; margin-right:17.65em; margin-top:0.5em; padding-top:1em; padding-bottom:10px;}
+
+.tiddler {
+	background:#454545; margin-bottom:20px; padding:1em 2em 1em 2em;}
+
+a, a:hover {
+color:#fff;
+text-decoration: none; background:transparent;
+}
+
+.viewer a, .viewer a:hover {
+	border-bottom:1px dotted #fff; font-weight:normal;}
+
+.button { border: none; }
+.viewer .button, .editorFooter .button {
+color: #fff;
+border: 1px solid #fff;
+}
+
+.viewer .button:hover, .editorFooter .button:hover,
+.viewer .button:active, .editorFooter .button:active,
+.viewer .highlight, .editorFooter .highlight {
+color: #fff;
+background: #3B3B3B;
+border-color: #3B3B3B;
+}
+
+.title {color:#ccc; font-size:1.5em;}
+
+.subtitle, .subtitle a { color: #777; font-size: 0.95em;margin:0.2em;}
+.shadow .title{color:#777;}
+
+.toolbar {font-size:90%;}
+.selected .toolbar a {color:#666;border:0;}
+.selected .toolbar a:hover {color:#999; background:transparent;border:0;}
+
+.toolbar .button:hover, .toolbar .highlight, .toolbar .marked, .toolbar a.button:active{color:#666;border:0; background:transparent;border:0;}
+
+.tagging, .tagged {
+background-color: #3B3B3B;
+border: 1px solid #555;
+}
+
+.selected .tagging, .selected .tagged {
+background-color: 	#3B3B3B;
+border: 1px solid #666;
+}
+
+.tagging .listTitle, .tagged .listTitle {
+color: #666;
+}
+
+.selected .tagging .listTitle, .selected .tagged .listTitle {
+color: #aaa;
+}
+
+.tagging .button, .tagged .button {
+color: #999;
+}
+.selected .tagging .button, .selected .tagged .button {
+color:#c3c3c3;
+}
+
+.highlight, .marked {background:transparent; color:#000; border:none; text-decoration:underline;}
+
+.tagging .button:hover, .tagged .button:hover, .tagging .button:active, .tagged .button:active {
+border: none; background:transparent; color:#eee;
+}
+
+#sidebarOptions {margin-top:1em;}
+#sidebar {margin-right:1.35em;}
+
+#sidebarOptions a, #sidebarOptions a:hover{border:none;color:#666;}
+#sidebarOptions a:hover, #sidebarOptions a:active {background:#454545; color:#ccc;}
+#sidebarTabs .tabContents {background:#454545;border:0px solid #666; border-right:1px solid #454545;}
+#sidebarOptions input {background:#ccc; border:1px solid #666;}
+
+#sidebarTabs .tabContents .tiddlyLink, #sidebarTabs .tabContents .button{color:#666;font-weight:normal;}
+#sidebarTabs .tabContents .tiddlyLink:hover, #sidebarTabs .tabContents .button:hover {color:#ccc; background:transparent;}
+.listTitle {color:#777;}
+
+#sidebarTabs .tabSelected,#sidebarTabs .tabSelected:hover{background:#454545;border:none;color:#ccc; border:1px solid #454545;}
+#sidebarTabs .tabUnselected{background:#3B3B3B; border:1px solid #454545; color:#666;}
+
+#sidebarTabs .txtMoreTab .tabSelected,
+#sidebarTabs .txtMoreTab .tab:hover,
+#sidebarTabs .txtMoreTab .tabContents {
+color: #ccc;
+background: #3B3B3B; border:1px solid #3B3B3B;
+}
+
+#sidebarTabs .txtMoreTab .tabUnselected {
+color: #777; border:1px solid #3B3B3B;
+background: #454545;
+}
+
+#sidebarTabs .tabContents .button:hover,
+#sidebarTabs .tabContents .highlight,
+#sidebarTabs .tabContents .marked,
+#sidebarTabs .tabContents a.button:active {color:#ccc; background:transparent;}
+
+#sidebarOptions .sliderPanel {
+background: #454545; font-size: .9em;
+}
+
+#sidebarOptions .sliderPanel input {border:1px solid #666; background:#ccc;}
+#sidebarOptions .sliderPanel .txtOptionInput {border:1px solid #666;width:9em;}
+
+#sidebarOptions .sliderPanel a {font-weight:normal; color:#666;background-color: #454545; border-bottom:1px dotted #222;}
+
+#sidebarOptions .sliderPanel a:hover {
+color:#ccc;
+background-color: #454545;
+border:none;
+border-bottom:1px dotted #000;
+}
+
+.popup {
+background: #3B3B3B;
+border: 1px solid #454545;
+}
+
+.popup li.disabled {
+color: #000;
+}
+
+.popup li a, .popup li a:visited {
+color: #777;
+border: none;
+}
+
+.popup li a:hover {
+background: #3b3b3b;
+color: #c3c3c3;
+border: none;
+}
+.popup hr {
+	color: #777;
+	background: #777;
+	border-bottom: 1px;
+}
+
+.listBreak div {
+	border-bottom: 1px solid #777;
+}
+
+#messageArea {
+border: 4px dotted #ccc;
+background: #454545;
+color: #777;
+font-size:90%;
+}
+
+#messageArea .button {
+color: #3B3B3B;
+background:#ccc;
+border: 1px solid #ccc;
+}
+#messageArea .button:hover {
+color: #ccc;
+background: #3B3B3B;
+border-color: #3B3B3B;
+}
+
+.viewer blockquote {
+border-left: 5px solid 		#3B3B3B; background:#3B3B3B
+}
+
+.viewer table, .viewer td, .viewer th, thead td {
+border: 1px solid #222;
+}
+.viewer th, thead td {
+background: #3B3B3B;
+color: #ccc;
+}
+
+.viewer pre {
+border: 1px solid #3b3b3b;
+background: #555;
+}
+
+.viewer code {
+color: #c3c3c3;
+background: #555;
+}
+
+.viewer hr {
+border-top: dashed 1px #222; margin:0 1em;
+}
+
+h1,h2,h3,h4,h5,h6 { color: #ccc; background: transparent; padding-bottom:2px; }
+h1 {font-size:18px;}
+h2 {font-size:16px;}
+h3 {font-size: 14px;}
+
+.editor input {
+border: 1px solid #ccc; margin-top:5px;
+}
+
+.editor textarea {
+border: 1px solid #ccc;
+}
+/*}}}*/</pre>
+</div>

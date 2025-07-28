@@ -1,0 +1,60 @@
+<div title="BookmarkViewTemplate" modifier="ELSDesignStudios" created="200707100220" modified="200802121743" tags="BookmarkPackage template IFramePackage">
+<pre><!--{{{-->
+<!--
+|Name|BookmarkViewTemplate|
+|Source|http://www.TiddlyTools.com/#BookmarkViewTemplate|
+|Version||
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|template|
+|Requires|WikifyPlugin, TaggedTemplateTweak|
+|Description|custom template used to display tiddlers tagged with "Bookmark"|
+
+Usage:
+Create a tiddler tagged with "bookmark" (or "Bookmark") and enter URL, description and author using a 'slice table':
+	|URL:|Enter a URL|
+	|Description:|enter a description|
+	|Author:|enter author/moderator info|
+-->
+<span class='toolbar' macro='toolbar [[ToolbarCommands::ViewToolbar]]'></span>
+<span class='title' macro='view title'></span>
+<span class='subtitle' style='white-space:nowrap' macro='view modified date [[DDD, MMM DDth YYYY]]'></span>
+<div class='tagClear'></div>
+<div class='viewer'>
+	<div class='floatleft' macro='wikify "{{big{[[%0|%1]]}}}<br>" here::Description here::URL'></div>
+	<div class='toolbar'>
+		<a class='button' href='javascript:;'
+			onclick='window.history.go(-1);' title='go back one page'>back</a>
+		<a class='button' href='javascript:;'
+			onclick='window.history.go(+1);' title='go foward one page'>forward</a>
+		<a class='button' href='javascript:;'
+			onclick='var f=this.parentNode.parentNode.getElementsByTagName("iframe")[0];
+			f.src=f.src'
+			title='reload current page'>reload</a>
+		<a class='button' href='javascript:;'
+			onclick='var f=this.parentNode.parentNode.getElementsByTagName("iframe")[0];
+				var w=prompt("Enter a new frame width (use px, em, cm, in, or %)","100%");
+				if (!w||!w.length) return; if (!w.replace(/[0-9]*/,"").length) w+="px";
+				f.style.width=w;'
+			title='set frame width'>width</a>
+		<a class='button' href='javascript:;'
+			onclick='var f=this.parentNode.parentNode.getElementsByTagName("iframe")[0];
+				var h=prompt("Enter a new frame height (use px, em, cm, or in)","500");
+				if (!h||!h.length) return; if (!h.replace(/[0-9]*/,"").length) h+="px";
+				f.style.height=h;'
+			title='set frame height'>height</a>
+		<a class='button' href='javascript:;'
+			onclick='var f=this.parentNode.parentNode.getElementsByTagName("iframe")[0];
+				var show=f.style.display=="none";
+				f.style.display=show?"block":"none";
+				this.innerHTML=show?"hide":"show";'
+			title="toggle display of this frame (but DON'T reload content)">hide</a>
+	</div><div class='tagClear'
+		macro='wikify [[<html><iframe src="%0" height="500" width="100%" style="background:#fff"></iframe></html>]] here::URL'>
+	</div>
+	<div macro='view text wikified'></div>
+</div>
+<!--}}}-->
+</pre>
+</div>

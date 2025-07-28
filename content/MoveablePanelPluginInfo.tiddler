@@ -1,0 +1,110 @@
+<div title="MoveablePanelPluginInfo" modifier="ELSDesignStudios" created="200801081406" modified="201012250606" tags="pluginInfo moveable MoveablePanelPackage">
+<pre>/***
+|Name|MoveablePanelPluginInfo|
+|Source|http://www.TiddlyTools.com/#MoveablePanelPlugin|
+|Documentation|http://www.TiddlyTools.com/#MoveablePanelPluginInfo|
+|Version|3.0.3|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|plugin|
+|Description|documentation for MoveablePanelPlugin|
+Adds move/resize mouse handling plus fold/unfold, hover/scroll, and close/dock buttons to any rendered tiddler content, page element, or [[floating slider panel|NestedSlidersPlugin]].
+!!!!!Usage
+<<<
+Please see [[MoveablePanelPackage]] for a general overview of features as well as information about other plugins and tiddlers associated with installation and use of moveable panels.
+{{{
+<<moveablePanel>>
+<<moveablePanel undocked fold hover noclose nodock manager name:... width:... height:...>>
+
+<<moveablePanel move label:... prompt:... name:... top:... left:...>>
+
+<<moveablePanel jump label:... prompt:... name:... >>
+<<moveablePanel jump label:... prompt:... top:... left:... >>
+
+<<moveablePanel dock label:... prompt:... name:... >>
+<<moveablePanel dock label:... prompt:... all>>
+}}}
+Without any parameters, the {{{<<moveablePanel>>}}} simply adds the 'moveable panel' mouse handling and button commands to a containing element that has been marked with a CSS class of 'moveablePanel' (e.g., """{{moveablePanel{...}}}""") or 'floatingPanel' (created by [[NestedSlidersPlugin]]) .  If no containing 'moveablePanel' or 'floatingPanel' element is located, the panel handlers are added directly to the element in which the macro is contained.
+
+__Optional macro parameters are:__
+*''undocked''<br>by default, a moveable panel is rendered inline ('docked'), and only floats in front of other content ('undocked') after the user has moved it from it's 'anchor point'.  The ''undocked'' keyword indicates that the panel should be be immediately 'undocked' and brought to the front of the 'stack' of undocked panels as soon as it is rendered.
+*''fold''<br>adds the fold/unfold (-/+) button
+*''hover''<br>adds the hover/scroll (^/=) button
+*''noclose''<br>supresses the close (X) button
+*''nodock''<br>supresses the dock (&radic;) button
+*''manager''<br>forces the Panel Manger button to always appear in the panel, regardless of the option setting (see below)
+*''name:...''<br>specifies a unique identifier for the panel, to be used by the ''menu'', ''move'', ''jump'', or ''dock'' functions described below, as well as by the (optional) [[PanelManagerPlugin]] to create //panel maps// that track and record the size and position of named panels, so that they can remain where you put them, even in between browser sessions.
+*''width:...''<br>specifies a fixed-width for the panel (using CSS dimensions).  This prevents horizontal resizing.
+*''height:...''<br>specifies a fixed-height for the panel (using CSS dimensions).  This prevents vertical resizing.
+
+In addition to adding panel handlers to a containing element, the macro can also be used to invoke several panel-specific actions, either immediately, or by clicking on an embedded command link:
+*''dock''<br>returns a named panel to it's original anchor point.
+*''jump''<br>scrolls the window to view a named panel or go to the specified (top,left) location on the page.  To dock all panels at once, the ''all'' keyword can be used instead of specifying a ''name:...'' parameter.
+*''move''<br>moves the named panel to the specified (top,left) location on the page.
+Note: when using ''dock'', ''jump'', or ''move'', if the ''label:...'' parameter is omitted, the action is performed immediately upon rendering the macro.  Otherwise, a command link is created using the specified ''label:...'' and (optional) ''prompt:...'' values.
+
+__Mouse handling:__
+When the mouse is just inside the edges of a moveable panel, the cursor will change to 'crossed-arrows'.  Grab (click-hold) the panel anywhere in the edge area and then drag the mouse to reposition it.  To resize the panel, hold the ''shift'' key before grabbing the panel: the cursor will change to a 'double-arrow' resizing symbol.  Drag a side edge of the panel to stretch horizontally or vertically, or drag a corner of the panel to stretch in both dimensions at once.  Double-clicking the edge of a panel resets it to its original 'docked' size and location.  Clicking (anywhere) in a moveable panel brings it to the top of the 'zIndex' stack (if overlapping with other panels).  Shift-click (along an edge) sends the panel to the back.
+
+__Panel buttons:__
+When the mouse is anywhere over a panel (not just near the edge), a special 'panel menu' appears in the ''upper right corner'' of the panel, with the following command buttons:
+* &minus;/+ (fold/unfold): ''fold'' temporarily reduces the panel height to just one line.  ''unfold'' restores the panel height.
+*^/= (hover/scroll): ''hover'' causes the panel to remain in view (i.e., 'fixed position') even when scrolling the rest of the page content.  ''scroll'' allows the panel to revert to scrolling with the page content (the usual behavior)
+*X (close): ''close'' hides a panel from the page display.  If you have moved/resized a panel, closing it restores its default position and size.
+*&radic; (dock): When a moveable panel has actually been moved from its default position, the ''close'' command is replaced with ''dock'', which restores the tiddler to its default //non-floating// location on the page.
+*&#x2261; (manager): If [[PanelManagerPlugin]] is installed, this button provides instant access to the entire Panel Manager popup menu and interactive, graphical panel map viewer.
+
+__Adding panel handlers to all tiddlers__
+You can apply {{{<<moveablePanel ...>>}}} to //all// tiddlers by customizing the [[ViewTemplate]] definition to wrap the entire tiddler layout within a span that invokes the macro.  To uniquely name each moveable tiddler panel (i.e., so its position/size will be remembered by the Panel Manager), you can use a 'computed parameter' to dynamically assign the tiddler's title as the value of the 'name:...' parameter, like this:
+{{{
+<div class='moveablePanel'>
+	... rest of tiddler layout template (i.e., everything from the normal ViewTemplate)
+	<div macro='moveablePanel name:{{tiddler?tiddler.title:""}} height:auto'></div>
+</div>
+}}}
+//Note: reference to 'tiddler.title' in this way requires installation of TiddlyTools'// [[CoreTweaks##444]] or use of TW2.5 (not yet available)
+<<<
+!!!!!Configuration
+<<<
+<<option chkMoveablePanelShowManager>> automatically add<<moveablePanel menu label:[[Panel Manager Popup Menu]]>>in undocked panels
+{{{<<option chkMoveablePanelShowManager>>}}}
+<<option chkMoveablePanelShowStatus>> show position/size while moving/resizing a panel
+{{{<<option chkMoveablePanelShowStatus>>}}}
+<<<
+!!!!!Revisions
+<<<
+2010.12.24 3.0.4 fixed findMouseX/findMouseY for webkit browsers
+2008.12.24 3.0.3 added ESC key handling to cancel panel move/size (restores previous panel state)
+2008.12.20 3.0.2 addGhost()/clearGhost(): shows panel outline during move/size (prevents document from shrinking until move/size is done)
+2008.12.15 3.0.1 handling for 'hovered' elements: adjust for fixed vs. absolute (no relative offsets, no scroll offsets), translate movement to top-left screen, restrict movement within screen bounds
+2008.12.10 3.0.0 total rewrite: extensive code refactoring and improved event handling for cross-browser compatibility, manage zIndex 'stacking' of panels, added shadow tiddler for customizable CSS, named panels, macro commands for embedding jump, dock, or move command links, complete I18N/L10N-readiness, {{{ensureVisible()}}} 'fixups' for horizontal scrolling, and hooks for optional [[PanelManagerPlugin]] (panel map 'memory' and interactive graphical viewers)
+2008.11.17 2.6.0 added optional 'height:...' and 'width:...' macro params for fixed size dimensions (use 'height:auto' for moveable tiddlers).  Added CSS for moveablePanelMenu and moveablePanelButton styles (for easier customization)
+2008.11.16 2.5.2 small fixes to mouseover/isEdge() handling.  some code cleanup as well
+2008.11.15 2.5.1 changed stored panel data format to be compatible with Project Cecily map format (space-separated, strip decimals and 'px').  Also, moved slider-specific adjustPanel() logic into [[NestedSlidersPlugin]].
+2008.11.12 2.5.0 more major code changes (lots of event handling fixes and code refactoring)
+2008.11.09 2.4.0 major re-write to fix mouse event handling issues and isEdge() logic for nested moveable panels
+2008.11.06 2.3.0 added CLICK/SHIFT-CLICK for 'move to top / return to stack' panel zIndex handling
+2008.11.03 2.2.0 automatically store/recall position/size of named panels using a cookie and/or tiddler
+2008.09.11 2.1.2 corrected caching of transient attribute (use =='true' to convert string to boolean)
+2008.01.08 [*.*.*] plugin size reduction: documentation moved to ...Info tiddler
+2007.12.30 2.1.0 added 'noedges' option for alternative 'grab handles' (top=move, bottom-right=resize)
+2007.12.17 2.0.0 code reduction and feature cleanup: when the macro is not in a floating panel, it will make it's containing element moveable.  Removed 'maximize' functionality (which was badly broken), and replaced it with 'double-click=DOCK' (resets size/position without hiding panel). Use hasClass() test function to allow additional classes to be used with moveable floating panels (to apply extra custom CSS styles).
+2007.06.10 1.3.7 in handler(), mouse event handlers now use apply() to correctly invoke any previous mouse handler functions.  Also, clear the existing 'snap panel back to button location' mouseover/out event handlers for floating panels (defined by NestedSlidersPlugin).  Extends fix from v1.3.5. 
+2007.06.08 1.3.6 in getPanel(), remove unneeded check for 'moveable' tag.  Also, added support for 'noclose' macro param, and updated documentation accordingly.
+2007.06.02 1.3.5 in handler(), remove onmouseover handler from NestedSlider button elements, to prevent automatic 'snap to original location' behavior.  This allows *moveable* floating panels to maintain their placement when they have been manually re-positioned.  This change is made for compatibility with [[NestedSlidersPlugin]] use of onmouseover (see entry for version 2.0.4)
+2006.10.17 1.3.4 when moving panel, adjust position for relative containing DIV
+2006.05.25 1.3.3 in closePanel(), use p.button.onclick() so that normal processing (updating slider button tooltip, access key, etc.) is performed
+2006.05.11 1.3.2 doc update
+2006.05.11 1.3.1 re-define all functions within moveablePanel object (eliminate global window.* function definitions (and some 'leaky closures' in IE)
+2006.05.11 1.3.0 converted from inline javascript to true plugin
+2006.05.09 1.2.3 in closePanel(), set focus to sliderpanel button (if any)
+2006.05.02 1.2.2 in MoveOrSizePanel(), calculate adjustments for top and left when inside nested floating panels
+2006.04.06 1.2.1 in getPanel(), allow redefinition or bypass of 'moveable' tag (changed from hard-coded 'tearoff')
+2006.03.29 1.2.0 in getPanel(), require 'tearoff' tag to enable floating tiddlers
+2006.03.13 1.1.0 added handling for floating tiddlers and conditional menu display
+2006.03.06 1.0.2 set move or resize cursor during mousetracking
+2006.03.05 1.0.1 use 'window' vs 'document.body' so mousetracking in FF doesn't drop the panel when moving too quickly
+2006.03.04 1.0.0 Initial public release
+<<<</pre>
+</div>

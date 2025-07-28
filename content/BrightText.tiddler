@@ -1,0 +1,169 @@
+<div title="BrightText" modifier="ELSDesignStudios" created="200511221009" modified="200705310158" tags="CSS ThemePackage">
+<pre>/***
+|Name|BrightText|
+|Source|http://www.TiddlyTools.com/#BrightText|
+|Version|1.0.0|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|CSS|
+|Description|adjust font colors for use with dark backgrounds|
+***/
+
+/* background images */
+/* colors and borders */
+a, .button { color:#ccf; }
+a:hover, .button:hover { color:#fff; }
+
+#breadCrumbs { color:#ccc; }
+#breadCrumbs a { color:#ccf; }
+#titleLine { color: #fff; }
+#titleLine a { color: #009900; }
+.siteMenu { color: #fff; border:0;  }
+.siteMenu a, .siteMenu .button, .siteMenu .tiddlyLink { color: #ccf; }
+.storyMenu { color: #fff; border:0; }
+.storyMenu a, .storyMenu .button, .storyMenu .tiddlyLink { color: #ccf; }
+/*
+#mainMenu { color: #fff; }
+#mainMenu .tiddlyLink { color: #def; }
+#mainMenu .tiddlyLink:hover { color: #fff; }
+#mainMenu .externalLink { color: #def; }
+#mainMenu .externalLink:hover { color: #fff; }
+#mainMenu .button, #mainMenu A { color: #def; }
+#mainMenu .button:hover, #mainMenu A:hover { color: #fff; }
+*/
+#messageArea { color: #006; }
+#messageArea a:link, #messageArea a:visited { color: #006; }
+#messageArea a:hover { color: #f00; }
+#messageArea a:active { color: #006; }
+#popup { color: #000; }
+#popup a { color: #006; }
+#popup .viewer a { color: #ccf; }
+#popup a:hover { color: #006; }
+#popup .viewer a:hover { color: #fff; }
+#popup hr { color: #666; }
+.tabContents { color: #000; }
+.tiddler .button { color: #ccf; }
+.tiddler .button:hover { color: #fff; }
+.tiddler .button:active { color: #fff; }
+.title { color: #def; }
+.subtitle { color: #89a; }
+.toolbar { color: #aaa; }
+.footer { color: #888; }
+.selectedTiddler .footer { color: #ddd; }
+.annotation { color:#ddd; }
+.annotation a:link, .annotation a:visited { color: #ccf; }
+.annotation a:hover { color: #fff; }
+.viewer { color: #fff; }
+.viewer a:link, .viewer a:visited { color: #ccf; }
+.viewer a:hover { color: #fff; }
+.viewer .button { color: #def; }
+.viewer .button:hover { color: #fff; }
+.viewer th { color: #fff; }
+.viewer td { color: #fff; }
+.viewer code { color: #ccc; }
+.viewer pre { color: #000; }
+.viewer hr { color: #666; }
+.viewer .highlight, .viewer .marked { color: #fff; }
+.viewer .tabSelected { background-color: #002; color:#fff; border-color:#999; border-width:1px; padding-bottom:1px !important; }
+.viewer .tabUnselected { background-color: transparent; color:#999; border-color:#666}
+.viewer .tabContents { background-color: #002; color:#fff; border-color:#999; border-width:1px }
+.tagging a, .tagged a, .tagging .button, .tagged .button  { color: #009; }
+.highlight, .marked { color: #fff; }
+.lowlight a { color: #009 !important; }
+.editor { color: #402C74; }
+.editorFooter { color: #aaa; }
+.editorFooter A { color: #930; }
+.editorFooter A:hover { color: #cf6; }
+.editorFooter A:active { color: #fff; }
+#licensePanel A { color: #66f; }
+#licensePanel A:hover { color: #fff; }
+#licensePanel A:active { color: #fff; }
+.errorNoSuchMacro { color: #ff0; }
+.zoomer { color: #fff; }
+
+.mouseover 
+	{color:#336 !important;}
+.mouseover a
+	{color:#336 !important;}
+.selected .mouseover
+	{color:#ccf !important;}
+.selected .mouseover .button, .selected .mouseover a
+	{color:#ccf !important;}
+
+.selected .mouseover .moveablePanelButton
+	{color:#000 !important;}
+
+.floatingPanel .button,
+.floatingPanel a:link,
+.floatingPanel a:hover,
+.floatingPanel a:visited,
+.selected .floatingPanel .button,
+.selected .floatingPanel a:link,
+.selected .floatingPanel a:hover,
+.selected .floatingPanel a:visited,
+.toolbar .floatingPanel .button,
+.toolbar .floatingPanel a:link,
+.toolbar .floatingPanel a:hover,
+.toolbar .floatingPanel a:visited,
+.viewer .floatingPanel .button,
+.viewer .floatingPanel a:link,
+.viewer .floatingPanel a:hover,
+.viewer .floatingPanel a:visited {
+	color: #009 !important;
+}
+.floatingPanel .viewer .button,
+.floatingPanel .viewer a:link,
+.floatingPanel .viewer a:visited {
+	color: #ccf !important;
+}
+.floatingPanel a:hover,
+.viewer .floatingPanel a:hover {
+	color: #fff !important;
+}
+/***
+----
+***/
+/*{{{*/
+.attachPanel a, #importPanel a, #exportpanel a,
+.attachPanel .button, #importPanel .button, #exportpanel .button,
+.attachPanel .tiddlyLinkExisting, #importPanel .tiddlyLinkExisting, #exportpanel .tiddlyLinkExisting,
+.attachPanel .tiddlyLinkNonExisting, #importPanel .tiddlyLinkNonExisting, #exportpanel .tiddlyLinkNonExisting,
+.tab .button, .tab A,
+.tab .tiddlyLinkExisting, .tab .tiddlyLinkNonExisting
+	{ color:#009 !important; }
+#sidebarOptions, #sidebarOptions .sliderPanel
+	{ color: #fff; }
+#sidebarOptions .button, #sidebarOptions A,
+#sidebarOptions .tiddlyLinkExisting, #sidebarOptions .tiddlyLinkNonExisting,
+#sidebarOptions .sliderPanel .button, #sidebarOptions .sliderPanel A,
+#sidebarOptions .sliderPanel .tiddlyLinkExisting, #sidebarOptions .sliderPanel .tiddlyLinkNonExisting
+	{ color: #def; }
+#sidebarTabs, #sidebarTabs .sliderPanel, #sidebarTabs .tabContents
+	{ color: #fff; }
+#sidebarTabs .tabContents *[class="TOCList"] /* MOZ ONLY */
+	{ color:#fff !important; }
+#sidebarTabs .button, /* #sidebarTabs A, */
+#sidebarTabs .tiddlyLinkExisting, #sidebarTabs .tiddlyLinkNonExisting
+	{ color: #def; }
+.menubox
+	{ color:#fff; border-color:#999; }
+.menubox .button, .menubox .tiddlyLinkExisting, .menubox .tiddlyLinkNonExisting
+	{ color:#99f !important; }
+.QOTD
+	{ color:#fff !important; background:inherit !important; }
+.groupbox, .groupbox table, .groupbox tbody, .groupbox tr, .groupbox td
+	{ color:#000; }
+.groupbox a, .groupbox .button, .groupbox .tiddlyLinkExisting, .groupbox .tiddlyLinkNonExisting
+	{ color:#009 !important; }
+.outline
+	{ border-color:#999; }
+.floatingPanel, .floatingPanel table, .floatingPanel tbody, .floatingPanel tr, .floatingPanel td
+	{ color:#000; }
+.toolbar {color:#336 !important;}
+.toolbar a {color:#336 !important;}
+.selected .toolbar { color:#999 !important; }
+.selected .toolbar a {color:#ccf !important;}
+.selected .toolbar a:hover {color:#fff !important; }
+/*}}}*/</pre>
+</div>

@@ -1,0 +1,20 @@
+<div title="DisplayOptions" modifier="acarvalho" created="201304241626" modified="201304242233" tags="System" _hash="9a56b5d1e89d3dad73e90bcb0a33ecaa20789f8b">
+<pre>! Display and Navigation Options
+
+//Display and navigation options for this space//
+
+<<option chkEnableTabsBar>> Tabbed navigation
+<<option chkShowBreadcrumbs>> Show Breadcrumbs
+<<option chkSinglePageMode>> Display one tiddler at a time
+><<option chkSinglePagePermalink>> Automatically permalink current tiddler
+><<option chkSinglePageKeepFoldedTiddlers>> Don't close tiddlers that are folded
+><<option chkSinglePageKeepEditedTiddlers>> Don't close tiddlers that are being edited
+<<option chkTopOfPageMode>> Open tiddlers at the top of the page
+<<option chkBottomOfPageMode>> Open tiddlers at the bottom of the page
+<<option chkSinglePageAutoScroll>> Automatically scroll tiddler into view (if needed)
+
+----
+@@color:#c4d6ed; ^^
+Description: Display and navigation options for this space
+^^@@</pre>
+</div>

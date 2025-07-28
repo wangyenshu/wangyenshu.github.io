@@ -1,0 +1,22 @@
+<div title="Sagemath in Docker" modifier="Wang Yanshu" created="202503081742" modified="202503100358" tags="memo sagemath">
+<pre>Run a container with a shared folder:
+{{{
+docker run --mount type=bind,source=<host-path>,target=<container-path> -it --name <container-name> <image_name>
+}}}
+Show all containers:
+{{{
+docker ps -a
+}}}
+Load files:
+{{{
+sage:load('<file-name>')
+}}}
+Start existent container
+{{{
+docker start <container-id>
+}}}
+Run command inside a container
+{{{
+docker exec -it <container-id> <command>
+}}}</pre>
+</div>

@@ -1,0 +1,27 @@
+<div title="Math Feed" modifier="Wang Yanshu" created="202503141747">
+<pre><<rssReader "https://feeds.feedburner.com/ymsc/conference/academic">>
+<<rssReader "https://mathmeetings.net/conferences/index.rss">>
+<<rssReader "https://feeds.feedburner.com/ymsc/seminar">>
+<<rssReader "https://kill-the-newsletter.com/feeds/tnzzrqbc34ut2rcbde9h.xml">>
+<<rssReader "https://morss.it/:items=||*[class=page]||ul|li/https://swc-math.github.io/aws/">>
+<<rssReader "https://morss.it/:items=||*[class=page]||ul/https://swc-math.github.io">>
+<<rssReader "https://morss.it/:items=||*[class=calendar-seminars]||td|p/https://www.newton.ac.uk/events/calendar-of-activities/seminars/future/">>
+<<rssReader "https://morss.it/:items=||*[class=card-body]/https://mathinstitutes.org/events">>
+<<rssReader "http://us10.campaign-archive.com/feed?u=6f8674f5d780d2dc591d397c9&id=dbda1af1a5">>
+<<rssReader "https://feeds.feedburner.com/ymsc/minicourse">>
+<<rssReader "https://morss.it/:items=||*[class=Agenda-sujet]/https://www.ihes.fr/en/events/">>
+<<rssReader "https://www.mathprograms.org/db?joblist-0-0----rss--">>
+<<rssReader "https://morss.it/https://www.crmath.ca/en/activities/">>
+<<rssReader "https://www.mpg.de/en/research.rss">>
+<<rssReader "https://morss.it/:items=%7C%7C*[class=tile]/https://www.claymath.org/events/?event-type=research-school">>
+<<rssReader "https://feeds.feedburner.com/cim/conferences">>
+<<rssReader "https://events.berkeley.edu/live/rss/events/group/Mathematics/category/Lectures/header/Mathematics%20Lectures%20Events">>
+<<rssReader "https://morss.it/:items=||*[class=tile-content]/https://www.mathematics.uni-bonn.de/en/events/events-calendar">>
+<<rssReader "https://open.clemson.edu/dissertations_number_theory/recent.rss">>
+<<rssReader "https://feeds.feedburner.com/bicmr">>
+<<rssReader "https://events.berkeley.edu/live/rss/events/group/Mathematics/category/Academic/header/Mathematics%20Academic%20Events">>
+<<rssReader "https://www.ipam.ucla.edu/rss?post_type=news-and-research">>
+<<rssReader "https://feeds.feedburner.com/cim/lecture">>
+<<rssReader "https://feeds.feedburner.com/ymsc/lecture/modernmath">>
+</pre>
+</div>

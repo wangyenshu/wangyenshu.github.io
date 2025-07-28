@@ -1,0 +1,159 @@
+<div title="PasteUpCommands" modifier="ELSDesignStudios" created="201105171931" modified="201109110805" tags="PasetUpPackage translate" _hash="e06a3e9145ff68d1502fe31c30fe13b71f2f4aaa">
+<pre>|Name|[[PasteUpCommands]]|
+|Source|http://www.TiddlyTools.com/#PasteUpCommands|
+|Version|2.1.0|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.5|
+|Type|plugin|
+|Requires|PasteUpPlugin PasteUpHelperPlugin EditSectionPlugin|
+|Description|commands for use with PasteUp documents|
+|See also|PasteUpToolbar StoryMenu|
+!Navigation, Help and Printing (StoryMenu):
+<<<
+!!!contents
+<<tiddler ToggleLeftSidebar with: "&#x25C4;contents" "show/hide main menu" "button nowrap">>
+!!!toggleSidebar
+<<tiddler ToggleRightSidebar with: "sidebar&#x25BA;" "show/hide sidebar functions" "button nowrap">>
+!!!home
+<html><nowiki><a href='javascript:;' class='button nowrap' title='redisplay starting page(s)'
+onclick='story.closeAllTiddlers(); restart(); return false;'>&#x25C4;home</a></html>
+!!!pages
+<<tag pasteup "pages" "view pasteup pages">>
+!!!help
+<html><nowiki><a class='button nowrap' title="Instructions for using this document" onclick="
+	story.displayTiddler(null,'Instructions');
+	return false;
+">help</a></html>
+!!!printall
+<html><nowiki><a class='button nowrap' title="print all pages" onclick="
+	var storyname=store.getTiddlerText('PasteUpConfig::SlideshowList');
+	var list=config.macros.storyViewer.getStory(storyname);
+	if (!list.length) list.push('DefaultPage');
+	story.closeAllTiddlers();
+	story.displayTiddlers(null,list);
+	window.print();
+	return false;
+">print</a></html>
+!!!!!end
+<<<
+!!!Slideshow mode (StoryMenu):
+<<<
+!!!slideshow
+<html><nowiki><a class='button nowrap' title="start/stop automatic slideshow" onclick="
+	if (config.macros.storyViewer.started || this.savedHTML) {
+		this.innerHTML=this.savedHTML; this.savedHTML=null;
+		config.macros.option.propagateOption('chkSlideshow','checked',false,'input');
+		config.macros.storyViewer.started=false;
+		story.refreshAllTiddlers(true);
+	} else {
+		var chk='<input type=\x22checkbox\x22 checked style=\x22margin:0;padding:0;\x22>';
+		this.savedHTML=this.innerHTML; this.innerHTML=chk+this.innerHTML;
+		var storyname=store.getTiddlerText('PasteUpConfig::SlideshowList');
+		var list=config.macros.storyViewer.getStory(storyname);
+		if (!list.length) list.push('DefaultPage');
+		window.readOnly=true;
+		config.macros.option.propagateOption('chkHttpReadOnly','checked',true,'input');
+		config.macros.option.propagateOption('chkSinglePageMode','checked',true,'input');
+		config.macros.option.propagateOption('chkSlideshow','checked',true,'input');
+		config.macros.storyViewer.started=true;
+		story.closeAllTiddlers();
+		story.switchTheme(config.options.txtTheme);
+		store.notifyAll();
+		story.displayTiddler(null,list[0]);
+	}
+	return false;
+">slides</a></html><<tiddler {{
+	var e=place.lastChild.getElementsByTagName('a')[0];
+	if (config.macros.storyViewer.started && e.innerHTML.indexOf('checkbox')==-1) {
+		var chk='<input type=\x22checkbox\x22 checked style=\x22margin:0;padding:0;\x22>';
+		e.savedHTML=e.innerHTML;
+		e.innerHTML=chk+e.innerHTML;
+	}
+'';}}>>
+!!!slideshow_toolbar
+<<storyViewer
+	{{store.getTiddlerText('PasteUpConfig::SlideshowList')}}
+	list allbuttons
+	prompt:{{store.getTiddlerText('PasteUpConfig::SlideshowPrompt')}}>>/%
+%/<<storyViewer
+	{{store.getTiddlerText('PasteUpConfig::SlideshowList')}}
+	timer:{{store.getTiddlerText('PasteUpConfig::SlideshowTimer')}}>>
+!!!!!end
+<<<
+!Editing (StoryMenu):
+<<<
+!!!toggleEdit
+<html><nowiki><span class="button nowrap" style="cursor:pointer"
+	title="enable/disable editing of this document"
+	onclick="this.getElementsByTagName('input')[0].click();">
+<input type='checkbox' style="margin:0;padding:0;cursor:pointer" onclick="
+	window.readOnly=!this.checked;
+	config.macros.option.propagateOption('chkHttpReadOnly','checked',window.readOnly,'input');
+	config.macros.option.propagateOption('chkSinglePageMode','checked',window.readOnly,'input');
+	config.macros.option.propagateOption('chkSlideshow','checked',false,'input');
+	config.macros.storyViewer.started=false;
+	if (!config.extensions.tiddlyspace) { // DON'T HIDE BACKSTAGE FOR TIDDLYSPACE
+		window.showBackstage=!window.readOnly;
+		if(showBackstage && !backstage.area) backstage.init();
+		backstage.button.style.display=showBackstage?'block':'none';
+		backstage.hide();
+	}
+	story.switchTheme(config.options.txtTheme); store.notifyAll(); story.refreshAllTiddlers(true);
+	return false;
+">edit</span></html><<tiddler {{
+	var e=place.lastChild.getElementsByTagName('input')[0];
+	e.checked=!window.readOnly;
+'';}}>>
+!!!unsavedChanges
+{{nowrap{<<unsavedChanges command "%0 unsaved change%2">>}}}
+!!!undo
+{{nowrap{<<undo label:"undo">>}}}
+!!!save
+{{nowrap{<<saveChanges "save" "save changes to this document">>}}}
+!!!autosave
+{{nowrap button{<<option chkAutoSave>>autosave}}}
+!!!saveAs
+{{nowrap{<<saveAs "label:save as">>}}}
+!!!download
+<html><nowiki><a class="button nowrap" href="" title="download a local copy of this document" onmouseover="
+	if (config.extensions.tiddlyspace)
+		this.href='/?download='+config.extensions.tiddlyspace.currentSpace.name+'.html';
+	else
+		this.href=document.location.href.replace(/^https?/,'ftp');
+">download</a></html>
+!!!setup
+<<slider closed PasteUpConfig##setupmenu
+	"setup" "configure PasteUp settings for this document">>
+!!!!!end
+<<<
+!Editing (MainMenu and PasteUpToolbar)
+<<<
+!!!defaultpage
+<html><nowiki><a class='button nowrap' title="edit default page layout" onclick="
+	story.displayTiddler(null,'DefaultPage');
+	return false;
+">edit default page...</a></html>
+!!!addpart
+<html><nowiki><a class='button nowrap' title="add a part to this page" onclick="
+	var here=story.findContainingTiddler(this);
+	var tid=here?here.getAttribute('tiddler'):'';
+	return config.macros.pasteUpHelper.popupPicker(this,event,tid,'part',
+		'create a new part...', 'DefaultPart',
+		'Please enter a part name:', 'or, add an existing part:');
+">add a part...</a></html>
+!!!addpage
+<html><nowiki><a class='button nowrap' title="create a new pasteup page" onclick="
+	return config.macros.pasteUpHelper.popupPicker(this,event,null,'pasteup',
+		'create a new page...',	'DefaultPage',
+		'Please enter a page name:', 'or, copy an existing page:');
+">add a page...</a></html>
+!!!deletepage
+<html><nowiki><a class='button nowrap' title="delete this pasteup page" onclick="
+	var tid=story.findContainingTiddler(this).getAttribute('tiddler');
+	config.commands.deleteTiddler.handler(event,this,tid);
+	return false;
+">delete this page...</a></html>
+!!!!!end
+<<<</pre>
+</div>

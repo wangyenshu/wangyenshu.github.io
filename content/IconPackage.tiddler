@@ -1,0 +1,11 @@
+<div title="IconPackage" modifier="ELSDesignStudios" created="200707132129" modified="200707162151" tags="IconPackage package story">
+<pre>This package defines a set of small icons appear adjacent to the title of each tiddler and indicate various information about the tiddler, such as whether it has unsaved changes, or has been changed recently, or has been tagged as<<tag Trash>>.  Additional icons indicate important categories of tiddlers (based on tags), such as plugins, scripts, templates, attachments, bookmarks, tasks, etc.
+
+----
+<<tiddler ShowAllIcons>>
+----
+
+{{fine italic{
+Note: this package includes icons that are part of the "Silk" icon set: http://www.famfamfam.com/lab/icons/silk/ containing 1000 16-by-16 pixel icons in PNG format, created by Mark James, a part-time web developer, part-time student currently living in Birmingham, UK, and is licensed under a Creative Commons Attribution 2.5 License. Please visit http://www.famfamfam.com/ for further information and licensing details.}}}
+</pre>
+</div>

@@ -1,0 +1,145 @@
+<div title="ListboxPluginInfo" modifier="ELSDesignStudios" created="200801090449" modified="201003151240" tags="pluginInfo" plugins="AdvancedOptionsPlugin" gender="Male" size="30" color="#0000FF" thing="eenie">
+<pre>|Name|ListboxPlugin|
+|Source|http://www.TiddlyTools.com/#ListboxPlugin|
+|Documentation|http://www.TiddlyTools.com/#ListboxPluginInfo|
+|Version|1.4.1|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|documentation|
+|Description|documentation for ListboxPlugin|
+The {{{<<select>>}}} macro allows you to set tiddler field values by selecting pre-configured enumerated values from a listbox/droplist control.  
+!!!!!Usage
+<<<
+in tiddler content:
+{{{
+<<select fieldname@tiddlername value value value ...
+	rows:nn width:xxx "prompt:..." autoSave allowBlank allowOther allowMultiple>>
+<<select fieldname@tiddlername label=value label=value label=value ...
+	rows:nn width:xxx "prompt:..." autoSave allowBlank allowOther allowMultiple>>
+<<select fieldname@tiddlername =tagvalue allowEdit
+	rows:nn width:xxx "prompt:..." autoSave allowBlank allowOther allowMultiple>>
+<<select fieldname@tiddlername "=tag expression" allowEdit
+	rows:nn width:xxx "prompt:..." autoSave allowBlank allowOther allowMultiple>>
+<<select fieldname@tiddlername +TiddlerName allowEdit
+	rows:nn width:xxx "prompt:..." autoSave allowBlank allowOther allowMultiple>>
+<<select fieldname@tiddlername *TiddlerName allowEdit
+	rows:nn width:xxx "prompt:..." autoSave allowBlank allowOther allowMultiple>>
+}}}
+in a custom [[EditTemplate]] or [[ViewTemplate]]:
+{{{
+<div class="editor" macro="select ..."></div>
+}}}
+//where://
+*''fieldname@tiddlername'' (or ''=cookiename''){{block{
+<<<
+Specifies the tiddler field associated with the list display.  The "@tiddlername" portion is optional and, when omitted (or the special keyword, "@here" is used), the current tiddler is assumed.  Alternatively, if the fieldname begins with an equal sign (=), then it will be used as a TiddlyWiki option cookie reference and the selected value will be ''assigned to that cookiename //instead// of being stored in a tiddler field''.  Note: when a cookie reference is used, any "@tiddlername" portion that may be present in the syntax will be //ignored//.
+<<<
+}}}
+*{{block{
+''value value value ...'' //or// ''label=value label=value label=value ...'' //(inline list definition)//
+''+~TiddlerName'' //or// ''*~TiddlerName'' //(tiddler-based list definition)//
+''=tagvalue'' //or// ''"=tag expression"'' //(tag-based list definition)//
+<<<
+Specifies list items as simple values or label/value pairs.  
+
+You can use the ''+~TiddlerName'' or ''*~TiddlerName'' syntax to define the values or label/value pairs using a tiddler containing an "HR-separated" list, where each list item is one or two lines of text, separated from the next item by a horizontal rule: """----""".  The first line of each item contains the value or label=value that will appear in the list.  The second, optional line allows you to specify custom tooltip help text for that list item.
+
+The default tooltip for a list item is: "{{{set fieldname@tiddlername=itemvalue}}}".  Note: if all list entries are single-line (i.e., you are not defining ANY custom tooltips), you can omit the horizontal rule between entries... each line of text will be treated as a separate list entry.
+
+If you use "*" preceding the ~TiddlerName, the contents of the tiddler will first be processed by the TiddlyWiki parser and that output will then be used as the list definition.  This allows you to apply macros and scripts to //dynamically generate list definitions// based on the current document contents (such as available tag names).
+
+You can also use the ''=tagvalue'' syntax to generate a list whose items are the names of tiddlers tagged with that value (e.g., "=systemConfig" to list all plugins, or "=friends" to list all tiddlers tagged as "friends").  If you have MatchTagsPlugin installed, you can use Boolean tag //expressions// (e.g., "=friends or (lovers and not crazy)", to list only tiddlers that have a suitable combination of tags.
+<<<
+}}}
+*''allowEdit'' //(for use with +~TiddlerName or *~TiddlerName param only)//{{block{
+<<<
+adds optional "edit list..." item to the end of the list, to enable quick editing of a tiddler-based list definition.  Note: if the ''+~TiddlerName'' parameter refers to a tiddler that does not yet exist, the "edit list..." item is automatically added to the list, even if ''allowEdit'' was not specified.  This allows you to place an 'empty' tiddler-based list into your content (e.g., """<<select fieldname =NewTiddlerName>>"""), and then create and define the tiddler-based list later on.
+<<<
+}}}
+*''rows:nn''{{block{
+<<<
+specifies the number of lines to display in the list.  If rows=1, a 'droplist' is displayed. If rows>1 a fixed-height listbox is used.  By default (or if rows=0 is used), the listbox is displayed with enough lines to show all items without scrolling (i.e., "fit to contents - vertically")
+<<<
+}}}
+*''width:xxx''{{block{
+<<<
+specifies the width of the list, using a CSS dimension value (px, em, in, cm, or %).  The default is auto (i.e., "fit to contents - horizontally").
+<<<
+}}}
+*''"prompt:..."''{{block{
+<<<
+specifies 'guide text' to display as the first item in the list.  Selecting this item does not change the value stored in the field.
+<<<
+}}}
+*''autoSave''{{block{
+<<<
+when used in EditTemplate, this keyword forces selection changes to be applied immediately rather than waiting for the "done" command to be invoked.  Note: because the standard ViewTemplate toolbar does not have a "done" command to signal the end of the editing activity, ''autoSave'' is always enabled when working with a selection list that is being displayed in 'view mode'.
+<<<
+}}}
+*''allowBlank''{{block{
+<<<
+when the value of a tiddler field is "undefined", a 'blank' item is added at the beginning of the list to represent the undefined field value.  When a field value is subsequently selected, the blank item is removed from the list.   Use the ''allowBlank'' keyword to always include the blank item in the list.  Selecting the blank item sets the field value back to "undefined" (i.e., deletes the field).
+<<<
+}}}
+*''allowOther''{{block{
+<<<
+when the value of a tiddler field does not match any of the values in the list, a special 'other' item is added at the end of the list so that the unrecognized field value can be shown.  If another field value is subsequently selected, the 'other' item is removed from the list.  Use the ''allowOther'' keyword to always include the 'other item in the list.  When this item is selected, you will be prompted to enter a custom value to assign to the field.
+<<<
+}}}
+*''allowMultiple''{{block{
+<<<
+when used with a listbox (e.g, rows>1), permits selection of multiple items using ctrl-click and shift-click.  Selected values are stored in the tiddler field as a space-separated list, with brackets ({{{[[...]]}}}}) used as needed around values containing spaces.  //note: multiple selection is not supported by droplists (rows=1)//
+<<<
+}}}
+<<<
+!!!!!Examples
+<<<
+''inline list definition:''
+{{{<<select thing rows:1 eenie meenie miney moe>>}}}
+<<select thing rows:1 eenie meenie miney moe>>
+{{{<<select size rows:1 "prompt:select a show size..." xsmall=30 small=32 medium=34 large=36 xlarge=38>>}}}
+<<select size rows:1 "prompt:select a show size..." xsmall=30 small=32 medium=34 large=36 xlarge=38>>
+{{{<<select size allowOther "prompt:select a shoe size..." xsmall=30 small=32 medium=34 large=36 xlarge=38>>}}}
+<<select size allowOther "prompt:select a shoe size..." xsmall=30 small=32 medium=34 large=36 xlarge=38>>
+
+{{{<<select gender Male Female>>}}}
+<<select gender Male Female>>
+
+''tiddler-based list definition:''
+{{{<<select color rows:1 +ListboxSample>>}}}
+<<select color rows:1 +ListboxSample>>
+{{{<<select color allowBlank allowOther allowMultiple +ListboxSample allowEdit>>}}}
+<<select color allowBlank allowOther allowMultiple +ListboxSample allowEdit>>
+{{{<<select demo@ListboxDemoTarget +ListboxNewSample>>}}}
+<<select demo@ListboxDemoTarget +ListboxNewSample>>
+
+''tag-based list definition:''
+{{{<<select plugins rows:1 =systemConfig>>}}}
+<<select plugins rows:1 allowBlank =systemConfig>>
+{{{<<select samples rows:1 allowBlank =sample>>}}}
+<<select samples rows:1 =sample>>
+<<<
+!!!!!Revisions
+<<<
+2010.03.14 1.4.1 use filterTiddlers() instead of getTaggedTiddlers() - use MatchTagsPlugin for tag expressions
+2009.09.02 1.4.0 added 'prompt:...' param
+2009.09.02 1.3.0 added special handling for tags field
+2009.06.15 1.2.3 in setFieldValue(), eliminate extra brackets around single value selections
+2009.06.15 1.2.2 fixed infinite loop problem in refresh()
+2009.06.15 1.2.1 if not allowMultiple, handle field values containing space-separated lists as single values
+2009.05.31 1.2.0 added allowMultiple flag.  Rewrote handler to allow option params in any order.  Corrected handling of blank/other values.
+2008.07.22 1.1.0 added "=cookiename" syntax for storing selected value in cookie instead of a tiddler field
+2008.04.28 1.0.1 added "=tagvalue" syntax for generating lists of tiddlers tagged with a given value
+2007.08.31 0.8.2 corrected handling for "@tiddlername" syntax for non-default 'target' tiddler.
+2007.08.06 0.8.1 added support for "@here" keyword syntax and cleaned up handling for identifying 'target' tiddler.  Also added 'onclick' handler for "other:" item, so that prompt dialog is presented even if "other" was already selected (and hence, no "onchange" event)
+2007.07.29 0.8.0 added getWikifiedData() and use of "*" prefix on TiddlerName so macros or inline scripts embedded in listbox definitions can generate dynamic lists based on current document content.
+2007.07.26 0.7.3 fixed call to config.macros.select.setFieldValue()
+2007.07.24 0.7.2 in setFieldValue(), 'touch' target tiddler AFTER setting value to avoid early refresh event that steps on listbox attributes, causing a fatal error (in IE only).
+2007.06.28 0.7.1 in render(), retrieve current val from tiddler editor control (when editing) or use stored field (when viewing).
+2007.05.29 0.7.0 split render() logic from handler(), added refresh() notification to auto sync lists that use +TiddlerName definition
+2007.05.15 0.6.1 code/documentation cleanup
+2007.05.14 0.6.0 lots more options
+2007.05.12 0.5.0 started
+<<<</pre>
+</div>

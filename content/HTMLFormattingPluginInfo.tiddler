@@ -1,0 +1,71 @@
+<div title="HTMLFormattingPluginInfo" modifier="ELSDesignStudios" created="200801090044" modified="201005071837" tags="pluginInfo">
+<pre>|Name|HTMLFormattingPluginInfo|
+|Source|http://www.TiddlyTools.com/#HTMLFormattingPlugin|
+|Documentation|http://www.TiddlyTools.com/#HTMLFormattingPluginInfo|
+|Version|2.4.1|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|documentation|
+|Description|documentation for HTMLFormattingPlugin|
+The ~HTMLFormatting plugin allows you to freely ''mix wiki-style formatting syntax within HTML formatted content'' by extending the action of the standard TiddlyWiki formatting handler.
+!!!!!Usage
+<<<
+The shorthand Wiki-style formatting syntax of ~TiddlyWiki is very convenient and enables most content to be reasonably well presented. However, there are times when tried-and-true HTML formatting syntax allows more more precise control of the content display.
+
+When a tiddler is about to be displayed, ~TiddlyWiki looks for tiddler content contained within {{{<html>}}} and {{{</html>}}} markers.  When present, the TiddlyWiki core simply passes this content directly to the browser's internal "rendering engine" to process as ~HTML-formatted content.  However, TiddlyWiki does not also process the HTML source content for any embedded wiki-formatting syntax it may contain.  This means that while you can use HTML formatted content, you cannot mix wiki-formatted content within the HTML formatting.
+
+This plugin extends the TiddlyWiki core processing so that, after the HTML formatting has been processed, all the pieces of text occuring within the HTML block are then processed one piece at a time, so that normal wiki-style formatting can be applied to the individual text pieces.
+
+Note: To bypass this extended processing for a specific section of HTML content, embed ''{{{<nowiki>}}}'' //anywhere// inside the {{{<html>...</html>}}} delimiters, and wiki formatting will not be applied to that content.
+<<<
+!!!!!Line breaks
+<<<
+One major difference between Wiki formatting and HTML formatting is how "line breaks" are processed. Wiki formatting treats all line breaks as literal content to be displayed //as-is//. However, because HTML normally ignores line breaks and actually processes them as simple "word separators" instead, many people who write HTML include extra line breaks in their documents, just to make the "source code" easier to read.
+
+Even though you can use HTML tags within your tiddler content, the default treatment for line breaks still follows the Wiki-style rule (i.e., all new lines are displayed as-is). When adding HTML content to a tiddler (especially if you cut-and-paste it from another web page), you should take care to avoid adding extra line breaks to the text.
+
+If removing all the extra line breaks from your HTML content would be a big hassle, you can quickly //override the default Wiki-style line break rule// so that the line breaks use the standard HTML rules, by placing ''{{{<hide linebreaks>}}}'' //anywhere// within the HTML content.  This automatically converts all line breaks to spaces before rendering the content, so that the literal line breaks will be processed as simple word-breaks instead.
+
+Alternatively, if you //always// want to omit all line breaks from the rendered output, you can set this option:
+><<option chkHTMLHideLinebreaks>> ignore all line breaks
+which can also be 'hard coded' into your document by adding the following to a tiddler, tagged with <<tag systemConfig>>
+>{{{config.options.chkHTMLHideLinebreaks=true;}}}
+
+Note: this does //not// alter the actual tiddler content that is stored in the document, just the manner in which it is displayed. Any line breaks contained in the tiddler will still be there when you edit its content. Also, to include a literal line break when the ''<{{{hide linebreaks}}}>'' tag is present, you will need to use a ''<{{{br}}}>'' or ''<{{{p}}}>'' HTML tag instead of simply typing a line break.
+<<<
+!!!!!How it works
+<<<
+The TW core support for HTML does not let you put ANY wiki-style syntax (including TW macros) *inside* the {{{<html>...</html>}}} block.  Everything between {{{<html>}}} and {{{</html>}}} is handed to the browser for processing and that is it.
+
+However, not all wiki syntax can be safely passed through the browser's parser. Specifically, any TW macros inside the HTML will get 'eaten' by the browser since the macro brackets, {{{<<...>>}}} use the "<" and ">" that normally delimit the HTML/XML syntax recognized by the browser's parser.
+
+Similarly, you can't use InlineJavascript within the HTML because the {{{<script>...</script>}}} syntax will also be consumed by the browser and there will be nothing left to process afterward.  Note: unfortunately, even though the browser removes the {{{<script>...</script>}}} sequence, it doesn't actually execute the embedded javascript code that it removes, so any scripts contained inside of <html> blocks in TW are currently being ignored. :-(
+
+As a work-around to allow TW *macros* (but not inline scripts) to exist inside of <html> formatted blocks of content, the plugin first converts the {{{<<}}} and {{{>>}}} into "%%(" and ")%%", making them "indigestible" so they can pass unchanged through the belly of the beast (the browser's HTML parser).
+
+After the browser has done its job, the wiki syntax sequences (including the "undigested" macros) are contained in #text nodes in the browser-generated DOM elements.  The plugin then recursively locates and processes each #text node, converts the %%( and )%% back into {{{<<}}} and {{{>>}}}, passes the result to wikify() for further rendering of the wiki-formatted syntax into a containing SPAN that replaces the previous #text node.  At the end of this process, none of the encoded %%( and )%% sequences remain in the rendered tiddler output.
+<<<
+!!!!!Revisions
+<<<
+2010.05.07 2.4.1 added chkHTMLHideLinebreaks option
+2009.01.05 2.4.0 in wikifyTextNodes(), pass w.highlightRegExp and w.tiddler to wikify() so that search term highlighting and tiddler-relative macro processing will work
+2008.10.02 2.3.0 added use of {{{<nowiki>}}} marker to bypass all wikification inside a specific HTML block
+2008.09.19 2.2.0 in wikifyTextNodes(), don't wikify the contents of STYLE nodes (thanks to MorrisGray for bug report)
+2008.04.26 [*.*.*] plugin size reduction: more documentation moved to HTMLFormattingInfo
+2008.01.08 [*.*.*] plugin size reduction: documentation moved to HTMLFormattingInfo
+2007.12.04 [*.*.*] update for TW2.3.0: replaced deprecated core functions, regexps, and macros
+2007.06.14 2.1.5 in formatter, removed call to e.normalize().  Creates an INFINITE RECURSION error in Safari!!!!
+2006.09.10 2.1.4 update formatter for 2.1 compatibility (use this.lookaheadRegExp instead of temp variable)
+2006.05.28 2.1.3 in wikifyTextNodes(), decode the *value* of TEXTAREA nodes, but don't wikify() its children.  (thanks to "ayj" for bug report)
+2006.02.19 2.1.2 in wikifyTextNodes(), put SPAN element into tiddler DOM (replacing text node), BEFORE wikifying the text content.  This ensures that the 'place' pasced to any macros is correctly defined when the macro is evaluated, so that calls to story.findContainingTiddler(place) will work as expected. (Thanks for bug report from GeoffSlocock)
+2006.02.05 2.1.1 wrapped wikifier hijack in init function to eliminate globals and avoid FireFox 1.5.0.1 crash bug when referencing globals
+2005.12.01 2.1.0 don't wikify #TEXT nodes inside SELECT and TEXTAREA elements
+2005.11.06 2.0.1 code cleanup
+2005.10.31 2.0.  replaced hijack wikify() with hijack config.formatters["html"] and simplified recursive WikifyTextNodes() code
+2005.10.09 1.0.2 combined documentation and code into a single tiddleb
+2005.08.05 1.0.1 moved HTML and CSS definitions into plugin code instead of using separate tiddlers
+2005.07.26 1.0.1 Re-released as a plugin. Added <{{{html}}}>...</{{{nohtml}}}> and <{{{hide newlines}}}> handling
+2005.06.26 1.0.0 Initial Release (as code adaptation - pre-dates TiddlyWiki plugin architecture!!)
+<<<</pre>
+</div>

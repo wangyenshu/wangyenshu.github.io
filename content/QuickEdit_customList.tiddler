@@ -1,0 +1,15 @@
+<div title="QuickEdit_customList" modifier="ELSDesignStudios" created="200902191601" modified="200906092154" tags="settings QuickEditPackage">
+<pre>timestamp
+$[[enter a date|{{new Date().formatString('DDD, MMM DDth, YYYY hh12:0mm:0ssam')}}]]
+----
+scrollbox
+@@display:block;height:10em;overflow:auto;$[[enter scrolling content|$1]]@@@@display:block;text-align:right;^^scroll for more...^^@@
+----
+nested slider
++++[$1]<<tiddler $1>>===
+----
+big red
+@@font-size:36pt;color:red;$1@@
+----
+</pre>
+</div>

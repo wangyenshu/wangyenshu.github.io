@@ -1,0 +1,26 @@
+<div title="ShowAllPermalinks" modifier="ELSDesignStudios" created="200708161439" tags="script">
+<pre>/%
+|Name|ShowAllPermalinks|
+|Source|http://www.TiddlyTools.com/#ShowAllPermalinks|
+|Version|1.0.0|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|script|
+|Description|generate a list containing permalinks for every tiddler in the document|
+%/{{small smallform{<html><form style='display:inline'>
+	<textarea name=txt rows=10 style='width:100%' onfocus="this.select()"></textarea>
+</form></html><script>
+	var out=outtxt=""; 
+	var tids=store.getTiddlers("title","excludeLists");
+	for (var t=0; t<tids.length; t++) {
+		var url=store.getTiddlerText("SiteUrl");
+		if (!url) url=document.location.href;
+		var permalink=encodeURIComponent(String.encodeTiddlyLink(tids[t].title));
+		out+="[["+tids[t].title+"|"+url+"#"+permalink+"]]\n";
+		outtxt+=url+"#"+permalink+"\n";
+	}
+	place.lastChild.firstChild.txt.value=outtxt;
+	return "{{threecolumns{"+out+"}}}";
+</script>}}}</pre>
+</div>

@@ -1,0 +1,45 @@
+<div title="TaskViewTemplate" modifier="ELSDesignStudios" created="200705161735" modified="200804131721" tags="TaskPackage template">
+<pre><!--{{{-->
+<!--
+|Name|TaskViewTemplate|
+|Source|http://www.TiddlyTools.com/#TaskViewTemplate|
+|Version||
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|template|
+|Requires|ToolbarCommands, TaggedTemplateTweak, ListboxPlugin, CheckboxPlugin, TaskTimerPlugin, WikifyPlugin, NestedSlidersPlugin, MoveablePanelPlugin, CommentPlugin, ToggleSliders |
+|Description|custom version of view template used when tiddler is tagged with "task"|
+-->
+<span class='toolbar' macro='toolbar [[ToolbarCommands::ViewToolbar]]'></span>
+<span class='title'>
+	<span class='floatleft' macro='tiddlerIcons' style='cursor:auto !important;'></span>
+	<span macro='view title'></span>
+</span>
+<span class='subtitle'>
+	<span style='white-space:nowrap' macro='view modified date [[DDD, MMM DDth YYYY]]'></span>
+</span>
+<div class='tagClear'></div>
+<div class='tagging' macro='tagging'></div>
+<div class='tagged' macro='tags'></div>
+<!-- TASK CONTROLS one line hanging "bubble" (bottom right) -->
+<div class='viewer'>
+	<div macro='view text wikified'></div>
+	<div class="floatright block" style="height:2em;padding-top:2px;">
+		<div class="center viewer smallform" style="padding:.5em 1em">
+			<span class='fine subtitle'>task status:</span>
+			<span macro='select status rows:1 allowOther "not started" "in progress" "on hold" "completed"'></span>
+			<span class='fine subtitle'>assigned to:</span>
+			<span macro='select assigned rows:1 allowBlank allowOther +TaskAssignmentList allowEdit'></span>
+			<span macro='checkbox urgent@'></span>
+			<span class='fine subtitle'>urgent</span>
+			<span macro='taskTimer'></span>
+			<span class='fine subtitle' style='padding-left:1em'
+				macro='wikify [[+++^40em^{{small{[add a note]}}}...<<moveablePanel>>add a note<html><hr></html><<comment here "" "+++!!!!![%when% (%who%): %subject%]>...\n%message%\n===\n">>=== | <<tiddler ToggleSliders with: here "view all" "close all">>]]'></span>
+		</div>
+	</div>
+</div>
+<div class='tagClear'></div>
+<!--}}}-->
+</pre>
+</div>

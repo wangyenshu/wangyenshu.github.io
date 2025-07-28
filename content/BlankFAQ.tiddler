@@ -1,0 +1,10 @@
+<div title="BlankFAQ" modifier="ELSDesignStudios" created="200701241913" tags="blank DiscoveryPackage">
+<pre>/%
+|Description|enter FAQ list item text here|
+%/
+{{small{
+__enter FAQ display title text here__
+
+enter FAQ content here
+}}}</pre>
+</div>

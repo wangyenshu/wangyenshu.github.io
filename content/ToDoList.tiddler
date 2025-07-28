@@ -1,0 +1,21 @@
+<div title="ToDoList" modifier="ELSDesignStudios" created="200805181709" modified="200806150316" tags="sample TaskPackage [[To Do]]" urgent="false">
+<pre>This tiddler is an example of an automatic "to do" list generator, where each "to do" item is stored in a separate, tagged tiddler: 
+<<<
+{{valignTop{
+| ''<<tag [[To Do]] "Pending tasks">>'' | ''<<tag Done "Completed tasks">>'' |
+|<<matchTags {{"<<tiddler CheckboxToggleTag with: Done [[To Do]] %0\>\> %0"}} "\n" To Do>>|<<matchTags {{"<<tiddler CheckboxToggleTag with: Done [[To Do]] %0\>\> %0"}} "\n" Done>>|
+}}}
+----
+The following syntax:
+{{{
+<<matchTags {{"<<tiddler CheckboxToggleTag with: Done [[To Do]] %0\>\> %0"}} "\n" To Do OR Done>>
+}}}
+combines the {{{<<matchTags>>}}} macro (defined by [[MatchTagsPlugin]]) with the [[CheckboxToggleTag]] inline script (requires [[InlineJavascriptPlugin]]) to output a list of checkboxes and corresponding tiddler titles, one for each matched tiddler.  Setting/clearing any given checkbox toggles that tiddler between the two alternative tag values and also auto-refreshes the list display.
+
+You can also display separate lists of //pending tasks// (tagged with <<tag [[To Do]]>>) and //completed tasks// (tagged with <<tag Done>>) by using two instances of the above syntax, each with different tag expressions for matching the appropriate tiddlers:
+{{{
+<<matchTags {{"<<tiddler CheckboxToggleTag with: Done [[To Do]] %0\>\> %0"}} "\n" To Do>>
+<<matchTags {{"<<tiddler CheckboxToggleTag with: Done [[To Do]] %0\>\> %0"}} "\n" Done>>
+}}}
+<<<</pre>
+</div>

@@ -1,0 +1,565 @@
+<div title="SlideShowPlugin" modifier="Wang Yanshu" created="202411221531">
+<pre>/***
+|''Name:''|SlideShowPlugin|
+|''Description:''|Creates a simple slide show type display|
+|''Version:''|1.5.3|
+|''Date:''|Sep 12, 2007|
+|''Source:''|http://www.math.ist.utl.pt/~psoares/addons.html|
+|''Documentation:''|[[SlideShowPlugin Documentation|SlideShowPluginDoc]]|
+|''Author:''|Paulo Soares and [[Clint Checketts|http://www.checkettsweb.com]]|
+|''License:''|[[Creative Commons Attribution-Share Alike 3.0 License|http://creativecommons.org/licenses/by-sa/3.0/]]|
+|''~CoreVersion:''|2.1.0|
+***/
+//{{{
+config.macros.slideShow = {label: "slide show", maxTOCLength: 30};
+config.macros.slideShow.messages = {gotoLabel: "Go to slide:"};
+config.views.wikified.slideShow = {text: "slide show", tooltip: "Start slide show"};
+config.views.wikified.slideShow.quit = {text: "end", tooltip: "Quit the slide show"};
+config.views.wikified.slideShow.firstSlide = {text: "<<", tooltip: "first slide"};
+config.views.wikified.slideShow.previousSlide = {text: "<", tooltip: "previous slide"};
+config.views.wikified.slideShow.nextSlide = {text: ">", tooltip: "next slide"};
+config.views.wikified.slideShow.lastSlide = {text: ">>", tooltip: "last slide"};
+config.views.wikified.slideShow.resetClock = {text: " ", tooltip: "reset"};
+
+config.formatters.push( {
+	name: "SlideSeparator",
+	match: "^-s-+$\\n?",
+	handler: function(w) {
+		createTiddlyElement(w.output,"hr",null,'slideSeparator');
+	}
+});
+
+function changeStyleSheet(tiddlerName) {
+	setStylesheet(store.getRecursiveTiddlerText("StyleSheetColors"),"StyleSheetColors");
+	setStylesheet(store.getRecursiveTiddlerText("StyleSheetLayout"),"StyleSheetLayout");
+	setStylesheet(store.getRecursiveTiddlerText(tiddlerName == null ? "StyleSheet" : tiddlerName,""),"StyleSheet");
+}
+
+//Excellent (and versatile) reparser created by Paul Petterson for parsing the paramString in a macro
+function reparse( params ) {
+	var re = /([^:\s]+)(?:\:((?:\d+)|(?:["'](?:[^"']+)["']))|\s|$)/g;
+	var ret = new Array();
+	var m;
+	while( (m = re.exec( params )) != null ) ret[ m[1] ] = m[2]?m[2]:true;
+	return ret;
+}
+
+function getElementsByClass(searchClass,node,tag) {
+	var classElements = new Array();
+	if ( node == null ) node = document;
+	if ( tag == null ) tag = '*';
+	var els = node.getElementsByTagName(tag);
+	var elsLen = els.length;
+	var pattern = new RegExp("(^|\\s)"+searchClass+"(\\s|$)");
+	var j=0;
+	for (var i = 0; i < elsLen; i++) {
+		if ( pattern.test(els[i].className) ) {
+			classElements[j] = els[i];
+			j++;
+		}
+	}
+	return classElements;
+}
+
+// 'keys' code adapted from S5 which in turn was adapted from MozPoint (http://mozpoint.mozdev.org/)
+function keys(key) {
+with(config.macros.slideShow){
+	if (document.getElementById('contentWrapper').className == "slideShowMode"){
+		if (!key) {
+			key = event;
+			key.which = key.keyCode;
+		}
+ 		switch (key.which) {
+			case 32: // spacebar
+				if(time>0){
+					if(autoAdvance){
+						clearInterval(autoAdvance);
+						autoAdvance = null;
+					} else {
+						autoAdvance=setInterval("GoToSlide(1)", time);
+					}
+				}
+				break;
+			case 34: // page down
+			case 39: // rightkey
+				GoToSlide("n");
+				break;
+			case 40: // downkey
+				GoToSlide(-1);
+				break;
+			case 33: // page up
+			case 37: // leftkey
+				GoToSlide("p");
+				break;
+			case 38: // upkey
+				GoToSlide(1);
+				break;
+			case 36: // home
+				GoToSlide("f");
+				break;
+			case 35: // end
+				GoToSlide("l");
+				break;
+			case 27: // escape
+				endSlideShow();
+				break;
+		}
+	}
+	return false;
+}
+}
+
+function clicker(e) {
+	if (!e) var e = window.event;
+	var target = resolveTarget(e);
+	//Whenever something is clicked that won't advance the slide make sure that the table of contents gets hidden
+	if (target.getAttribute('href') != null || isParentOrSelf(target, 'toc') || isParentOrSelf(target,'embed') || isParentOrSelf(target,'object') || isParentOrSelf(target, 'slideFooter') || isParentOrSelf(target, 'navigator')){
+		 //Don't hide the TOC if the indexNumbers (which trigger the index) is clicked
+		if(isParentOrSelf(target,'indexNumbers') || isParentOrSelf(target,'jumpInput')){
+ 			return true;
+		}
+		showHideTOC('none');
+		return true;
+	}
+	//Advance a slide if the TOC is visible otherwise make sure that the TOC gets hidden
+	if ((!e.which && e.button == 1) || e.which == 1) {
+		if (document.getElementById('toc').style.display != 'block'){
+			GoToSlide("n");
+		} else {
+			showHideTOC('none');
+		}
+	}
+	if ((!e.which && e.button == 2) || e.which == 3) {
+		if (document.getElementById('toc').style.display != 'block'){
+			GoToSlide("p");
+		} else {
+			showHideTOC('none');
+		}
+		return false;
+	}
+}
+
+function isParentOrSelf(element, id) {
+	if (element == null || element.nodeName=='BODY') return false;
+	else if (element.id == id) return true;
+	else return isParentOrSelf(element.parentNode, id);
+}
+
+function GoToSlide(step) {
+	var new_pos;
+	var slideHolder = document.getElementById('slideContainer');
+	//The parse float ensures that the attribute is returned as a number and not a string.
+	var cur_pos = parseFloat(slideHolder.getAttribute('currentslide'));
+	var numberSlides = parseFloat(slideHolder.getAttribute('numberSlides'));
+	switch (step) {
+		case "f":
+			new_pos=0;
+			break;
+		case "l":
+			new_pos=numberSlides-1;
+			break;
+		case "n":
+			var numberOverlays = parseFloat(slideHolder.childNodes[cur_pos].getAttribute('numberOverlays'));
+			var currentOverlay = parseFloat(slideHolder.getAttribute('currentOverlay'));
+			if(numberOverlays==0 || currentOverlay==numberOverlays){
+				if(noClicks==false) new_pos=cur_pos+1;
+			} else {
+				var className="Overlay"+currentOverlay;
+				var overlay=getElementsByClass(className,slideHolder.childNodes[cur_pos]);
+				for(var i=0; i<overlay.length; i++) {overlay[i].className=className+' previousOverlay';}
+				currentOverlay++;
+				slideHolder.setAttribute('currentOverlay',currentOverlay);
+				className="Overlay"+currentOverlay;
+				overlay=getElementsByClass(className,slideHolder.childNodes[cur_pos]);
+				for(i=0; i<overlay.length; i++) {overlay[i].className=className+' currentOverlay';}
+				return false;
+			}
+			break;
+		case "p":
+			var numberOverlays = parseFloat(slideHolder.childNodes[cur_pos].getAttribute('numberOverlays'));
+			var currentOverlay = parseFloat(slideHolder.getAttribute('currentOverlay'));
+			if(numberOverlays==0 || currentOverlay==0){
+				if(noClicks==false) new_pos=cur_pos-1;
+			} else {
+				var className="Overlay"+currentOverlay;
+				var overlays=getElementsByClass(className,slideHolder.childNodes[cur_pos]);
+				for(var i=0; i<overlays.length; i++) {overlays[i].className=className+' nextOverlay';}
+				currentOverlay--;
+				className="Overlay"+currentOverlay;
+				overlays=getElementsByClass(className,slideHolder.childNodes[cur_pos]);
+				for(i=0; i<overlays.length; i++) {overlays[i].className=className+' currentOverlay';}
+				slideHolder.setAttribute('currentOverlay',currentOverlay);
+				return false;
+			}
+			break;
+		default:
+			new_pos=cur_pos+step;
+	}
+	if(slideShowCircularMode && new_pos == numberSlides) new_pos=0;
+	if(slideShowCircularMode && new_pos<0) new_pos=(numberSlides - 1);
+	if(step!=0 && new_pos>=0 && new_pos<numberSlides) {
+		slideHolder.childNodes[cur_pos].style.display='none';
+		slideHolder.childNodes[new_pos].style.display='block';
+		slideHolder.setAttribute('currentslide',new_pos);
+		var numberOverlays = parseFloat(slideHolder.childNodes[new_pos].getAttribute('numberOverlays'));
+		if(step=="p"){
+			var currentOverlay=numberOverlays;
+			var state=' previousOverlay';
+		} else {
+			var currentOverlay=0;
+			var state=' nextOverlay';
+		}
+		slideHolder.setAttribute('currentOverlay',currentOverlay);
+		if(numberOverlays>0) {
+			for(var i=1; i<=numberOverlays; i++){
+				var className="Overlay"+i;
+				var overlays=getElementsByClass(className,slideHolder.childNodes[new_pos]);
+				for(var j=0; j<overlays.length; j++) {overlays[j].className=className+state;}
+			}
+			if(step=="p"){
+				var className="Overlay"+numberOverlays;
+				var overlays=getElementsByClass(className,slideHolder.childNodes[new_pos]);
+				for(var j=0; j<overlays.length; j++) {overlays[j].className=className+' currentOverlay';}
+			}
+		}
+		new_pos++;
+		var indexNumbers = document.getElementById('indexNumbers');
+		indexNumbers.firstChild.data = new_pos+'/'+numberSlides;
+		if((new_pos==numberSlides) && !slideShowCircularMode && autoAdvance) clearInterval(autoAdvance);
+		return true;
+	}
+	return false;
+}
+
+function tocShowSlide(e) {
+	if (!e) var e = window.event;
+	var target = resolveTarget(e);
+	var slide = target.getAttribute('slideNumber');
+	var cur_pos = document.getElementById('slideContainer').getAttribute('currentslide');
+	var step = slide-cur_pos;
+	if(step!=0) GoToSlide(step);
+	showHideTOC('none');
+	return;
+}
+
+//Toggle the display of the table of contents
+function showHideTOC(display){
+	var toc = document.getElementById('toc');
+	//Reset the input box
+	document.getElementById('jumpInput').value = "";
+	if (display == null || display.length == null){
+		if (toc.style.display == 'none' || toc.style.display == ''){
+			toc.style.display = 'block';
+			document.getElementById('jumpInput').focus();
+		} else {
+			toc.style.display = 'none';
+		}
+	} else {
+		toc.style.display = display;
+		if (display == 'block')
+			document.getElementById('jumpInput').focus();
+	}
+}
+
+function padZero(x){return (x>=10 || x<0 ? "" : "0")+x;}
+
+function setClock(){
+	var actualTime = new Date();
+	var newTime = actualTime.getTime() - clockStartTime;
+	newTime = clockMultiplier*newTime+clockInterval+clockCorrection;
+	actualTime.setTime(newTime);
+	newTime = padZero(actualTime.getHours()) + ":" + padZero(actualTime.getMinutes())+ ":" + padZero(actualTime.getSeconds());
+	var clock = document.getElementById('slideClock');
+	clock.firstChild.nodeValue = newTime;
+}
+
+function resetClock(){
+	var time = new Date(0);
+	if(clockStartTime>time){
+		var startTime = new Date();
+		clockStartTime=startTime.getTime();
+	}
+}
+
+var title;
+var place;
+var autoAdvance=null;
+var slideClock=null;
+var noOverlays=false;
+var noClicks=false;
+var forceRefresh=false;
+var time = 0;
+var slideShowCircularMode;
+var slideShowStyleSheet;
+var slideShowParams;
+var clockMultiplier;
+var clockInterval;
+var clockCorrection=0;
+var clockStartTime;
+var openTiddlers;
+
+config.macros.slideShow.handler = function(aPlace,macroName,params,wikifier,paramString,tiddler){
+	if(tiddler instanceof Tiddler){
+		var lingo = config.views.wikified.slideShow;
+		if (!e) var e = window.event;
+ 		place = aPlace;
+		title = tiddler.title;
+		params = reparse(paramString);
+		var onclick = function(){config.macros.slideShow.onClickSlideShow(params);};
+		createTiddlyButton(aPlace,lingo.text,lingo.tooltip,onclick);
+	}
+}
+
+config.macros.slideShow.onClickSlideShow = function(newParams) {
+//	if(typeof(newParams)=="number") newParams=slideShowParams;
+	openTiddlers = new Array;
+	var viewer=document.getElementById('tiddlerDisplay');
+	for(var i=0; i<viewer.childNodes.length; i++){
+		var name = viewer.childNodes[i].getAttribute('tiddler');
+		openTiddlers.push(name);
+	}
+	document.oncontextmenu = function(e){return false;}
+	clockMultiplier = 1;
+	clockInterval = 0;
+	var startTime = new Date(0);
+	slideShowCircularMode = false;
+	time = 0;
+	slideShowStyleSheet = null;
+	if(newParams['style']){
+		slideShowStyleSheet = eval(newParams['style']);
+	} 
+	if(newParams['repeat']){
+		slideShowCircularMode = true;
+	}
+	if(newParams['noClicks']){
+		noClicks = true;
+	}
+	if(newParams['forceRefresh']){
+		forceRefresh = true;
+	}
+	if(newParams['slidePause'] > 0){
+		time = newParams['slidePause'];
+	}
+	if(newParams['clock']){
+		clockCorrection=startTime.getTimezoneOffset()*60000;
+		startTime = new Date();
+		var clockType= eval(newParams['clock']);
+		if(clockType != '+') {
+			clockMultiplier = -1;
+			clockInterval = -clockType*60000;
+		}
+	}
+	clockStartTime=startTime.getTime();
+	if(newParams['noOverlays']){
+		noOverlays = true;
+	}
+	clearMessage();
+	//Attach the key and mouse listeners
+	document.onkeyup = keys;
+	document.onmouseup = clicker;
+	story.refreshTiddler(title,"SlideShowViewTemplate",true);
+	createSlides(newParams);
+	slideClock=setInterval("setClock()", 1000); 
+	if(time>0) autoAdvance=setInterval("GoToSlide(1)", time); 
+	story.closeAllTiddlers(title);
+	toggleSlideStyles();
+	return;
+}
+
+config.macros.slideShow.endSlideShow=function(){
+	var showHolder = document.getElementById('slideShowWrapper');
+	showHolder.parentNode.removeChild(showHolder);
+	document.oncontextmenu =  function(e){};
+	if(autoAdvance) clearInterval(autoAdvance);
+	if(slideClock) clearInterval(slideClock);
+	noClicks=false;
+	story.refreshTiddler(title,null,true);
+	story.closeAllTiddlers();
+	toggleSlideStyles();
+	story.displayTiddlers(null,openTiddlers,DEFAULT_VIEW_TEMPLATE);
+	document.onmouseup = function(){};
+}
+
+function isInteger(s){
+	var i;
+	for (i = 0; i < s.length; i++){
+		// Check that current character is number.
+		var c = s.charAt(i);
+		if (((c < "0") || (c > "9"))) return false;
+	}
+	// All characters are numbers.
+	return true;
+}
+
+function jumpInputToSlide(e){
+	if (!e) {
+		e = window.event;
+		e.which = e.keyCode;
+	}
+	if(e.which==13){
+		var jumpInput= document.getElementById("jumpInput").value;
+		if(isInteger(jumpInput)){
+			var step=jumpInput-document.getElementById('slideContainer').getAttribute('currentslide')-1;
+			if (GoToSlide(step)){
+				showHideTOC('none'); 
+			}
+		}
+	}
+	return;
+}
+
+//Used to shorten the TOC fields
+function abbreviateLabel(label){
+	var maxTOCLength = config.macros.slideShow.maxTOCLength;
+	if(label.length>maxTOCLength) {
+		var temp = new Array();
+		temp = label.split(' ');
+		label = temp[0];
+		for(var j=1; j<temp.length; j++){
+			if((label.length+temp[j].length)<=maxTOCLength){
+				label += " " + temp[j];
+			} else {
+				label += " ...";
+				break;
+			}
+		}
+	}
+	return label;
+}
+
+function createSlides(newParams){
+	var lingo = config.views.wikified.slideShow;
+	//Remove dblClick on edit function
+	var theTiddler = document.getElementById("tiddler"+title);
+	theTiddler.ondblclick = function() {};
+	// Grab the 'viewer' element and give it a signature so the show can be resumed if stopped
+	var tiddlerElements = theTiddler.childNodes;
+	var viewer;
+	for (var i = 0; i < tiddlerElements.length; i++){
+		if (tiddlerElements[i].className == "viewer") viewer = tiddlerElements[i];
+	}
+	viewer.id = 'slideShowWrapper';
+	//Hide the text that comes before the first H1 element (I think I may put this into a cover page type thing)
+	while(viewer.childNodes.length > 0 && viewer.firstChild.nodeName.toUpperCase() != "HR" && viewer.firstChild.className!="slideSeparator") {
+		viewer.removeChild(viewer.firstChild);
+	}
+	//Cycle through the content and each time you hit an H1 begin a new slide div
+	var slideNumber = 0;
+	var slideHolder = document.createElement('DIV');
+	slideHolder.id = "slideContainer";
+	slideHolder.setAttribute('currentslide',0);
+	while(viewer.childNodes.length > 0){
+		//Create a new slide a append it to the slide holder
+		if (viewer.firstChild.nodeName.toUpperCase() == "HR" && viewer.firstChild.className=="slideSeparator"){
+			slideNumber++;
+			var slide = document.createElement('DIV');
+			slide.id = "slideNumber"+slideNumber;
+			slide.className = "slide";
+			if (slideNumber > 1) {
+				//slideHolder.setAttribute('currentslide',0);
+				slide.style.display='none';
+			} else {
+				slide.style.display='block';
+			}
+			slideHolder.appendChild(slide); 
+			viewer.removeChild(viewer.firstChild);
+		} else {
+			if(viewer.firstChild.nodeName=="SPAN" && viewer.firstChild.className=="" && viewer.firstChild.hasChildNodes()) {
+				var anchor=viewer.firstChild.nextSibling;
+				for (var ii=0;ii<viewer.firstChild.childNodes.length;ii++) {
+					var clone=viewer.firstChild.childNodes[ii].cloneNode(true);
+					viewer.insertBefore(clone,anchor);
+				}
+				viewer.removeChild(viewer.firstChild);
+			} else {
+				slide.appendChild(viewer.firstChild);
+			}
+		}
+	} 
+	//Stick the slides back into the viewer
+	viewer.appendChild(slideHolder);
+	slideHolder.setAttribute('numberSlides',slideNumber);
+	//Create the navigation bar
+	var slidefooter = createTiddlyElement(viewer,"DIV","slideFooter","slideFooterOff");
+	var navigator = createTiddlyElement(slidefooter,"SPAN","navigator");
+	//Make it so that when the footer is hovered over the class will change to make it visible
+	slidefooter.onmouseover = function () {slidefooter.className = "slideFooterOn"};
+	slidefooter.onmouseout = function () {slidefooter.className = "slideFooterOff"};
+	//Create the control button for the navigation 
+	var onClickQuit = function(){config.macros.slideShow.endSlideShow();};
+	createTiddlyButton(navigator,lingo.quit.text,lingo.quit.tooltip,onClickQuit);
+	createTiddlyButton(navigator,lingo.firstSlide.text,lingo.firstSlide.tooltip,first_slide);
+	createTiddlyButton(navigator,lingo.previousSlide.text,lingo.previousSlide.tooltip,previous_slide);
+	createTiddlyButton(navigator,lingo.nextSlide.text,lingo.nextSlide.tooltip,next_slide);
+	createTiddlyButton(navigator,lingo.lastSlide.text,lingo.lastSlide.tooltip,last_slide); 
+	createTiddlyButton(navigator,lingo.resetClock.text,lingo.resetClock.tooltip,resetClock,"button","slideClock");
+	var indexNumbers = createTiddlyElement(slidefooter,"SPAN","indexNumbers","indexNumbers","1/"+slideNumber)
+	indexNumbers.onclick = showHideTOC;
+	var toc = createTiddlyElement(slidefooter,"UL","toc");
+	var ovl=1;
+	for (var i=0;i<slideHolder.childNodes.length;i++) {
+		if(!noOverlays) {
+			var ovl=1;
+			while(1){
+				var className="Overlay"+ovl;
+				var overlays=getElementsByClass(className,slideHolder.childNodes[i]);
+				if(overlays.length>0){
+					for(var j=0; j<overlays.length; j++) {overlays[j].className+=' nextOverlay';}
+					ovl++;
+				} else {break;}
+			}
+		}
+		slideHolder.childNodes[i].setAttribute("numberOverlays",ovl-1);
+		slideHolder.setAttribute("currentOverlay",0);
+		//Loop through each slide and check the header's content
+		var tocLabel = null; 
+		for (var j=0;j<slideHolder.childNodes[i].childNodes.length;j++) {
+			var node = slideHolder.childNodes[i].childNodes[j];
+			if(node.nodeName=="H1" || node.nodeName=="H2" || node.nodeName=="H3" || node.nodeName=="H4") {
+				var htstring = node.innerHTML;
+				var stripped = htstring.replace(/(<([^>]+)>)/ig,"");
+				tocLabel = abbreviateLabel(stripped);
+				var tocLevel="tocLevel"+node.nodeName.charAt(1);
+				var tocItem = createTiddlyElement(toc,"LI",null,tocLevel);
+				var tocLink = createTiddlyElement(tocItem,"A",null,"tocItem",tocLabel);
+				tocLink.setAttribute("slideNumber",i);
+				tocLink.onclick=tocShowSlide;
+			}
+		}
+	}
+	//Input box to jump to s specific slide
+	var tocItem = createTiddlyElement(toc,"LI",null,"tocJumpItem",config.macros.slideShow.messages.gotoLabel);
+	var tocJumpInput = createTiddlyElement(tocItem,"INPUT","jumpInput");
+	tocJumpInput.type="text";
+	tocJumpInput.onkeyup=jumpInputToSlide;
+}
+
+var next_slide= function(e){GoToSlide(1);}
+var first_slide= function(e){GoToSlide("f");}
+var previous_slide= function(e){GoToSlide(-1);}
+var last_slide= function(e){GoToSlide("l");}
+
+function toggleSlideStyles(){
+	var contentWrapper = document.getElementById('contentWrapper');
+	if (contentWrapper.className == "slideShowMode"){
+		contentWrapper.className = "";
+		window.applyPageTemplate();
+		setStylesheet("#backstageShow{display: block;}","SlideShowStyleSheet");
+		changeStyleSheet();
+	} else{
+		contentWrapper.className = "slideShowMode";
+		window.applyPageTemplate("SlideShowPageTemplate");
+		setStylesheet(store.getRecursiveTiddlerText("SlideShowStyleSheet"),"SlideShowStyleSheet");
+		if(slideShowStyleSheet) changeStyleSheet(slideShowStyleSheet);
+	}
+}
+
+config.shadowTiddlers.SlideShowPageTemplate="<!--{{{-->\n<div id='displayArea'>\n<div id='tiddlerDisplay'></div>\n</div>\n<!--}}}-->";
+
+config.shadowTiddlers.SlideShowViewTemplate="<!--{{{-->\n<div class='title' macro='view title'></div>\n<div class='viewer' macro='view text wikified'></div>\n<!--}}}-->";
+
+config.shadowTiddlers.SlideShowStyleSheet = "/***\n!Slide Mode Styles\n***/\n/*{{{*/\n#backstageShow{\n display: none !important;\n}\n\n#contentWrapper.slideShowMode #slideContainer{\n display: block;\n}\n\n#contentWrapper.slideShowMode .Comment{\n display: none;\n}\n\n#contentWrapper.slideShowMode .nextOverlay{\n visibility: hidden;\n}\n\n#contentWrapper.slideShowMode .currentOverlay{\n visibility: visible;\n}\n\n#contentWrapper.slideShowMode .previousOverlay{\n visibility: visible;\n}\n\n#jump{\n text-align: right;\n}\n\n.slideFooterOff #navigator{\n visibility: hidden;\n}\n\n.slideFooterOn #navigator{\n visibility: visible;\n}\n\n#contentWrapper.slideShowMode #slideClock{\n cursor: pointer; margin: 0 5px 0 5px; border: 1px solid #db4\n}\n\n#contentWrapper.slideShowMode,\n #contentWrapper.slideShowMode #displayArea{\n width: 100%;\n font-size: 1.5em;\n margin: 0 !important;\n padding: 0;\n}\n\n#slideContainer{\n display: none;\n}\n\n.indexNumbers{\n cursor: pointer;\n}\n\n#navigator{\n visibility: hidden;\n bottom: 0;\n}\n\n#toc{\n display: none;\n position: absolute;\n font-size: .75em;\n bottom: 2em;\n right: 0;\n background: #fff;\n border: 1px solid #000;\n text-align: left;\n}\n\nul#toc, #toc li{\n margin: 0;\n padding: 0;\n list-style: none;\n line-height: 1em;\n}\n\n.tocJumpItem{\n margin-right: 2em;\n}\n\n.tocJumpItem input{\nmargin-right: 1em;\n border: 0;\n}\n\n#toc a,\n#toc a.button{\n display: block;\n padding: .1em;\n}\n\n#toc .tocLevel1{\nfont-size: .8em;\n}\n\n#toc .tocLevel2{\n margin-left: 1em;\n font-size: .75em;\n}\n\n#toc .tocLevel3{\n margin-left: 2em;\nfont-size: .75em;\n}\n\n#toc .tocLevel4{\n margin-left: 3em;\nfont-size: .65em;\n}\n\n#toc a{\n cursor: pointer;\n}\n\nh1{\n min-height: 1em;\n}\n\n.slide h1{\n min-height: 0;\n}\n\n/* The '>' selector is ignored by IE6 and earlier so the proper rules are given */\n#slideFooter{\n position: fixed;\n bottom: 2px;\n right: 2px;\n width: 100%;\n text-align: right;\n}\n\n/* This is a hack to trick IE6 and earlier to put the navbar on the bottom of the page */\n* html #slideFooter {\n position: absolute;\n width: 100%;\n text-align: right;\n right: auto; bottom: auto;\n left: expression( ( -20 - slideFooter.offsetWidth + ( document.documentElement.clientWidth ? document.documentElement.clientWidth : document.body.clientWidth ) + ( ignoreMe2 = document.documentElement.scrollLeft ? document.documentElement.scrollLeft : document.body.scrollLeft ) ) + 'px' );\n top: expression( ( -10 - slideFooter.offsetHeight + ( document.documentElement.clientHeight ? document.documentElement.clientHeight : document.body.clientHeight ) + ( ignoreMe = document.documentElement.scrollTop ? document.documentElement.scrollTop : document.body.scrollTop ) ) + 'px' );\n}\n\n\n\n/*}}}*/";
+
+config.shadowTiddlers.SlideShowPluginDoc="The documentation is missing. It is available [[here|http://www.math.ist.utl.pt/~psoares/addons.html#SlideShowPluginDoc]].";
+//}}}</pre>
+</div>

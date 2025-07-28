@@ -1,0 +1,40 @@
+<div title="QuickEdit_font" modifier="ELSDesignStudios" created="200803221859" modified="200906112024" tags="QuickEditPackage">
+<pre>/%
+|Name|QuickEdit_font|
+|Source|http://www.TiddlyTools.com/#QuickEdit_font|
+|Version|2.4.3|
+|Author|Eric Shulman|
+|License|see http://www.TiddlyTools.com/#QuickEditPlugin|
+|Type|html|
+|Requires|QuickEditPlugin|
+|Description|quickedit - select font family|
+
+Usage: see  http://www.TiddlyTools.com/#QuickEditToolbar
+
+%/<html><hide linebreaks><a href="javascript:;" class="tiddlyLink" tabindex="-1" 
+title="set font-family CSS attribute - @@font-family:facename;...@@"
+onclick="var p=Popup.create(this); if (!p) return false; p.className+=' sticky smallform';
+	var s=createTiddlyElement(p,'select'); s.button=this;
+	s.options[0]=new Option('select a font family...','');
+	var fonts=store.getTiddlerText('QuickEdit_fontList','').split('\n');
+	for (var i=0; i<fonts.length; i++) {
+		if (!fonts[i].length) continue;
+		s.options[s.length]=new Option(fonts[i],fonts[i]);
+		s.options[s.length-1].style.fontFamily=fonts[i];
+	}
+	s.options[s.length]=new Option('[Edit font list...]','_edit');
+	s.options[s.length-1].title='enter fonts, one per line...';
+	s.size=Math.min(s.length,15);
+	s.onclick=function(){
+		if (this.value=='_edit')
+			story.displayTiddler(story.findContainingTiddler(this.button),'QuickEdit_fontList',DEFAULT_EDIT_TEMPLATE);			
+		else
+			config.quickEdit.wrapSelection(this.button,'@@font-family:\x22'+this.value+'\x22;','@@');
+		Popup.remove(); return false;
+	};
+	s.onkeyup=config.quickEdit.keyup;
+	Popup.show();
+	s.focus();
+	return config.quickEdit.processed(event);"
+>font</a></html></pre>
+</div>

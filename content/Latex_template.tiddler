@@ -1,0 +1,33 @@
+<div title="Latex template" modifier="Wang Yanshu" created="202406191443" modified="202406200316" creator="Wang Yanshu">
+<pre>//{{{
+\documentclass{article}
+\usepackage{xwatermark}
+\usepackage{xcolor}
+\usepackage{calc}
+\usepackage{graphicx}
+\usepackage{insdljs}
+\newlength\testh
+\newlength\testw
+\newcommand{\shorttextwatermark}{authored by Yanshau Wang ORCID iD: 0009-0003-2217-3295 }
+\setlength{\testh}{\heightof{\shorttextwatermark}}
+\setlength{\testw}{\widthof{\shorttextwatermark}}
+%black!5 for invisible watermark
+\newwallpaper[allpages,picangle=45,color=black!19,tilexsize=0.2\paperwidth,tileysize=0.008\paperwidth,tilexoffset=1ex,tileyoffset=2ex]{\shorttextwatermark}
+
+\begin{insDLJS}{\jobname}{the name of js}
+	%function update() {
+		%    var a = parseFloat(this.getField("A").value);
+		%    var b = parseFloat(this.getField("B").value);
+		%    this.getField("C").value = a*a+b;
+		%}
+	%todo: get viewer's id displayed as watermark to fight plagiarism
+\end{insDLJS}
+
+\begin{document}
+	hello
+\end{document}
+//}}}
+
+ref:https://tex.stackexchange.com/questions/637967/make-repeating-watermark-with-tiling
+https://tex.stackexchange.com/questions/60582/how-do-i-place-a-simple-javascript-in-the-resulting-pdf</pre>
+</div>

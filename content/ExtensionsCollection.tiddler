@@ -1,0 +1,34 @@
+<div title="ExtensionsCollection" modifier="Wang Yanshu" created="202409130137" modified="202507091526" creator="Wang Yanshu">
+<pre>|Source     |https://github.com/YakovL/TiddlyWiki_ExtensionsExplorerPlugin/blob/master/ExtensionsCollection.txt|
+|Description|This is a central collection for ExtensionsExplorerPlugin. It is meant to gather collections of existing extensions, and also to help new authors make their work more explorable.|
+|Version    |0.2.0|
+Current status is "under construction", meaning that there's a lot of collections and extensions to add. Other things should be considered as well, like quality guidelines, handling forks, etc. Instructions for authors will be published in a separate readme and linked here.
+//{{{
+[
+  {
+    "url": "https://github.com/YakovL/TiddlyWiki_YL_ExtensionsIndex/blob/master/YLExtensionsCollection.txt",
+    "description": "Extensions created or heavily modified by Yakov Litvin",
+    "type": "collection"
+  },
+  {
+    "url": "https://github.com/YakovL/TiddlyWiki_Extensions/blob/master/TranslationsCollection.txt",
+    "description": "TiddlyWiki Translations",
+    "type": "collection"
+  },
+  {
+    "url": "https://github.com/YakovL/TiddlyThemes/blob/master/ThemesCollection.txt",
+    "description": "TiddlyWiki themes (see also https://yakovl.github.io/TiddlyThemes/)",
+    "type": "collection"
+  },
+  {
+    "url": "https://github.com/YakovL/TiddlyWiki_Extensions/blob/master/FND/SimpleSearchPlugin.js",
+    "description": "Displays search results as a simple list of matching tiddlers"
+  },
+  {
+    "url": "https://github.com/PengjuYan/TiddlyWiki_SwitchPalettePlugin/blob/master/SwitchPalettePlugin.js",
+    "description": "Switches among your color palettes"
+  }
+]
+//}}}
+</pre>
+</div>

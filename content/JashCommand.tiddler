@@ -1,0 +1,10 @@
+<div title="JashCommand" modifier="Wang Yanshu" created="200712101138" modified="202412200643" tags="JashPackage">
+<pre><html><hide linebreaks><a href="javascript:;" class="button"
+	title='JASH: Javascript Shell - view/modify internal run time variables and functions!'
+	onclick="if (window.toggleJash) toggleJash(); return false;"
+	onmouseover="this.href='javascript:void(eval(decodeURIComponent(%22(function(){try{('
+		+encodeURIComponent(encodeURIComponent(this.onclick))
+		+')()}catch(e){alert(e.description?e.description:e.toString())}})()%22)))';">
+	$1
+</a></html></pre>
+</div>

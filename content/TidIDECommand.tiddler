@@ -1,0 +1,23 @@
+<div title="TidIDECommand" modifier="ELSDesignStudios" created="200604142234" modified="200709092312" tags="TidIDEPackage">
+<pre>/%
+|Name|TidIDECommand|
+|Source|http://www.TiddlyTools.com/#TidIDECommand|
+|Version|2.0.0|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|script|
+|Requires|TidIDEPlugin, NestedSlidersPlugin, MoveablePanelPlugin, TextAreaPlugin, TiddlerTweakerPlugin, InlineJavascriptPlugin, CompareTiddlers|
+|Description|command link invokes TidIDE editor for current tiddler|
+
+Usage (in ViewTemplate):
+	<span class='toolbar' macro='tiddler TidIDECommand'></span>
+OR embedded directly in tiddler content:
+	<<tiddler TidIDECommand>>
+
+%/+++^[TidIDE|Edit this tiddler using the TiddlyWiki Integrated Development Environment].../%
+	%/{{fine smallform nowrap{<<moveablePanel>>/%
+	%/<<tidIDE SystemInfo TiddlerTweaker CompareTiddlers +edit:here>>/%
+	%/<<resizeEditor>>}}}/%
+%/===</pre>
+</div>

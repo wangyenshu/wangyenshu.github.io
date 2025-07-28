@@ -1,0 +1,68 @@
+<div title="GotoPluginInfo" modifier="acarvalho" created="201206181927" modified="201304121713" tags="System pluginInfo" _hash="1cd0cfb0e072a891d11609461b94113543c48b9f">
+<pre>/***
+|Name|GotoPluginInfo|
+|Source|http://www.TiddlyTools.com/#GotoPlugin|
+|Documentation|http://www.TiddlyTools.com/#GotoPluginInfo|
+|Version|1.9.2|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|documentation|
+|Description|Documentation for GotoPlugin|
+''View a tiddler by typing its title and pressing //enter//.''  As you type, a list of possible matches is displayed.  You can scroll-and-click (or use arrows+enter) to select/view a tiddler, or press escape to close the listbox to resume typing.  When the listbox is not displayed, pressing //escape// clears the current input.
+!!!!!Usage/Examples
+<<<
+syntax: {{{<<gotoTiddler quiet search inputstyle:... liststyle:... filter:...>>}}}
+All parameters are optional.
+* ''quiet'' (//keyword//)<br>list will not be automatically display as each character is typed.  Use //down// or //enter// to view the list.
+* ''showlist'' (//keyword//)<br>list will always be displayed, inline, directly below the input field.
+* ''search'' (//keyword//)<br>adds an extra 'command item' to the list that can be used to invoke a full-text search using the entered value.  This can be especially useful when no matching tiddler titles have been found.
+* ''inputstyle:'' and ''liststyle:''<br>are CSS declarations that modify the default input and listbox styles, respectively.  Note: the CSS styles must be surrounded by ({{{"..."}}} or {{{'...'}}}) or ({{{[[...]]}}}) (e.g., {{{liststyle:"border:1px dotted blue;color:green;..."}}}.
+* ''filter:''<br>is a single tag value (or a boolean tag expression if MatchTagsPlugin is installed), and is used to limit the search to only those tiddlers matching the indicated tag or tag expression (e.g., {{{<<gotoTiddler filter:"faq or help">>}}})
+{{{<<gotoTiddler>>}}}
+<<gotoTiddler>>
+{{{<<gotoTiddler search>>}}}
+<<gotoTiddler search>>
+{{{<<gotoTiddler showlist filter:"pluginInfo" liststyle:"height:10em;width:auto;">>}}}
+<<gotoTiddler showlist filter:"pluginInfo" liststyle:"height:10em;width:auto;">>
+<<<
+!!!!!Configuration
+<<<
+*Match titles only after {{twochar{<<option txtIncrementalSearchMin>>}}} or more characters are entered.<br>Use down-arrow to start matching with shorter input.  //Note: This option value is also set/used by [[SearchOptionsPlugin]]//.
+*To set the maximum height of the listbox, you can create a tiddler tagged with <<tag systemConfig>>, containing:
+//{{{
+config.macros.gotoTiddler.listMaxSize=10;  // change this number
+//}}}
+<<<
+!!!!!Revisions
+<<<
+2009.05.22 1.9.2 use reverseLookup() for IncludePlugin
+2009.04.12 1.9.1 support multiple instances with different filters by using per-element tiddler cache instead of shared static cache
+2009.04.05 1.9.0 added 'showlist' parameter for inline display with listbox always visible.
+2009.03.23 1.8.0 added txtIncrementalSearchMin (default=3).  Avoids fetching long lists.  Use down arrow to force search with short input.
+2008.12.15 1.7.1 up arrow from input field now moves to end of droplist (search for input).  Also, shift+enter cam now be used to quickly invoke search for text.
+2008.10.16 1.7.0 in macro handler(), changed to use //named// params instead of positional params, and added optional "filter:" param for tag filtering.  Removed 'insert' handling (now provided by [[QuickEditPlugin]]).
+2008.10.02 1.6.1 for IE, wrap controls in a table.  Corrects placement of listbox so it is below input field.
+2008.10.02 1.6.0 added 'search' param for optional "Search for:" item that invokes full text search (especially useful when no title matches are found)
+2008.02.17 1.5.0 ENTER key always displays tiddler based on current input regardless of whether input matches any existing tiddler
+2007.10.31 1.4.3 removed extra trailing comma on last property of config.macros.gotoTiddler object.  This fixes an error under InternetExplorer that was introduced 6 days ago... sure, I should have found it sooner, but... WHY DON'T PEOPLE TELL ME WHEN THINGS ARE BROKEN!!!!
+2007.10.25 1.4.2 added onclick handler for input field, so that clicking in field hides the listbox.
+2007.10.25 1.4.1 re-wrote getItems() to cache list of tiddlers/shadows/tags and use case-folded simple text match instead of regular expression to find matching tiddlers.  This *vastly* reduces processing overhead between keystrokes, especially for documents with many (>1000) tiddlers.  Also, removed local definition of replaceSelection(), now supported directly by the TW2.2+ core, as well as via backward-compatible plugin
+2007.04.25 1.4.0 renamed macro from "goto" to "gotoTiddler".  This was necessary to avoid a fatal syntax error in Opera (and other browsers) that require strict adherence to ECMAScript 1.5 standards which defines the identifier "goto" as "reserved for FUTURE USE"... *sigh*
+2007.04.21 1.3.2 in html definition, removed DIV around droplist (see 1.2.6 below).  It created more layout problems then it solved. :-(
+2007.04.01 1.3.1 in processItem(), ensure that correct textarea field is found by checking for edit=="text" attribute
+2007.03.30 1.3.0 tweak SideBarOptions shadow to automatically add {{{<<goto>>}}} when using default sidebar content
+2007.03.30 1.2.6 in html definition, added DIV around droplist to fix IE problem where list appears next to input field instead of below it.  
+2007.03.28 1.2.5 in processItem(), set focus to text area before setting selection (needed for IE to get correct selection 'range')
+2007.03.28 1.2.4 added prompt for 'pretty text' when inserting a link into tiddler content
+2007.03.28 1.2.3 added local copy of core replaceSelection() and modified for different replace logic
+2007.03.27 1.2.2 in processItem(), use story.getTiddlerField() to retrieve textarea control
+2007.03.26 1.2.1 in html, use either 'onkeydown' (IE) or 'onkeypress' (Moz) event to process <esc> key sooner, to prevent <esc> from 'bubbling up' to the tiddler (which will close the current editor).
+2007.03.26 1.2.0 added support for optional "insert" keyword param.
+2006.05.10 1.1.2 when filling listbox, set selection to 'heading' item... auto-select first tiddler title when down/enter moves focus into listbox
+2006.05.08 1.1.1 added accesskey ("G") to input field html (also set when field gets focus).  Also, inputKeyHandler() skips non-printing/non-editing keys. 
+2006.05.08 1.1.0 added heading to listbox for better feedback (also avoids problems with 1-line droplist)
+2006.05.07 1.0.0 list matches against tiddlers/shadows/tags.  input field auto-completion... 1st enter=complete matching input (or show list)... 2nd enter=view tiddler.  "quiet" param controls when listbox appears.  handling for enter (13), escape(27), and down(40) keys.   Change 'ondblclick' to 'onclick' to avoid unintended triggering of tiddler editor).  Shadow titles inserted into list instead of appended to the end.
+2006.05.05 0.0.0 started
+<<<</pre>
+</div>

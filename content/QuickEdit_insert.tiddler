@@ -1,0 +1,76 @@
+<div title="QuickEdit_insert" modifier="ELSDesignStudios" created="200801120913" modified="200906112023" tags="QuickEditPackage">
+<pre>/%
+|Name|QuickEdit_insert|
+|Source|http://www.TiddlyTools.com/#QuickEdit_insert|
+|Version|2.4.3|
+|Author|Eric Shulman|
+|License|see http://www.TiddlyTools.com/#QuickEditPlugin|
+|Type|html|
+|Requires|QuickEditPlugin|
+|Description|quickedit - insert content from another tiddler or external file|
+
+Usage: see  http://www.TiddlyTools.com/#QuickEditToolbar
+
+%/<html><hide linebreaks><a href="javascript:;" class="tiddlyLink" tabindex="-1" 
+title="insert content from another tiddler or external file"
+onclick="var p=Popup.create(this); if (!p) return false; p.className+=' sticky smallform';
+
+	var s2=createTiddlyElement(p,'select'); s2.title='filter by tag';
+	s2.options[0]=new Option('filter by tag...','');
+	s2.options[s2.length]=new Option('[all tiddlers]','');
+	var tags=store.getTags();
+	for (var t=0; t<tags.length; t++) s2.options[s2.length]=new Option(tags[t][0],tags[t][0]);
+	s2.onchange=function(){
+		var tag=this.value;
+		var tids=tag.length?store.reverseLookup('tags',tag,true):store.reverseLookup('tags','excludeLists');
+		var list=this.nextSibling.nextSibling;
+		while (list.length) list.options[0]=null;
+		var prompt='select a tiddler or file...';
+		if (tag.length) prompt='select a tagged tiddler ['+tids.length+' matches]...';
+		list.options[0]=new Option(prompt,'');
+		if (!tag.length) list.options[list.length]=new Option('[browse for file...]','_file');
+		for (var t=0; t<tids.length; t++) {
+			list.options[list.length]=new Option(tids[t].title,tids[t].title);
+			list.options[list.length-1].title=tids[t].getSubtitle();
+		}
+		list.size=Math.min(list.length,10);
+		list.selectedIndex=0; list.focus();
+		this.style.width=list.offsetWidth+'px';
+		if (!tag.length) this.selectedIndex=0;
+	};
+	createTiddlyElement(p,'br');
+
+	var s=createTiddlyElement(p,'select'); s.button=this;
+	s.title='select a tiddler or file';
+	s.options[0]=new Option('select a tiddler or file...','');
+	s.options[s.length]=new Option('[browse for file...]','_file');
+	var tids=store.reverseLookup('tags','excludeLists');
+	for (var t=0; t<tids.length; t++) {
+		s.options[s.length]=new Option(tids[t].title,tids[t].title);
+		s.options[s.length-1].title=tids[t].getSubtitle();
+	}
+	s.size=Math.min(s.length,10);
+	s.onclick=function(){ if (!this.value.length) return false;
+		if (this.value=='_file') {
+			var fn=config.quickEdit.promptForFilename(
+				'Enter/select a text file',getLocalPath(document.location.href),'');
+			if (!fn) return false; /* cancelled by user */
+			var txt=loadFile(getLocalPath(fn));
+			if (!txt) { alert('Error: unable to read contents from \0027'+fn+'\0027'); return; }
+		}
+		else var txt=store.getTiddlerText(this.value);
+		if (!txt) {
+			displayMessage(this.value+' not found');
+			this.selectedIndex=0; this.focus();
+			return false;
+		}
+		config.quickEdit.setSelection(this.button,txt);
+		Popup.remove(); return false;
+	};
+	s.onkeyup=config.quickEdit.keyup;
+	Popup.show();
+	s2.style.width=s.offsetWidth+'px';
+	s.focus();
+	return config.quickEdit.processed(event);"
+>insert</a></html></pre>
+</div>

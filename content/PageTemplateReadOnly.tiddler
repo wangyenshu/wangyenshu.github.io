@@ -1,0 +1,38 @@
+<div title="PageTemplateReadOnly" modifier="ELSDesignStudios" created="200801030423" modified="200810141317" tags="template">
+<pre><!--{{{-->
+<!--
+|Name|PageTemplateReadOnly|
+|Source|http://www.TiddlyTools.com/#PageTemplateReadOnly|
+|Version||
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|template|
+|Description|custom version of shadow template for controlling page layout|
+-->
+<div id='siteHeader' class='header'>
+	<span id='siteTitle' class='siteTitle' refresh='content' tiddler='SiteTitle'></span>
+	<span id='siteSubtitle' class='siteSubtitle' refresh='content' tiddler='SiteSubtitle'></span>
+</div>
+<div id='siteMenu' class='siteMenu' refresh='content' tiddler='SiteMenu' style='clear:both'></div>
+<div id='breadCrumbs' class='breadCrumbs'></div>
+<div id='mainMenu'>
+	<div>
+		<div id='mainMenuStandard' refresh='content' tiddler='MainMenu'></div>
+		<div class='center fine' style='padding-bottom:1em;' refresh='content' tiddler='ToggleReadOnly'></div>
+	</div>
+	<div id='mainMenuExtras' refresh='content' tiddler='MainMenuExtras'></div>
+</div>
+<div id='sidebar'>
+	<div id='sidebarOptions' refresh='content' tiddler='SideBarOptions'></div>
+	<div id='sidebarTabs' refresh='content' force='true' tiddler='SideBarTabs'></div>
+</div>
+<div id='displayArea'>
+	<div id='messageArea'></div>
+	<div id='storyMenu' class='storyMenu' refresh='content' force='false' tiddler='StoryMenu'></div>
+	<div id='searchPanel' class='searchPanel smallform' style='display:none;margin:1em;clear:both' macro='moveablePanel name:searchresults undocked width:auto height:auto'></div>
+	<div id='tiddlerDisplay' style="clear:both"></div>
+</div>
+<span style='display:none' macro='tiddler SiteStartup'></span>
+<!--}}}--></pre>
+</div>

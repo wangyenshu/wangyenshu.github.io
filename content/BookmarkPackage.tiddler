@@ -1,0 +1,11 @@
+<div title="BookmarkPackage" modifier="ELSDesignStudios" created="200707132129" modified="200707162207" tags="BookmarkPackage package story">
+<pre>Tiddlers that are tagged with<<tag bookmark>>can be used to define ''~URLs, descriptions and author information for favorite websites''.
+
+Bookmark tiddlers are displayed using a custom BookmarkViewTemplate (requires use of TaggedTemplateTweak), which automatically embeds the website directly in the tiddler content using an HTML "IFRAME" element.  Most (but not all) of the bookmarks distributed with this TiddlyTools package refer to TiddlyWiki documents and are also tagged with<<tag systemServer>>, allowing them to be selected as import sources when using the TiddlyWiki standard ImportTiddlers function.
+
+To create additional bookmarks, simply copy the BlankBookmark tiddler, edit the URL, description, and author info, tag the new tiddler with<<tag bookmark>>and press 'done' to start viewing the remote URL.  Alternatively, you can add the following """<<newTiddler>>""" macro in your SideBarOptions (or any other tiddler) to insert a<<newTiddler label:'new bookmark' title:'NewBookmark' text:{{store.getTiddlerText('BlankBookmark','')}} tag:'bookmark' prompt:'create a bookmark tiddler'>>command into your document:
+{{{
+<<newTiddler label:'new bookmark' title:'NewBookmark' tag:'bookmark'
+	text:{{store.getTiddlerText('BlankBookmark','')}}>>
+}}}</pre>
+</div>

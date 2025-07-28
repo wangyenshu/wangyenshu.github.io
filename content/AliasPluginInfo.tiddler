@@ -1,0 +1,64 @@
+<div title="AliasPluginInfo" modifier="EricShulman" created="200509280700" modified="201208102043" tags="pluginInfo">
+<pre>/***
+|Name|AliasPlugin|
+|Source|http://www.TiddlyTools.com/#AliasPlugin|
+|Documentation|http://www.TiddlyTools.com/#AliasPluginInfo|
+|Version|1.2.0|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|documentation|
+|Description|documentation for AliasPlugin|
+Define macros for abbreviations and other "aliases", and then embed them in the rest of your tiddler content to quickly insert common terms, phrases and links without a lot of repetitive typing.
+!!!!!Usage
+<<<
+{{{
+<<alias keyword "content to display">>
+}}}
+Select a short keyword or other abbreviated term that is easily input with just a few keystrokes.  When the {{{<<alias>>}}} macro is processed, it creates a new macro for you to embed in tiddler content, using the specified alias keyword as the name for that new macro.  You can choose any keyword you like, but don't include any spaces, as macro names must not contain spaces.
+
+In order to ensure that your aliases are always defined and available for use, you should add your definitions to a tiddler that you are certain will be displayed when your TW is first loaded (e.g., [[MainMenu]]).  The {{{<<alias>>}}} macro itself won't actually produce any visible output, so it can be safely added to practically any tiddler without producing a change in that tiddler's appearance.
+
+To use the aliases you have defined, simply invoke them as you would any other TiddlyWiki macro, e.g.,
+{{{<<keyword>>}}}.  If you include parameters when you invoke the macro -- {{{<<keyword param param param...>>}}} -- they can be inserted direclty into the output by replacing corresponding substitution markers, indicated by using "%0" through "%9" in the "text to display" parameter used when the alias was defined.  You can also use standard "backslash quoting" (e.g, "\n" (newline), "\t" (tab), etc.) to insert special characters into the alias output.  Important note: ''//to embed another macro within an alias definition, you must "quote" the closing angle brackets by adding a backslash, like this:// {{{>\>}}}.''
+
+For example, to define a quick alias for inserting a link to any given subject on www.wikipedia.com, you can write:
+{{{
+<<alias wikipedia "[[Wikipedia:%0|http://www.wikipedia.com/wiki/%0]]">>
+}}}
+which allows you to then write:
+{{{
+<<wikipedia TiddlyWiki>>
+}}}
+which is processed as if you wrote:
+{{{
+[[Wikipedia:TiddlyWiki|http://www.wikipedia.com/wiki/TiddlyWiki]]
+}}}
+and is displayed this way:
+><<alias wikipedia "[[Wikipedia:%0|http://www.wikipedia.com/wiki/%0]]">><<wikipedia TiddlyWiki>>
+
+Another interesting example uses the substitution markers to automatically display a reference to a TiddlerSlice value:
+{{{
+<<alias describe "|<<tiddler [[%0::Description]]>\>|\n">>
+}}}
+which allows you to then write:
+{{{
+<<describe AliasPlugin>>
+}}}
+which is processed as if you wrote:
+{{{
+|<<tiddler [[AliasPlugin::Description]]>>|
+}}}
+and is displayed this way:
+<<alias describe "|\t<<tiddler [[%0::Description]]>\>|\n">><<describe AliasPlugin>>
+<<<
+!!!!!Revisions
+<<<
+2012.08.10 1.2.0 handle backslash quoting to allow direct use of macro calls in aliases
+2009.09.09 1.1.1 'tiddler' arg passed to wikify() so aliases containing macros render with correct context
+2008.03.11 [*.*.*] plugin size reduction - documentation moved to [[AliasPluginInfo]]
+2007.03.21 1.1.0 added support for parameter substitution into alias macros, using format() method and%0..%9 markers
+2005.10.09 1.0.3 combined documentation and code into a single tiddler
+2005.08.12 1.0.0 initial release
+<<<</pre>
+</div>

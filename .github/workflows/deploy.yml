@@ -1,0 +1,61 @@
+name: Build and Deploy Site
+
+on:
+  push:
+    branches:
+      - main # Or your default branch like 'master'
+      
+permissions:
+  contents: write
+
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0 # Important for pushing to a different branch
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20' # Or your preferred Node.js version
+
+    - name: Install dependencies
+      run: npm install
+
+    - name: Change to build directory and run build
+      run: |
+        cd build
+        npm run build-site
+        cd .. # Go back to the root directory
+
+    - name: Prepare docs directory
+      run: |
+        mkdir -p docs
+        cp build/cooked/index.html docs/index.html
+
+    - name: Copy passthrough content to docs
+      run: |
+        # Ensure the 'passthrough' directory exists in your root
+        # If 'passthrough' is nested elsewhere, adjust the path
+        if [ -d "passthrough" ]; then
+          cp -r passthrough/* docs/
+        else
+          echo "Warning: 'passthrough' directory not found. Skipping copy."
+        fi
+
+    - name: Commit and push docs to build_site branch
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: |
+        cd docs
+        git init
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+        git checkout -B gh-pages
+        git add .
+        git commit -m "Build site: Update docs for deployment" || echo "No changes to commit"
+        git push --force "https://x-access-token:${GITHUB_TOKEN}@github.com/${{ github.repository }}" gh-pages

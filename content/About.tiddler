@@ -1,0 +1,42 @@
+<div title="About" modifier="Wang Yanshu" created="202409231357" modified="202506230324" tags="menu" creator="Wang Yanshu">
+<pre>Powered by [[TiddlyWikiClassi|https://github.com/TiddlyWiki/tiddlywiki.com]] <<version>>.
+Except where otherwise noted, text content on this site is licensed under [[Creative Commons NonCommercial license 4.0|https://creativecommons.org/licenses/by-nc-sa/4.0/legalcode.en]].
+
+!TagPolicy
+*blog: General blog content, will appear in AutoOpenTiddlersPlugin and rss.
+*Content: It will appear in content timeline.
+*Decrypt(Euclid): Encrypted tiddlers class Euclid.
+*Decrypt(Ramanujan): Encrypted tiddlers class Ramanujan.
+*Decrypt(Clavius): Encrypted tiddlers class Clavius.
+*AES(Teichmüller): Encrypted tiddlers class Teichmüller by AES Encryption Bookmarklet
+*Category: Used for category name.
+
+!CategoryPolicy
+<<forEachTiddler 
+where 
+'tiddler.tags.contains("category")'
+sortBy
+'tiddler.title'
+>>
+
+!Credit
+This site uses the Third Party components and learns from their designs from:
+https://tiddlytools.com/Classic/
+http://mgsd.tiddlyspot.com
+http://tbgtd.tiddlyspot.com
+https://acarvalho.tiddlyhost.com/
+http://tiddlyvault.tiddlyspot.com/
+https://classic.tiddlywiki.com/
+many plugins and designs and bookmarklets from living or dead sites
+https://www.swiftlatex.com/
+https://labs.leaningtech.com/cheerpj3
+https://labs.leaningtech.com/cheerpx
+https://accessibility-widget.pages.dev/
+https://webamp.org/
+http://www.javascriptkit.com/
+https://ribo.zone
+https://github.com/jstrieb/link-lock
+
+!Permanent Backup
+https://cdn.jsdelivr.net/gh/wangyenshu/wangyenshu.github.io@main/index.html</pre>
+</div>

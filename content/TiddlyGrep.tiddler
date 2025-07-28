@@ -1,0 +1,46 @@
+<div title="TiddlyGrep" modifier="ELSDesignStudios" created="200909221913" modified="201011211910" tags="html alpha">
+<pre>/%
+|Name|TiddlyGrep|
+|Source|http://www.TiddlyTools.com/#TiddlyGrep|
+|Version|0.0.1|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|html|
+|Description|search for text patterns in specific tiddler sections and display matching lines|
+|Status|EXPERIMENTAL ALPHA - SUBJECT TO LOTS OF CHANGES|
+Usage:
+
+%/<<tiddler HideTiddlerTags>>{{small smallform{
+<html><nowiki>
+<form style='display:inline;white-space:nowrap;'>
+<table class='borderless' style='width:100%'><tr><td style='width:33%'>
+	search pattern:<br>
+	<input name=pattern style='width:97%' value='' title='enter search pattern'>
+</td><td style='width:33%'>
+	section (blank=search whole tiddlers):<br>
+	<input name=section style='width:97%' value='' title='enter section name'>
+</td><td style='width:33%'>
+	tag filter (blank=all tiddlers):<br>
+	<input name=tag     style='width:97%' value='' title='enter tag filter'>
+</td><td>
+	<br>
+	<input type=button style='width:auto' value='find' onclick="
+	var f=this.form;
+	var target=f.nextSibling; removeChildren(target);
+	var pattern='[^\\n]*('+f.pattern.value+')[^\\n]*'
+	var section=f.section.value; if (section.length) section='##'+section;
+	var re=new RegExp(pattern,'mg');
+	var out=[];
+	var fmt='#[[%0]]:<br>\x22\x22\x22%1\x22\x22\x22';
+	var tids=tag.length?store.getTaggedTiddlers(f.tag.value):store.getTiddlers();
+	for (var t=0; t<tids.length; t++) {
+		var tid=tids[t].title+section;
+		var matches=store.getTiddlerText(tid,'').match(re)||[];
+		for (var m=0;m<matches.length;m++)
+			out.push(fmt.format([tids[t].title,matches[m]]));
+	}
+	if (!out.length) out.push('no matches found');
+	wikify('<<<\n'+out.join('\n')+'\n<<<\n',target);
+"></td></tr></table></form><div></div></html>}}}</pre>
+</div>

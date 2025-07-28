@@ -1,0 +1,121 @@
+<div title="AttachFilePluginInfo" modifier="ELSDesignStudios" created="200801081347" modified="200906041718" tags="pluginInfo">
+<pre>/***
+|Name|AttachFilePluginInfo|
+|Source|http://www.TiddlyTools.com/#AttachFilePlugin|
+|Documentation|http://www.TiddlyTools.com/#AttachFilePluginInfo|
+|Version|4.0.0|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|plugin|
+|Description|Documentation for AttachFilePlugin|
+Store or link binary files (such as jpg, gif, pdf or even mp3) within your TiddlyWiki document and then use them as images or links from within your tiddler content.
+!!!!!Inline interface (live)
+>see [[AttachFile]] (shadow tiddler)
+><<tiddler AttachFile>>
+!!!!!Syntax
+<<<
+''To display the attach file control panel, simply view the [[AttachFile]] shadow tiddler that is automatically created by the plugin, and contains an instance of the inline control panel.''.  Or, you can write:
+{{{
+<<attach inline>>
+}}}
+in any tiddler to display the control panel embedded within that tiddler.  Note: you can actually use any unique identifier in place of the "inline" keyword.  Each unique id creates a separate instance of the controls.  If the same ID is used in more than one tiddler, then the control panel is automatically moved to the most recently rendered location.  Or, you can write:
+{{{
+<<attach>>
+}}}
+(with no ID parameter) in SidebarOptions.  This adds a command link that opens the controls as a floating panel, positioned directly to the left of the sidebar.
+<<<
+!!!!!Usage
+<<<
+Binary file content can be stored in three different locations:
+#embedded in the attachment tiddler (encoded as base64)
+#on your filesystem (a 'local link' path/filename)
+#on a web server (a 'remote link' URL)
+The plugin creates an "attachment tiddler" for each file you attach.  Regardless of where you store the binary content, your document can refer to the attachment tiddler rather than using a direct file or URL reference in your embedded image or external links, so that changing document locations will not require updating numerous tiddlers or copying files from one system to another.
+> Important note: As of version 3.6.0, in order to //render// images and other binary attachments created with this plugin, you must also install [[AttachFilePluginFormatters]], which extends the behavior of the TiddlyWiki core formatters for embedded images ({{{[img[tooltip|image]]}}}), linked embedded images ({{{[img[tooltip|image][link]]}}}), and external/"pretty" links ({{{[[label|link]]}}}), so that these formatter will process references to attachment tiddlers as if a normal file reference had been provided. |
+When you attach a file, a tiddler (tagged with<<tag attachment>>) is generated (using the source filename as the tiddler's title).  The tiddler contains //''base64 text-encoded binary data''//, surrounded by {{{/%...%/}}} comment markers (so they are not visible when viewing the tiddler).  The tiddler also includes summary details about the file: when it was attached, by whom, etc. and, if the attachment is an image file (jpg, gif, or png), the image is automatically displayed below the summary information.
+>Note: although you can edit an attachment tiddler, ''don't change any of the encoded content below the attachment header'', as it has been prepared for use in the rest of your document, and even changing a single character can make the attachment unusable.  //If needed, you ''can'' edit the header information or even the MIME type declaration in the attachment data, but be very careful not to change any of the base64-encoded binary data.//
+Unfortunately, embedding just a few moderately-sized binary files using base64 text-encoding can dramatically increase the size of your document.   To avoid this problem, you can create attachment tiddlers that define external local filesystem (file://) and/or remote web server (http://) 'reference' links, without embedding the binary data directly in the tiddler (i.e., uncheck "embed data" in the 'control panel').
+
+These links provide an alternative source for the binary data: if embedded data is not found (or you are running on Internet Explorer, which does not currently support using embedded data), then the plugin tries the local filesystem reference.  If a local file is not found, then the remote reference (if any) is used.  This "fallback" approach also lets you 'virtualize' the external links in your document, so that you can access very large binary content such as PDFs, MP3's, and even *video* files, by using just a 'remote reference link' without embedding any data or downloading huge files to your hard disk.
+
+Of course, when you //do// download an attached file, the local copy will be used instead of accessing a remote server each time, thereby saving bandwidth and allowing you to 'go mobile' without having to edit any tiddlers to alter the link locations...
+<<<
+!!!!!Syntax / Examples
+<<<
+To embed attached files as images or link to them from other tiddlers, use the standard ~TiddlyWiki image syntax ({{{[img[tooltip|filename]]}}}), linked image syntax ({{{[img[tooltip|filename][tiddlername]]}}}) , or "external link" syntax ({{{[[text|URL]]}}}), replacing the filename or URL that is normally entered with the title of an attachment tiddler.
+
+embedded image data:
+>{{{[img[Meow|AttachFileSample]]}}}
+>[img[Meow|AttachFileSample]]
+embedded image data with link to larger remote image:
+>{{{[img[click for larger view|AttachFileSample][AttachFileSample2]]}}}
+>[img[click for larger view|AttachFileSample][AttachFileSample2]]
+'external' link to embedded image data:
+>{{{[[click to view attachment|AttachFileSample]]}}}
+>[[click to view attachment|AttachFileSample]]
+'external' link to remote image:
+>{{{[[click to view attachment|AttachFileSample2]]}}}
+>[[click to view attachment|AttachFileSample2]]
+regular ~TiddlyWiki links to attachment tiddlers:
+>{{{[[AttachFileSample]]}}} [[AttachFileSample]]
+>{{{[[AttachFileSample2]]}}} [[AttachFileSample2]]
+<<<
+!!!!!Defining MIME types
+<<<
+When you select a source file, a ''[[MIME|http://en.wikipedia.org/wiki/MIME]]'' file type is automatically suggested, based on filename extension.  The AttachFileMIMETypes tiddler defines the list of MIME types that will be recognized by the plugin.  Each MIME type definition consists of exactly two lines of text: the official MIME type designator (e.g., "text/plain", "image/gif", etc.), and a space-separated list of file extensions associated with that type.  List entries are separated by "----" (horizontal rules).
+<<<
+!!!!!Known Limitations
+<<<
+Internet Explorer does not support the data: URI scheme, and cannot use the //embedded// data to render images or links.  However, you can still use the local/remote link definitions to create file attachments that are stored externally.  In addition, while it is relatively easy to read local //text// files, reading binary files is not directly supported by IE's FileSystemObject (FSO) methods, and other file I/O techniques are subject to security barriers or require additional MS proprietary technologies (like ASP or VB) that make implementation more difficult.  As a result, you cannot //create// new attachment tiddlers using IE.
+<<<
+!!!!!Installation
+<<<
+Import (or copy/paste) the following tiddlers into your document:
+* [[AttachFilePlugin]] (tagged with <<tag systemConfig>>)
+* [[AttachFilePluginFormatters]] ("runtime distribution library") (tagged with <<tag systemConfig>>)
+* [[AttachFileSample]] and [[AttachFileSample2]] //(tagged with <<tag attachment>>)//
+* [[AttachFileMIMETypes]] //(defines binary file types)//
+> Important note: As of version 3.6.0, in order to //render// images and other binary attachments created with this plugin, you must also install [[AttachFilePluginFormatters]], which extends the behavior of the TiddlyWiki core formatters for embedded images ({{{[img[tooltip|image]]}}}), linked embedded images ({{{[img[tooltip|image][link]]}}}), and external/"pretty" links ({{{[[label|link]]}}}), so that these formatter will process references to attachment tiddlers as if a normal file reference had been provided. |
+<<<
+!!!!!Revisions
+<<<
+2009.06.04 4.0.0 changed attachment storage format to use //sections// instead of embedded substring markers.
+2008.07.21 3.9.0 Fixup for FireFox 3: use HTML with separate text+button control instead of type='file' control
+2008.05.12 3.8.1 automatically add 'attach' task to backstage (moved from BackstageTweaks)
+2008.04.09 3.8.0 in onChangeSource(), if source matches current document folder, use relative reference for local link.  Also, disable 'embed' when using IE (which //still// doesn't support data: URI)
+2008.04.07 3.7.3 fixed typo in HTML for 'local file link' so that clicking in input field doesn't erase current path/file (if any)
+2008.04.07 3.7.2 auto-create AttachFile shadow tiddler for inline interface
+2008.01.08 [*.*.*] plugin size reduction: documentation moved to ...Info
+2007.12.04 [*.*.*] update for TW2.3.0: replaced deprecated core functions, regexps, and macros
+2007.12.03 3.7.1 in createAttachmentTiddler(), added optional "noshow" flag to suppress display of newly created tiddlers.
+2007.10.29 3.7.0 code reduction: removed support for built-in upload to server... on-line hosting of binary attachments is left to the document author, who can upload/host files using 3rd-party web-based services (e.g. www.flickr.com, ) or stand-alone applications (e.g., FTP).
+2007.10.28 3.6.0 code reduction: removed duplicate definition of image and prettyLink formatters.  Rendering of attachment tiddlers now //requires// installation of AttachFilePluginFormatters
+2007.03.01 3.5.3 use apply() to invoke hijacked function
+2007.02.25 3.5.2 in hijack of "prettyLink", fix version check for TW2.2 compatibility (prevent incorrect use of fallback handler)
+2007.01.09 3.5.1 onClickAttach() refactored to create separate createAttachmentTiddler() API for use with FileDropPluginHandlers
+2006.11.30 3.5.0 in getAttachment(), for local references, add check for file existence and fallback to remote URL if local file not found.  Added fileExists() to encapsulate FF vs. IE local file test function (IE FSO object code is TBD).
+2006.11.29 3.4.8 in hijack for PrettyLink, 'simple bracketed link' opens tiddler instead of external link to attachment
+2006.11.29 3.4.7 in readFile(), added try..catch around initWithPath() to handle invalid/non-existent paths better.
+2006.11.09 3.4.6 REAL FIX for TWv2.1.3: incorporate new TW2.1.3 core "prettyLink" formatter regexp handling logic and check for version < 2.1.3 with fallback to old plugin code.  Also, cleanup table layout in HTML (added "border:0" directly to table elements to override stylesheet)
+2006.11.08 3.4.5 TEMPORARY FIX for TWv2.1.3: disable hijack of wikiLink formatter due to changes in core wikiLink regexp definition.  //Links to attachments are broken, but you can still use {{{[img[TiddlerName]]}}} to render attachments as images, as well as {{{background:url('[[TiddlerName]]')}}} in CSS declarations for background images.//
+2006.09.10 3.4.4 update formatters for 2.1 compatibility (use this.lookaheadRegExp instead of temp variable)
+2006.07.24 3.4.3 in prettyLink formatter, added check for isShadowTiddler() to fix problem where shadow links became external links.
+2006.07.13 3.4.2 in getAttachment(), fixed stripping of newlines so data: used in CSS will work
+2006.05.21 3.4.1 in getAttachment(), fixed substring() to extract data: URI (was losing last character, which broken rendering of SOME images)
+2006.05.20 3.4.0 hijack core getRecursiveTiddlerText() to support rendering attachments in stylesheets (e.g. {{{url([[AttachFileSample]])}}})
+2006.05.20 3.3.6 add "description" feature to easily include notes in attachment tiddler (you can always edit to add them later... but...)
+2006.05.19 3.3.5 add "attach as" feature to change default name for attachment tiddlers.  Also, new optional param to specify tiddler name (disables editing)
+2006.05.16 3.3.0 completed XMLHttpRequest handling for GET or POST to configurable server scripts
+2006.05.13 3.2.0 added interface for upload feature.  Major rewrite of code for clean object definitions.  Major improvements in UI interaction and validation.
+2006.05.09 3.1.1 add wikifer support for using attachments in links from "linked image" syntax: {{{[img[tip|attachment1][attachment2]]}}}
+2006.05.09 3.1.0 lots of code changes: new options for attachments that use embedded data and/or links to external files (local or remote)
+2006.05.03 3.0.2 added {{{/%...%/}}} comments around attachment data to hide it when viewing attachment tiddler.
+2006.02.05 3.0.1 wrapped wikifier hijacks in initAttachmentFormatters() function to eliminate globals and avoid FireFox 1.5.0.1 crash bug when referencing globals
+2005.12.27 3.0.0 Update for TW2.0.  Automatically add 'excludeMissing' tag to attachments
+2005.12.16 2.2.0 Dynamically create/remove attachPanel as needed to ensure only one instance of interface elements exists, even if there are multiple instances of macro embedding.
+2005.11.20 2.1.0 added wikifier handler extensions for "image" and "prettyLink" to render tiddler attachments
+2005.11.09 2.0.0 begin port from old ELS Design adaptation based on ~TW1.2.33
+2005.07.20 1.0.0 Initial release (as adaptation)
+<<<</pre>
+</div>

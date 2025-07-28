@@ -1,0 +1,115 @@
+<div title="sketchbook_draft" modifier="Wang Yanshu" created="202406010515" modified="202503032356" tags="draft" creator="YourName">
+<pre><html>
+  <head>
+    
+  <style>
+  	
+ 	* { box-sizing: border-box; }
+	body {  min-height: 100vh; }
+	section {
+		border: 0.8vw solid black;
+		background-color: #e8ecd1;
+		
+		border-radius: 2vw;
+		width: 65vw;
+		height: 40vw;
+		display: none;
+		position: absolute;
+		top: 95%;
+		left: 50%;
+		transform: translate(-50%, -50%);
+		padding: 0 0.2vw;
+	}
+	section#start { 
+		display: flex;
+		z-index: 1;
+	}
+	section:target {
+		display: flex;
+		z-index: 2;
+	}
+	
+	.pageL,	.pageR {
+		height: 100%;
+		width:50%;
+		display: inline-block;
+		position: relative;
+		border-radius: 1.5vw;
+		font-size: 32px;
+	}
+	.pageL { border-left: 0.1vw grey solid; }
+	.pageR { border-right: 0.1vw grey solid; }
+	a.pageL:hover::after, a.pageL:focus::after {
+		content: '<';
+		color: black;
+		position: absolute;
+		bottom: 1vw;
+		left: 1.2vw;
+	}
+	a.pageR:hover::after, a.pageR:focus::after {
+		content: '>';
+		color: black;
+		position: absolute;
+		bottom: 1vw;
+		right: 1.2vw;
+	}
+	.mid { width: 1%; background: linear-gradient(to right, white, grey, white); }
+	img, h1, p { max-width: 90%; 
+		position: absolute;
+		top: 50%;
+		left: 50%;
+		transform: translate(-50%, -50%); 
+		image-rendering: auto;
+	}
+	h1 { text-align: center; top: 40%; }
+	section a:hover, section a:focus { background-color: transparent; }
+	.home {
+		position: fixed;
+		top: 20px;
+		right: 20px;
+		z-index: 3
+	}
+	.home a { color: teal; background-color: white; }
+	.home a:hover, .home a:focus { color: white; background-color: teal; }
+	
+	
+	}
+  </style>
+</head>
+<body>
+
+<main>
+<section id="start">
+	<div class="pageL">
+	  <p>	131231 </p>
+	</div>
+	<div class="mid"></div>
+	<a class="pageR" href="#01">
+		<!-- page content here -->
+	</a>
+</section>
+
+<section id="01">
+	<a class="pageL" href="#start">
+		<!-- page content here -->
+	</a>
+	<div class="mid"></div>
+	<a class="pageR" href="#02">
+		<!-- page content here -->
+	</a>
+</section>
+
+<section id="02">
+	<a class="pageL" href="#01">
+		<!-- page content here -->
+	</a>
+	<div class="mid"></div>
+	<a class="pageR" href="#03">
+		<!-- page content here -->
+	</a>
+</section>
+</main>
+
+</body>
+</html></pre>
+</div>

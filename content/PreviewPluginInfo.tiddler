@@ -1,0 +1,53 @@
+<div title="PreviewPluginInfo" modifier="ELSDesignStudios" created="200801090118" modified="200801090119" tags="pluginInfo" foobar="{{big{phoo}}}\n{{green{mumble}}}\n|snork|wah!|\n|&gt;| wow|">
+<pre>/***
+|Name|PreviewPluginInfo|
+|Source|http://www.TiddlyTools.com/#PreviewPlugin|
+|Documentation|http://www.TiddlyTools.com/#PreviewPluginInfo|
+|Version|1.8.1|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|documentation|
+|Description|documentation for PreviewPlugin|
+Provides key-by-key ''LIVE PREVIEW'' of //formatted// tiddler content as you type input into a textarea (multi-line) edit field.
+!!!!!Usage
+<<<
+Syntax: (in tiddler content)
+{{{
+<<preview hide fieldname height>>
+}}}
+//OR// (in [[EditTemplate]])
+{{{
+<span macro='preview hide fieldname height'></span>
+}}}
+where:
+* 'hide' (optional)<br>is a keyword that causes the preview display to be initially hidden when created.  This is typically used in an [[EditTemplate]] definition, in conjunction with the 'previewTiddler' toolbar syntax (see below).
+* fieldname (optional)<br>specifies the name of the tiddler field that is being previewed.  It corresponds to the fieldname specified in the {{{<span class='editor' macro='edit fieldname height'></span>}}} syntax used to define the textarea edit field, and is used to locate and access the source content that is to be previewed.  When omitted, the previewer will automatically associate itself with the last textarea control that precedes it in the rendered tiddler editor display.
+* height (optional)<br>defines the total height of the previewer display (including the status line and controls), using CSS "em" (line height) measurements.  The default height value is "15em" (i.e., approximately 15 lines of standard-sized text)
+
+In addition to the preview macro itself, you can place the following in your [[EditTemplate]] to add a tiddler toolbar command that enables you to toggle the preview display once it has been created:
+{{{
+<span class='toolbar' macro='toolbar previewTiddler'></span>
+}}}
+when clicked, this command will show/hide ALL preview controls that are displayed in the current tiddler.  Note that, when desired, you can also embed this toolbar command directly into a tiddler by entering the "{{{<<toolbar previewTiddler>>}}}" syntax in the tiddler source.
+<<<
+!!!!!Examples
+<<<
+in [[EditTemplate]]:
+{{{
+<div class='editor' macro='edit foobar 5'></div>
+<div class='editor' macro='preview hide foobar 10'></div>
+}}}
+OR, embedded in tiddler content:
+{{{
+<<edit foobar 5>><<preview foobar 10>>
+}}}
+{{smallform{
+<<edit foobar 5>><<preview foobar 10>>}}}
+By default, the preview display is automatically rendered each time a key is typed into the tiddler content edit field.  As soon as changes are entered, they will be instantly visible within the preview display.  Unfortunately, the partial tiddler source definitions that occur //during// editing may somtimes cause rendering problems, and some exceptionally complex tiddlers make take an unusually long amount of time to completely render their content.   In such cases, key-by-key display updates are undesirable or impractical.
+
+You can select the ''freeze'' checkbox to suspend automatic key-by-key preview display updates.  The preview display will not be re-rendered again until you press the ''refresh'' button or clear the 'freeze' checkbox.  The preview display will also automatically freeze whenever the //rendering time// exceeds a pre-determined time limit (see configuration section), specified in milliseconds.  Note: the ''actual elapsed time'' used to process and render any given content is reported in the preview "status bar" whenever that content is previewed.
+
+In addition to a 'wikified' preview, the previewer display can show a ''DOM viewer'' and/or an ''HTML viewer'' that are also updated with each keystroke.  These text-based displays can be helpful while attempting to correct or enhance the formatting of tiddler content, especially when complex combinations of wiki-syntax produce unexpected or undesired results.
+<<<</pre>
+</div>

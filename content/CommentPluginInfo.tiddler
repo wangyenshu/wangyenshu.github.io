@@ -1,0 +1,93 @@
+<div title="CommentPluginInfo" modifier="ELSDesignStudios" created="200804122114" modified="201104271826" tags="pluginInfo">
+<pre>/***
+|Name|CommentPluginInfo|
+|Source|http://www.TiddlyTools.com/#CommentPlugin|
+|Documentation|http://www.TiddlyTools.com/#CommentPluginInfo|
+|Version|2.9.5|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|Documentation|
+|Description|Documentation for CommentPlugin|
+!!!!!Usage
+<<<
+syntax:
+{{{
+<<comment TiddlerName overwrite reverse marker:... tags format dateformat>>
+}}}
+where:
+*''~TiddlerName'' //(optional)//<br>specifies the 'target' tiddler into which comments will be written.  If you use the keyword, //{{{"here"}}}// (or omit all parameters), the current tiddler is used by default.  The ~TiddlerName can also include special //substitution markers// to construct a unique target title by dynamically inserting values, where:
+**%tiddler%=containing tiddler title,
+**%UTC%=UTC timestamp (YYYYMMMDD.HHMMSSMMM),
+**%random%=random decimal number (.123456789),
+**%who%=current TiddlyWiki username,
+**%subject%=comment subject text.
+*''overwrite'' //(optional)//<br>Normally, comments are //added// to a target tiddler if it already exists.  However, if you use the ''overwrite'' keyword, the new comment text //''completely replaces the previous contents of an existing tiddler''//.
+*''reverse'' //(optional)//<br>By default, new comments are added to the target tiddler //following// any existing comments.  When ''reverse'' is used, new comments are inserted //before// existing comments, resulting in a reverse-chronological display (i.e, newest comments shown first).
+*''marker:...'' //(optional)//<br>specifies an alternative //substitution marker// within the target tiddler (see below).
+*''tags'' //(optional)//<br>adds specified space-separated tags to the target tiddler whenever a comment is written.  Note that the list of tags should be enclosed in "..." so that it is processed as a single parameter.
+*''format'' //(optional)//<br>specifies a custom output format that overrides the default format defined in {{{config.macros.comment.fmt}}} (see Configuration, below), using the following //substitution markers//:
+**%tiddler%=containing tiddler title,
+**%UTC%=UTC timestamp (YYYYMMMDD.HHMMSSMMM),
+**%when%=formatted date/time,
+**%who%=username,
+**%subject%=subject,
+**%message%=comment body text.
+*''dateformat'' //(optional)//<br>specifies a custom date/timestamp output to be inserted in place of {{{%when%}} in the comment output format above.  Overrides the default format defined in {{{config.macros.comment.datefmt}}} (see Configuration, below).
+
+To indicate the location within the target tiddler where new comments are to be inserted, embed {{{/%comment%/}}} as a //substitution marker// //within that target tiddler's source//.  Each new comment is inserted immediately preceding the marker, resulting in a time-ordered sequence of comments.  If no marker is present, new comments are appended to the end of the tiddler.  To insert comments from different forms into separate locations in the //same target tiddler//, you can use the ''marker:...'' parameter to specify alternative marker text (e.g., use "marker:note" or "marker:memo" to specify {{{/%note%/}}} or {{{/%memo%/}}} instead of {{{/%comment%/}}})
+<<<
+!!!!!Configuration
+<<<
+To configure the behavior and formats used by [[CommentPlugin]], //''place one or more of the following javascript statements in a tiddler tagged with<<tag systemConfig>>''//: //(note: the default values for each setting are shown)//
+{{{
+config.macros.comment.reverse=false;
+}}}
+>when set to {{{true}}}, all new comments are inserted //following// the comment marker instead of preceding it, resulting in a reverse chronological display order.  If no comment marker is present in the target tiddler source, the 'reverse' option is ignored and new comments are always appended to the end of the tiddler.
+{{{
+config.macros.comment.fmt="__''%subject%''__\n^^posted by %who% on %when%^^\n<<<\n%message%\n<<<\n";
+}}}
+>defines the comment output format to be inserted into the tiddler, where: %when%=date/time, %who%=username, %subject%=subject, and %message% is the body of the comment.  //Note: if you omit %subject% from the output format, the subject input field on the comment form will be automatically suppressed.  Similarly, omitting %message% from the output format suppresses the message input field.  This can be useful when using the {{{<<comment>>}}} macro to create simple activity logs that only require a short, one-line subject rather than entering extended message content.//
+{{{
+config.macros.comment.datefmt="DDD, MMM DDth, YYYY at hh12:0mm:0ss am";
+}}}
+>defines the date/timestamp output used within the comment format above.
+{{{
+config.macros.comment.tags="";
+}}}
+>defines an optional space-separated, list of tags to be added to the target tiddler whenever a comment is written.  This is most useful when the target tiddler is different from the tiddler containing the {{{<<comment>>}}} macro, to make it easy to locate that tiddler later on.
+
+Note: as of revision 2.0.0, direct dependency on [[NestedSlidersPlugin]], [[MoveablePanelPlugin]], [[InlineJavascriptPlugin]] and [[ToggleSliders]] has been eliminated.  As a result, the comment form and generated comment output are no longer automatically contained within sliders and the "view all/close all" command is not automatically included.  To recreate the previous output format and comment interface, use the following syntax in the tiddler in which you want to place your comments:
+{{{
++++^40em^[add a note]...
+<<moveablePanel>>add a note
+----
+<<comment here "" "+++!!!!![%when% (%who%): %subject%]>...\n%message%\n===\n">>===
+ | <<tiddler ToggleSliders with: here "view all" "close all">>
+}}}
+<<<
+!!!!!Revisions
+<<<
+2011.04.27 2.9.5 merge/clone defaultCustomFields for saving on TiddlySpace
+2010.11.30 2.9.4 use story.getTiddler()
+2009.04.10 2.9.3 invoke autoSaveChanges() after adding a comment
+2009.03.09 2.9.2 added marker:... macro parameter
+2009.03.08 2.9.1 fix handling of nosubject/nomessage when macro param specifies output format
+2008.05.17 2.9.0 optional 'overwrite' param replaces existing comment when stored as separate tiddler
+2008.04.21 2.8.0 replaced use of %n markers with special 'named' markers: %tiddler%, %UTC%, %random%, %who%, %when%, %subject% and %message% to avoid conflict with TW core processing of tiddler content.  Also, added support for 'reverse' macro param.
+2008.04.17 2.7.0 added support for constructing target by inserting UTC timestamp, random number, username and/or subject text into target tiddler title
+2008.04.15 2.6.0 added support for custom format and dateformat parameters to override global default formats
+2008.04.15 2.5.1 make sure tiddlers are displayed before attempting to refresh them
+2008.04.15 2.5.0 refresh tiddler containing comment macro after adding new comment to target tiddler (if different)
+2008.04.14 2.4.0 added optional tag list parameter for tagging the target tiddler when comments are written
+2008.04.14 2.3.0 if %2 (subject) or %3 (message) are omitted from format string, suppress display and validation of corresponding form elements.
+2008.04.13 2.2.0 added optional ~TiddlerName param to specify target tiddler for writing comments
+2008.04.10 2.1.0 converted from inline script to plugin
+2008.04.05 2.0.0 removed dependencies on NestedSlidersPlugin, MoveablePanelPlugin, ToggleSliders
+2007.10.24 1.2.0 added config.options.txtCommentDateFormat
+2007.07.05 1.1.0 added 'view all/close all' toolbar item plus code cleanup
+2007.06.28 1.0.2 added tiddler.fields to saveTiddler() call (preserves custom fields)
+2007.05.26 1.0.1 added support for optional 'reverse' keyword.
+2006.04.20 1.0.0 initial release
+<<<</pre>
+</div>

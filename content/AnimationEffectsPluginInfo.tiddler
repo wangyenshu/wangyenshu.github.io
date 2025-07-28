@@ -1,0 +1,50 @@
+<div title="AnimationEffectsPluginInfo" modifier="ELSDesignStudios" created="200801090010" tags="pluginInfo">
+<pre>/***
+|Name|AnimationEffectsPlugin|
+|Source|http://www.TiddlyTools.com/#AnimationEffectsPlugin|
+|Documentation|http://www.TiddlyTools.com/#AnimationEffectsPluginInfo|
+|Version|3.1.1|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.2|
+|Type|documentation|
+|Description|documentation for AnimationEffectsPlugin|
+|Status|!BETA - EXPERIMENTAL - UNDER DEVELOPMENT - USE WITH CAUTION|
+This plugin defines the {{{<<animate>>}}} macro that can be used to peform simple animations of formatted tiddler content by saving/setting/reseting the values of CSS style attributes at specified times.  The macro can also be used to smoothly animate CSS styles that use ''numeric values'', by automatically computing a series of incremental values, ranging from //start// to //stop//, for a specified //duration//, with optional "pause-and-reverse" //cycles// to create repeating animations or continuous loops.
+!!!!!Examples
+>Please see [[AnimationEffectsSampler]] for a live animation example...
+!!!!!Usage
+<<<
+The macro syntax is:
+{{{
+<<animate type source style format start stop wait duration cycles pause>>
+<<animate type source "set" style value wait>>
+<<animate source "save" style wait>>
+<<animate source "reset" style wait>>
+<<animate source "add" classname wait>>
+<<animate source "remove" classname wait>>
+}}}
+> //note: default values are shown in parentheses for //optional// parameters.  To ensure the correct order and number of parameters in the macro, you should enter these default values as 'placeholders' when using non-default values for other parameters.  Of course, if all the remaining values that follow a non-default parameter are default values, they do not need to be specified, and can be safely omitted.//
+where:
+* ''//type// (="span")''<br>is either ''div'' or ''span'', and forces the animation container to be a "DIV" or "SPAN" element (i.e., displayed on a separate line, or inline with other content), which can affect how the specified CSS style will be applied.  When this param is omitted (which is the general use case), the animation container defaults to the same type as the original content.  When using a parameter with "inline" content (see below), a span element is created by default.
+* ''//source//''<br>specifies the source content to be animated, and can be one of:
+**''"text to display"''<br>inline wiki-syntax content, entered directly as a //quoted// macro parameter.  The {{{<<animate>>}}} macro automatically creates a container at the current location and renders the content into it before animating.
+**''@~TiddlerName''<br>as above, but retrieves and renders wiki-syntax content from another tiddler.
+**''=elementID''<br>indicates a specific DOM element, by assigned ID (e.g., "mainMenu", "displayArea", "sidebar", etc.).  The macro will animate this content from it's original location.
+**''='' (or ''=here'')<br>indicates the current containing DOM element (i.e, the one in which the {{{<<animate>>}}} macro is embedded.  The animation will affect all content that //precedes the macro// within the current container.
+* ''"set"'', ''"save"'', ''"reset"'', ''"add"'', ''"remove"''<br>are keywords to indicate how to process the rest of the macro parameters.  If ''set'' is used, the remaining parameters are interpeted as //style//, //value//, and //wait//, respectively, and the macro assigns the value to the specified style at the indicated time.  The ''save'' and ''reset'' keywords expect only //style// and //wait// parameters following the keyword, where ''save'' retains a copy of the current CSS style value so that you can later use ''reset'' to re-assign the original saved value back to the specified CSS style.   The ''add'' and ''remove'' keywords expect and //classname// and //wait// value, and adds/removes the specified classname from the animated element.  If no keyword (or ''morph'') is specified, the remaining macro parameters are used to calculate and apply multiple incremental CSS values for smooth animation processing (a.k.a., "morphing").
+* ''//style// (="left")''<br>indicates the CSS attribute to be animated (e.g., "left", "marginTop", "width", "fontSize", etc.).  Note: if you embed more than one {{{<<animate>>}}} macro in the same container (to simultaneously alter multiple CSS attributes), only the //''last''// animation effect will be applied.  To combine several effects, you must precede the //style// parameter value with a "+" symbol for all uses of {{{<<animate>>}}} //except// for the first occurrence within that container, which must //NOT// have a "+" symbol).
+* ''//format// (="%0%")''<br>provides a 'text template' for generating CSS attribute values during animation, by using "%0" as a substitution marker to be automatically replaced by the current animation value, combined with a CSS measurement type (e.g., px, em, %, in, cm).  For example: "%0px" produces pixel-based values (e.g., "27px", "342.873px", etc.), while "%0%" generates percentage-based relative measurements, (e.g., "-100%", "42%", etc.), and "%0em" results in measurements that are relative to the current font size (em).
+* ''//start// (=-100) and //stop// (=0)'' or ''//value// (="")''<br>define the initial and ending values for the CSS attribute being animated.  Note that, except when using the alternative ''set'' keyword syntax, these values must be numeric, as they are used to //calculate// the incremental values for each 'tick' of the animation processing.
+* ''//wait// (=0)''<br>indicates the number of milliseconds to wait before starting the animation sequence.  All animation macros that are embedded in the same content begin simultaneously.  The //wait// value allows you to use several effects in sequence, by defining the start of each effect so that it does not begin until the previous one has completed.
+* ''//duration// (=2000)''<br>indicates the number of milliseconds during which to animate from the //start// value to the //stop// value.
+* ''//cycles// (=1)'' and ''//pause// (=1000)''<br>indicates the number of "reverse-and-repeat" cycles to perform and the pause (in milliseconds) in between each part of the cycle.  When cycles=1 (or zero, or is omitted entirely), animation progresses from //start// to //stop// just once.  However, if cycles>1, then the animation can pause for a specified amount of time before swapping the //start// and //stop// values and continuing ''//in reverse//''.  A value of cycles=2 performs the animation twice, completing a single loop from //start// to //stop// and then back to //start// again, while cycles=3 does 1.5 loops (ending with the //stop// value), and cycles=4 does 2 complete loops (ending with the //start// value), etc.  To loop forever, specify a cycle value of "-1".
+
+In addition to the {{{<<animate>>}}} macro, the plugin also defines the following macro for backward-compatibility with the now retired [[ZoomTextPlugin]]:
+{{{
+<<zoomText "text to display" wait start stop duration cycles pause>>
+<<zoomText @TiddlerName wait start stop duration cycles pause>>
+}}}
+This permits rendering of existing tiddlers that already contain the {{{<<zoomText>>}}} macro without needing to update those tiddlers.  However, use of this older syntax is deprecated in favor of the more robust and flexible {{{<<animate>>}}} syntax described above.  
+<<<</pre>
+</div>

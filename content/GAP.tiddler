@@ -1,0 +1,36 @@
+<div title="GAP" modifier="Wang Yanshu" created="202507040258" modified="202507040357">
+<pre><html>
+<iframe src="https://yanshuwang.heliohost.us/gap.html"
+              height="460px" width="500px">
+</html>
+Credit:https://github.com/gap-system/gap/tree/master/etc/emscripten
+Thanks Prof. Christopher Jefferson for Instructions.
+Compiled using emiscripten 3.1.23 on ubuntu 24.04.2 LTS
+License:https://github.com/gap-system/gap/blob/master/LICENSE
+{{{
+<html>
+  <head>
+    <title>gap</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/xterm@4.17.0/css/xterm.css">
+  </head>
+  <body>
+    <div id="terminal"></div>
+    <script src="https://cdn.jsdelivr.net/npm/xterm@4.17.0/lib/xterm.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/xterm-pty@0.9.4/index.js"></script>
+    <script>
+      const xterm = new Terminal();
+      xterm.open(document.getElementById("terminal"));
+
+      const { master, slave } = openpty();
+      xterm.loadAddon(master);
+
+      const worker = new Worker("./gap-worker.js");
+      new TtyServer(slave).start(worker);
+    </script>
+
+    <!-- Hack to get around lack of SharedArrayBuffer on github pages -->
+    <script src="gap-coi-serviceworker.js"></script>
+  </body>
+</html>
+}}}</pre>
+</div>

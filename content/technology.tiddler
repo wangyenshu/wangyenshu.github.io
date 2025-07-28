@@ -1,0 +1,6 @@
+<div title="technology" modifier="Wang Yanshu" created="202503301719" modified="202506030506" tags="category">
+<pre><<forEachTiddler 
+where 
+'tiddler.tags.contains("blog") && tiddler.data("category") == "tech"'
+>></pre>
+</div>

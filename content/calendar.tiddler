@@ -1,0 +1,4 @@
+<div title="calendar" modifier="YourName" created="202405281547" modified="202405281557" creator="YourName">
+<pre>|padding:10px;<<calendar thismonth>>|vertical-align:top;padding:10px;<<showReminders leadtime:-14...7>> |
+{{{-> }}}[[display calendar of the complete year|calendar year]]</pre>
+</div>

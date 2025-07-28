@@ -1,0 +1,70 @@
+<div title="Plugin: Syntaxify Haskell" modifier="Wang Yanshu" created="202502161601">
+<pre>/***
+|Author|[[Conal Elliott|http://conal.net]]|
+|Date|2007-01-28|
+|Version|1.1|
+|LoadDependencies|SyntaxifyPlugin|
+|''Source:''|http://journal.conal.net/#%5B%5BSyntaxifyPlugin%3A%20Haskell%5D%5D|
+!Description
+Add support for [[Haskell| http://haskell.org]] syntax highlighting, as an extension to SyntaxifyPlugin.
+!Use
+{{{
+{{haskell{
+<haskell code goes here>
+}}} 
+}}}
+or <html><code>{{haskell{inline code}}}</code></html>.
+!Example
+{{haskell{
+-- Define the data types and conversion:
+type Line = String
+
+silly :: Line -> Line
+silly src = src ++ toU " oho " ++ reverse src
+ where
+   toU = map toUpper
+}}}
+or {{haskell{if foo then "bar" else "baz"}}}.
+!History
+* Version 1.1
+** Smarter {{haskell{identifiers}}} pattern, to avoid false hits for expressions (especially in-line).
+** {{haskell{{- Multi-line comments -} }}} 
+!To Do
+* Type coloring.
+!See Also
+* SyntaxifyPlugin
+* [[RewritePlugin: Haskell]] for a more convenient notation (especially with literate Haskell programming).
+!Code
+***/
+//{{{
+version.extensions.syntaxifyHaskell =
+  {major: 1, minor: 1, revision: 0, date: new Date(2007,1,28)};
+
+config.macros.syntaxify.addLanguages({
+  haskell:
+      { singleLineComments: [[new RegExp('-- .*$', "g").source]]
+      , keywords: 
+          [ [ 'as', 'case', 'class', 'data', 'default'
+            , 'deriving', 'do', 'else', 'forall', 'hiding', 'if'
+            , 'import', 'in', 'infix', 'infixl', 'infixr'
+            , 'instance', 'let', 'module', 'newtype', 'of'
+            , 'qualified', 'then', 'type', 'where', '_'
+            ]
+          , ["\\b[A-Z][a-zA-Z0-9]*\\b"] 
+          ]
+      , literals:
+	  [ ["'(?:\\\\.|[^\\\\'])'"] // char literals
+	  , [config.macros.syntaxify.regexpDoubleQuotedString.source]
+	  , ["\\b\\d+(?:\\.\\d+(?:[eE][\\+-]\\d+)?)?\\b"] // Numbers
+	  ]
+      // def or decl.  id in "id ... = ..." or "id :: ...".  Ids can have tick marks.
+      // The "..." must not contain symbols.  (Not strictly true in Haskell, but too hard
+      // to describe fully with regexps.)
+      , identifiers: [["^[a-z][a-zA-Z0-9']*\\b'*(?=(?:[^=<>:+-]*=|\\s*::)[^=<>:+-])"]]
+      , delimiters: [/*["[\\{\\}]"],*/["[\\(\\)]"],["[\\[\\]]"]]
+      , multiLineComments: [["{-(?:.|\n)*?-}"]]
+      }
+});
+//}}}
+</pre>
+</div>

@@ -1,0 +1,152 @@
+<div title="SetIconPluginInfo" modifier="ELSDesignStudios" created="200805091123" modified="201110030355" tags="pluginInfo">
+<pre>/***
+|Name|SetIconPlugin|
+|Source|http://www.TiddlyTools.com/#SetIconPlugin|
+|Documentation|http://www.TiddlyTools.com/#SetIconPluginInfo|
+|Version|1.9.1|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.3|
+|Type|documentation|
+|Description|documentation for SetIconPlugin|
+!!!!!Syntax
+<<<
+{{{
+<<setIcon image find:"..." style iconpos>>
+}}}
+where:
+*''image''<br>tiddlername for an attached image or a URL for an external image
+*''find:"..."''(optional)<br>finds a link that starts with the specified text (for use with """<<tabs>>""")
+*''style'' (optional)<br>CSS style attributes applied to the image (default="vertical-align:middle;width:auto;height:auto")
+*''iconpos''(optional)<br>indicates the placement of the image relative to the link text.  Use keywords: ''left'', ''right'' or ''notext'' (default=''left'', i.e., the text follows the image).  ''notext'' hides the link text, even if the global option (see Configuration section, below) is set to display the link text along with image.  //Note:  when specifying the non-default //''right''// or //''notext''// value, you can use "" as a placeholder for the ''style'' parameter to apply the standard CSS styles)//
+<<<
+!!!!!Usage
+<<<
+First, create a link element using any of:
+* ''links:''<br>&nbsp;&nbsp;"""[[TiddlerName]]""" or """[[text|TiddlerName]]""" or """[[text|URL]]"""
+* ''macros that generate links:''<br>&nbsp;&nbsp;"""<<toolbar ...>>""", """<<slider ...>>""", """<<tabs ...>>""", """<<saveChanges>>""", etc.
+* ''inline sliders:'' (using NestedSlidersPlugin)<br>&nbsp;&nbsp;"""+++[sliderlabel]...==="""
+* '''onclick' scripts:'' (using InlineJavascriptPlugin)<br>&nbsp;&nbsp;"""<script label="...">...</script>"""
+* ''~HTML-based links:''<br>&nbsp;&nbsp;"""<html><a href="...">...</a></html>"""
+* ''transcluded links:'' (where the output of the specified ~TiddlerName contains a link)<br>&nbsp;&nbsp;"""<<tiddler TiddlerName>>""" 
+Then, ''embed the """<<setIcon>>""" macro immediately following the generated link''.  The macro looks for the last rendered link element that occurs //within the same DOM container// and adds the specified image to that link.  If an optional find:"..." parameter is provided, then the macro looks for a matching link that starts with the indicated label, working backward from the last rendered link within the DOM container.
+
+Note: links embedded via the """<<tiddler>>""" macro or HTML syntax are rendered within a //child// DOM element container.  To ensure that """<<setIcon>>""" will find the correct link, you can isolate the child DOM element container along with the associated """<<setIcon>>""" macro that follows it by enclosing both elements within a surrounding SPAN 'class wrapper' element, like this:
+{{{
+{{span{<<tiddler SomeTranscludedLink>><<setIcon ...>>}}}
+{{span{<html><a href="...">...</a></html><<setIcon ...>>}}}
+}}}
+This same technique should also be applied for any other macros that may generate output that is nested within their own containing DOM elements.  Similarly, link elements created by macros embedded directly in the ViewTemplate or EditTemplate using HTML syntax (i.e, """<span macro='...'></span>""") are also rendered within their own DOM element containers.  To ensure that the correct link is located, """<span macro='setIcon ...'></span>""" should be inserted //within// the span that invokes the link-generating macro, like this:
+{{{
+<span macro='...'>
+   <span macro='setIcon ...'></span>
+</span>
+}}}
+Alternatively, your can surround the paired link+icon sequence in an enclosing span, like this:
+{{{
+<span>
+   <span macro='...'></span>
+   <span macro='setIcon ...'></span>
+</span>
+}}}
+''In general, whether the link element is rendered in tiddler content or directly from a template, if you are uncertain when an 'isolation span' is needed, you can always choose to surround every link+icon sequence within a enclosing span, regardless of the type of link content being rendered.''
+<<<
+!!!!!Examples
+<<<
+''~TiddlyLink:'' [[About]]<<setIcon information.png>>
+{{{
+[[About]]<<setIcon information.png>>
+}}}
+''toolbar command:'' <<toolbar jump>><<setIcon page_go.png>>
+{{{
+in tiddler content:
+	<<toolbar jump>><<setIcon page_go.png>>
+in template definitions:
+	<span class='toolbar' macro='toolbar jump'>
+		<span macro='setIcon page_go.png'></span>
+	</span>
+}}}
+''slider macro:''<<slider "" PluginManager Plugins "view installed plugin status">><<setIcon cog.png>>
+{{{
+in tiddler content:
+	<<slider "" PluginManager Plugins "view installed plugin status">><<setIcon cog.png>>
+in template definitions:
+	<span macro='slider ...'>
+		<span macro='setIcon page_go.png'></span>
+	</span>
+}}}
+''nested (inline) slider:'' +++[settings]<<list filter [tag[settings]]>>===<<setIcon wrench.png>>
+{{{
++++[settings]
+	<<list filter [tag[settings]]>>
+===<<setIcon wrench.png>>
+}}}
+''onclick script:'' <script label="print document">window.print();</script><<setIcon printer.png>>
+{{{
+<script label="print document">
+	window.print();
+</script><<setIcon printer.png>>
+}}}
+''tiddler macro:'' {{span{<<tiddler SiteUrl>><<setIcon exclamation.png>>}}}
+{{{
+in tiddler content:
+	{{span{<<tiddler SiteUrl>><<setIcon exclamation.png>>}}}
+in template definitions:
+	<span macro='tiddler ...'>
+		<span macro='setIcon exclamation.png'></span>
+	</span>
+}}}
+''tabs macro:'' {{span{<<tabs chkDemo About About About Legal Legal LegalStatements>><<setIcon information.png find:"About">><<setIcon exclamation.png find:"Legal">>}}}
+{{{
+in tiddler content:
+	{{span{<<tabs chkTest About ... Legal ...>><<setIcon information.png find:"About">><<setIcon exclamation.png find:"Legal">>}}}
+in template definitions:
+	<span macro='tabs chkDemo About ... Legal ...>
+		<span macro='setIcon information.png find:"About"'></span>
+		<span macro='setIcon exclamation.png find:"Legal"'></span>
+        </span>
+}}}
+''HTML link:'' {{span{<html><a href="http://www.TiddlyWiki.com">TiddlyWiki.com</a></html><<setIcon server_go.png>>}}}
+{{{
+in tiddler content:
+	{{span{<html><a href="http://www.TiddlyWiki.com">TiddlyWiki.com</a></html><<setIcon server_go.png>>}}}
+in template definitions:
+	<span>
+		<a href="http://www.TiddlyWiki.com">TiddlyWiki.com</a>
+		<span macro='setIcon server_go.png'></span>
+	</span>
+}}}
+''macro link:'' {{span{<<saveChanges>><<setIcon disk.png>>}}}
+{{{
+in tiddler content:
+	{{span{<<saveChanges>><<setIcon disk.png>>}}}
+in template definitions:
+	<span macro='saveChanges'>
+		<span macro='setIcon disk.png'></span>
+	</span>
+}}}
+<<<
+!!!!!Configuration
+<<<
+<<option chkIconsShowImage>> show icons on links //(unchecked=text-only)//
+^^{{{<<option chkIconsShowImage>>}}}^^
+<<option chkIconsShowText>> include link text with images //(unchecked=icons-only, ignored if no icons displayed)//
+^^{{{<<option chkIconsShowText>>}}}^^
+default image style: {{stretch{<<option txtIconsCSS>>}}}
+^^{{{<<option txtIconsCSS>>}}}^^
+<<<
+!!!!!Revisions
+<<<
+2011.10.02 1.9.1 use plain text instead of innerHTML for link tooltips
+2011.10.02 1.9.0 added 'find:...' macro param (for use with tabsets)
+2008.05.11 1.8.0 added optional 'notext' value for iconpos to force text to be hidden for specific links
+2008.05.11 1.7.0 support use within template definitions by looking for nearest link using: siblings, children, parents, or cousins.  Also, major documentation re-write with improved examples
+2008.05.11 1.6.0 added optional iconpos param to control icon placement ("left" or "right", default="left")
+2008.05.10 1.5.0 converted to plugin/macro and reduced code size by moving documentation into SetIconPluginInfo
+2008.05.10 1.4.0 handle links contained in {{{<<tiddler>>}}} and {{{<html>...</html}}}
+2008.05.10 1.3.0 added support for setting styles on images
+2008.05.09 1.2.0 handle links created by TiddlyLinks, sliders, and nested sliders syntax
+2008.05.09 1.1.0 added support for external URLs and options for displaying text with images
+2008.05.09 1.0.0 initial release (as inline script)
+<<<</pre>
+</div>

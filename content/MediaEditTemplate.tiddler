@@ -1,0 +1,81 @@
+<div title="MediaEditTemplate" modifier="ELSDesignStudios" created="200706210039" modified="200709030206" tags="MediaPackage template">
+<pre><!--{{{-->
+<!--
+|Name|MediaEditTemplate|
+|Source|http://www.TiddlyTools.com/#MediaEditTemplate|
+|Version|1.0.0|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|template|
+|Requires|ListboxPlugin, CheckboxPlugin|
+|Description|custom version of edit template used when tiddler is tagged with "media"|
+-->
+<span class='toolbar' macro='toolbar +saveTiddler -cancelTiddler ! copyTiddler deleteTiddler ! fields '></span>
+<div class='title' macro='view title'></div>
+<div style='clear:both'></div>
+<div class='viewer'>
+<table class='borderless' style='width:100%'><tr valign='bottom'>
+<td style='width:40%'>
+	<div class='small'>this item (tiddler name):</div>
+	<div class='editor' macro='edit title'></div>
+</td><td style='width:30%'>
+	<div class='small'>previous (tiddler name):</div>
+	<div class='editor' macro='edit previous'></div>
+</td><td style='width:30%'>
+	<div class='small'>next (tiddler name):</div>
+	<div class='editor' macro='edit next'></div>
+</td></tr></table>
+<table class='borderless' style='width:100%'><tr valign='bottom'>
+<td style='width:70%'>
+	<div class='small'>caption (text):</div>
+	<div class='editor' macro='edit mediatitle'></div>
+</td><td style='width:15%'>
+	<div class='small'>item ID (text):</div>
+	<div class='editor' macro='edit itemid'></div>
+</td><td style='width:15%'>
+	<div class='small'>group ID (text):</div>
+	<div class='editor' macro='edit groupid'></div>
+</td></tr></table>
+<table class='borderless' style='width:100%'><tr valign='bottom'>
+<td style='width:40%'>
+	<div class='small left'>media&nbsp;URL (Windows/Real/Quicktime/Flash/JPG/GIF/HTML):</div>
+	<div class='editor' macro='edit mediaurl'></div>
+</td><td style='width:15%'>
+	<div class='small left'>media&nbsp;type:</div>
+	<div class='editor smallform' macro='select mediatype rows:1 width:100% "auto-detect=auto" "Windows Media=windows" "Real One=realone" "QuickTime=quicktime" "Flash=flash" "still image (JPG/GIF)=image" "web page (HTML)=iframe"'></div>
+</td><td style='width:15%'>
+	<span class='small'>width&nbsp;(px):</span>
+	<span class='editor' macro='edit width'></span>
+</td><td style='width:15%'>
+	<span class='small'>height&nbsp;(px):</span>
+	<span class='editor' macro='edit height'></span>
+</td><td style='width:15%;white-space:nowrap'>
+	<span class='smallform' macro='checkbox autoplay@'></span><!--
+	--><span class='small'>autoplay</span><br>
+	<span class='smallform' macro='checkbox showcontrols@ checked'></span><!--
+	--><span class='small'>show controls</span>
+</td></tr></table>
+<div class='small'>Notes (text):</span></div>
+<div class='editor' macro='edit text 5'></div>
+<table class='borderless' style='width:100%'><tr valign='bottom'>
+<td style='width:33%'>
+	<div class='small'>Submit comments to (URL):</div>
+	<div class='editor' macro='edit rpgaction'></div>
+</td><td style='width:33%'>
+	<div class='small'>OK 'landing' page (URL):</div>
+	<div class='editor' macro='edit rpgok'></div>
+</td><td style='width:33%'>
+	<div class='small'>Retry 'landing' page (URL):</div>
+	<div class='editor' macro='edit rpgretry'></div>
+</td></tr></table>
+<div class='small'>Tags (keywords):</span></div>
+<div class='editor' macro='edit tags'></div>
+<div class='small editorFooter' style='text-align:left !important;'>
+	<span macro='message views.editor.tagPrompt'></span>
+	<span macro='tagChooser'></span>
+</div>
+<div style='clear:both'></div>
+</div>
+<!--}}}--></pre>
+</div>

@@ -1,0 +1,174 @@
+<div title="RichTextPlugin" modifier="Wang Yanshu" created="202411221516">
+<pre>/***
+|Location|http://groups.google.com/group/TiddlyWiki|
+|Version|1.0|
+|Requires|~TW2.1.x, TinyMCE 2.1.x|
+|Browsers|Firefox 2.0.x|
+!Description:
+Integrate tinyMCE richtext editor in TiddlyWiki.
+
+!Demo:
+After installation, tag a tiddler as richText and edit it.
+
+!Installation:
+# Download tinyMCE from http://tinymce.moxiecode.com/download.php and unzip it somewhere. By default, tiny_mce.js script path should be tiny_mce/tiny_mce.js (so in a tiny_mce subdirectory).
+# Import the RichTextPlugin tiddler and tag it as a systemConfig.
+# Add txtTinyMCEPath and txtRichTextTag in advanced options panel, or use the following. 
+**<<option txtTinyMCEPath>> TinyMCE Path (relative or absolute)
+**<<option txtRichTextTag>> taggled tiddler will edit in richText mode by default
+# Adapt this option values to your needs.
+# Save and reload your tiddlywiki.
+# __Optionnally__, you can add a richText macro to the EditTemplate toolbar. It adds a button to switch on and off the richText editor.
+# __Optionnaly__, edit tiny_mce\themes\simple\css\*.css files to adapt the look and feel in rich text editor.
+# tag a tiddler as richText (or the value you put in the options) and edit it. Have a fine job !
+
+!History:
+*20-03-07: ver 1.0
+
+!Code
+***/
+//{{{
+config.commands.saveTiddler.richTextPreviousHandler = config.commands.saveTiddler.handler;
+config.commands.saveTiddler.handler = function (event,src,title) {
+ if (typeof tinyMCE!= "undefined") config.commands.richText.RichTextMode("off",title);
+ return config.commands.saveTiddler.richTextPreviousHandler(event,src,title);
+}
+
+config.commands.cancelTiddler.richTextPreviousHandler = config.commands.cancelTiddler.handler;
+config.commands.cancelTiddler.handler = function (event,src,title){
+ if (typeof tinyMCE!= "undefined") config.commands.richText.RichTextMode("off",title);
+ return config.commands.cancelTiddler.richTextPreviousHandler(event,src,title);
+}
+
+config.commands.deleteTiddler.richTextPreviousHandler = config.commands.deleteTiddler.handler;
+config.commands.deleteTiddler.handler = function (event,src,title){
+ if (typeof tinyMCE!= "undefined") config.commands.richText.RichTextMode("off",title);
+ return config.commands.deleteTiddler.richTextPreviousHandler(event,src,title);
+}
+
+config.commands.editTiddler.richTextPreviousHandler = config.commands.editTiddler.handler;
+config.commands.editTiddler.handler = function (event,src,title){
+ var res = config.commands.editTiddler.richTextPreviousHandler(event,src,title);
+ if (store.getTiddler(title).tags.contains(config.options.txtRichTextTag)) 
+ if (typeof tinyMCE!="undefined") config.commands.richText.RichTextMode("on",title);
+return res;
+}
+
+merge(config.options,{txtTinyMCEPath : "tiny_mce/tiny_mce.js", txtRichTextTag : "richText"},true);
+
+config.commands.richText = {
+ handler : function (event,src,title){
+ this.RichTextMode("switch", title);
+return false;
+ },
+ text:"Richtext (on/off)",
+ tooltip:"write it in rich text",
+ matchingRules : { // global definition to avoid defintion in a recursive function
+ strong : {wikIn : "''", wikOut : "''"}, 
+ em : {wikIn : "//", wikOut : "//" }, 
+ u : {wikIn : "__", wikOut : "__" }, 
+ strike : {wikIn : "--", wikOut : "--" }, 
+ p : {wikIn : "\n", wikOut : "" }, 
+ br : {wikIn : "\n", wikOut : "" }, 
+ li : {wikIn : "\n", wikOut : ""}, 
+ ul : {wikIn : "", wikOut : ""}, 
+ ol : {wikIn : "", wikOut : ""}
+ },
+ tinyMCELoad :function (){
+ var scriptElement = document.createElement("script");
+ scriptElement.src = config.options.txtTinyMCEPath;
+ scriptElement.type= "text/javascript";
+ scriptElement.language = "javascript";
+ document.getElementsByTagName("head")[0].appendChild(scriptElement); 
+ this.tinyMCEInit();
+ }, 
+ tinyMCEInit : function () {
+ if (typeof tinyMCE== "undefined") window.setTimeout("config.commands.richText.tinyMCEInit()",100);
+ else tinyMCE.init({mode : "none", theme : "simple", gecko_spellcheck : "true", strict_loading_mode : true}); //wait script is loaded
+ },
+ 
+ WikiToHTML : function(myString){ //Convert Wiki code to HTML code
+ for (tag in this.matchingRules){
+ if ((this.matchingRules[tag].wikIn==this.matchingRules[tag].wikOut)&&(this.matchingRules[tag].wikIn!="")){ // format delimiters
+ myString=this.ReplaceWithTag(myString,this.matchingRules[tag].wikIn,"<"+tag+">","</"+tag+">");
+ }
+ }
+ lines = myString.split("\n");
+ var ul=0; ol=0; ulLevel=0, olLevel=0;
+ for (cpt=0; cpt<lines.length; cpt++){
+
+ olLevel=(/^#+/.exec(lines[cpt])||"").toString().length; // count # at line begining
+ ulLevel=(/^\*+/.exec(lines[cpt])||"").toString().length; // count * at line begining
+ lines[cpt]=lines[cpt].replace(/^#+/,""); // delete wiki symbols before replacing with equivalent HTML
+ lines[cpt]=lines[cpt].replace(/^\*+/,""); // delete wiki symbols before replacing with equivalent HTML
+ 
+ if (ulLevel||olLevel) lines[cpt]="<li>"+lines[cpt]+"</li>"; // wiki line are paragraphs or list items
+ else lines[cpt]="<P>"+lines[cpt]+"</P>"
+ 
+ if (ulLevel>ul) lines[cpt]=Array(ulLevel-ul+1).join("<ul>")+lines[cpt]; // list open tags match wiki symbol count changes, here unordered list. Use Array.join(+1) to repeat string.
+ if (olLevel>ol) lines[cpt]=Array(olLevel-ol+1).join("<ol>")+lines[cpt]; // list open tags match wiki symbol count changes, here ordered list. Use Array.join(+1) to repeat string.
+ if (ulLevel<ul) lines[cpt]=Array(ul-ulLevel+1).join("</ul>")+lines[cpt]; // list close tags match wiki symbol count changes, here unordered list. Use Array.join(+1) to repeat string.
+ if (olLevel<ol) lines[cpt]=Array(ol-olLevel+1).join("</ol>")+lines[cpt]; // list close tags match wiki symbol count changes, here ordered list. Use Array.join(+1) to repeat string.
+ 
+ ul=ulLevel; ol=olLevel;
+ }
+ res = lines.join("");
+ if (ul+ol>0) for(var cpt=0;cpt<ul+ol; cpt++) res+="</ul>" //if list item is last line, must close tags here
+ return res;
+ },
+ HTMLNodeToWiki : function(myNode, ol, ul, last){//Convert HTML code to Wiki code
+ if (myNode.nodeType==3) return myNode.textContent; // final node level = text
+ 
+ var ol=ol||""; var ul=ul||""; var last=last||"ul"; var res = "";
+ var nName = myNode.nodeName.toLowerCase();
+ 
+ switch (nName) {
+ case "ul" : ul+="*"; last = "ul"; break; //increase list level
+ case "ol" : ol+="#"; last = "ol"; break; //increase numerical list level
+ case "li" : res = eval(last); //apply list level to wiki code
+ }
+ 
+ for (var cpt=0; cpt< myNode.childNodes.length; cpt++)
+ res += this.HTMLNodeToWiki(myNode.childNodes[cpt], ol, ul, last); // convert children recursively
+ 
+ if (this.matchingRules[nName]) // then HTML element has wiki equivalent
+ res = this.matchingRules[nName].wikIn + res + this.matchingRules[nName].wikOut;
+ return res;
+ },
+ ReplaceWithTag : function(myString, lookFor, tagForOpen, tagForClose){ // replace tag alternatively with tagForOpen and tagForClose
+ var stringArray = myString.split(lookFor);
+ var res=stringArray[0];
+ for (var cpt=1;cpt<stringArray.length;cpt++){
+ if (cpt%2!=0) res=res+tagForOpen+stringArray[cpt];
+ else res=res+tagForClose+stringArray[cpt]; 
+ }
+ return res;
+ },
+
+ RichTextMode : function (mode, title){
+if (typeof tinyMCE== "undefined") return false;
+ var editorID="richtext"+title;
+ var area = document.getElementById("tiddler"+title).getElementsByTagName("textarea")[0];
+ var statut = (tinyMCE.getInstanceById(editorID)!=null);
+
+ if (mode!="on" && mode !="off") mode="switch"; // only accept "on", "off" or "switch" (default value)
+ if (statut && (mode=="switch")) mode="off"; 
+ if (!statut && (mode=="switch")) mode="on";
+
+ if (mode=="on" && !statut){
+ area.value=this.WikiToHTML(area.value);
+ tinyMCE.addMCEControl(area,editorID);
+ }
+ if (mode=="off" && statut){
+ tinyMCE.removeMCEControl(editorID);
+ var myDiv = document.createElement("div");
+ myDiv.innerHTML=area.value;
+ area.value = this.HTMLNodeToWiki(myDiv).replace(/\n/,""); // remove unuseful first carriage return
+ }
+ } 
+}
+
+if (navigator.userAgent.indexOf('Gecko') != -1) config.commands.richText.tinyMCELoad(); 
+
+//}}}</pre>
+</div>

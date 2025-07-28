@@ -1,0 +1,29 @@
+<div title="EditTemplateReadOnly" modifier="ELSDesignStudios" created="200801230424" modified="200805121145" tags="template" status="done">
+<pre><!--{{{-->
+<!--
+|Name|EditTemplate|
+|Source|http://www.TiddlyTools.com/#EditTemplate|
+|Version||
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|template|
+|Requires|ToolbarCommands|
+|Description|custom version of shadow template used to display tiddler for normal editing|
+-->
+<span class='toolbar' macro='toolbar [[ToolbarCommands::EditToolbarReadOnly]]'></span>
+<div class='title' macro='view title'></div>
+<div style='clear:both'></div>
+<div class='editor' macro='edit title'></div>
+<div macro='annotations'></div>
+<div class='editor' macro='edit text'></div>
+<span macro='resizeEditor'></span>
+<div class='editor' macro='preview hide text'></div>
+<div class='editor' macro='edit tags'></div>
+<div class='toolbar editorFooter' style='text-align:left !important;float:left !important'>
+	<span macro='message views.editor.tagPrompt'></span>
+	<span macro='tagChooser'></span>
+</div>
+<div style='clear:both'></div>
+<!--}}}--></pre>
+</div>

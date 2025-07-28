@@ -1,0 +1,46 @@
+<div title="Blackout" modifier="ELSDesignStudios" created="200607160224" modified="200801230101" tags="CSS ThemePackage stylesheets systemTheme">
+<pre>/***
+|Name|Blackout|
+|Source|http://www.TiddlyTools.com/#Blackout|
+|Version|1.0.0|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|CSS|
+|Description|theme: black/blue-gray/gray backgrounds w/light text|
+|StyleSheet|Blackout|
+|PageTemplateReadOnly|PageTemplateReadOnly|
+|EditTemplateReadOnly|EditTemplateReadOnly|
+***/
+
+[[StyleSheetAdjustments]]
+[[BrightText]]
+/* ==== blackout ==== */
+/*{{{*/
+body
+	{ background-color:#000; }
+.menubox
+	{ background-color:#111; }
+.annotation
+	{ background-color: #111; }
+.viewer
+	{ background-color:#111; border: 1px solid #999; -moz-border-radius:1em;-webkit-border-radius:1em; padding:1em; }
+.header
+	{ background-image: none; background-color:transparent; color:#ccf; border:0; }
+.floatingPanel, .attachPanel, #importPanel, #exportPanel,
+	{ background: #eee; background-image: url('[[TexturesParchmentGray]]');}
+.floatingPanel a, .attachPanel a, #messageArea a, #importPanel a, #exportPanel a, #sidebarTabs .tabContents a,
+.floatingPanel .button, .attachPanel .button, #messageArea .button, #importPanel .button, #exportPanel .button, #sidebarTabs .tabContents .button,
+.floatingPanel .tiddlyLinkExisting, .attachPanel .tiddlyLinkExisting, #messageArea .tiddlyLinkExisting, #importPanel .tiddlyLinkExisting, #exportPanel .tiddlyLinkExisting, #sidebarTabs .tabContents .tiddlyLinkExisting
+	{ color:#009; }
+.siteMenu .floatingPanel, #messageArea 
+	{ background: #eee; }
+.tiddlyCard { background:#ffd; }
+
+.viewer h1,.viewer h2,.viewer h3,.viewer h4,.viewer h5 { background: #666; color:#fff; }
+.viewer .tabContents, #sidebarTabs .tabContents
+	{ background-color:#111; color:#fff; }
+.tabContents a, .tabContents .button, .tabContents .tiddlyLinkExisting
+	{ color:#99f; }
+/*}}}*/</pre>
+</div>

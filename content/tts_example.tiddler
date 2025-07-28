@@ -1,0 +1,6 @@
+<div title="tts example" modifier="Wang Yanshu" created="202407260947" modified="202503032356" tags="draft" creator="Wang Yanshu">
+<pre><html>
+<div><button type="button" onclick="speak(document.getElementById("tiddlerDisplay").value)">Speak</button></div>
+
+</html></pre>
+</div>

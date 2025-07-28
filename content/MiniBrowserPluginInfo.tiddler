@@ -1,0 +1,49 @@
+<div title="MiniBrowserPluginInfo" modifier="ELSDesignStudios" created="200710152019" modified="201102090436" tags="pluginInfo">
+<pre>/***
+|Name|MiniBrowserPlugin|
+|Source|http://www.TiddlyTools.com/#MiniBrowserPlugin|
+|Documentation|http://www.TiddlyTools.com/#MiniBrowserPluginInfo|
+|Version|1.5.3|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.2|
+|Type|plugin|
+|Requires|PlayerPlugin (optional, recommended)|
+|Description|embedded browser-in-browser with favorites lists and media support|
+!!!!!Usage
+<<<
+{{{<<miniBrowser noplayer noedit expand hidecontrols nocontrols URL TiddlerName TiddlerName TiddlerName...>>}}}
+* ''noplayer'' (optional)<br>disables support for embedded media player (using [[PlayerPlugin]], if installed)
+* ''noedit'' (optional)<br>hides bookmark //add//, //del//, and //edit// buttons
+* ''expand'' (optional)<br>displays minibrowser controls on two lines instead of one for increased readability, especially when long titles or URLs are displayed.
+* ''hidecontrols'' (optional)<br>hides initial display of minibrowser controls (except for 'show controls' checkbox)<br>//note: if no initial URL is specified, controls will be shown anyway//
+* ''nocontrols'' (optional)<br>hides all minibrowser controls including 'show controls' checkbox<br>//note: if no initial URL is specified, controls will be shown anyway//
+* ''URL'' (optional)<br>specifies an initial URL to open when the mini browser is rendered
+* ''TiddlerName'', ''TiddlerName''... (optional)<br>indicates one or more tiddlers containing 'HR-separated' lists of favorites.<br>//notes: if no tiddler is specified, [[MiniBrowserList]] is used by default.  In addition, when adding/deleting favorites, the plugin automatically updates [[MiniBrowserList]], regardless of any alternative lists of favorites stored in separate tiddlers.  After changes to [[MiniBrowserList]] are made, you can then use cut/paste to manually move entries from that tiddler into other tiddlers.//
+<<<
+!!!!!Configuration
+>Default mini browser size:
+>width: <<option txtMiniBrowserWidth>> height: <<option txtMiniBrowserHeight>>
+!!!!!Examples
+>{{{<<miniBrowser>>}}}<br>{{smallform small{<<miniBrowser>>}}}
+>{{{<<miniBrowser noedit>>}}}<br>{{smallform small{<<miniBrowser noedit>>}}}
+>{{{<<miniBrowser expand>>}}}<br>{{smallform small{<<miniBrowser expand>>}}}
+>{{{<<miniBrowser noedit expand>>}}}<br>{{smallform small{<<miniBrowser noedit expand>>}}}
+>{{{<<miniBrowser hidecontrols http://www.TiddlyWiki.com>>}}}<br>{{smallform small{<<miniBrowser hidecontrols http://www.TiddlyWiki.com>>}}}
+!!!!!Revisions
+<<<
+2011.02.08 1.5.3 added 'nocontrols' macro keyword parameter
+2009.08.29 1.5.2 in load(), fixed 'noplayer' IFRAME output
+2009.07.03 1.5.1 added onclick handling to 'n of m' button.  also, if noedit mode, add line numbers to bookmarks droplist items
+2009.06.08 1.5.0 added optional 'noedit' mode to hide bookmark add/del/edit buttons.  Also, moved html def'n to section (saves space)
+2008.09.30 1.4.0 removed hard-coded fontsize.  Added 'expand' option (wider controls, displayed on two lines)
+2008.09.16 1.3.1 fixed getWikifiedData() when using IE (remove \r and multiple \n)
+2008.08.12 1.3.0 added support for wikifying content from favorites lists to enable use of forEachTiddler or inline script output to generate lists on the fly.
+2008.08.06 1.2.2 corrected size control buttons to use fixed width
+2008.04.07 1.2.1 added txtMiniBrowserWidth and txtMiniBrowserHeight.  cleanup init handling (somewhat)
+2008.04.06 1.2.0 added support for specifying initial URL to view (suggested by Richard Berg).  When opening a URL, select matching entry (if any) in bookmarks droplist.  Added support for hiding minibrowser controls.
+2008.01.19 1.1.0 added support for optional extra favorites lists stored in separate tiddlers
+2007.10.15 1.0.0 combined MiniBrowser and MediaCenter inline scripts and converted to true plugin
+2006.03.01 0.0.0 inline script
+<<<</pre>
+</div>

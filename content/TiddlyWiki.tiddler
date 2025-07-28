@@ -1,0 +1,35 @@
+<div title="TiddlyWiki" modifier="YourName" created="201206161111" modified="202103231043" tags="System Tag excludeLists" _hash="d2ebb3ced9814cc659b9c8b896108bae89f0e5f3">
+<pre>!!Sites
+* [[Projectify|https://projectify.wiki/]] - Projectify brings project management to TiddlyWiki, interlinking task and knowledge management in one place. 
+
+!!Guides
+* [[TiddlyWiki Guides|http://tiddlywikiguides.org/index.php?title=TiddlyWiki_Guides]] - This is one of two collaborative documentation projects for TiddlyWiki. 
+
+!!How To
+!!! Formating images
+* [[TWHelp|http://twhelp.tiddlyspot.com/#FormattingImages]]
+
+!!Macros
+|Type|Name|Code|Description|h
+|Information|Version|{{{<<version>>}}}|Displays ~TiddlyWiki version|
+|Information|Timeline|{{{<<timeline (created|modified) 5>>}}}|Displays last X tiddlers created or modified|
+
+!!Creating macros
+* BibRefMacro
+
+!!Plugins
+|Version|Name|Description|h
+|Classic|||
+|~|[[SlideShowPlugin|http://www.math.ist.utl.pt/~psoares/addons.html#SlideShowPlugin]]|Creates a slide show from any number of tiddlers.|
+|~|[[LinkifyPlugin|http://linkify.tiddlyspot.com/#LinkifyPlugin]]|Automatically turns text into links, optionally using aliases.|
+|TW 5|[[Projectify|https://projectify.wiki]]|Projectify is a project management app for TiddlyWiki, inspired by products like Todoist and Basecamp.|
+|~|[[Relink|https://github.com/flibbles/tw5-relink]]|It expands on TW5's bulk updating to allow for any customizable fields to be updated, whether they're lists, filters, macros, or single-tiddler fields. In addition, relink parses through the text of all relevant tiddlers and updates prettyLinks, transclusions, widgets, and other syntax patterns to properly reflect the title change.|
+----
+See also [[TiddlyWiki Wish List|TiddlyWiki WishList]]
+----
+/%
+@@color:#c4d6ed; ^^
+Description: TiddlyWiki related issues. 
+^^@@
+%/</pre>
+</div>

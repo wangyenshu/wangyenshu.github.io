@@ -1,0 +1,54 @@
+<div title="WikifyPluginInfo" modifier="ELSDesignStudios" created="200706230458" modified="201103071455" tags="pluginInfo">
+<pre>/***
+|Name|WikifyPlugin|
+|Source|http://www.TiddlyTools.com/#WikifyPlugin|
+|Documentation|http://www.TiddlyTools.com/#WikifyPluginInfo|
+|Version|1.2.0|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|documentation|
+|Description|documentation for WikifyPlugin|
+The {{{<<wikify>>}}} macro retrieves values from tiddler slices, sections, or fields and then inserts those values into wiki-formatted output.  The {{{<<wikiCalc>>}}} macro performs the same processing as {{{<<wikify>>}}} and, in addition, passes the assembled text content through javascript's {{{eval()}}} function before rendering the results.  This allows you to, for example, construct and compute mathematical expressions that use input values extracted from tiddler fields or slices.
+!!!!!Usage
+<<<
+{{{
+<<wikify "format" value value value value ...>>
+<<wikiCalc "format" value value value value ...>>
+}}}
+* ''format'' specifies the output format of the wiki-syntax content (or javascript expression, if using {{{<<wikiCalc>>}}}).  Use //substitution markers// "%0" through "%9" to insert each value parameter into the formatted content, replacing its corresponding marker.  If the ''format'' is blank (or does //not// contain any substitution markers), then all values are simply joined together (with spaces) for output.  If {{{<<wikiCalc>>}}} is used, the formatted output is evaluated as a javascript expression before rendering.
+* ''value'' parameters (space-separated), specified using any of:
+** slices:<br>''::slicename'' or ''tiddlername::slicename'' or ''here::slicename''
+** sections:<br>''##sectionname'' or ''tiddlername##sectionname'' or ''here##sectionname''
+** fields:<br>''fieldname'' or ''fieldname@tiddlername'' or ''fieldname@here''
+** evaluated javascript:<br>''"""{{...}}"""''
+** literal text:<br>''"..."''
+Note: if a slice/section/field reference omits the tiddlername (or uses the special keyword, ''here''), the current tiddler is implied.
+<<<
+!!!!!Examples
+<<<
+{{{
+<<wikify [[This tiddler is: %0 using %1 bytes (last author: %2)]] title {{tiddler.text.length}} modifier>>
+<<wikify [[The source URL for this plugin is: %0]] 'here::Source'>>
+<<wikify [[The tiddler has been changed %0 times]] changecount@here>>
+<<wikify [[The Primary Mid color is: @@background:%0;%0@@]] 'ColorPalette::PrimaryMid'>>
+<<wikify [[This current user is: %0]] {{config.options.txtUserName}}>>
+}}}
+<<wikify [[This tiddler is: %0 using %1 bytes (last author: %2)]] title {{tiddler.text.length}} modifier>>
+<<wikify [[The source URL for this plugin is: %0]] 'here::Source'>>
+<<wikify [[The tiddler has been changed %0 times]] changecount@here>>
+<<wikify [[The Primary Mid color is: @@background:%0;%0@@]] 'ColorPalette::PrimaryMid'>>
+<<wikify [[This current user is: %0]] {{config.options.txtUserName}}>>
+<<<
+!!!!!Revisions
+<<<
+2011.03.07 1.2.0 added handling in getFieldReference() for retrieving section values and eliminated ~SiteSlices, ~SiteFields and 'checked' (fieldname) fallbacks.
+2009.03.29 1.1.4 in handler(), pass 'tiddler' value to wikify() to fix macro errors in rendered content
+2009.03.26 1.1.3 unescape output before wikify so that \n can be used in formatting string
+2008.11.16 1.1.2 in getFieldReference(), if not a field/slice reference (or field/slice is not found), return string input unchanged instead of returning a blank string.
+2008.03.08 1.1.1 size reduction: documentation moved to [[WikifyPluginInfo]]
+2008.03.07 1.1.0 added {{{<<wikicalc>>}}} variant for evaluating assembled output as javascript before rendering the result
+2007.11.11 1.0.1 in handler(), fixed problem where a trailing space was created when no substitution markers were present in the format param.
+2007.06.22 1.0.0 initial release
+<<<</pre>
+</div>

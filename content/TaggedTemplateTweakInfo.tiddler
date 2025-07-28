@@ -1,0 +1,54 @@
+<div title="TaggedTemplateTweakInfo" modifier="ELSDesignStudios" created="200801090247" modified="200909022003" tags="pluginInfo">
+<pre>/***
+|Name|TaggedTemplateTweakInfo|
+|Source|http://www.TiddlyTools.com/#TaggedTemplateTweak|
+|Documentation|http://www.TiddlyTools.com/#TaggedTemplateTweakInfo|
+|Version|1.6.1|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|documentation|
+|Description|Documentation for TaggedTemplateTweak|
+This plugin extends the core function, story.chooseTemplateForTiddler(), so that any given tiddler can be viewed and/or edited using alternatives to the standard tiddler templates.  To select alternative templates, a 'template prefix' is determined by using the tiddler's title or matching a tag value or using a value stored in a custom tiddler field.  
+!!!!!Usage
+<<<
+*The plugin first attempts to use the tiddler's //title// as a prefix added to the standard TiddlyWiki template titles, [[ViewTemplate]] and [[EditTemplate]] (i.e., ''TiddlerNameViewTemplate'' and ''TiddlerNameEditTemplate'').  This allows you to associate a custom template with a specific tiddler, without needing to add any special tags or custom field values to that individual tiddler.  
+*You can also define a tiddler's template prefix by using a //custom tiddler field// named 'template'.  If no corresponding template was found using the tiddler's title, then the tiddler's 'template' field value, if present, will be used as a prefix (e.g., if template='SomeThing', then [[SomeThingViewTemplate]] will be applied).
+*If no template is found using the either the title or 'template' field, then each of the tiddler's tags is tried as a template prefix, until a corresponding template, if any, is found.  For example, any tiddlers that are tagged with ''<<tag media>>'' could find alternative templates named [[mediaViewTemplate]] and [[mediaEditTemplate]].
+*If you using a systemTheme, the plugin will also tries adding the currently selected theme name (specified by {{{config.options.txtTheme}}}) to the template name (e.g. ''[[SomeTheme##MediaViewTemplate]]'') so that the alternative template definitions can be contained as //sections// within a single systemTheme tiddler.
+*Lastly, if no alternative template is found at all, the standard [[ViewTemplate]] or [[EditTemplate]] definition as determined by the TiddlyWiki core handler is used.
+Notes:
+*You can redefine the //name// of the custom field used to store the template prefix.  For example, to use the name of a TiddlyWeb server-side 'bag' as a prefix (so that tiddlers from separate bags can have different appearances), add the following to a tiddler tagged with<<tag systemConfig>>:{{block{
+{{{
+config.options.txtTemplateTweakFieldname='server.bag'; // use TiddlyWeb bag name as prefix
+}}}
+}}}
+*To permit use of templates that have proper WikiWord tiddler titles (e.g., [[MediaViewTemplate]] and [[MediaEditTemplate]]), the plugin also attempts to use a capitalized form of the tag value (e.g., ''Media'') as a prefix.  //This capitalization is for comparison purposes only and will not alter the actual tag values that are stored in the tiddler.//
+<<<
+!!!!!Examples
+<<<
+|Sample tiddler| tag | view template | edit template |
+|[[MediaSample - QuickTime]]| <<tag media>> | [[MediaViewTemplate]] | [[MediaEditTemplate]] |
+|[[MediaSample - Windows]]| <<tag media>> | [[MediaViewTemplate]] | [[MediaEditTemplate]] |
+|[[CDSample]]| <<tag CD>> | [[CDViewTemplate]] | [[CDEditTemplate]] |
+|<<newTiddler label:"create new task..." title:SampleTask tag:task text:"Type some text and then press DONE to view the task controls">> | <<tag task>> | [[TaskViewTemplate]] | [[EditTemplate]] |
+
+//(note: if these samples are not present in your document, please visit// http://www.TiddlyTools.com/ //to view these sample tiddlers on-line)//
+<<<
+!!!!!Revisions
+<<<
+2009.09.02 1.6.1 apply field-based template (if any) *before* tag-based template
+2009.07.31 1.6.0 added support for using custom field value as prefix
+2009.05.04 1.5.2 check for tiddler exist *after* title-as-prefix (allows shadow tiddlers to use custom templates)
+2009.01.06 1.5.1 reversed logic so that title-as-prefix takes precedence over tag-matched prefix
+2008.12.18 1.5.0 added handling for using tiddler //title// as prefix (e.g., {{{SomeTiddlerViewTemplate}}}) 
+2008.08.29 1.4.1 corrected handling for tiddlers with no matching tagged template when non-default theme is in effect (e.g., use "MyTheme##ViewTemplate").
+2008.05.15 1.4.0 support use of *shadow* tagged templates (e.g., [[DiscussionViewTemplate]] created by [[DiscussionPlugin]])
+2008.05.10 1.3.0 corrected handling for determining core template when using theme with sections
+2008.05.01 1.2.5 added support for tagged templates stored as sections in a theme
+2008.04.01 1.2.0 added support for using systemTheme section-based template definitions (requested by Phil Hawksworth)
+2008.01.22 [*.*.*] plugin size reduction - documentation moved to [[TaggedTemplateTweakInfo]]
+2007.06.23 1.1.0 re-written to use automatic 'tag prefix' search instead of hard coded check for each tag.  Allows new custom tags to be used without requiring code changes to this plugin.
+2007.06.11 1.0.0 initial release
+<<<</pre>
+</div>

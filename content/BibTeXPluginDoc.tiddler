@@ -1,0 +1,10 @@
+<div title="BibTeXPluginDoc" modifier="Wang Yanshu" created="202411221536">
+<pre>!Description
+Very incomplete (and personal) ~BibTeX implementation to work with bibliographic references.
+!Usage
+First of all, you need to dump your ~BibTeX entries in a tiddler, lets call it //~MyReferences//. The first macro that this plugin provides is {{{<<cite>>}}}. As the name suggests it is used to cite a reference such as {{{<<cite Soares:07>>}}} where {{{Soares:07}}} is a ~BibTeX key for a reference. However, in your first citation you must include the name of the tiddler that contains the ~BibTeX entries like this {{{<<cite Soares:07 bibliography:MyReferences>>}}}
+
+The {{{<<cite>>}}} macro produces a full reference if there are at most two authors, otherwise it is abbreviated. If you want to force a full reference then you can use  the {{{showAll}}} parameter as in {{{<<cite Coda:97 showAll:true>>}}}.
+
+The production of a list of cited references is done with the {{{<<bibliography>>}}} macro using the name of the tiddler that contains the ~BibTeX entries as a single parameter such as {{{<<bibliography MyReferences>>}}}. If you want to make a list of all your ~BibTeX entries then use {{{<<bibliography MyReferences showAll:true>>}}}.</pre>
+</div>

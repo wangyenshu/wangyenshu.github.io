@@ -1,0 +1,243 @@
+<div title="CookTiddlerPlugin" modifier="Wang Yanshu" created="202503140503">
+<pre>CookTiddlerPlugin
+CookTiddlerPluginInfo
+/***
+|Description|Allows to "cook" tiddlers using various "recipes" – automatically (once a "part" is updated) and using a button|
+|Version|0.2.5|
+|Author|Yakov Litvin|
+***/
+//{{{
+// creates a hidden section with lines commented by "//"
+// to prevent css comments from being treated as end of js comments;
+// adds js that grabs that section (of nameOfTiddlerToCook tiddler), removes "//"
+// in each line and creates a shadow tiddler treated as css (..)
+function wrapAsCssAdder(css, nameOfTiddlerToCook, cssName, options) {
+
+	return	'// /%\n' +
+		'/***\n!' + cssName + '\n***/\n' +
+		css.replace(/^/gm, '//') +
+		'\n/***\n!end of '+ cssName + '\n***/\n'+
+		'// %/ //\n' +
+		'//{{{\n'+
+		';(function() {\n' +
+		'var cssName = ' + JSON.stringify(cssName) + ',\n' +
+		'    css = store.getTiddlerText(' + JSON.stringify(nameOfTiddlerToCook) + ' + \"##\" + cssName).replace(/^\\/\\//gm, \"\");\n' +
+		'css = css.substring(5, css.length - 5); // cut leading \\n***/ and trailing /***\\n of the section\n' +
+		'config.shadowTiddlers[cssName] = css;\n' +
+		(options && options.dontApply ? '' :
+			'store.addNotification(cssName, refreshStyles);\n' +
+			'store.addNotification("ColorPalette", function(smth, doc) { refreshStyles(cssName, doc) })\n'
+		) +
+		'})();\n' +
+		'//}}}'
+}
+
+config.extensions.cookBook = {
+
+	// hashmap by tiddlerName of
+	// - parts: Array of tiddlerTextExpr (tName, tName::slNmae, tName##seName, ::slNmae,)
+	// - steps: JavaScript expression containing parts[i] to be evaled that returns text,
+	//          null means join("\n") of parts[i] ~contents
+	// - title: equal to tiddlerName for usage flexibility
+	recipes: {},
+	addRecipe: function(title, parts, steps, tags, autoupdate, reinstall, minify, reinstallOnly) {
+
+		this.recipes[title] = { title: title, parts: parts, steps: steps, tags: tags, autoupdate: autoupdate, reinstall: reinstall, reinstallOnly: reinstallOnly }
+	},
+	getRecipeFor: function(title) { return this.recipes[title] },
+	getRecipesContaining: function(title) {
+
+		var goodPartRegExp = new RegExp("^" + title.escapeRegExp() + "(?:$|::.+|##.+)")
+		var demandedRecipes = [], t, recipeParts, i;
+		for(t in this.recipes) {
+			recipeParts = this.recipes[t].parts;
+			for(i = 0; i < recipeParts.length; i++)
+				if(goodPartRegExp.exec(recipeParts[i])) {
+					demandedRecipes.push(this.recipes[t]);
+					break;
+				}
+		}
+		return demandedRecipes;
+	}
+};
+
+config.macros.defineRecipe = {
+
+	readRecipeList: function() {
+
+		if (!window.store) return setTimeout(readRecipeList, 100);
+
+		var recipeList = store.fetchTiddler("RecipeList");
+		if(recipeList && recipeList.text)
+			wikify(recipeList.text, document.createElement("div"), null, recipeList);
+	},
+	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
+
+		var pParams = paramString.parseParams("tiddler", null, true, false, true),
+		    checkFlag	 = function(name, default_val) {
+			return getParam(pParams, name, default_val) ||
+				!!((new RegExp("\\s"+name+"(?:\\s|$)")).exec(paramString))
+		    },
+		    tiddlerNames = pParams[0]["tiddler"],
+		    partNames	 = pParams[0]["parts"],
+		    tags	 = pParams[0]["tags"] || [],
+		    plugin	 = checkFlag("plugin"),
+		    recipe	 = getParam(pParams, "recipe", ""),
+		    autoupdate	 = checkFlag("autoupdate"),
+		    reinstallOnly= checkFlag("reinstallOnly"),
+		    reinstall	 = checkFlag("reinstall") || reinstallOnly,
+		    minify	 = checkFlag("minify");
+		if(plugin) tags.push("systemConfig");
+
+		if(!tiddlerNames) {
+			createTiddlyError(place,
+			  "Macro error: no 'tiddler' param (click this for details)",
+			  "Put it after the macro name as either 'tiddler:\"tiddlerName\"' or just '\"tiddlerName\"'");
+			return;
+		}
+		if(reinstallOnly) partNames = tiddlerNames;
+		if(!partNames) {
+			createTiddlyError(place,"Macro error: no 'parts' param (click this for details)","Put them after the 'tiddler' param as 'parts:\"partName1\" \"partName2\" ...'");
+			return;
+		}
+		var tiddlerName = tiddlerNames[0],
+		    sameTiddlerPartRegExp = /^(::|##).+/, i;
+		for(i = 0; i < partNames.length; i++)
+			if(sameTiddlerPartRegExp.exec(partNames[i]))
+				partNames[i] = tiddlerName + partNames[i];
+
+		// show the written macro code:
+		var w = wikifier,
+		    macroTWcode = w.source.substring(w.matchStart, w.nextMatch),
+		    hide = params.contains('hide');
+		if (!hide)
+			createTiddlyText(createTiddlyElement(place, "pre"), macroTWcode);
+
+		config.extensions.cookBook.addRecipe(tiddlerName, partNames,
+			recipe, tags, autoupdate, reinstall, minify, reinstallOnly);
+	}
+};
+
+config.macros.cook = {
+
+	cookRecipe: function(recipe, force) {
+
+		if(!force && !recipe.autoupdate) return;
+
+		var partNames = recipe.parts, parts = {}, i;
+		for(i = 0; i < partNames.length; i++)
+			parts[partNames[i]] = [ store.getTiddlerText(partNames[i], "") ];
+//# for filtering, add extra parsing here (fill the array with several parts)
+
+		var script = "config.macros.cook.f = function(title, partNames, parts) {" +
+			"var text = '', tid = new Tiddler(title)," +
+
+			"    oldTid  = store.fetchTiddler(title);" +
+			"tid.creator = oldTid ? oldTid.creator : config.options.txtUserName;" +
+			"tid.created = oldTid ? oldTid.created : new Date();" +
+			"tid.modifier = config.options.txtUserName;" +
+			"tid.modified = new Date();" +
+			"var oldChangeCount = oldTid ? oldTid.fields.changecount : null;" +
+			"tid.fields.changecount = oldChangeCount ? (parseInt(oldChangeCount)+1) : 0;\n" +
+
+			recipe.steps +
+
+			"\nvar partName, namedParts, i;" +
+			"for(partName in parts) {" +
+			"    namedParts = parts[partName];" +
+			"    for(i = 0; i < namedParts.length; i++)" +
+			"        text += (namedParts[i]+'\\n');" +
+			"};" +
+			"if(text) text = text.substr(0,text.length-1);" +
+			"tid.text = tid.text || text;" +
+			"return tid;" +
+		"};"
+console.log("in cookRecipe, script is",script);
+		eval(script);
+
+		var tid      = this.f(recipe.title, partNames, parts),
+		    modifier = config.options.txtUserName,
+		    modified = new Date();
+		tid.tags = tid.tags.concat(recipe.tags);
+		if(recipe.minify) {
+			tid.text = tid.text.replace(/\r/gm,'\n');
+			//# implement minification here, use some external lib
+		}
+		
+console.log("in cookRecipe, tid is",tid);
+		if(!recipe.reinstallOnly) {
+			store.saveTiddler(tid, recipe.title, null, modifier, modified);
+			displayMessage("Tiddler \""+ recipe.title +"\" has been cooked");
+console.log("Tiddler \""+recipe.title+"\" has been cooked");
+//# add msg that tells the results (test this with both ways of cooking)
+//# add msg that tells if some part wasn't found
+		}
+		if(recipe.reinstall /*&& isPluginEnabled(tid)*/) {
+			//# do stuff from STP's installPlugin (logging)
+			var msg;
+			try {
+				window.eval(tid.text);
+				msg = '"'+ tid.title +'" was reinstalled.';
+			} catch(ex) {
+				// do react on errors in a helpful way
+				msg = "Error evaluating "+ tid.title +":\n"+
+					  exceptionText(ex)
+			} finally {
+				displayMessage(msg);
+				console.log(msg);
+			}
+			//# do stuff from STP's installPlugin (logging)
+		}
+	},
+	cookRecipeFor: function(title, force) {
+
+		var recipe = config.extensions.cookBook.getRecipeFor(title);
+		if(recipe)
+			this.cookRecipe(recipe, force);
+		else
+			return 'no recipe for "'+ title +'"';
+	},
+	cookRecipesContaining: function(title, force) {
+
+		var recipes = config.extensions.cookBook.getRecipesContaining(title), i;
+		for(i = 0; i < recipes.length; i++)
+			this.cookRecipe(recipes[i], force);
+	},
+	handler: function(place, macroName, params, wikifier, paramString, tiddler) {
+
+		var pParams = paramString.parseParams("title", null, true, false, true),
+		    title = getParam(pParams, "title", tiddler ? tiddler.title : ""),
+		    label = getParam(pParams, "label", "cook"),
+		    tooltip = getParam(pParams, "tooltip", "");
+		
+		createTiddlyButton(place, label, tooltip, function() {
+			var error = config.macros.cook.cookRecipeFor(title, true);
+			if(error) displayMessage(error);
+		});
+	}
+};
+
+// hijack in a reinstallable fashion
+if(!config.commands.saveTiddler.orig_handler_CTP)
+ config.commands.saveTiddler.orig_handler_CTP = config.commands.saveTiddler.handler;
+config.commands.saveTiddler.handler = function(event, src, title) {
+
+	// "pre-saving" of the tiddler's text for cooking to see it
+	// (code extracted from Story.saveTiddler)
+	var tiddlerElem = story.getTiddler(title);
+	if(tiddlerElem) {
+		var fields = {};
+		story.gatherSaveFields(tiddlerElem, fields);
+		var tiddler = store.saveTiddler(title, title, fields.text);
+	}
+
+	config.macros.cook.cookRecipesContaining(title);
+//# add the corresponding messages
+
+	return config.commands.saveTiddler.orig_handler_CTP.apply(this, arguments);
+	// it's important not to use "this" here (causes conflicts with CodeMirror and may do so with others)
+};
+
+setTimeout(config.macros.defineRecipe.readRecipeList, 100);
+//}}}</pre>
+</div>

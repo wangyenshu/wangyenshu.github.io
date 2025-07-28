@@ -1,0 +1,4 @@
+<div title="Brython_Example_HelloBrython" modifier="Wang Yanshu" created="202503210338" tags="demo RunScriptPlugin">
+<pre>from browser import alert
+alert("ok")</pre>
+</div>

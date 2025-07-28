@@ -1,0 +1,5 @@
+<div title="AttachFilePackage" modifier="YourName" created="200707170002" modified="202401130639" tags="package AttachFilePackage">
+<pre>[[AttachFilePlugin]] reads binary data from locally-stored files (e.g., images, PDFs, mp3's, etc.) and converts it to base64-encoded text that is stored in tiddlers tagged with<<tag attachment>>. [[AttachFilePluginFormatters]] allows you to use those tiddlers in place of the external path/file references that are normally part of the image and external links wiki syntax.
+
+[[FileDropPlugin]] and [[FileDropPluginConfig]] allow you to quickly create attachment tiddlers simply by dragging files directly from your system's desktop folder display and dropping it onto an open TiddlyWiki document.  Text files are automatically created as simple tiddlers, while binary files are automatically encoded and attached.</pre>
+</div>

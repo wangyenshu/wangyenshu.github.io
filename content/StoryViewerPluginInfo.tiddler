@@ -1,0 +1,95 @@
+<div title="StoryViewerPluginInfo" modifier="ELSDesignStudios" created="200710230906" modified="201103111136" tags="pluginInfo">
+<pre>/***
+|Name|StoryViewerPluginInfo|
+|Source|http://www.TiddlyTools.com/#StoryViewerPlugin|
+|Documentation|http://www.TiddlyTools.com/#StoryViewerPluginInfo|
+|Version|1.4.0|
+|Author|Eric Shulman|
+|License|http://www.TiddlyTools.com/#LegalStatements|
+|~CoreVersion|2.1|
+|Type|documentation|
+|Description|documentation for StoryViewerPlugin|
+The {{{<<storyViewer>>}}} macro allows you to quickly ''display //and// navigate between a set of tiddlers'', using a droplist of titles and/or individual "first/previous/next/last" buttons/text links.  It also provides a "slideshow" feature that permits you to ''present one tiddler at a time with a countdown timer to automatically advance to the next tiddler'' after a specified number of seconds.
+!!!!!Usage
+<<<
+{{{
+<<storyViewer storyname|tagvalue list buttonoption prompt:... sort:...>>
+<<storyViewer storyname|tagvalue first|previous|here|next|last sort:...>>
+<<storyViewer storyname|tagvalue links sort:fieldname>>
+<<storyViewer storyname|tagvalue timer:nnn autostart close|fold sort:...>>
+}}}
+where:
+* ''storyname'' or ''tagvalue''<br>specifies a set of tiddler titles, defined either by matching a tag value, or by creating a tiddler, tagged with <<tag story>>, containing a space-separated list of titles.  //Note: You can use the {{{<<saveStory>>}}} macro (see [[StorySaverPlugin]]) to automatically create stories using the titles of the tiddlers that are currently being viewed.//  If you omit the storyname/tagname parameter, the plugin will attempt to identify a suitable story by locating the current tiddler title within a saved story tiddler.  The story view controls are not displayed unless the current tiddler title is explicitly found in at least one saved story.
+** Note: if [[MatchTagsPlugin]] is installed, you can use a compound //boolean tag expression//, enclosed within doubled square brackets.  This allows you to generate sets of stories based on complex combinations of tags, rather than matching just one tag value.  [[MatchTagsPlugin]] also allows you to use a //wildcard// expression, ".*" (without quotes), that will match all tiddlers, regardless of their tag value(s).
+* ''list''<br>displays a droplist of tiddlers for the specified story, with previous/next pushbuttons on either side of the list.  You can also specify which buttons will appear when using a droplist:
+** ''allbuttons''<br>displays buttons for first/last as well as previous/next.
+** ''nobuttons''<br>displays the droplist without any buttons
+** ''onlybuttons''<br>hides the droplist and shows just the buttons
+* ''prompt:...'' (default={{{"storyname..."}}})<br>specifies non-selectable label text to use as the first item in the droplist.
+* ''sort:fieldname'' //(optional)//<br>when a ''tagvalue'' is used to select tiddlers, you can specify a tiddler fieldname that can be used to sort the resulting list of tiddlers, with an optional "-" prefix to indicate descending vs. ascending ordering, e.g, "sort:-modified" will generate a list of tiddlers in reverse date order (newest tiddler first).
+* ''first'' or ''previous'' or ''here'' or ''next'' or ''last''<br>displays an individual link to the indicated tiddler within the story. The next/previous links are automatically calculated relative to the current tiddler.  ''here'' displays the current tiddler title.
+* ''links''<br>displays the set of first, previous, here, next and last links with just one convenient macro invocation, allowing you to quickly and easily embed story navigation links into any tiddler content.
+* ''timer:nnn''<br>displays an automatic countdown 'slideshow' timer, where ''nnn'' is the number of seconds between slides.  Click on the timer to start the countdown.  The countdown is paused when hovering over the timer.  Click a //running// timer to immediately advance to the next tiddler in the story.  Optional slideshow parameters:
+** ''autostart''<br>automatically starts the countdown without an initial click.
+** ''close'' or ''fold''<br>close or fold (see [[CollapseTiddlerPlugin]]) the current tiddler when the next tiddler in the story is opened. The default is to simply display the next tiddler following the current one.
+<<<
+!!!!!Examples
+<<<
+{{smallform{
+{{{
+<<storyViewer MenuDefinitions list nobuttons>>
+}}}
+><<storyViewer MenuDefinitions list nobuttons>> //uses "saved story" tiddler//
+{{{
+<<storyViewer pluginInfo>>
+}}}
+><<storyViewer pluginInfo>>
+{{{
+<<storyViewer pluginInfo list allbuttons prompt:"TiddlyTools menu definitions...">>
+}}}
+><<storyViewer pluginInfo list allbuttons prompt:"TiddlyTools menu definitions...">>
+{{{
+<<storyViewer pluginInfo first>>
+<<storyViewer pluginInfo previous>>
+<<storyViewer pluginInfo next>>
+<<storyViewer pluginInfo last>>
+}}}
+><<storyViewer pluginInfo first>>
+><<storyViewer pluginInfo previous>>
+><<storyViewer pluginInfo next>>
+><<storyViewer pluginInfo last>>
+{{{
+<<storyViewer pluginInfo previous label:"back">>
+<<storyViewer pluginInfo next label:"forward">>
+}}}
+><<storyViewer pluginInfo previous label:"back">>
+><<storyViewer pluginInfo next label:"forward">>
+{{{
+<<storyViewer pluginInfo links>>
+}}}
+><<storyViewer pluginInfo links>>
+{{{
+<<storyViewer pluginInfo timer:20 fold>>
+}}}
+><<storyViewer pluginInfo timer:20 fold>>
+{{{
+<<storyViewer ".*" prompt:"timeline..." sort:-modified>>
+}}}
+><<storyViewer ".*" prompt:"timeline..." sort:-modified>>
+}}}
+<<<
+!!!!!Revisions
+<<<
+2011.03.11 1.4.0 added 'sort:fieldname' parameter
+2011.01.24 1.3.4 in droplist onchange handler, don't clear slideshow 'started' flag (allows slideshow to continue after manual navigation)
+2011.01.12 1.3.3 added config.macros.storyViewer.started (controls 'autostart' for automatic presentation of multiple pages)
+2011.01.11 1.3.2 use pushbutton instead of text to display slideshow timer
+2011.01.11 1.3.1 code and documentation cleanup
+2011.01.10 1.3.0 added slideshow (params= timer:nnn, autostart, close/fold).  Added custom prompt for droplist (param= prompt:"text"). Added support for [[MatchTagsPlugin]]
+2008.06.05 1.2.0 added custom story paramifier to extract story titles from tiddler links instead of using parseParams.  Permits use of links from any tiddler as a story, even if it contains wiki-syntax formatting in addition to list of tiddler titles
+2008.03.10 *.*.* plugin size reduction: documentation moved to [[StoryViewerPluginInfo]]
+2007.12.31 1.1.0 instead of readBracketedList(), use internal tiddler.links[] to retrieve story list from tiddler content.  Allows more flexible formatting of story tiddler content.
+2007.12.04 *.*.* update for TW2.3.0: replaced deprecated core functions, regexps, and macros
+2007.10.23 1.0.0 Initial release, split {{{<<storyViewer>>}}} macro definition from [[StorySaverPlugin]] to allow separate installation of story saving vs. story viewing features.
+<<<</pre>
+</div>

@@ -1,0 +1,10 @@
+#saveTest, #messageArea, #copyright, #storeArea, #shadowArea {
+	display: none;
+}
+#javascriptWarning {
+	text-align: center;
+	padding: 1em;
+	font-weight: bold;
+	background-color: #dd1100;
+	color: #fff;
+}

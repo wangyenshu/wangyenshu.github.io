@@ -1,0 +1,6 @@
+<div title="culture" modifier="Wang Yanshu" created="202506220222" tags="category">
+<pre><<forEachTiddler 
+where 
+'tiddler.tags.contains("blog") && tiddler.data("category") == "culture"'
+>></pre>
+</div>
