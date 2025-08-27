@@ -35,7 +35,7 @@ jobs:
     - name: Prepare docs directory
       run: |
         mkdir -p docs
-        mv ./build/cooked/*/* docs/
+        mv build/cooked/*/* docs/
 
     - name: Copy passthrough content to docs
       run: |
