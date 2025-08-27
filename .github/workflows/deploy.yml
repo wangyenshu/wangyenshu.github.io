@@ -36,6 +36,7 @@ jobs:
       run: |
         mkdir -p docs
         cp build/cooked/index.html docs/index.html
+        cp build/cooked/index.xml docs/index.xml
 
     - name: Copy passthrough content to docs
       run: |
