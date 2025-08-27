@@ -144,7 +144,7 @@ tiddler: TemporaryTiddlersPlugin.js
 tiddler: TextAreaPlugin.js
 tiddler: ThostUploadPlugin.js
 tiddler: TidIDEPlugin.js
-tiddler: TiddlerEncryptionPlugin.js
+tiddler: SJCLTiddlerEncryptionPlugin.js
 tiddler: TiddlerIconsPlugin.js
 tiddler: TiddlerIconsPluginConfig.js
 tiddler: TiddlerInFilePlugin-ByTagFork.js
