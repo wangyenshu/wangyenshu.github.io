@@ -1,0 +1,20 @@
+created: 20250905034800000
+creator: Wang Yanshu
+modified: 20250905034800000
+modifier: Wang Yanshu
+tags: diary proxy
+title: UseNetworkProxyInChineseUniversity
+
+I use Hiddify, system proxy mode, the mixed port is 12334.
+*1.Use Hotspot
+*2.Add 
+{{{
+export http_proxy="127.0.0.1:12334"
+export https_proxy="127.0.0.1:12334"
+export no_proxy="localhost,127.0.0.1,*.localdomain"
+}}} to ~/.bashrc
+*3.Add 
+{{{
+Acquire::http::Proxy "http://127.0.0.1:12334/";
+]}}
+to /etc/apt/apt.conf.d/proxy.conf (use sudo nano; create it if it does not exist)
