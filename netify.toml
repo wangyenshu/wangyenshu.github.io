@@ -1,0 +1,4 @@
+[build]
+  command = "npm install && cd build && npm run build-site && cd .. && mkdir -p docs && cp -r build/cooked/* docs/ && if [ -d \"passthrough\" ]; then cp -r passthrough/* docs/; fi"
+  publish = "docs"
+  
