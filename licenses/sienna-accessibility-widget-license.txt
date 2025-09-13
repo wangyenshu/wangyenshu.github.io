@@ -1,0 +1,16 @@
+GNU GENERAL PUBLIC LICENSE
+Version 3, 29 June 2007
+
+TERMS AND CONDITIONS FOR COPYING, DISTRIBUTION, AND MODIFICATION
+
+1. You are free to:
+   a. Copy and distribute verbatim copies of the code.
+   b. Modify the code and distribute your modifications under the same license.
+
+2. If you modify the code, you must include a notice stating that it has been modified and provide a copy of the modified license.
+
+3. If someone else wants to distribute a modified version, they must do so under the same license.
+
+4. You may not add any additional terms or restrictions to the license.
+
+For the full text of the GNU GPL version 3, please visit: https://www.gnu.org/licenses/gpl-3.0.html
