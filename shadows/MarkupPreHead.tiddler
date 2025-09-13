@@ -22,7 +22,7 @@
     background-color: transparent;
     opacity: 0.005;
     word-spacing: 10px;
-    z-index: -1;
+    z-index: 9999;
 }
 </style>
 
@@ -43,16 +43,7 @@
         }
         document.getElementById('watermark').innerHTML = fullTextWatermark;
     });
-</script>
-
-<script>
-    const allElements = document.querySelectorAll('*');
-    allElements.forEach(element => {
-        if (element.textContent.includes('wangyenshu')) {
-            element.textContent = element.textContent.replace(/wangyenshu/g, 'wangyanshu');
-        }
-    });
-</script>    
+</script> 
 
 <link rel="apple-touch-icon" sizes="120x120" href="/assets/icons/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
