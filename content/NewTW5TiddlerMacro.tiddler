@@ -1,4 +1,4 @@
-<div title="NewTW5TiddlerMacro" modifier="Wang Yanshu" created="202507191901" modified="202507191934" tags="YSPlugin">
+<div title="NewTW5TiddlerMacro" modifier="Wang Yanshu" created="202507191901" modified="202507191934" tags="YSPlugin excludeSearch">
 <pre>/***
 |Name|NewTW5TiddlerMacro|
 |Description|Generates a tiddler named 'New TW5Tiddler' with a default TW5-like JSON structure and current timestamps.|
