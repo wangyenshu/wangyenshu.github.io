@@ -1,5 +1,6 @@
 <div title="Plugins" modifier="Wang Yanshu" created="202503291538" modified="202507082233" creator="Wang Yanshu">
 <pre>!YSPlugin
+{{{
 <<forEachTiddler 
 where 
 'tiddler.tags.contains("YSPlugin")'
@@ -23,6 +24,8 @@ write
 +"]]}}}@@<br>  "
 +"|\n"'
 >>
+}}}
+
 [[PluginsTODO]]
 <<disqus Plugins>></pre>
 </div>
