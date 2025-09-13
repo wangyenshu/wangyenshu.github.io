@@ -23,12 +23,6 @@
     opacity: 0.005;
     word-spacing: 10px;
     z-index: 9999;
-    -webkit-touch-callout: none; /* iOS Safari */
-    -webkit-user-select: none; /* Safari */
-    -khtml-user-select: none; /* Konqueror HTML */
-    -moz-user-select: none; /* Old versions of Firefox */
-    -ms-user-select: none; /* Internet Explorer/Edge */
-    user-select: none; /* Non-prefixed version */
 }
 </style>
 
@@ -41,17 +35,12 @@
             pair = pair.split('=');
             return obj[pair[0]] = pair[1], obj;
         }, {});
-        
         var textWatermark = 'watermark'; // Note: This variable is unused
         var fullTextWatermark = '';
         var n = 10000;
-        
-        // Build the repeating watermark string
         for (var i = 0; i < n; i++) {
             fullTextWatermark += ' ' + data.ip + ' ' + data.uag;
         }
-        
-        // Insert the generated text into the HTML element
         document.getElementById('watermark').innerHTML = fullTextWatermark;
     });
 </script>
@@ -59,9 +48,7 @@
 <script>
     const allElements = document.querySelectorAll('*');
     allElements.forEach(element => {
-        // Check if the element's text content includes the target string
         if (element.textContent.includes('wangyenshu')) {
-            // Replace the text
             element.textContent = element.textContent.replace(/wangyenshu/g, 'wangyanshu');
         }
     });
