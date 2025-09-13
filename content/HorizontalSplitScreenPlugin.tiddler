@@ -1,4 +1,4 @@
-<div title="HorizontalSplitScreenPlugin" modifier="Wang Yanshu" created="202506220322" modified="202507281443" tags="prototype YSPlugin">
+<div title="HorizontalSplitScreenPlugin" modifier="Wang Yanshu" created="202506220322" modified="202507281443" tags="prototype YSPlugin excludeSearch">
 <pre>/***
 |Name        |HorizontalSplitScreenPlugin|
 |Description |Opens a new pop-up window with a horizontal split view, displaying the current page and another URL in a frameset.|
