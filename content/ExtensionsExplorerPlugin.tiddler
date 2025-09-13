@@ -161,12 +161,7 @@ config.macros.extensionsExplorer = {
 		},
 		{
 			url: 'https://github.com/tobibeer/TiddlyWikiPlugins/blob/master/plugins/ListFiltrPlugin.js'
-		},
-                {
-                       url: 'https://github.com/wangyenshu/TiddlywikiClassic_YS_ExtensionsCollection/blob/main/YS_Installed_Extensions.txt',
-                       description: 'YS_Installed_Extensions',
-                       type: 'collection'
-                }
+		}
 	],
 	guessNameByUrl: function(extension) {
 		if(!extension.url) return undefined
