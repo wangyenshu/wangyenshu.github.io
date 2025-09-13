@@ -1,4 +1,4 @@
-<div title="VerticalSplitScreenPlugin" modifier="Wang Yanshu" created="202506220315" modified="202507281443" tags="prototype YSPlugin">
+<div title="VerticalSplitScreenPlugin" modifier="Wang Yanshu" created="202506220315" modified="202507281443" tags="prototype YSPlugin excludeSearch">
 <pre>/***
 |Name        |VerticalSplitScreenPlugin|
 |Description |Opens a new pop-up window with a vertical split view, displaying the current page and another URL in a frameset.|
