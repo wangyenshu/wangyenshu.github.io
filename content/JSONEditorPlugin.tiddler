@@ -1,4 +1,4 @@
-<div title="JSONEditorPlugin" modifier="Wang Yanshu" created="202507191902" modified="202507191934" tags="YSPlugin">
+<div title="JSONEditorPlugin" modifier="Wang Yanshu" created="202507191902" modified="202507191934" tags="YSPlugin excludeSearch">
 <pre>/***
 |Name|JSONEditorPlugin|
 |Description|A GUI editor for JSON content in TiddlyWiki tiddlers. Companion plugin for innerTW5Plugin.|
