@@ -9,56 +9,63 @@
 
 <style>
 #watermark {
-  color: rgba(128, 128, 128, 0.3);
-  height: 100%;
-  left: 0;
-  line-height: 2;
-  margin: 0;
-  position: fixed;
-  top: 0;
-  transform: rotate(-30deg);
-  transform-origin: 0 100%;
-  width: 200%;
-  backgound-color: transparent;
-  opacity: 0.005;
-  word-spacing: 10px;
-  z-index: -1;
-  -webkit-touch-callout: none; /* iOS Safari */
+    color: rgba(128, 128, 128, 0.3);
+    height: 100%;
+    left: 0;
+    line-height: 2;
+    margin: 0;
+    position: fixed;
+    top: 0;
+    transform: rotate(-30deg);
+    transform-origin: 0 100%;
+    width: 200%;
+    background-color: transparent;
+    opacity: 0.005;
+    word-spacing: 10px;
+    z-index: 9999;
+    -webkit-touch-callout: none; /* iOS Safari */
     -webkit-user-select: none; /* Safari */
-     -khtml-user-select: none; /* Konqueror HTML */
-       -moz-user-select: none; /* Old versions of Firefox */
-        -ms-user-select: none; /* Internet Explorer/Edge */
-            user-select: none; /* Non-prefixed version, currently
-                                  supported by Chrome, Edge, Opera and Firefox */
+    -khtml-user-select: none; /* Konqueror HTML */
+    -moz-user-select: none; /* Old versions of Firefox */
+    -ms-user-select: none; /* Internet Explorer/Edge */
+    user-select: none; /* Non-prefixed version */
 }
 </style>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.4/jquery.min.js"></script>
 <p id="watermark"></p>
 <script>
-$.get('https://www.cloudflare.com/cdn-cgi/trace', function(data) {
-  // Convert key-value pairs to JSON
-  // https://stackoverflow.com/a/39284735/452587
-  data = data.trim().split('\n').reduce(function(obj, pair) {
-    pair = pair.split('=');
-    return obj[pair[0]] = pair[1], obj;
-  }, {});
-  // console.log(data);
-  
-  var textWatermark = 'watermark';
-var fullTextWatermark = '';
-var n = 10000;
-for (var i = 0; i < n; i++) {
-  fullTextWatermark+= ' ' + data.ip + ' ' + data.uag;
-}
-document.getElementById('watermark').innerHTML = fullTextWatermark
-
-
-});
-
+    $.get('https://www.cloudflare.com/cdn-cgi/trace', function(data) {
+        // Convert key-value pairs to JSON
+        data = data.trim().split('\n').reduce(function(obj, pair) {
+            pair = pair.split('=');
+            return obj[pair[0]] = pair[1], obj;
+        }, {});
+        
+        var textWatermark = 'watermark'; // Note: This variable is unused
+        var fullTextWatermark = '';
+        var n = 10000;
+        
+        // Build the repeating watermark string
+        for (var i = 0; i < n; i++) {
+            fullTextWatermark += ' ' + data.ip + ' ' + data.uag;
+        }
+        
+        // Insert the generated text into the HTML element
+        document.getElementById('watermark').innerHTML = fullTextWatermark;
+    });
 </script>
 
-
+<script>
+    const allElements = document.querySelectorAll('*');
+    allElements.forEach(element => {
+        // Check if the element's text content includes the target string
+        if (element.textContent.includes('wangyenshu')) {
+            // Replace the text
+            element.textContent = element.textContent.replace(/wangyenshu/g, 'wangyanshu');
+        }
+    });
+</script>    
 
 <link rel="apple-touch-icon" sizes="120x120" href="/assets/icons/apple-touch-icon.png">
 <link rel="icon" type="image/png" sizes="32x32" href="/assets/icons/favicon-32x32.png">
