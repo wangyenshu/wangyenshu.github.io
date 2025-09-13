@@ -22,7 +22,7 @@
     background-color: transparent;
     opacity: 0.005;
     word-spacing: 10px;
-    z-index: 9999;
+    z-index: -1;
 }
 </style>
 
