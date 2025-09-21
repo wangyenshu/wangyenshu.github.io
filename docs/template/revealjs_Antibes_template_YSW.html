@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Reveal.js – Permalinks + Chalkboard + Dynamic TOC</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+
+  <!-- Reveal core CSS + theme -->
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.6.0/dist/reveal.css">
+  <link rel="stylesheet" href="https://unpkg.com/reveal.js@4.6.0/dist/theme/white.css" id="theme">
+
+  <!-- Font Awesome (toolbar icons) -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+  <!-- Chalkboard & CustomControls styles -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js-plugins/chalkboard/style.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/reveal.js-plugins/customcontrols/style.css">
+
+  <style>
+    /* ─── NAV & BASIC LAYOUT ───────────────────────────────────────── */
+    body{margin:0;font-family:Arial,Helvetica,sans-serif;background:#fff}
+
+    nav.top-nav{position:fixed;top:0;left:0;right:0;height:50px;background:#003366;
+      display:flex;align-items:center;padding:0 24px;z-index:2000;overflow-x:auto}
+    nav.top-nav ul{display:flex;list-style:none;margin:0;padding:0}
+    nav.top-nav li{margin-right:24px;white-space:nowrap}
+    nav.top-nav a{color:#fff;text-decoration:none;font-weight:bold;padding:.5em 0}
+    nav.top-nav a.active{border-bottom:3px solid #ffc107}
+    nav.top-nav a:hover{color:#ffc107}
+
+    .bottom-nav{position:fixed;bottom:0;left:0;right:0;height:55px;background:#003366;
+      display:flex;align-items:center;justify-content:space-between;padding:0 24px;z-index:2000}
+    .nav-buttons{display:flex;gap:12px}
+    .nav-buttons button{background:none;border:2px solid #fff;color:#fff;padding:6px 12px;
+      font-size:14px;border-radius:4px;cursor:pointer;transition:background .2s,border-color .2s}
+    .nav-buttons button:hover{background:#e10600;border-color:#e10600}
+    .author-info{color:#fff;font-weight:bold}
+
+    /* ─── TITLE BAR ────────────────────────────────────────────────── */
+    .beamer-title{display:flex;flex-direction:column;justify-content:center;align-items:center;
+      height:calc(100vh - 110px);transform:translateY(-5vh)}
+    .title-bar{background:#003366;color:#fff;padding:1rem 2.5rem;border-radius:8px;
+      text-align:center;box-shadow:0 3px 8px rgba(0,0,0,.25)}
+    .title-bar h1{font-size:2.8rem;margin:0 0 .4rem 0;color:#fff}
+    .title-bar h3{font-size:1.4rem;font-weight:normal;margin:0;color:#fff}
+
+    /* ─── CONTENT BLOCKS (unchanged) ──────────────────────────────── */
+    .block{border:2px solid #003366;border-left-width:8px;border-radius:6px;background:#f8f9fa;
+      margin:1.2rem 0;box-shadow:0 2px 6px rgba(0,0,0,.15)}
+    .block .header{background:#003366;color:#fff;padding:.5rem 1rem;font-weight:bold;
+      border-top-left-radius:4px;border-top-right-radius:4px}
+    .block .body{padding:1rem 1.2rem}
+    .block-theorem{border-color:#007bff}.block-theorem .header{background:#007bff}
+    .block-definition{border-color:#28a745}.block-definition .header{background:#28a745}
+    .block-example{border-color:#ffc107}.block-example .header{background:#ffc107;color:#000}
+
+    .title-banner{background:#003366;color:#fff;padding:1rem;border-radius:8px;font-size:1.8rem;
+      font-weight:bold;margin-bottom:1.5rem;box-shadow:0 2px 6px rgba(0,0,0,.15);text-align:center}
+    .columns{display:flex;gap:1.5rem}.columns .col{flex:1}
+    table{width:100%;border-collapse:collapse;margin-top:1rem}
+    table,th,td{border:1px solid #003366}
+    th,td{padding:.6rem 1rem;text-align:left}
+    th{background:#003366;color:#fff}
+    .caption{font-size:.9rem;color:#555;text-align:center;margin-top:.5rem}
+
+    /* ─── REVEAL PADDING ─────────────────────────────────────────── */
+    .reveal{margin-top:50px;margin-bottom:55px}
+    .reveal .slide-number{display:none!important}
+
+    /* ─── CHALKBOARD OVERLAY (pointer-aligned) ───────────────────── */
+    .reveal .chalkboardOverlay,
+    .reveal .slideCanvasOverlay{
+      transform:translateY(-50px);
+      height:calc(100% + 50px);
+      z-index:1500!important;
+      cursor:crosshair!important;
+    }
+
+    /* ─── TOC PANEL ───────────────────────────────────────────────── */
+    #toc-panel {
+      position: fixed;
+      top: 50px;
+      left: 0;                  /* anchor to the left edge */
+      bottom: 55px;
+      width: 260px;
+      background: #f7f7f7;
+      border-right: 3px solid #003366;
+      box-shadow: 2px 0 6px rgba(0,0,0,.2);
+      padding: 1rem;
+      font-size: 14px;
+      line-height: 1.4;
+      overflow-y: auto;
+      z-index: 1800;
+
+      /* hide it off-screen to the left */
+      transform: translateX(-100%);
+      transition: transform .3s ease;
+    }
+    #toc-panel.open {
+      /* slide it back into view */
+      transform: translateX(0);
+    }
+  </style>
+
+  <!-- MathJax 3 -->
+  <script>
+    window.MathJax = {tex:{inlineMath:[['$','$'],['\\\\(','\\\\)']]}};
+  </script>
+  <script defer src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+</head>
+<body>
+
+<!-- ───── TOP NAVIGATION ───── -->
+<nav class="top-nav"><ul id="top-nav-list"></ul></nav>
+
+<!-- ───── BOTTOM NAVIGATION ───── -->
+<div class="bottom-nav">
+  <div class="nav-buttons">
+    <button id="prev-slide-btn" title="Previous Slide">◀</button>
+    <button id="next-slide-btn" title="Next Slide">▶</button>
+    <button id="prev-section-btn" title="Previous Section">◀◀</button>
+    <button id="next-section-btn" title="Next Section">▶▶</button>
+    <button id="last-slide-btn"  title="Last Slide">⏩</button>
+    <button id="home-btn"        title="Home">⌂</button>
+    <button id="fullscreen-btn"  title="Toggle Fullscreen">⛶</button>
+    <button id="permalink-btn"   title="Copy Permanent Link">🔗</button>
+
+    <!-- Chalkboard + TOC buttons -->
+    <button id="chalkboard-btn" title="Toggle Chalkboard (B)"><i class="fa fa-pen-square"></i></button>
+    <button id="notes-btn"      title="Toggle Notes Canvas (C)"><i class="fa fa-pen"></i></button>
+    <button id="toc-btn"        title="Table of Contents"><i class="fa fa-bars"></i></button>
+  </div>
+  <span class="author-info">Author – Nankai University</span>
+</div>
+
+<!-- ───── TOC PANEL ───── -->
+<aside id="toc-panel">
+  <h3>Table of Contents</h3>
+  <ul id="toc-list"></ul>
+</aside>
+
+<!-- ===== Reveal deck ===== -->
+  <div class="reveal">
+    <div class="slides">
+      <!-- 0. Title -->
+      <section data-menu-title="Home">
+        <div class="beamer-title">
+          <div class="title-bar">
+            <h1>Awesome Presentation Title</h1>
+            <h3>Exciting Subtitle Goes Here</h3>
+          </div>
+          <div class="title-meta">
+            <p class="menu-title">Home</p>
+            <p>Author</p>
+            <p>Nankai University</p>
+            <p id="current-date"></p>
+          </div>
+        </div>
+      </section>
+
+      <!-- 1. Introduction -->
+      <section data-menu-title="Introduction">
+        <section>
+          <div class="title-banner">Motivation</div>
+          <p>This slide uses a full‑width title banner styled like a Beamer frame title.</p>
+        </section>
+        <section>
+          <div class="title-banner">Objectives</div>
+          <p>Another example of the title banner on a different slide.</p>
+        </section>
+      </section>
+
+      <!-- 2. Blocks -->
+      <section data-menu-title="Blocks">
+        <section>
+          <h2>Beamer‑style Blocks</h2>
+          <div class="block block-theorem">
+            <div class="header">Theorem 1 (Pythagoras)</div>
+            <div class="body">In a right‑angled triangle the square on the hypotenuse is equal to the sum of the squares on the other two sides.</div>
+          </div>
+          <div class="block block-definition">
+            <div class="header">Definition (Prime Number)</div>
+            <div class="body">A prime number is a natural number greater than 1 that has no positive divisors other than 1 and itself.</div>
+          </div>
+        </section>
+        <section>
+          <h2>More Block Variants</h2>
+          <div class="block block-example">
+            <div class="header">Example</div>
+            <div class="body">The number 7 is prime since its only divisors are 1 and 7.</div>
+          </div>
+          <div class="block block-theorem">
+            <div class="header">Theorem 2 (Fermat's Little)</div>
+            <div class="body">If <em>p</em> is prime and <em>a</em> is not divisible by <em>p</em>, then <em>a</em><sup>p‑1</sup> ≡ 1 (mod <em>p</em>).</div>
+          </div>
+        </section>
+      </section>
+
+      <!-- 3. Lists -->
+      <section data-menu-title="Lists">
+        <section>
+          <h2>Unordered & Ordered Lists</h2>
+          <div class="block block-example">
+            <div class="header">Unordered List</div>
+            <div class="body">
+              <ul class="example-list">
+                <li>First bullet item</li>
+                <li>Second bullet item</li>
+                <li>Third bullet item</li>
+              </ul>
+            </div>
+          </div>
+          <div class="block block-example">
+            <div class="header">Ordered List</div>
+            <div class="body">
+              <ol class="example-list">
+                <li>First numbered item</li>
+                <li>Second numbered item</li>
+                <li>Third numbered item</li>
+              </ol>
+            </div>
+          </div>
+        </section>
+      </section>
+
+      <!-- 4. References -->
+      <section data-menu-title="References">
+        <section>
+          <h2>References</h2>
+          <ul class="example-list">
+            <li>[1] G. Strang, <em>Linear Algebra and Its Applications</em>, 4th ed., Brooks/Cole, 2006.</li>
+            <li>[2] T. H. Cormen et al., <em>Introduction to Algorithms</em>, MIT Press, 2009.</li>
+            <li>[3] D. E. Knuth, <em>The Art of Computer Programming</em>, Addison‑Wesley, 1968‑2011.</li>
+          </ul>
+        </section>
+      </section>
+
+      <!-- 5. Media -->
+      <section data-menu-title="Media">
+        <section>
+          <h2>Image Example</h2>
+          <img src="https://source.unsplash.com/800x450/?landscape" alt="Random landscape"
+               style="max-width:70%;border-radius:8px;box-shadow:0 2px 8px rgba(0,0,0,.25);">
+          <p class="caption">Figure 1 – A randomly chosen landscape (Unsplash)</p>
+        </section>
+        <section data-background-video="https://www.youtube.com/embed/dQw4w9WgXcQ"
+                 data-background-video-loop data-background-video-muted>
+          <h2 style="color:#fff;text-shadow:0 0 8px #000;">Background Video Slide</h2>
+        </section>
+      </section>
+
+      <!-- 6. Layouts -->
+      <section data-menu-title="Layouts">
+        <section>
+          <h2>Two‑Column Layout</h2>
+          <div class="columns">
+            <div class="col">
+              <h3>Left Column</h3>
+              <ul>
+                <li>Bullet A</li><li>Bullet B</li><li>Bullet C</li>
+              </ul>
+            </div>
+            <div class="col">
+              <h3>Right Column</h3>
+              <img src="https://source.unsplash.com/400x300/?technology" alt="Tech"
+                   style="width:100%;border-radius:8px;">
+            </div>
+          </div>
+        </section>
+        <section data-background-image="https://source.unsplash.com/1600x900/?city"
+                 data-background-size="cover">
+          <h2 style="color:#fff;text-shadow:0 0 8px #000;">Full‑Background Image</h2>
+        </section>
+      </section>
+
+      <!-- 7. Tables & Code -->
+      <section data-menu-title="Tables & Code">
+        <section>
+          <h2>Performance Table</h2>
+          <table>
+            <thead>
+              <tr><th>Algorithm</th><th>Best Case</th><th>Average</th><th>Worst Case</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>QuickSort</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n²)</td></tr>
+              <tr><td>MergeSort</td><td>O(n log n)</td><td>O(n log n)</td><td>O(n log n)</td></tr>
+              <tr><td>BubbleSort</td><td>O(n)</td><td>O(n²)</td><td>O(n²)</td></tr>
+            </tbody>
+          </table>
+        </section>
+        <section>
+          <h2>Highlighted Code</h2>
+          <pre><code class="language-python" data-trim>
+def greet(name):
+    print(f"Hello, {name}!")
+
+if __name__ == "__main__":
+    greet("Reveal.js")
+          </code></pre>
+        </section>
+      </section>
+
+      <!-- 8. Math & Charts -->
+      <section data-menu-title="Math">
+        <section>
+          <h2>Euler’s Identity</h2>
+          <p>\[ e^{i\\pi} + 1 = 0 \]</p>
+        </section>
+      </section>
+    </div>
+  </div>
+
+<!-- ───── SCRIPTS ───── -->
+<script src="https://unpkg.com/reveal.js@4.6.0/dist/reveal.js"></script>
+<script src="https://unpkg.com/reveal.js@4.6.0/plugin/math/math.js"></script>
+<script src="https://unpkg.com/reveal.js@4.6.0/plugin/highlight/highlight.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://unpkg.com/reveal.js-plugins/chart/plugin.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js-menu/menu.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js-plugins/chalkboard/plugin.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/reveal.js-plugins/customcontrols/plugin.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/js/all.min.js"></script>
+
+<script>
+/* ==== HELPERS ==== */
+const $ = id => document.getElementById(id);
+
+/* ==== Build dynamic top nav ==== */
+function buildTopNav(){
+  const ul=document.querySelector('#top-nav-list');
+  ul.innerHTML='';
+  document.querySelectorAll('.reveal .slides>section').forEach((sec,i)=>{
+    const t=sec.getAttribute('data-menu-title')||
+            sec.querySelector('.menu-title')?.textContent.trim()||`Section ${i}`;
+    const li=document.createElement('li'),a=document.createElement('a');
+    a.href='#';a.dataset.index=i;a.textContent=t;li.appendChild(a);ul.appendChild(li);
+  });
+  ul.querySelectorAll('a').forEach(a=>a.onclick=e=>{
+    e.preventDefault();Reveal.slide(parseInt(a.dataset.index,10),0);
+  });
+}
+function updateActive(){
+  const {h}=Reveal.getIndices();
+  document.querySelectorAll('#top-nav-list a')
+          .forEach(a=>a.classList.toggle('active',parseInt(a.dataset.index,10)===h));
+}
+
+/* ==== Build dynamic TOC ==== */
+function buildTOC(){
+  const list=$('toc-list');
+  list.innerHTML='';
+  document.querySelectorAll('.reveal .slides > section').forEach((sec,h)=>{
+    const title=sec.getAttribute('data-menu-title')||
+                sec.querySelector('.menu-title')?.textContent.trim()||
+                `Section ${h}`;
+    const li=document.createElement('li');
+    const a=document.createElement('a');
+    a.href='#';a.dataset.h=h;a.dataset.v=0;a.textContent=title;
+    a.onclick=e=>{
+      e.preventDefault();
+      Reveal.slide(parseInt(a.dataset.h,10),parseInt(a.dataset.v,10));
+      toggleTOC(false);
+    };
+    li.appendChild(a);
+
+    /* vertical slides */
+    const vertical=sec.querySelectorAll(':scope > section');
+    if(vertical.length){
+      const subUl=document.createElement('ul');
+      vertical.forEach((sub,v)=>{
+        const subTitle=sub.getAttribute('data-menu-title')||
+                       sub.querySelector('.menu-title')?.textContent.trim()||
+                       sub.querySelector('h1,h2,h3')?.textContent.trim()||
+                       `Slide ${v+1}`;
+        const subLi=document.createElement('li');
+        const subA=document.createElement('a');
+        subA.href='#';subA.dataset.h=h;subA.dataset.v=v;
+        subA.textContent=subTitle;
+        subA.onclick=e=>{
+          e.preventDefault();
+          Reveal.slide(parseInt(subA.dataset.h,10),parseInt(subA.dataset.v,10));
+          toggleTOC(false);
+        };
+        subLi.appendChild(subA);
+        subUl.appendChild(subLi);
+      });
+      li.appendChild(subUl);
+    }
+    list.appendChild(li);
+  });
+}
+function toggleTOC(force){
+  const panel=$('toc-panel');
+  if(force===true){panel.classList.add('open');}
+  else if(force===false){panel.classList.remove('open');}
+  else{panel.classList.toggle('open');}
+}
+
+/* ==== Reveal init ==== */
+Reveal.initialize({
+  hash:true,controls:false,progress:false,slideNumber:false,center:false,
+  plugins:[RevealChalkboard,RevealCustomControls,RevealMath.MathJax3,RevealHighlight,RevealChart,RevealMenu],
+  chalkboard:{theme:'chalkboard'},
+  customcontrols:{
+    controls:[
+      {icon:'<i class="fa fa-pen-square"></i>',title:'Chalkboard (B)',action:'RevealChalkboard.toggleChalkboard();'},
+      {icon:'<i class="fa fa-pen"></i>',       title:'Notes (C)',action:'RevealChalkboard.toggleNotesCanvas();'}
+    ]
+  },
+  menu:{side:'left',loadIcons:true,markers:true,numbers:true},
+  chart:{defaults:{global:{defaultFontSize:16}}}
+});
+
+Reveal.on('ready',()=>{
+  buildTopNav();updateActive();
+  buildTOC();
+  $('current-date').textContent=new Date().toLocaleDateString();
+});
+Reveal.on('slidechanged',updateActive);
+
+/* ==== Bottom‑nav button bindings ==== */
+$('prev-slide-btn').onclick =()=>Reveal.prev();
+$('next-slide-btn').onclick =()=>Reveal.next();
+$('prev-section-btn').onclick=()=>{const i=Reveal.getIndices();Reveal.slide(Math.max(i.h-1,0),0);}
+$('next-section-btn').onclick=()=>{const i=Reveal.getIndices();Reveal.slide(Math.min(i.h+1,document.querySelectorAll(".reveal .slides>section").length-1),0);}
+$('last-slide-btn').onclick  =()=>Reveal.slide(document.querySelectorAll(".reveal .slides>section").length-1,0);
+$('home-btn').onclick        =()=>Reveal.slide(0,0);
+$('fullscreen-btn').onclick  =()=>{document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen();};
+$('permalink-btn').onclick   =()=>{
+  const url=location.origin+location.pathname+location.hash;
+  navigator.clipboard?.writeText(url).then(()=>{
+    const b=$('permalink-btn'),t=b.textContent;b.textContent='✓';setTimeout(()=>b.textContent=t,1500);
+  }).catch(()=>prompt('Copy link:',url));
+};
+
+/* ==== Chalkboard buttons ==== */
+$('chalkboard-btn').onclick =()=>RevealChalkboard.toggleChalkboard();
+$('notes-btn').onclick      =()=>RevealChalkboard.toggleNotesCanvas();
+
+/* ==== TOC button ==== */
+$('toc-btn').onclick=()=>toggleTOC();
+</script>
+</body>
+</html>
