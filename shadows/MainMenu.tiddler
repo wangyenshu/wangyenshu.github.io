@@ -37,9 +37,11 @@ onclick="
     })();
     return false;
 ">DarkMode</a></nowiki></html>
+/%
 <html>
 <a href="vr.html" class="tiddlyLink tiddlyLinkExisting"  >VR Mode</a>
 </html>
+%/
 <<toggleSideBar "SideBar">>
 /%
 <html><nowiki><a href="javascript:;" title="Toggle 3D Mode" class="tiddlyLink tiddlyLinkExisting"
